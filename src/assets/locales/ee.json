@@ -1,0 +1,139 @@
+{
+  "main": {
+    "pagination": "Kuva {num} kaupa"
+  },
+  "header": {
+    "title":"fossiilid.info",
+    "subtitle":"Paleo-elurikkus Baltoskandias",
+
+    "button_show":"puuvaade",
+    "button_hide":"Sulge",
+
+    "f_weblinks":"Veel teavet",
+    "fossils_browse_tree":"Süstemaatikapuu",
+    "fossils_classification":"Klassifikatsioon",
+    "f_fossil_group":"Fossiilirühm",
+    "f_found_higher_taxa":"Leitud taksonid",
+    "f_found_genera":"Perekonnad",
+    "f_found_species":"Liigid",
+    "f_found_over_limit":"Leitud üle saja vaste. Täpsusta otsingut",
+    "f_found_none":"Ei leitud ühtki vastet",
+    "f_found_close_window":"Sulge aken",
+
+    "f_link_wikipedia":"Vikipeedia",
+    "f_link_tolweb":"Tree of Life",
+    "f_link_eol":"Encyclopedia of Life",
+    "f_link_plutof":"Eesti eElurikkus",
+    "f_link_naturforskaren":"Naturforskaren",
+    "f_link_see_also":"Vaata taksoni kirjet:",
+    "f_belongs_to":"Kuulub",
+    "f_contains":"Sisaldab",
+    "f_contains_genera":"Sisaldab perekondi",
+    "f_sister_taxa":"Sõsartaksonid",
+    "f_stratigraphical_distribution":"Stratigraafiline levik",
+    "f_baltic_genera":"Eestist leitud perekonnad (andmebaasis)",
+    "f_baltic_species":"Baltoskandiast leitud liigid (andmebaasis): ",
+    "f_recent":"Tänapäev",
+    "f_species_list":"Eestist leitud liigid (ei pruugi olla täielik, kuvatakse kuni 1000 liiki)",
+    "f_taxon_intro":"Taksoni iseloomustus",
+    "f_taxon_identifications":"Taksoni määrangud kollektsioonides",
+    "f_taxon_images":"Taksoni pildid",
+    "f_higher_taxon_images_title_gallery":"Pildigalerii",
+    "f_higher_taxon_images_title_visualtool":"Visuaalne määraja",
+    "f_taxon_references":"Valik taksonit käsitlevast teaduskirjandusest",
+
+
+    "f_genus":"perekond",
+    "f_link_all_specimens":"Näita kõiki eksemplare",
+    "f_link_all_images":"Näita kõiki pilte",
+    "f_genus_species":"Liigid (liikide registris)",
+    "f_genus_images":"Pildid (kuvatakse kuni 50 pilti)",
+    "f_genus_identifications":"Perekonna määrangud eksemplaride tabelis",
+    "f_genus_identifications_link":"eksemplari",
+    "f_genus_distribution":"Kogudes talletatud eksemplaride levik",
+    "f_genus_images_title_visualtool":"Visuaalne määraja",
+    "f_genus_images_title_gallery":"Taksoni pildid",
+
+    "f_species_identifications":"Andmebaasis on registreeritud sarnase nimega määranguid",
+    "f_species_linked_specimens":"Liigiga seotud eksemplarid Eesti geokogudes",
+    "f_species_synonymy":"Sünonüümika",
+    "f_species_geographic_distribution":"Geograafiline levik",
+    "f_species_stratigraphic_distribution":"Stratigraafiline levik",
+    "f_species_distribution_references":"Liigi levik ja kirjandusviited",
+    "f_species_distribution_samples":"Esinemine mikropaleontoloogilistes proovides",
+    "f_species_type_data":"Tüüpeksemplari andmed",
+    "f_species_type_reference":"Liigi esmakirjeldus",
+    "f_species_type_specimen":"Tüüpeksemplar",
+    "f_species_type_locality":"Tüüpleiukoht",
+    "f_species_type_stratum":"Tüüpstratoon",
+    "f_species_link_samples":"proov(i)",
+    "f_distribution_map":"Taksoni registreeritud leiukohad",
+
+    "f_db_rank":"rank",
+    "f_db_class":"class_et",
+    "f_db_locality":"locality_et",
+    "f_db_stratigraphy":"stratigraphy_et",
+    "f_db_stratigraphy_top":"top",
+    "f_db_stratigraphy_base":"base",
+    "f_db_geographic_distribution":"geographic_distribution",
+
+    "page_not_found":"Lehekülge ei leitud",
+
+    "search_msg_error_empty_form":"Palun sisestage mõni otsingukriteerium",
+    "search_msg_error_limit_exceeded":"Päring leidis üle %s kirje, palun täpsustage otsingu kriteeriume",
+
+    "msg_error_page_not_found":"Lehekülge ei leitud",
+
+    "search_msg_error_empty_form":"Please provide search term",
+    "search_msg_error_limit_exceeded":"More than %s rows found. Please specify search conditions",
+
+    "add": "Lisa uus",
+    "edit": "Minu failid",
+    "lang": "Keel",
+    "settings": "Seaded",
+    "logOut": "Logi välja",
+    "view": "Vaata"
+  },
+
+  "menu": {
+    "fossils":"Fossiilid",
+    "collecting":"Kogumine",
+    "identifying":"Määramine",
+    "fossils_estonia":"Eestis",
+    "time":"Ajaskaala",
+    "collections":"Kollektsioonid",
+    "detail_search":"Detailotsing",
+    "search":"Lihtotsing"
+  },
+
+  "footer": {
+    "licence":"Kui ei ole märgitud teisiti, siis on lehe sisu kasutatav CC BY-NC litsentsi alusel.",
+    "collections":"Geoloogilised kollektsioonid",
+    "estonia":"Eestis",
+    "sweden":"Rootsis",
+    "finland":"Soomes",
+    "related":"Vaata ka",
+    "gi":"TTÜ Geoloogia Instituut",
+    "emu": "Estonian University of Life Sciences",
+    "ut":"TÜ Loodusmuuseum",
+    "fmnh":"Soome Loodusmuuseum",
+    "nrm":"Rootsi Loodusmuuseum"
+  },
+
+  "search": {
+    "fossils_search":"Otsi taksonit",
+
+    "hightaxon":"Kõrgtakson",
+    "species":"Liik",
+    "locality":"Leiukoht",
+    "country":"Riik, maakond, vald",
+    "stratigraphy":"Stratigraafia",
+    "button":"Otsi liike",
+    "results":"Otsingu tulemused",
+    "results_species":"liiki"
+  },
+
+  "messages": {
+    "langChange": "Vahetasite keelt!"
+  }
+}

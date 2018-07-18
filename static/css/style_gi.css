@@ -1,0 +1,282 @@
+#header {
+position: fixed;
+top: 0px; 
+left: 0px;
+z-index: 1000;
+width: 100%;
+height: 95px;
+background-image: url(imgs/f1_bg.jpg);
+/*background-image: url(imgs/header_bg2.jpg);*/
+/*background-image: url(imgs/header_okas.jpg);*/
+/*background-image: url(imgs/tene1.jpg);*/
+/*background-image: url(imgs/header1a.jpg);*/
+background-position: center;
+background-repeat: repeat-x;
+background-color: #333;
+/*border-bottom: solid 1px #fff;*/
+text-align: center;
+margin-left: auto;
+margin-right: auto;
+border-bottom: solid 1px #fff;
+box-shadow: 1px 1px 10px #666;
+}
+
+
+#header_fossils {
+position: relative;
+left: 10px;
+}
+
+#header_fossils h1 {
+text-shadow: 1px 1px 5px #000;
+font-size: 32pt;
+}
+
+#header_fossils a:link { color: #fff; }
+#header_fossils a:active  { color: #fff; }
+#header_fossils a:visited { color: #fff; }
+#header_fossils a:hover	  { color: #fff; }
+
+
+.menubar {
+border-left: dotted 1px #ccc;
+border-right: dotted 1px #ccc;
+background-image: url(imgs/menu_bg1.png); 
+background-repeat: repeat-x;
+}
+
+
+
+#menu {
+position: absolute;
+/*padding-top: 100px;*/
+top: 100px;
+/*height: 100%;*/
+left: 0px;
+width: 210px;
+float: right;
+clear: both;
+margin-right: 10px;
+margin-bottom: 10px;
+border: dotted 0px #ccc;
+z-index: 10;
+/*background-color: #f4f4e9;*/
+
+}
+
+
+
+
+#content_container0 {
+position: absolute;
+top: 100px;
+}
+
+
+
+#content {
+margin-top: 110px;
+margin-left: 220px;
+margin-right: 30px;
+min-height: 400px;
+
+
+/*position: relative;
+left: 150px;
+margin-right: 150px;
+top: 128px;
+padding: 10px;
+padding-bottom: 40px;
+border: dotted 1px #666;*/
+
+}
+
+
+#content_right {
+margin-top: 110px;
+margin-left: 10px;
+margin-right: 30px;
+right: 10px;
+top: 10px;
+min-height: 400px;
+min-width: 100px;
+
+position: absolute;
+
+/*left: 150px;
+margin-right: 150px;
+top: 128px;
+padding: 10px;
+padding-bottom: 40px;
+border: dotted 1px #666;*/
+
+}
+
+
+#footer {
+position: relative;
+clear: both;
+top: 20px;
+left: -10px;
+width: 100%;
+color: #666;
+font-size: 0.7em;
+line-height: 1.2em;
+padding: 10px;
+background-color: transparent;
+text-align: center;
+margin-left: auto;
+margin-right: auto;
+border-top: solid 2px #ccc;
+}
+
+
+#simplesearch {
+width: 380px;
+text-align: center;
+/*background-image: url("di.php?f=specimen_image/311/311-16_1.jpg&w=600");*/
+
+  background-color: #e1e1e1; /* #eee; */ 
+  /*margin: 6px; 
+  padding: 6px; */
+  margin-top: 10px;
+ padding-top: 10px;
+ padding-bottom: 10px;
+  
+  border: solid 1px #fff;
+  /*background-image: url('http://geokogud.info/menu_bg1.png');*/
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  -moz-box-shadow: 1px 1px 4px #666;
+  -webkit-box-shadow: 1px 1px 4px #666;
+  box-shadow: 1px 1px 4px #666;
+  font-size: 0.8em;
+}
+
+#simplesearch form {
+background-color:  #d1d1d1;  /**/
+
+ padding-top: 5px;
+ padding-bottom: 5px;
+ margin-top: 5px;
+ margin-bottom: 5px;
+ /*opacity: 0.5;
+filter:alpha(opacity=50);*/
+ 
+}
+#simplesearch form:hover {
+ background-color: #ccc; 
+}
+
+
+.contentpage {
+float: left;
+min-width: 770px; 
+background-color: #fff; 
+padding: 20px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  -moz-box-shadow: 1px 1px 4px #999;
+  -webkit-box-shadow: 1px 1px 4px #999;
+  box-shadow: 1px 1px 4px #999;
+  }
+
+.contentpage-simple {
+float: left;
+background-color: #fff; 
+padding: 15px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  -moz-box-shadow: 1px 1px 4px #999;
+  -webkit-box-shadow: 1px 1px 4px #999;
+  box-shadow: 1px 1px 4px #999;
+  }
+
+
+.menubox {
+  color: #666; 
+  font-size: 0.8em; 
+  margin: 6px; 
+  padding: 6px;
+  font-family: verdana, arial, tahoma, sans-serif;
+}
+
+
+.menubox-item {
+  padding: 2px 0 2px 6px;
+  border-top: dotted 1px #ccc;
+}
+
+.menubox-item a {
+  display: block;
+}
+
+.menubox-item a:hover {
+  border-left: solid 4px #E85B2D;
+  margin-left: -6px;
+  padding-left: 2px;
+}
+
+.menubox1 {
+  color: #666; 
+  font-size: 0.9em; 
+  margin: 6px; 
+  padding: 6px; 
+  font-family: verdana, arial, tahoma, sans-serif;
+}
+
+.news h1 {
+/*display: block;*/
+border-bottom: solid 1px #E85B2D;
+padding: 2px 0;
+margin:2px 0;
+
+}
+.news {
+margin-bottom: 30px;;
+}
+.news h2 {
+color: #000;
+}
+
+.news-date {
+color: #E85B2D;
+font-size: 0.8em;
+}
+
+/* OVERRIDES sarv.css which is common to all subsites */
+.tr_header {
+ background-color: #C4D5E3; 
+}
+
+
+.olControlAttribution {
+top: 2px;
+height: 1px;
+display: none;
+opacity: 0.3;
+}
+
+.olControlAttribution:hover {
+opacity: 0.8;
+}
+
+.olAlphaImg {
+opacity: 0.3;
+}
+
+.olAlphaImg:hover {
+opacity: 0.6;
+}
+
+#map {
+
+/*
+  -moz-box-shadow: 1px 1px 4px #999;
+  -webkit-box-shadow: 1px 1px 4px #999;
+  box-shadow: 1px 1px 4px #999;
+*/
+}

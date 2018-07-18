@@ -1,0 +1,129 @@
+{
+  "main": {
+    "pagination": "Kuva {num} kaupa"
+  },
+  "header": {
+    "title":"fossiilid.info",
+    "subtitle":"Baltoskandian paleodiversiteetti",
+
+    "button_show":"Show tree",
+    "button_hide":"Hide",
+
+    "f_weblinks":"Linkit",
+    "fossils_browse_tree":"Selaa taksonomiapuuta",
+    "fossils_classification":"Luokittelu",
+    "f_fossil_group":"Fossiiliryhmä",
+    "f_found_higher_taxa":"Löydetyt taksonit",
+    "f_found_genera":"Suvut",
+    "f_found_species":"Lajit",
+    "f_found_over_limit":"Yli 100 osumaa, tarkenna hakua",
+    "f_found_none":"Ei hakutuloksia",
+    "f_found_close_window":"Sulje ikkuna",
+
+    "f_link_wikipedia":"Wikipedia",
+    "f_link_tolweb":"Tree of Life",
+    "f_link_eol":"Encyclopedia of Life",
+    "f_link_plutof":"Estonian eBiodiversity",
+    "f_link_naturforskaren":"Naturforskaren",
+    "f_link_see_also":"Katso myös",
+    "f_belongs_to":"Sisältyy taksoniin",
+    "f_contains":"Sisältää taksonit",
+    "f_contains_genera":"Sisältää suvut",
+    "f_sister_taxa":"Sisartaksonit",
+    "f_stratigraphical_distribution":"Ajallinen levinneisyys",
+    "f_baltic_genera":"Baltian ja Fennoskandian suvut (tietokannassa olevat)",
+    "f_baltic_species":"Baltian ja Fennoskandian lajit (tietokannassa olevat)",
+    "f_recent":"Nykyinen",
+    "f_species_list":"Baltian ja Fennoskandian lajit (tietokannassa olevat, näytetään 1000 lajia)",
+    "f_taxon_intro":"Yleistä taksoneista",
+    "f_taxon_identifications":"Kokoelmissa olevat näytteet",
+    "f_taxon_images":"Kuvat",
+    "f_higher_taxon_images_title_gallery":"Kuvagalleria",
+    "f_higher_taxon_images_title_visualtool":"Kuvallinen määritysopas",
+
+    "f_taxon_references":"Aiheeseen liittyvät julkaisut",
+
+    "f_genus":"Suku",
+    "f_link_all_specimens":"Näytä kaikki näytteet",
+    "f_link_all_images":"Näytä kaikki kuvat",
+    "f_genus_species":"Tietokannassa olevat lajit",
+    "f_genus_images":"Kuvia suvusta (voidaan näyttää 50)",
+    "f_genus_identifications":"Sukuun kuuluvia kokoelmanäytteitä",
+    "f_genus_identifications_link":"Näytteet",
+    "f_genus_distribution":"Levinneisyys",
+
+    "f_species_identifications":"Samankaltaisia määrityksiä kokoelmanäytteistä",
+    "f_species_linked_specimens":"Lajiin liittyvät kokoelmanäytteet",
+    "f_species_synonymy":"Synonyymit",
+    "f_species_geographic_distribution":"Maantieteellinen levinneisyys",
+    "f_species_stratigraphic_distribution":"Ajallinen levinneisyys",
+    "f_species_distribution_references":"Levinneisyys ja viitteet",
+    "f_species_distribution_samples":"Esiintyminen mikropaleontologisissa näytteissä",
+    "f_species_type_data":"Tyyppilajitiedot",
+    "f_species_type_reference":"Alkuperäinen kuvaus",
+    "f_species_type_specimen":"Tyyppinäyte",
+    "f_species_type_locality":"Tyyppipaikka",
+    "f_species_type_stratum":"Tyyppikerrostuma",
+    "f_species_link_samples":"",
+    "f_distribution_map":"Levinneisyyskartta",
+
+    "f_db_rank":"rank_en",
+    "f_db_class":"class_se",
+    "f_db_locality":"locality_en",
+    "f_db_stratigraphy":"stratigraphy_en",
+    "f_db_stratigraphy_top":"top_en",
+    "f_db_stratigraphy_base":"base_en",
+    "f_db_geographic_distribution":"geographic_distribution_en",
+
+    "page_not_found":"Sivua ei löydy",
+
+    "search_msg_error_empty_form":"Please provide search term",
+    "search_msg_error_limit_exceeded":"More than %s rows found. Please specify search conditions",
+
+    "add": "Add new",
+    "edit": "My files",
+    "lang": "Lang",
+    "settings": "Settings",
+    "logOut": "Log out"
+  },
+  "menu": {
+    "fossils":"Fossiilit",
+    "collecting":"Kerääminen",
+    "identifying":"Tunnistus",
+    "fossils_estonia":"Viron fossiilia",
+    "time":"Ajanjakso",
+    "collections":"Kokoelmat",
+    "detail_search":"Tarkennettu haku",
+    "search":"Pikahaku"
+  },
+  "footer": {
+    "licence":"Except where otherwise noted, content on this site is licensed under CC BY-NC Licence.",
+    "collections":"Geological collections in",
+    "estonia":"Estonia",
+    "sweden":"Sweden",
+    "finland":"Finland",
+    "related":"Related web resources",
+    "emu": "Estonian University of Life Sciences",
+    "gi":"Institute of Geology at Tallinn University of Technology",
+    "ut":"Natural History Museum, University of Tartu",
+    "fmnh":"Finnish Museum of Natural History",
+    "nrm":"Swedish Museum of Natural History"
+  },
+
+  "search": {
+    "fossils_search":"Hae fossiilia",
+
+    "hightaxon":"Ylempi taksoni",
+    "species":"Laji",
+    "locality":"Paikka",
+    "country":"Maa, maakunta",
+    "stratigraphy":"Stratigrafia",
+    "button":"Hae",
+    "results":"Haun tulokset",
+    "results_species":"laji"
+  },
+
+  "messages": {
+    "langChange": "Changed language!"
+  }
+}
