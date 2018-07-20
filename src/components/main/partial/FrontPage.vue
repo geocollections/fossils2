@@ -21,8 +21,9 @@
 
 
 <script>
-
+  import MyMixin from '../../../mixins/mixin';
   export default {
+    mixins: [MyMixin],
     name: "app-content",
     data() {
         return {
@@ -39,13 +40,10 @@
       if(this.$localStorage.get('fossilsLang') === 'ee'){
           lang = 'et'
       }
-      this.$http.get('http://127.0.0.1:8001/taxon_page/?language='+lang).then(response => {
-        if (response.status === 200) {
-          this.content = response.body.results
-        }
-      }, errResponse => {
-        console.log('ERROR: ' + JSON.stringify(errResponse));
-      })
+//      'http://127.0.0.1:8001/taxon_page/?language='+lang
+//      this.getRequest(this.apiUrl+'/taxon_page/?language='+lang).then((response) => {
+//        this.content = response
+//      });
 
     }
   }

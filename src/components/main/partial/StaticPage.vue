@@ -7,16 +7,15 @@
 </template>
 
 <script>
-
-
+  import MyMixin from '../../../mixins/mixin';
   export default {
+    mixins: [MyMixin],
     components: {
 
     },
     name: 'static-page',
     data() {
       return {
-        apiUrl: 'http://localhost:8000/',
         raw_html : ''
       }
     },
@@ -29,23 +28,15 @@
     },
     methods:  {
         loadStaticContent: function() {
-          console.log(this.$config)
-          this.$http.get('http://127.0.0.1:8001/webpages/'+this.$route.params.id,
-            {
-              emulateJSON: true
-            }
-          ).then(response => {
-            if (response.status === 200) {
-              this.raw_html = response.body.results[0].content_et
-            }
-          }, errResponse => {
-            console.log('ERROR: ' + JSON.stringify(errResponse));
-          })
+          this.getRequest(this.apiUrl+'/webpages/'+this.$route.params.id).then((response) => {
+//            this.raw_html = this.$localStorage.get('lang') === 'ee' ? response.content_et : response.content_en
+              this.raw_html = response.content_et
+          });
         }
     },
-    created: function (){
-        console.log('Static page')
-      this.loadStaticContent()
+    mounted: function (){
+        this.loadStaticContent()
+
     }
   }
 </script>

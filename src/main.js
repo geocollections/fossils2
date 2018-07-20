@@ -22,6 +22,7 @@ import 'vue-multiselect/dist/vue-multiselect.min.css' // Select input
 // Custom styles
 import '@/assets/css/styles.css'
 
+
 Vue.use(VueResource)
 Vue.use(VueSession)
 Vue.use(VueLocalStorage)
@@ -80,6 +81,15 @@ Vue.http.interceptors.push((request, next) => {
   next();
 });
 
+Vue.mixin({
+  created: function () {
+    let myOption = this.$options.myOption;
+    let conf = this.$options.conf;
+    if (conf) {
+      console.log(conf)
+    }
+  }
+})
 /* eslint-disable no-new */
 new Vue({
   i18n,
@@ -92,9 +102,9 @@ new Vue({
     },
   },
   conf : {
-    apiUrl: 'TEST'
+    apiUrl: 'https://api.geocollections.info'
   },
-  components: { App },
+  components: { App},
   template: '<App/>',
   methods: {
     globalMethod: function () {

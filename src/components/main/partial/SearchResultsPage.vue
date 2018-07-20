@@ -61,13 +61,7 @@
     },
     created:function(){
         console.log('results')
-      this.$http.post('http://127.0.0.1:8001/search$',this.searchParams).then(response => {
-        if (response.status === 200) {
-          this.search_content = response.body.search_content[0]
-        }
-      }, errResponse => {
-        console.log('ERROR: ' + JSON.stringify(errResponse));
-      })
+
     },
     methods: {}
   }
