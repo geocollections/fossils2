@@ -30,7 +30,7 @@
         loadStaticContent: function() {
           this.getRequest(this.apiUrl+'/webpages/'+this.$route.params.id).then((response) => {
 //            this.raw_html = this.$localStorage.get('lang') === 'ee' ? response.content_et : response.content_en
-              this.raw_html = response.content_et
+              this.raw_html = response[0].content_et
           });
         }
     },

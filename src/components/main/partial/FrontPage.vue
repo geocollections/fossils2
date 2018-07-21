@@ -40,10 +40,7 @@
       if(this.$localStorage.get('fossilsLang') === 'ee'){
           lang = 'et'
       }
-//      'http://127.0.0.1:8001/taxon_page/?language='+lang
-//      this.getRequest(this.apiUrl+'/taxon_page/?language='+lang).then((response) => {
-//        this.content = response
-//      });
+
 
     }
   }

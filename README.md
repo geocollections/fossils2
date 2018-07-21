@@ -1,6 +1,6 @@
 # fossils
 
-> Upload application for fossils.info
+> fossils.info application
 
 ## Build Setup
 
