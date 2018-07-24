@@ -9,14 +9,18 @@
 </template>
 
 <script>
+  import MyMixin from '../../../mixins/mixin';
   export default {
+
     name: "lang-buttons",
+    mixins: [MyMixin],
     methods: {
 
       changeLang(lang) {
         this.$localStorage.set('fossilsLang', lang)
         this.$i18n.locale = lang
         this.toastInfo(this.$t('messages.langChange'))
+        this.setLangChanged(lang)
       },
 
       toastInfo(text) {

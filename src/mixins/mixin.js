@@ -1,10 +1,22 @@
 let MyMixin = {
   data() {
     return {
-      apiUrl : 'https://api.geocollections.info'
+      apiUrl : 'https://api.geocollections.info',
+      lang: '',
+    }
+  },
+  watch: {
+    lang: {
+      handler: function(val, oldVal) {
+        console.log(this.lang) // call it in the context of your component object
+      },
+      deep: true
     }
   },
   methods:{
+    setLangChanged (lang) {
+      this.lang = lang
+    },
     isDefinedAndNotNull(value) {
       return !!value && value !== null
     },
@@ -23,9 +35,17 @@ let MyMixin = {
         });
       })
     },
-    handleError() {
-
+    handleError() {}
+  },
+  openInNewWindow(params) {
+    if (typeof (params.width) === 'undefined') {
+      params.width = 500;
     }
-  }
+    if (typeof (params.height) === 'undefined') {
+      params.height = 500;
+    }
+    window.open(location.origin + '/' + params.object, '', 'width=' + params.width +
+      ',height=' + params.height,scrollbars, resizable)
+  },
 };
 export default MyMixin;

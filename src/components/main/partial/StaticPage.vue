@@ -16,27 +16,41 @@
     name: 'static-page',
     data() {
       return {
-        raw_html : ''
+        raw_html : '',
+        content : ''
       }
     },
     watch: {
       '$route.params.id': {
           handler: function(newVal,oldVal) {
             this.loadStaticContent()
+            this.applyTranslation()
           }
+      },
+      '$fossilsLang': {
+        handler: function(val, oldVal) {
+          console.log("TWTW") // call it in the context of your component object
+        },
+        deep: true
       }
+    },
+    created: function () {
+      this.loadStaticContent()
+    },
+    updated: function () {
+      this.loadStaticContent()
     },
     methods:  {
         loadStaticContent: function() {
           this.getRequest(this.apiUrl+'/webpages/'+this.$route.params.id).then((response) => {
-//            this.raw_html = this.$localStorage.get('lang') === 'ee' ? response.content_et : response.content_en
-              this.raw_html = response[0].content_et
+            this.content = response[0];
+            this.applyTranslation()
           });
+        },
+        applyTranslation: function() {
+          this.raw_html = this.$localStorage.get('fossilsLang') === 'ee' ? this.content.content_et : this.content.content_en
         }
     },
-    mounted: function (){
-        this.loadStaticContent()
 
-    }
   }
 </script>

@@ -21,8 +21,8 @@
             <div style="font-size: 0.7em;" v-if="taxon.fossil_group__id != null">
               <router-link v-bind:to="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</router-link>
             </div>
-
-            <span style="font-size: 0.7em;">{{taxon.rank__rank}}</span>
+            <div v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></div>
+            <span style="font-size: 0.7em;" v-test v-bind:et="taxon.rank__rank"></span>
             <!--<em v-if="content.rank_id in content.rank_list">{{taxon.taxon}}</em>-->
             <!--<span v-if="!(content.rank_id in content.rank_list)">{{taxon.taxon}}</span>-->
             <span style="font-size: 0.7em;">{{taxon.author_year}}</span>
@@ -54,6 +54,16 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <br />
+      <h3>{{$t('header.f_weblinks')}}</h3>
+      <div id="taxon-links">
+        <span>
+
+        </span>
+        <!--{% for link in content.seealso_links %}-->
+        <!--<a href="{{link.url}}">{{link.name}}</a> {% if forloop.last %}{%else%} <br /> {% endif %}-->
+        <!--{% endfor %}-->
       </div>
     </div>
     <div id="content-left">
@@ -124,22 +134,33 @@
       <br />
       <div id="taxon-details" v-html="taxon_page.content"></div>
       <!--REFERENCES-->
+      <div style="margin:15px auto;">
+        <h3>{{$t('header.f_taxon_references')}}</h3>
+        <ul>
+          <li v-for=" reference in taxon_occurrence">
+            <span class="openwinlink" @click="openUrl({parent_url:'http://geokogud.info/reference',object:reference.reference, width:500,height:500})">
+              <strong>{{reference.reference__reference}}</strong>
+            </span>. {{reference.reference__title}}
+            <a v-if="reference.reference__doi" :href="'http://dx.doi.org/'+reference.reference__doi" target="_blank">[DOI]</a>
+          </li>
+        </ul>
+      </div>
       <div>
-        {{taxon}}
-        {{parent}}
-        {{description}}
-        {{taxon_image}}
-        {{taxon_page}}
-        {{common_names}}
-        {{taxon_list}}
-        {{taxon_occurrence}}
-        {{children}}
-        {{siblings}}
-        {{synonyms}}
-        {{taxon_type_specimen}}
-        {{specimen_identification}}
-        {{speciment_attachment}}
-        {{hierarchy}}
+        <!--{{taxon}}-->
+        <!--{{parent}}-->
+        <br>{{description}}<br>
+        <!--{{taxon_image}}-->
+        <!--{{taxon_page}}-->
+        <!--{{common_names}}-->
+        <!--{{taxon_list}}-->
+        <!--{{taxon_occurrence}}-->
+        <!--{{children}}-->
+        <!--{{siblings}}-->
+        <!--{{synonyms}}-->
+        <!--{{taxon_type_specimen}}-->
+        <!--{{specimen_identification}}-->
+        <!--{{speciment_attachment}}-->
+        <!--{{hierarchy}}-->
       </div>
     </div>
     <div v-if="taxon_image">
@@ -161,10 +182,22 @@
         <div style="clear:both;"></div>
       </div>
     </div>
+    <div id="taxon-main">
+      <div id="taxon-left">
+
+      </div>
+      <div id="taxon-right">
+        <div style="padding: 0 0 0 10px;">
+          <!--content.genus.images-->
+
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
   import MyMixin from '../../../mixins/mixin';
+  import langchanged from '../../../directives/directive'
   export default {
     mixins: [MyMixin],
     name: 'item-page',
@@ -187,7 +220,17 @@
         hierarchy : {}
       }
     },
+    methods: {
+      openUrl : function( params) {
+        window.open(params.parent_url + '/' + params.object, '', 'width=' + params.width +
+          ',height=' + params.height,scrollbars)
+      }
+    },
+    updated: function () {
+      console.log('updated')
+    },
     created: function (){
+
       this.getRequest(this.apiUrl+'/taxon/'+this.$route.params.id).then((response) => {
         this.taxon = response ? response[0] : {};
 

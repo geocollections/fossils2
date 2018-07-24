@@ -90,7 +90,21 @@ Vue.mixin({
     }
   }
 })
-/* eslint-disable no-new */
+Vue.directive('translate',{
+  componentUpdated: function (el, binding) {
+    el.innerHTML = lang == 'ee' ? binding.value.et : binding.value.en
+  }
+})
+Vue.directive('test', {
+  params: ['et'],
+  paramWatchers: {
+    et: function (val, oldVal) {
+      console.log('a changed!')
+    }
+  }
+
+});
+    /* eslint-disable no-new */
 new Vue({
   i18n,
   el: '#app',
@@ -101,14 +115,13 @@ new Vue({
       default: 'ee'
     },
   },
-  conf : {
-    apiUrl: 'https://api.geocollections.info'
-  },
+
   components: { App},
   template: '<App/>',
   methods: {
     globalMethod: function () {
       return 'GlobalMethod'
     }
-  }
+  },
+
 });
