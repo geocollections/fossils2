@@ -154,10 +154,10 @@
         <!--{{common_names}}-->
         <!--{{taxon_list}}-->
         <!--{{taxon_occurrence}}-->
-        <!--{{children}}-->
-        <!--{{siblings}}-->
-        <!--{{synonyms}}-->
-        <!--{{taxon_type_specimen}}-->
+        {{children}}
+        {{siblings}}
+        {{synonyms}}
+        {{taxon_type_specimen}}
         <!--{{specimen_identification}}-->
         <!--{{speciment_attachment}}-->
         <!--{{hierarchy}}-->
@@ -184,8 +184,27 @@
     </div>
     <div id="taxon-main">
       <div id="taxon-left">
-        <h3>{{$t('header.f_distribution_map')}}</h3>
-        <div id="map" style="height: 300px;border-radius: 6px;"></div>
+        <div v-if="isMapLoaded">
+          <h3>{{$t('header.f_distribution_map')}}</h3>
+          <div id="map" style="height: 300px;border-radius: 6px;"></div>
+        </div>
+
+        <div id="synonymy_list" v-if="synonyms.length > 0">
+          <h3>{{$t('header.f_species_synonymy')}}</h3>
+          <ul>
+            <li v-for="synonym in synonyms">
+              <em>{{synonym.taxon_synonym}}</em>:
+              {{synonym.author}}, {{synonym.year}}, lk. {{synonym.pages}},
+              joon. {{synonym.figures}}
+            </li>
+          </ul>
+        </div>
+        <br />
+        <div id="species_type_data_list" v-if = "false">
+          <h3>{{$t('header.f_species_type_data')}}</h3>
+
+        </div>
+        <br />
       </div>
       <div id="taxon-right">
         <div style="padding: 0 0 0 10px;">
@@ -220,7 +239,8 @@
         taxon_type_specimen : {},
         specimen_identification : {},
         speciment_attachment : {},
-        hierarchy : {}
+        hierarchy : {},
+        isMapLoaded : false
       }
     },
     methods: {
@@ -281,6 +301,7 @@
           //load map
           var locations = this.getLocationsObject(this.taxon_occurrence)
           if (locations.length > 0) {
+            this.isMapLoaded = true;
             initMap(locations)
           }
         });
