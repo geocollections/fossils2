@@ -5,14 +5,14 @@ let MyMixin = {
       lang: '',
     }
   },
-  watch: {
+/*  watch: {
     lang: {
       handler: function(val, oldVal) {
         console.log(this.lang) // call it in the context of your component object
       },
       deep: true
     }
-  },
+  },*/
   methods:{
     setLangChanged (lang) {
       this.lang = lang

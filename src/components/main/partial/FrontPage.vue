@@ -17,24 +17,23 @@
 
 <script>
   import MyMixin from '../../../mixins/mixin';
+  import LangButtons from '@/components/main/partial/LangButtons';
   export default {
+    components: { LangButtons},
     mixins: [MyMixin],
     name: "app-content",
     data() {
         return {
-            content : ''
+          content : ''
         }
     },
-    methods: {
 
-    },
-    watch: {
-      lang: {
-        handler: function(val, oldVal) {
-          console.log(this.lang) // call it in the context of your component object
-        },
-        deep: true
+    created: function () {
+      let lang =this.$localStorage.get('fossilsLang')
+      if(this.$localStorage.get('fossilsLang') === 'ee'){
+        lang = 'et'
       }
+      this.loadFrontPage(lang)
     },
     mounted: function () {
       console.log('mounted')
@@ -58,13 +57,5 @@
         });
       }
     },
-    created: function () {
-      let lang =this.$localStorage.get('fossilsLang')
-      if(this.$localStorage.get('fossilsLang') === 'ee'){
-          lang = 'et'
-      }
-
-      this.loadFrontPage(lang)
-    }
   }
 </script>

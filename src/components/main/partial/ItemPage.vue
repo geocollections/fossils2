@@ -148,7 +148,7 @@
       <div>
         <!--{{taxon}}-->
         <!--{{parent}}-->
-        <br>{{description}}<br>
+        <!--<br>{{description}}<br>-->
         <!--{{taxon_image}}-->
         <!--{{taxon_page}}-->
         <!--{{common_names}}-->
@@ -162,7 +162,7 @@
         <!--{{speciment_attachment}}-->
         <!--{{hierarchy}}-->
       </div>
-    </div>
+
     <div v-if="taxon_image">
       <div style="clear: both;"></div>
       <!--<h3>{{tax.images_title}} ({{taxon.taxon}})</h3>-->
@@ -184,7 +184,8 @@
     </div>
     <div id="taxon-main">
       <div id="taxon-left">
-
+        <h3>{{$t('header.f_distribution_map')}}</h3>
+        <div id="map" style="height: 300px;border-radius: 6px;"></div>
       </div>
       <div id="taxon-right">
         <div style="padding: 0 0 0 10px;">
@@ -193,10 +194,12 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
 </template>
 <script>
   import MyMixin from '../../../mixins/mixin';
+
   import langchanged from '../../../directives/directive'
   export default {
     mixins: [MyMixin],
@@ -221,80 +224,108 @@
       }
     },
     methods: {
-      openUrl : function( params) {
+      getLocationsObject : function(object) {
+        let locations = []
+        let lang = this.lang
+        object.forEach(function(element) {
+          if (element.locality != null) {
+            locations.push({
+              lat : null,
+              long: null,
+              locality: (lang == 'ee' ? element.locality__locality
+                : element.locality__locality_en),
+              locid: element.locality
+            });
+          }
+        });
+        return locations
+      },
+      openUrl : function(params) {
         window.open(params.parent_url + '/' + params.object, '', 'width=' + params.width +
           ',height=' + params.height,scrollbars)
+      },
+      loadFullTaxonInfo : function () {
+        this.getRequest(this.apiUrl+'/taxon/'+this.$route.params.id).then((response) => {
+          this.taxon = response ? response[0] : {};
+
+          if (this.isDefinedAndNotNull(this.taxon.parent)){
+            this.getRequest(this.apiUrl+'/taxon/'+this.taxon.parent).then((response) => {
+              this.parent = response ? response[0] : {};
+            });
+          }
+
+        });
+
+        this.getRequest(this.apiUrl+'/taxon_page/?taxon='+this.$route.params.id).then((response) => {
+          this.taxon_page = response ? response[0] : {};
+        });
+
+        this.getRequest(this.apiUrl+'/taxon_image/?taxon='+this.$route.params.id).then((response) => {
+          this.taxon_image = response;
+        });
+
+        this.getRequest(this.apiUrl+'/taxon_description/?taxon='+this.$route.params.id).then((response) => {
+          this.description = response;
+        });
+
+        this.getRequest(this.apiUrl+'/taxon_common_name/?taxon='+this.$route.params.id).then((response) => {
+          this.common_names = response;
+        });
+
+        this.getRequest(this.apiUrl+'/taxon_list/?taxon='+this.$route.params.id).then((response) => {
+          this.taxon_list = response;
+        });
+
+        this.getRequest(this.apiUrl+'/taxon_occurrence/?taxon='+this.$route.params.id).then((response) => {
+          this.taxon_occurrence = response;
+          //load map
+          var locations = this.getLocationsObject(this.taxon_occurrence)
+          if (locations.length > 0) {
+            initMap(locations)
+          }
+        });
+
+        this.getRequest(this.apiUrl+'/taxon/?parent='+this.$route.params.id).then((response) => {
+          this.children = response;
+          this.siblings = response;
+        });
+
+        this.getRequest(this.apiUrl+'/taxon_synonym/?taxon='+this.$route.params.id).then((response) => {
+          this.synonyms = response;
+        });
+
+        this.getRequest(this.apiUrl+'/taxon_type_specimen/?taxon='+this.$route.params.id).then((response) => {
+          this.taxon_type_specimen = response;
+        });
+
+        this.getRequest(this.apiUrl+'/specimen/?specimenidentification__taxon_id='+this.$route.params.id+'&fields=id&format=json').then((response) => {
+          this.specimen_identification = response;
+        });
+
+        this.getRequest(this.apiUrl+'/taxon_type_specimen/?taxon='+this.$route.params.id).then((response) => {
+          this.taxon_type_specimen = response;
+        });
+
+        this.getRequest(this.apiUrl+'/attachment/?specimen__specimenidentification__taxon__id='+this.$route.params.id+'&fields=uuid_filename&format=json').then((response) => {
+          this.speciment_attachment = response;
+        });
+
+        this.getRequest(this.apiUrl+'/taxon?id__in=1,29,38,60,61,62,259,1081,2104&fields=id,taxon,rank__rank_en').then((response) => {
+          this.hierarchy = response;
+        });
+      },
+
+    },
+    watch: {
+      '$route.params.id': {
+        handler : function (newval, oldval) {
+          this.loadFullTaxonInfo()
+        }
       }
     },
-    updated: function () {
-      console.log('updated')
-    },
-    created: function (){
-
-      this.getRequest(this.apiUrl+'/taxon/'+this.$route.params.id).then((response) => {
-        this.taxon = response ? response[0] : {};
-
-        if (this.isDefinedAndNotNull(this.taxon.parent)){
-          this.getRequest(this.apiUrl+'/taxon/'+this.taxon.parent).then((response) => {
-            this.parent = response ? response[0] : {};
-          });
-        }
-
-      });
-
-      this.getRequest(this.apiUrl+'/taxon_page/?taxon='+this.$route.params.id).then((response) => {
-        this.taxon_page = response ? response[0] : {};
-      });
-
-      this.getRequest(this.apiUrl+'/taxon_image/?taxon='+this.$route.params.id).then((response) => {
-        this.taxon_image = response;
-      });
-
-      this.getRequest(this.apiUrl+'/taxon_description/?taxon='+this.$route.params.id).then((response) => {
-        this.description = response;
-      });
-
-      this.getRequest(this.apiUrl+'/taxon_common_name/?taxon='+this.$route.params.id).then((response) => {
-        this.common_names = response;
-      });
-
-      this.getRequest(this.apiUrl+'/taxon_list/?taxon='+this.$route.params.id).then((response) => {
-        this.taxon_list = response;
-      });
-
-      this.getRequest(this.apiUrl+'/taxon_occurrence/?taxon='+this.$route.params.id).then((response) => {
-        this.taxon_occurrence = response;
-      });
-
-      this.getRequest(this.apiUrl+'/taxon/?parent='+this.$route.params.id).then((response) => {
-        this.children = response;
-        this.siblings = response;
-      });
-
-      this.getRequest(this.apiUrl+'/taxon_synonym/?taxon='+this.$route.params.id).then((response) => {
-        this.synonyms = response;
-      });
-
-      this.getRequest(this.apiUrl+'/taxon_type_specimen/?taxon='+this.$route.params.id).then((response) => {
-        this.taxon_type_specimen = response;
-      });
-
-      this.getRequest(this.apiUrl+'/specimen/?specimenidentification__taxon_id='+this.$route.params.id+'&fields=id&format=json').then((response) => {
-        this.specimen_identification = response;
-      });
-
-      this.getRequest(this.apiUrl+'/taxon_type_specimen/?taxon='+this.$route.params.id).then((response) => {
-        this.taxon_type_specimen = response;
-      });
-
-      this.getRequest(this.apiUrl+'/attachment/?specimen__specimenidentification__taxon__id='+this.$route.params.id+'&fields=uuid_filename&format=json').then((response) => {
-        this.speciment_attachment = response;
-      });
-
-      this.getRequest(this.apiUrl+'/taxon?id__in=1,29,38,60,61,62,259,1081,2104&fields=id,taxon,rank__rank_en').then((response) => {
-        this.hierarchy = response;
-      });
-
+    created: function(){
+      this.loadFullTaxonInfo();
     }
+
   }
 </script>

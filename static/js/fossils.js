@@ -1,8 +1,8 @@
 var fossils = {
 	init: function () {
 		this.set_placeholder();
-	},	
-		
+	},
+
 	get_ajax: function (given) {
 		given=given||{};
 		$.ajax({
@@ -27,7 +27,7 @@ var fossils = {
 				input.addClass('placeholder');
 			    input.val(input.attr('placeholder'));
 			}
-		}).blur();		
+		}).blur();
 	}
 }
 
@@ -53,8 +53,8 @@ fossils.search = {
 									}
 								}));
 							},
-							failure: function () { 
-								console.log('failure'); 
+							failure: function () {
+								console.log('failure');
 							},
 						}
 					})
@@ -74,9 +74,9 @@ fossils.search = {
 					}
 		        },
 				minLength:3,
-			})			
+			})
 		});
-		
+
 		//When request result is complex term then when user tries to delete part
 		//of it then erase it alltogether so that user must re-initiate ajax request
 		el.addEventListener('keyup', function(){
@@ -89,14 +89,14 @@ fossils.search = {
 			}
 		});
 	},
-	
+
 	set_form_values: function (form, values) {
 		var sf = fossils.search.server_methods;
 		var ids = Object.keys(sf);
 		for (var term in values) {
 			form[term].value = values[term];
 			if(form[term].id.length > 0
-				&& -1 !== ids.indexOf(form[term].id) 
+				&& -1 !== ids.indexOf(form[term].id)
 				&& -1 === fossils.search.is_field_populated.indexOf(term)
 				&& values[term].length > 0) {
 				fossils.search.is_field_populated
@@ -104,7 +104,7 @@ fossils.search = {
 			}
 		}
 	},
-	
+
 	display_message: function (given) {
 		var msg_box = document.getElementById('msg-box-'+given.type);
 		var out = [];
@@ -116,13 +116,9 @@ fossils.search = {
 	},
 }
 
-
-
-
-
-function initMap(fs) 
+var initMap = function (fs)
 {
-    olMap = new ol.Map ({
+   var olMap = new ol.Map ({
     	target: "map",
     	layers: [
     		/*
@@ -132,7 +128,7 @@ function initMap(fs)
 				//})
 				source: new ol.source.OSM()
 			}),*/
-			
+
 			new ol.layer.Tile({
 			  source: new ol.source.XYZ({
 				url: 'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoia3V1dG9iaW5lIiwiYSI6ImNpZWlxdXAzcjAwM2Nzd204enJvN2NieXYifQ.tp6-mmPsr95hfIWu3ASz2w'
@@ -153,25 +149,25 @@ function initMap(fs)
 	        zoom: 4,
 	        maxZoom: 16,
 	        minZoom: 4,
-			restrictedExtent: ol.proj.transformExtent([-10, 52, 2, 62], 'EPSG:4326', 'EPSG:3857')  	
+			restrictedExtent: ol.proj.transformExtent([-10, 52, 2, 62], 'EPSG:4326', 'EPSG:3857')
     	})
    });
 
 
 
 
-	function defaultStyle(feature, resolution) 
+	function defaultStyle(feature, resolution)
 	{
 		return [
-			new ol.style.Style({ 
-				image: new ol.style.Circle({ 
-					radius: 5, 
+			new ol.style.Style({
+				image: new ol.style.Circle({
+					radius: 5,
 					fill: new ol.style.Fill({ color: 'rgba(236, 102, 37,0.7)', opacity: 0.9 }),
 					//stroke: new ol.style.Stroke({color: 'rgba(255,255,255,0)', width: 0})
 				}),
-				text: (resolution > 500 ? null : new ol.style.Text({ 
-					font: '10pt Arial, Helvetica, Helvetica Neue, Arial, sans-serif', 
-					text: feature.name, 
+				text: (resolution > 500 ? null : new ol.style.Text({
+					font: '10pt Arial, Helvetica, Helvetica Neue, Arial, sans-serif',
+					text: feature.name,
 					fill: new ol.style.Fill({ color: 'rgba(238,59,13,1)' }),
 					stroke: new ol.style.Stroke({color: '#fff', width: 3}),
 					textAlign: 'left',
@@ -180,19 +176,19 @@ function initMap(fs)
 					offsetY: -5,
 				}))
 			})
-		] 
+		]
 	};
 
 
 
-	var vectorSource = new ol.source.Vector({  
+	var vectorSource = new ol.source.Vector({
 		attributions: [new ol.Attribution({
-        	html: " "})] 
+        	html: " "})]
 	});
 
 	for (var i = 0; i < fs.length; i++){
 		console.log(fs[i].locid);
-		var centroidLL = ol.proj.transform([Number(fs[i].long), Number(fs[i].lat)], 'EPSG:4326', 'EPSG:3857'); 
+		var centroidLL = ol.proj.transform([Number(fs[i].long), Number(fs[i].lat)], 'EPSG:4326', 'EPSG:3857');
 		var centroidPoint = new ol.geom.Point(centroidLL);
 		var feature = new ol.Feature({ geometry: centroidPoint });
 		feature.name = fs[i].locality;
@@ -200,12 +196,12 @@ function initMap(fs)
 		vectorSource.addFeature(feature);
 	}
 
-    var layerData = new ol.layer.Vector({ 
-			title: "Localities", 
-			source: vectorSource, 
+    var layerData = new ol.layer.Vector({
+			title: "Localities",
+			source: vectorSource,
 			style: function(feature, resolution) { return defaultStyle(feature, resolution); }
     })
-    
+
     olMap.addLayer(layerData);
     /*
     olMap.getViewport().addEventListener('mousemove', function(evt)
@@ -234,7 +230,7 @@ var openLoc = function(pixel) {
     return feature;
   });
 
-  if (feature) 
+  if (feature)
   {
           	//window.location = '/locality/' + feature.fid;
           	window.open('http://geokogud.info/locality/' + feature.fid, '', 'width=750,height=750,scrollbars, resizable');
@@ -252,15 +248,20 @@ var displayFeatureInfo = function(pixel) {
     return feature;
   });
 
-  if (feature) 
-  
+  if (feature)
+
   {
-	// 
+	//
         	document.getElementById('hoverbox').style.display = 'block';
-        	//console.log(feature.name); 
+        	//console.log(feature.name);
         	document.getElementById('hoversystem').innerHTML = feature.name;
         	document.getElementById('hoverstat').innerHTML = "";
    } else {
         	document.getElementById('hoverbox').style.display = 'none';
    }
 };
+
+//
+// $(function(fs) {
+//   initMap(fs);
+// })

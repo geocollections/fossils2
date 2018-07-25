@@ -26,12 +26,6 @@
             this.loadStaticContent()
             this.applyTranslation()
           }
-      },
-      '$fossilsLang': {
-        handler: function(val, oldVal) {
-          console.log("TWTW") // call it in the context of your component object
-        },
-        deep: true
       }
     },
     created: function () {
