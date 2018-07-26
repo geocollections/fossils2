@@ -13,18 +13,22 @@ let MyMixin = {
       deep: true
     }
   },*/
+
   methods:{
     setLangChanged (lang) {
       this.lang = lang
     },
+    isDefinedAndNotEmpty(value) {
+      return !!value && value.length > 0
+    },
     isDefinedAndNotNull(value) {
       return !!value && value !== null
     },
-    getRequest(url){
+    getRequest(url, isCount = false){
       return new Promise((resolve, reject) => {
         this.$http.get(url).then(response => {
           if (response.status === 200) {
-            resolve( response.body.results)
+            isCount ? resolve( response.body.count) : resolve( response.body.results)
           } else {
             //
             this.handleError()

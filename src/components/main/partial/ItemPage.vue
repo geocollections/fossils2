@@ -16,15 +16,10 @@
 
         <div id="taxon-title">
           <h1 style='color: #333;'>
-            <!--<span style="color:#333; font-weight:bold" v-if="content.class && content.class != content.taxon">{{content.class}}</span><br />-->
             <span style="color:#333; font-weight:bold" v-if="taxon_page.frontpage_title">{{taxon_page.title}}</span><br />
-            <div style="font-size: 0.7em;" v-if="taxon.fossil_group__id != null">
-              <router-link v-bind:to="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</router-link>
-            </div>
-            <div v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></div>
+            <span style="font-size: 0.7em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
+            <span v-if="taxon.fossil_group__id != null">{{taxon.fossil_group__taxon}}</span>
             <span style="font-size: 0.7em;" v-test v-bind:et="taxon.rank__rank"></span>
-            <!--<em v-if="content.rank_id in content.rank_list">{{taxon.taxon}}</em>-->
-            <!--<span v-if="!(content.rank_id in content.rank_list)">{{taxon.taxon}}</span>-->
             <span style="font-size: 0.7em;">{{taxon.author_year}}</span>
           </h1>
           <div class="taxon_names" >
@@ -82,12 +77,13 @@
               <router-link v-bind:to="'/'+parent.id">{{parent.taxon}}</router-link>
             </em>
             <br />
-            {{$t('header.f_sister_taxa')}}:
-            <!--<em style='font-weight: normal;'>-->
-            ?sister_taxa?
-              <!--get_item_siblings-->
-            <!--</em>-->
-            <br />
+            <div v-if="isDefinedAndNotEmpty(sister_taxa)">
+              {{$t('header.f_sister_taxa')}}:
+              <span v-for="item in sister_taxa">
+                 <em style='font-weight: normal;'><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em>
+              </span>
+              <br />
+            </div>
             {{$t('header.f_contains')}}:
             <span v-if="siblings" v-for="(sibling, idx) in siblings">
               <router-link v-bind:to="'/'+sibling.id">{{sibling.taxon}}</router-link>
@@ -118,7 +114,7 @@
               <br />
             </div>
             <!--number of species-->
-            <div>
+            <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'species'">
               {{$t('header.f_baltic_species')}}
               <strong><a :href="'/'+taxon.id+'/species'">?num_species?</a></strong><br />
             </div>
@@ -147,17 +143,17 @@
       </div>
       <div>
         <!--{{taxon}}-->
-        <!--{{parent}}-->
+        {{parent}}
         <!--<br>{{description}}<br>-->
         <!--{{taxon_image}}-->
         <!--{{taxon_page}}-->
         <!--{{common_names}}-->
         <!--{{taxon_list}}-->
         <!--{{taxon_occurrence}}-->
-        {{children}}
-        {{siblings}}
-        {{synonyms}}
-        {{taxon_type_specimen}}
+        <!--{{children}}-->
+        <!--{{siblings}}-->
+        <!--{{synonyms}}-->
+        <!--{{taxon_type_specimen}}-->
         <!--{{specimen_identification}}-->
         <!--{{speciment_attachment}}-->
         <!--{{hierarchy}}-->
@@ -189,7 +185,7 @@
           <div id="map" style="height: 300px;border-radius: 6px;"></div>
         </div>
 
-        <div id="synonymy_list" v-if="synonyms.length > 0">
+        <div id="synonymy_list" v-if="synonyms && synonyms.length > 0">
           <h3>{{$t('header.f_species_synonymy')}}</h3>
           <ul>
             <li v-for="synonym in synonyms">
@@ -199,12 +195,50 @@
             </li>
           </ul>
         </div>
-        <br />
-        <div id="species_type_data_list" v-if = "false">
-          <h3>{{$t('header.f_species_type_data')}}</h3>
 
+        <br />
+        <div id="species_type_data_list" v-if = "taxon_type_specimen">
+          <h3>{{$t('header.f_species_type_data')}}</h3>
+          <ul>
+            <li v-for="item in taxon_type_specimen">
+              {{item.type_type__value}}:
+              <span class="openwinlink" @click="openUrl({parent_url:'http://geokogud.info/specimen',object:item.specimen, width:500,height:500})">
+                <strong>{{item.specimen_number}}</strong>
+              </span> ,
+                <!--, <span v-if="lang_ == 'ee'">{{item.locality__locality}}</span>-->
+              <span> {{item.locality__locality_en}}</span>, {{item.specimen__depth}} m
+            </li>
+          </ul>
         </div>
         <br />
+        <div id="linked_specimens_list" v-if="specimen_identification">
+          <h3>{{$t('header.f_species_linked_specimens')}}</h3>
+          <ul>
+            <li>
+              <strong>
+                <span class="openwinlink" @click="openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+parent.taxon+'&currentTable=specimen', width:500,height:500})">
+                   {{specimen_identification.length}} {{$t('header.f_genus_identifications_link')}}
+                </span>
+              </strong><br />
+            </li>
+          </ul>
+        </div>
+        <br>
+
+        <div id="identifications_list" v-if="hierarchy">
+          <h3>{{$t('header.f_taxon_identifications')}}</h3>
+          <ul>
+            <li>
+              <em>{{taxon.taxon}} {{taxon.author_year}}</em> :
+              <span class="openwinlink" @click="openUrl({
+              parent_url:'http://geokogud.info',
+              object:'search.php?taxon_1=1&taxon='+taxon.taxon+' '+taxon.author_year +'&currentTable=specimen',
+               width:500,height:500})">
+                   {{numberOfSpecimen}} {{$t('header.f_genus_identifications_link')}}
+                </span>
+            </li>
+          </ul>
+        </div>
       </div>
       <div id="taxon-right">
         <div style="padding: 0 0 0 10px;">
@@ -229,6 +263,7 @@
         parent : {},
         description : {},
         taxon_image : {},
+        sister_taxa : {},
         taxon_page : {},
         common_names : {},
         taxon_list : {},
@@ -240,19 +275,27 @@
         specimen_identification : {},
         speciment_attachment : {},
         hierarchy : {},
-        isMapLoaded : false
+        isMapLoaded : false,
+        lang_ : 'ee',
+        numberOfSpecimen: {}
+      }
+    },
+    computed: {
+      toLowerCase(val) {
+        return val.toLowerCase()
       }
     },
     methods: {
       getLocationsObject : function(object) {
-        let locations = []
-        let lang = this.lang
+        if (object === undefined) return;
+        let locations = [];
+        let lang = this.lang;
         object.forEach(function(element) {
           if (element.locality != null) {
             locations.push({
               lat : null,
               long: null,
-              locality: (lang == 'ee' ? element.locality__locality
+              locality: (lang === 'ee' ? element.locality__locality
                 : element.locality__locality_en),
               locid: element.locality
             });
@@ -264,6 +307,11 @@
         window.open(params.parent_url + '/' + params.object, '', 'width=' + params.width +
           ',height=' + params.height,scrollbars)
       },
+      excludeCurrentTaxon : function(list, itemID) {
+        return list.filter(function(val, i) {
+          return itemID.indexOf(val.id) === -1;
+        }, this);
+      },
       loadFullTaxonInfo : function () {
         this.getRequest(this.apiUrl+'/taxon/'+this.$route.params.id).then((response) => {
           this.taxon = response ? response[0] : {};
@@ -271,6 +319,10 @@
           if (this.isDefinedAndNotNull(this.taxon.parent)){
             this.getRequest(this.apiUrl+'/taxon/'+this.taxon.parent).then((response) => {
               this.parent = response ? response[0] : {};
+              // Sister taxa
+              this.getRequest(this.apiUrl+'//taxon/?parent_id='+this.taxon.parent+'&fields=taxon,id').then((response) => {
+                this.sister_taxa = this.excludeCurrentTaxon(response, this.$route.params.id);
+              });
             });
           }
 
@@ -300,7 +352,7 @@
           this.taxon_occurrence = response;
           //load map
           var locations = this.getLocationsObject(this.taxon_occurrence)
-          if (locations.length > 0) {
+          if (locations && locations.length > 0) {
             this.isMapLoaded = true;
             initMap(locations)
           }
@@ -334,6 +386,11 @@
         this.getRequest(this.apiUrl+'/taxon?id__in=1,29,38,60,61,62,259,1081,2104&fields=id,taxon,rank__rank_en').then((response) => {
           this.hierarchy = response;
         });
+
+        this.getRequest(this.apiUrl+'/specimen/?specimenidentification__taxon_id='+this.$route.params.id+'&fields=id&format=json&paginate_by=1', true).then((response) => {
+          this.numberOfSpecimen = response;
+        });
+
       },
 
     },
@@ -346,6 +403,7 @@
     },
     created: function(){
       this.loadFullTaxonInfo();
+      this.lang_ = this.lang;
     }
 
   }

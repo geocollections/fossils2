@@ -92,7 +92,7 @@ Vue.mixin({
 })
 Vue.directive('translate',{
   componentUpdated: function (el, binding) {
-    el.innerHTML = lang == 'ee' ? binding.value.et : binding.value.en
+    el.innerHTML = Vue.localStorage.get('fossilsLang') === 'ee' ? binding.value.et : binding.value.en
   }
 })
 Vue.directive('test', {
