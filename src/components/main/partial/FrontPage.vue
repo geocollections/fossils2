@@ -1,15 +1,15 @@
 <template>
   <div id='content'>
     <h3>{{$t('header.zero')}}</h3>
-    <div id='fossilgroups_box' v-render-front-page="{et:content_et, en:content_en}" >
-    <div class='fossilgroup_box' v-for="item in content">
-        <router-link v-bind:to="'/'+ item.taxon" :title="item.title+' ('+ item.taxon__taxon+')'">
-          <img :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="'/' + item.frontpage +' ('+ item.taxon__taxon+')'"
-               border='0' />
-          <h2>{{item.frontpage}}</h2>
-        </router-link>
-      </div>
-    </div>
+    <div id='fossilgroups_box' v-render-front-page="{et:content_et, en:content_en}" ></div>
+    <!--<div class='fossilgroup_box' v-for="item in content">-->
+        <!--<router-link v-bind:to="'/'+ item.taxon" :title="item.title+' ('+ item.taxon__taxon+')'">-->
+          <!--<img :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="'/' + item.frontpage +' ('+ item.taxon__taxon+')'"-->
+               <!--border='0' />-->
+          <!--<h2>{{item.frontpage}}</h2>-->
+        <!--</router-link>-->
+      <!--</div>-->
+    <!--</div>-->
   </div>
 
 </template>
