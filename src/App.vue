@@ -4,7 +4,7 @@
     <div id="msg-box-success" style="display:none;padding:10px;background-color:#edfeed"></div>
     <div id="msg-box-error" style="display:none;padding:10px;background-color:#feeded;"></div>
     <app-header/>
-    <front-page/>
+    <app-content/>
     <div style="clear: both;"></div>
     <app-footer/>
   </div>
@@ -14,11 +14,11 @@
 <script>
   import AppFooter from '@/components/main/partial/AppFooter'
   import AppHeader from '@/components/main/partial/AppHeader'
-  import FrontPage from "./components/main/AppContent";
+  import AppContent from "@/components/main/AppContent";
 
   export default {
     components: {
-      FrontPage,
+      AppContent,
       AppFooter,
       AppHeader,
     },

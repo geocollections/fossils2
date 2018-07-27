@@ -3,6 +3,7 @@
     "pagination": "Show {num} results per page"
   },
   "header": {
+    "zero" : "",
     "title":"fossiilid.info",
     "subtitle":"Paleobiodiversity in Baltoscandia",
 

@@ -26,15 +26,7 @@
         <td valign="top" style="border-left: solid 0px #ccc; border-right: dotted 0px #ccc;">
 
           <div id='lang-flags'>
-            <!--<form method="post" action="/lang/setlang/" id="language-form">-->
-            <!--{% for language in languages %}-->
-            <!--<button type="submit" value="{{ $t(' language.slug ') }}" name="language"-->
-            <!--style="border:0; background-color: transparent;"><img-->
-            <!--src="/static/imgs/{{ $t(' language.slug ') }}.png" alt="in {{ $t(' language.alt ') }}"-->
-            <!--border="0"/></button>-->
-            <!--&lt;!&ndash;<a href='/lang/{{ $t('language.slug') }}'><img src='/static/imgs/{{ $t('language.slug') }}.png' alt='in {{ $t('language.alt') }}' border='0'/></a>&ndash;&gt;-->
-            <!--{% endfor %}-->
-            <!--</form>-->
+            <lang-buttons lang-class="'footer'"/>
           </div>
 
 
@@ -92,8 +84,12 @@
 </template>
 
 <script>
+  import LangButtons from '@/components/main/partial/LangButtons'
   export default {
-    name: "app-footer"
+    name: "app-footer",
+    components:  {
+      LangButtons
+    },
   }
 </script>
 

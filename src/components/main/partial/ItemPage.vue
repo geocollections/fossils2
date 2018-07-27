@@ -19,7 +19,6 @@
             <span style="color:#333; font-weight:bold" v-if="taxon_page.frontpage_title">{{taxon_page.title}}</span><br />
             <span style="font-size: 0.7em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
             <span v-if="taxon.fossil_group__id != null">{{taxon.fossil_group__taxon}}</span>
-            <span style="font-size: 0.7em;" v-test v-bind:et="taxon.rank__rank"></span>
             <span style="font-size: 0.7em;">{{taxon.author_year}}</span>
           </h1>
           <div class="taxon_names" >
@@ -143,7 +142,7 @@
       </div>
       <div>
         <!--{{taxon}}-->
-        {{parent}}
+        <!--{{parent}}-->
         <!--<br>{{description}}<br>-->
         <!--{{taxon_image}}-->
         <!--{{taxon_page}}-->
@@ -252,8 +251,6 @@
 </template>
 <script>
   import MyMixin from '../../../mixins/mixin';
-
-  import langchanged from '../../../directives/directive'
   export default {
     mixins: [MyMixin],
     name: 'item-page',
@@ -280,11 +277,7 @@
         numberOfSpecimen: {}
       }
     },
-    computed: {
-      toLowerCase(val) {
-        return val.toLowerCase()
-      }
-    },
+
     methods: {
       getLocationsObject : function(object) {
         if (object === undefined) return;
@@ -394,6 +387,7 @@
       },
 
     },
+
     watch: {
       '$route.params.id': {
         handler : function (newval, oldval) {

@@ -19,12 +19,12 @@
     <div id="header-box">
 
       <div id="lang-block-top">
-        <lang-buttons/>
+        <lang-buttons lang-class="'header'"/>
       </div>
       <div id="header1">
         <!-- bd-logo -->
         <a href="http://balticdiversity.eu"><img id="bd-logo" src="/static/imgs/bd_logo0.png" border="0"/></a>
-        <div id="slogan-block-top">{{ $t('header.subtitle') }}</div>
+        <div id="slogan-block-top" style="text-transform: uppercase;">{{ $t('header.subtitle') }}</div>
 
       </div>
 
@@ -139,14 +139,6 @@
       }
     },
     methods: {
-      changeLang(lang) {
-        this.$localStorage.set('fossilsLang', lang)
-        this.$i18n.locale = lang
-
-        lang === 'ee' ? this.$moment.locale('et') : this.$moment.locale(lang)
-
-        this.toastInfo(this.$t('messages.langChange'))
-      },
       searchExtended() {
         if (this.$route.path != '/search/detail') {
           this.$router.push({ path: '/search/detail' , params: {'params': this.searchParams}})

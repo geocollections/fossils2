@@ -89,20 +89,26 @@ Vue.mixin({
       console.log(conf)
     }
   }
-})
+});
 Vue.directive('translate',{
   componentUpdated: function (el, binding) {
     el.innerHTML = Vue.localStorage.get('fossilsLang') === 'ee' ? binding.value.et : binding.value.en
   }
-})
-Vue.directive('test', {
-  params: ['et'],
-  paramWatchers: {
-    et: function (val, oldVal) {
-      console.log('a changed!')
+});
+ let loopItems = function (item) {
+   return "<div class=\'fossilgroup_box\'>"+
+     "<a href=\""+ item.taxon+"\" :title=\"\"+item.frontpage+\" ("+item.taxon__taxon+")\" ><img src=\"/static/fossilgroups/"+item.taxon+".png\" alt=\"/"+item.frontpage+" ("+item.taxon__taxon+")\" class><h2>" + item.frontpage + "</h2></a></div>"
+
+ };
+// Vue.
+Vue.directive('renderFrontPage',{
+  componentUpdated: function (el, binding) {
+    el.innerHTML = ''
+    let content = Vue.localStorage.get('fossilsLang') === 'ee' ? binding.value.et : binding.value.en;
+    for (var i = 0; i < content.length; i++) {
+      el.innerHTML += loopItems(content[i])
     }
   }
-
 });
     /* eslint-disable no-new */
 new Vue({

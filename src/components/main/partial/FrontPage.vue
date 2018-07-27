@@ -1,8 +1,8 @@
 <template>
-
   <div id='content'>
-    <div id='fossilgroups_box'>
-      <div class='fossilgroup_box' v-for="item in content">
+    <h3>{{$t('header.zero')}}</h3>
+    <div id='fossilgroups_box' v-render-front-page="{et:content_et, en:content_en}" >
+    <div class='fossilgroup_box' v-for="item in content">
         <router-link v-bind:to="'/'+ item.taxon" :title="item.title+' ('+ item.taxon__taxon+')'">
           <img :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="'/' + item.frontpage +' ('+ item.taxon__taxon+')'"
                border='0' />
@@ -17,43 +17,40 @@
 
 <script>
   import MyMixin from '../../../mixins/mixin';
-  import LangButtons from '@/components/main/partial/LangButtons';
   export default {
-    components: { LangButtons},
     mixins: [MyMixin],
-    name: "app-content",
+    name: 'front-page7',
     data() {
         return {
-          content : ''
+          content : '',
+          content_et : '',
+          content_en : ''
         }
     },
 
     created: function () {
       let lang =this.$localStorage.get('fossilsLang')
-      if(this.$localStorage.get('fossilsLang') === 'ee'){
+      if(lang === 'ee'){
         lang = 'et'
       }
       this.loadFrontPage(lang)
     },
-    mounted: function () {
-      console.log('mounted')
-    },
-    updated: function () {
-      console.log('updated')
-    },
-    watch: {
-      lang: {
-        handler: function(val, oldVal) {
-          console.log('w')
-          this.loadFrontPage(val) // call it in the context of your component object
-        },
-        deep: true
+    watch : {
+      'isLangChanged' : {
+        handler : function (newval, oldval) {
+          console.log(newval)
+        }
       }
     },
     methods:  {
       loadFrontPage: function(lang) {
-        this.getRequest(this.apiUrl+'/taxon_page/?language='+lang+'&fields=frontpage,taxon,taxon__taxon').then((response) => {
-          this.content = response;
+        this.content = {}
+        this.getRequest(this.apiUrl+'/taxon_page/?language=et&on_frontpage=1&order_by=frontpage_order&fields=frontpage,taxon,taxon__taxon').then((response) => {
+          this.content_et = response;
+        });
+
+        this.getRequest(this.apiUrl+'/taxon_page/?language=en&on_frontpage=1&order_by=frontpage_order&fields=frontpage,taxon,taxon__taxon').then((response) => {
+          this.content_en = response;
         });
       }
     },

@@ -3,6 +3,8 @@
     "pagination": "Kuva {num} kaupa"
   },
   "header": {
+    "zero" : "",
+
     "title":"fossiilid.info",
     "subtitle":"Paleobiodiversity in Baltoscandia",
 
