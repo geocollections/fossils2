@@ -135,8 +135,12 @@
           <li v-for=" reference in taxon_occurrence">
             <span class="openwinlink" @click="openUrl({parent_url:'http://geokogud.info/reference',object:reference.reference, width:500,height:500})">
               <strong>{{reference.reference__reference}}</strong>
-            </span>. {{reference.reference__title}}
-            <a v-if="reference.reference__doi" :href="'http://dx.doi.org/'+reference.reference__doi" target="_blank">[DOI]</a>
+            </span>. {{reference.reference__title}}.
+            <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
+            {{reference.reference__journal__journal_name}}:
+            <span v-if="reference.reference__book != null">{{reference.reference__book}}</span>
+            <span v-else>{{reference.reference__number}}</span>, {{reference.reference__pages}}. DOI:
+            <a v-if="reference.reference__doi" :href="'http://dx.doi.org/'+reference.reference__doi" target="_blank">{{reference.reference__doi}}</a>
           </li>
         </ul>
       </div>
