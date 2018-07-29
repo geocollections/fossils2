@@ -209,7 +209,7 @@
                 <strong>{{item.specimen_number}}</strong>
               </span> ,
                 <!--, <span v-if="lang_ == 'ee'">{{item.locality__locality}}</span>-->
-              <span> {{item.locality__locality_en}}</span>, {{item.specimen__depth}} m
+              <span v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></span>, {{item.specimen__depth}} m
             </li>
           </ul>
         </div>
@@ -290,8 +290,8 @@
         object.forEach(function(element) {
           if (element.locality != null) {
             locations.push({
-              lat : null,
-              long: null,
+              lat : element.locality__latitude,
+              long: element.locality__longitude,
               locality: (lang === 'ee' ? element.locality__locality
                 : element.locality__locality_en),
               locid: element.locality
@@ -348,10 +348,15 @@
         this.getRequest(this.apiUrl+'/taxon_occurrence/?taxon='+this.$route.params.id).then((response) => {
           this.taxon_occurrence = response;
           //load map
-          var locations = this.getLocationsObject(this.taxon_occurrence)
+          let locations = this.getLocationsObject(this.taxon_occurrence)
           if (locations && locations.length > 0) {
             this.isMapLoaded = true;
-            initMap(locations)
+            this.$nextTick(() => {
+              initMap(locations)
+            })
+            //
+          } else {
+            this.isMapLoaded = false;
           }
         });
 
@@ -396,6 +401,11 @@
       '$route.params.id': {
         handler : function (newval, oldval) {
           this.loadFullTaxonInfo()
+        }
+      },
+      isMapLoaded: {
+        handler : function (newval, oldval) {
+          //if (newval == true) initMap(this.locations)
         }
       }
     },

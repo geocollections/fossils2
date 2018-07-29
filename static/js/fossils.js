@@ -221,10 +221,10 @@ var initMap = function (fs)
 	}
 */
     //olMap.on('click', function(evt) { displayFeatureInfo(evt.pixel); }); //Useful for touch-based viewing, e.g. on iPhone.
-    olMap.on('click', function(evt) { openLoc(evt.pixel); });
+  olMap.on('click', function(evt) { openLoc(evt.pixel, olMap); });
 }
 
-var openLoc = function(pixel) {
+var openLoc = function(pixel,olMap) {
 
   var feature = olMap.forEachFeatureAtPixel(pixel, function(feature, layer) {
     return feature;

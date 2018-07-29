@@ -98,7 +98,7 @@ Vue.directive('translate',{
  let loopItems = function (item) {
    return "<div class=\'fossilgroup_box\'>"+
      "<a href=\'/#/"+ item.taxon+"\' :title=\"\"+item.frontpage+\" ("+item.taxon__taxon+")\" >" +
-     "<img src=\"/static/fossilgroups/"+item.taxon+".png\" alt=\"/"+item.frontpage+" ("+item.taxon__taxon+")\" class><h2>" + item.frontpage + "</h2></a></div>"
+     "<img src=\"/static/fossilgroups/"+item.taxon+".png\" alt=\"/"+item.frontpage+" ("+item.taxon__taxon+")\" border=\"0\" ><h2>" + item.frontpage + "</h2></a></div>"
 
  };
 // Vue.
