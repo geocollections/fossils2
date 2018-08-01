@@ -11,7 +11,7 @@
         <li><a href="/page/31">{{ $t('menu.fossils_estonia ') }}</a></li>
         <li><a href="http://stratigraafia.info/index.php?page=4">{{ $t('menu.time ') }}</a></li>
         <li><a href="http://geokogud.info">{{ $t('menu.collections ') }}</a></li>
-        <li>{{ $t('menu.detail_search ') }}</li>
+        <!--<li>{{ $t('menu.detail_search ') }}</li>-->
         <li>Sulge menüü</li>
       </ul>
     </div>
@@ -95,18 +95,18 @@
         <div id="title-menu">
           <router-link :to="{ path: '/page/28' }">{{ $t('menu.fossils') }}</router-link> |
           <router-link :to="{ path: '/page/29' }">{{ $t('menu.collecting') }}</router-link> |
-          <router-link :to="{ path: '/page/30' }">{{ $t('menu.identifying ') }}</router-link> |
+          <router-link :to="{ path: '/page/30' }">{{ $t('menu.identifying ') }}</router-link> 
 
           <!--<a href="/page/28">{{ $t('menu.fossils ') }}</a> |-->
           <!--<a href="/page/29">{{ $t('menu.collecting ') }}</a> |-->
           <!--<a href="/page/30">{{ $t('menu.identifying ') }}</a> |-->
           <!--<a href="http://stratigraafia.info/index.php?page=4">Geoloogiline aeg</a> |
       <a href="http://geokogud.info">{{ $t('menu.collections') }}</a> | -->
-          <span style="cursor:pointer"
-                id="show-detailed-search-btn" @click="hideAdvancedSearch = !hideAdvancedSearch">
-            <span v-if="hideAdvancedSearch">{{ $t('menu.detail_search ') }} </span>
-            <span v-if="!hideAdvancedSearch">{{ $t('menu.search ') }} </span>
-          </span>
+          <!--<span style="cursor:pointer"-->
+                <!--id="show-detailed-search-btn" @click="hideAdvancedSearch = !hideAdvancedSearch">-->
+            <!--<span v-if="hideAdvancedSearch">{{ $t('menu.detail_search ') }} </span>-->
+            <!--<span v-if="!hideAdvancedSearch">{{ $t('menu.search ') }} </span>-->
+          <!--</span>-->
         </div>
       </div><!-- header4 -->
       <div style="clear: both;"></div>

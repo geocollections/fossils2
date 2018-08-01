@@ -2,6 +2,7 @@ let MyMixin = {
   data() {
     return {
       apiUrl : 'https://api.geocollections.info',
+      fileUrl :  'http://files.geocollections.info',
       lang: '',
     }
   },

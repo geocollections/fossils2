@@ -129,7 +129,7 @@
       <br />
       <div id="taxon-details" v-html="taxon_page.content"></div>
       <!--REFERENCES-->
-      <div style="margin:15px auto;">
+      <div style="margin:15px auto;" v-if="taxon_occurrence">
         <h3>{{$t('header.f_taxon_references')}}</h3>
         <ul>
           <li v-for=" reference in taxon_occurrence">
@@ -162,19 +162,18 @@
         <!--{{hierarchy}}-->
       </div>
 
-    <div v-if="taxon_image">
+      <div v-if="taxon_image">
       <div style="clear: both;"></div>
-      <!--<h3>{{tax.images_title}} ({{taxon.taxon}})</h3>-->
-      <div class='photogallery' v-if="false">
+      <div class='photogallery'>
+        <h3>{{taxon.images_title}} ({{taxon.taxon}})</h3>
         <div v-for="image in taxon_image">
           <div style="position:relative;float:left;" :onmouseover="'$(\'#'+image.attachment+'-\').show();'" :onmouseout="'$(\'#'+image.attachment+'-\').hide();'">
             <a :href="'http://geokogud.info/'+image.acro+'/di.php?f=specimen_image/'+image.link+'/'+image.attachment__uuid_filename+'&w=1280'" >
-              <img :src="image.images_dir+''+image.preview" :alt="taxon.taxon"
+              <img :src="image.path" :alt="taxon.taxon"
                    :title="image.name+''+image.taxon+': '+image.number+''+image.diagnosis" border="0" /></a>
-            <!--<div style="display:none;cursor:pointer;position:absolute;top:0;right:0;" :id="image.attachment+'-'"-->
-                 <!--:onclick="$(this).siblings('a').attr('href','http://geokogud.info/'+image.acro+'/di.php?f=specimen_image/'+image.img_to_url+'&w=1280'); $(this).siblings('a').trigger('dblclick'); $(this).siblings('a').attr('href','/{{image.id}}{{image.link_id}}');">-->
-              <!--<img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />-->
-            <!--</div>-->
+          </div>
+          <div style="display:none;cursor:pointer;position:absolute;top:0;right:0;" :id="image.attachment+'-'" >
+            <img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />
           </div>
         </div>
 
@@ -255,6 +254,7 @@
 </template>
 <script>
   import MyMixin from '../../../mixins/mixin';
+
   export default {
     mixins: [MyMixin],
     name: 'item-page',
@@ -300,6 +300,21 @@
         });
         return locations
       },
+
+      composeImageRequest : function(taxonImages) {
+        // attachment__uuid_filename
+        // this.fileUrl + '/04/01/040186dd-f0b6-4bd6-8ec4-2da356ddae3c.jpg'
+        let imagePaths = [];
+        let fileUrl = this.fileUrl;
+        taxonImages.forEach(function(element) {
+          if (element.attachment__uuid_filename != null) {
+            element.path = fileUrl + '/' + element.attachment__uuid_filename.substring(0,2)+'/'+
+              element.attachment__uuid_filename.substring(2,4)+'/'+ element.attachment__uuid_filename;
+          }
+        });
+        return taxonImages
+      },
+
       openUrl : function(params) {
         window.open(params.parent_url + '/' + params.object, '', 'width=' + params.width +
           ',height=' + params.height,scrollbars)
@@ -330,7 +345,7 @@
         });
 
         this.getRequest(this.apiUrl+'/taxon_image/?taxon='+this.$route.params.id).then((response) => {
-          this.taxon_image = response;
+          this.taxon_image = this.composeImageRequest(response)
         });
 
         this.getRequest(this.apiUrl+'/taxon_description/?taxon='+this.$route.params.id).then((response) => {
