@@ -95,7 +95,7 @@
         <div id="title-menu">
           <router-link :to="{ path: '/page/28' }">{{ $t('menu.fossils') }}</router-link> |
           <router-link :to="{ path: '/page/29' }">{{ $t('menu.collecting') }}</router-link> |
-          <router-link :to="{ path: '/page/30' }">{{ $t('menu.identifying ') }}</router-link> 
+          <router-link :to="{ path: '/page/30' }">{{ $t('menu.identifying ') }}</router-link>
 
           <!--<a href="/page/28">{{ $t('menu.fossils ') }}</a> |-->
           <!--<a href="/page/29">{{ $t('menu.collecting ') }}</a> |-->
