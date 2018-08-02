@@ -36,7 +36,7 @@
         <h3>{{$t('header.fossils_classification')}}</h3>
         <table>
           <tbody class="hierarchy_tree" v-for="item in hierarchy">
-            <tr v-if="item.id != 29 && item.id != taxon.id">
+            <tr v-if="item.id != 29 && item.id < taxon.id">
               <td align="right" style="color: #999;">{{item.rank__rank_en}}</td>
               <td>
                 <router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link>
@@ -48,16 +48,37 @@
             </tr>
           </tbody>
         </table>
+        <br />
+        <span onclick="$('#tree').slideToggle();" style="cursor:pointer;font-size: 0.9em; color: #ccc; text-transform:uppercase;">{{$t('header.button_show')}}</span>
+        <ul id="tree" style="position:relative;left:0;background-color:#fff;z-index:100;padding:0;margin-right: 10px;width:100%;">
+          <!--<span onclick="$('#tree').slideToggle();" style="cursor:pointer">{{strings_fossils.button_hide}}</span>-->
+          <h3>{{$t('header.fossils_browse_tree')}}</h3>
+          <ul v-for="(item,idx) in hierarchy" v-if="item.id <= taxon.id">
+            <li>
+              <span v-for="i in idx" >&ensp;</span>
+              <router-link v-bind:to="'/'+item.id"   v-if="item.id != taxon.id">{{item.taxon}}</router-link>
+              <span class="node_in_tree_selected" v-if="item.id == taxon.id">{{item.taxon}}</span>
+              <span v-for="sibling in sortedSiblings" v-if="isParentForSiblings(sibling) && item.id == taxon.id">
+                <br/><span v-for="i in (idx+1)">&ensp;</span><router-link v-bind:to="'/'+sibling.id">{{sibling.taxon}}</router-link>
+              </span>
+              <span v-for="sister_taxa in sortedSisters" v-if="item.id == taxon.id">
+                <br/><span v-for="i in (idx)">&ensp;</span><router-link v-bind:to="'/'+sister_taxa.id">{{sister_taxa.taxon}}</router-link>
+              </span>
+            </li>
+          </ul>
+        </ul>
       </div>
       <br />
-      <h3>{{$t('header.f_weblinks')}}</h3>
-      <div id="taxon-links">
+      <div>
+        <h3>{{$t('header.f_weblinks')}}</h3>
+        <div id="taxon-links">
         <span>
 
         </span>
-        <!--{% for link in content.seealso_links %}-->
-        <!--<a href="{{link.url}}">{{link.name}}</a> {% if forloop.last %}{%else%} <br /> {% endif %}-->
-        <!--{% endfor %}-->
+          <!--{% for link in content.seealso_links %}-->
+          <!--<a href="{{link.url}}">{{link.name}}</a> {% if forloop.last %}{%else%} <br /> {% endif %}-->
+          <!--{% endfor %}-->
+        </div>
       </div>
     </div>
     <div id="content-left">
@@ -78,13 +99,14 @@
             <br />
             <div v-if="isDefinedAndNotEmpty(sister_taxa)">
               {{$t('header.f_sister_taxa')}}:
-              <span v-for="item in sister_taxa">
-                 <em style='font-weight: normal;'><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em>
+              <span v-for="(item,idx) in sortedSisters">
+                <em style='font-weight: normal;'><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em>
+                <span v-if = 'idx != sortedSisters.length -1'> | </span>
               </span>
               <br />
             </div>
             {{$t('header.f_contains')}}:
-            <span v-if="siblings" v-for="(sibling, idx) in siblings">
+            <span v-if="siblings" v-for="(sibling, idx) in sortedSiblings">
               <router-link v-bind:to="'/'+sibling.id">{{sibling.taxon}}</router-link>
               <span v-if = 'idx != siblings.length -1'> | </span>
             </span>
@@ -122,12 +144,14 @@
         <div style="clear:both;"></div>
       </div>
 
-      <h3>{{$t('header.f_taxon_intro')}}</h3>
-      <i style='font-size: 0.8em;'>
-        {{taxon_page.author_txt}} {{taxon_page.date_txt}}
-      </i>
-      <br />
-      <div id="taxon-details" v-html="taxon_page.content"></div>
+      <div>
+        <h3>{{$t('header.f_taxon_intro')}}</h3>
+        <i style='font-size: 0.8em;'>
+          {{taxon_page.author_txt}} {{taxon_page.date_txt}}
+        </i>
+        <br />
+        <div id="taxon-details" v-html="taxon_page.content"></div>
+      </div>
       <!--REFERENCES-->
       <div style="margin:15px auto;" v-if="taxon_occurrence">
         <h3>{{$t('header.f_taxon_references')}}</h3>
@@ -278,11 +302,25 @@
         hierarchy : {},
         isMapLoaded : false,
         lang_ : 'ee',
-        numberOfSpecimen: {}
+        numberOfSpecimen: {},
+        taxonomic_tree : {}
       }
     },
+    computed: {
+      sortedSiblings: function() {
+        return _.orderBy(this.siblings,'taxon');
+      },
+      sortedSisters: function() {
+        return _.orderBy(this.sister_taxa,'taxon');
+      },
+      sortedSistersWithCurrentTaxon: function() {
+        let newarr = this.sister_taxa.push(this.taxon);
+        return _.orderBy(newarr,'taxon');
+      },
 
+    },
     methods: {
+
       getLocationsObject : function(object) {
         if (object === undefined) return;
         let locations = [];
@@ -300,10 +338,12 @@
         });
         return locations
       },
-
+      isParentForSiblings : function(sibling) {
+        if(this.taxon === undefined) return false;
+        return sibling.parent_id === this.taxon.id;
+      },
       composeImageRequest : function(taxonImages) {
-        // attachment__uuid_filename
-        // this.fileUrl + '/04/01/040186dd-f0b6-4bd6-8ec4-2da356ddae3c.jpg'
+        if(taxonImages == undefined) return;
         let imagePaths = [];
         let fileUrl = this.fileUrl;
         taxonImages.forEach(function(element) {
@@ -324,6 +364,7 @@
           return itemID.indexOf(val.id) === -1;
         }, this);
       },
+
       loadFullTaxonInfo : function () {
         this.getRequest(this.apiUrl+'/taxon/'+this.$route.params.id).then((response) => {
           this.taxon = response ? response[0] : {};
@@ -418,11 +459,6 @@
           this.loadFullTaxonInfo()
         }
       },
-      isMapLoaded: {
-        handler : function (newval, oldval) {
-          //if (newval == true) initMap(this.locations)
-        }
-      }
     },
     created: function(){
       this.loadFullTaxonInfo();
