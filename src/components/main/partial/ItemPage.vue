@@ -55,19 +55,32 @@
         <ul id="tree" style="position:relative;left:0;background-color:#fff;z-index:100;padding:0;margin-right: 10px;width:100%;">
           <!--<span onclick="$('#tree').slideToggle();" style="cursor:pointer">{{strings_fossils.button_hide}}</span>-->
           <h3>{{$t('header.fossils_browse_tree')}}</h3>
-          <ul v-for="(item,idx) in hierarchy" v-if="item.id <= taxon.id">
-            <li>
-              <span v-for="i in idx" >&ensp;</span>
-              <router-link v-bind:to="'/'+item.id"   v-if="item.id != taxon.id">{{item.taxon}}</router-link>
-              <span class="node_in_tree_selected" v-if="item.id == taxon.id">{{item.taxon}}</span>
-              <span v-for="sibling in sortedSiblings" v-if="isParentForSiblings(sibling) && item.id == taxon.id">
-                <br/><span v-for="i in (idx+1)">&ensp;</span><router-link v-bind:to="'/'+sibling.id">{{sibling.taxon}}</router-link>
-              </span>
-              <span v-for="sister_taxa in sortedSisters" v-if="item.id == taxon.id">
-                <br/><span v-for="i in (idx)">&ensp;</span><router-link v-bind:to="'/'+sister_taxa.id">{{sister_taxa.taxon}}</router-link>
-              </span>
-            </li>
+          <ul v-for="(item,idx) in taxonomicTree.nodes">
+            <span v-for="i in idx" >&ensp;</span>
+            <router-link v-bind:to="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</router-link>
+            <span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>
+            <ul v-for="sibling in item.siblings">
+              <span v-for="j in idx+1" >&ensp;</span>
+              <router-link v-bind:to="'/'+sibling.id">{{sibling.label}}</router-link>
+            </ul>
           </ul>
+          <!--<ul v-for="(item,idx) in hierarchy" v-if="item.id <= taxon.id">-->
+            <!--<li>-->
+              <!--<span v-for="i in idx" >&ensp;</span>-->
+              <!--<router-link v-bind:to="'/'+item.id"   v-if="item.id != taxon.id">{{item.taxon}}</router-link>-->
+              <!--<span class="node_in_tree_selected" v-if="item.id == taxon.id">{{item.taxon}}</span>-->
+              <!--&lt;!&ndash;<span v-for="sibling in sortedSiblings" v-if="isParentForSiblings(sibling) && item.id == taxon.id">&ndash;&gt;-->
+                <!--&lt;!&ndash;<br/><span v-for="i in (idx+1)">&ensp;</span><router-link v-bind:to="'/'+sibling.id">{{sibling.taxon}}</router-link>&ndash;&gt;-->
+              <!--&lt;!&ndash;</span>&ndash;&gt;-->
+              <!--<span v-for="sibling in sortedSiblings" v-if="sibling.fossil_group__id == item.id">-->
+                <!--<br/><span v-for="i in (idx+1)">&ensp;</span>-->
+                <!--<router-link v-bind:to="'/'+sibling.id">{{sibling.taxon}}</router-link>-->
+              <!--</span>-->
+              <!--<span v-for="sister_taxa in sortedSisters" v-if="item.id == taxon.id">-->
+                <!--<br/><span v-for="i in (idx)">&ensp;</span><router-link v-bind:to="'/'+sister_taxa.id">{{sister_taxa.taxon}}</router-link>-->
+              <!--</span>-->
+            <!--</li>-->
+          <!--</ul>-->
         </ul>
       </div>
       <br />
@@ -287,29 +300,8 @@
     components: {
       Spinner
     },
-    data() {
-      return {
-        taxon : {},
-        parent : {},
-        description : {},
-        taxon_image : {},
-        sister_taxa : {},
-        taxon_page : {},
-        common_names : {},
-        taxon_list : {},
-        taxon_occurrence : {},
-        children : {},
-        siblings : {},
-        synonyms : {},
-        taxon_type_specimen : {},
-        specimen_identification : {},
-        speciment_attachment : {},
-        hierarchy : {},
-        isMapLoaded : false,
-        lang_ : 'ee',
-        numberOfSpecimen: {},
-        requestingData: false,
-      }
+    data () {
+      return this.initialData()
     },
     computed: {
       sortedSiblings: function() {
@@ -318,14 +310,41 @@
       sortedSisters: function() {
         return _.orderBy(this.sister_taxa,'taxon');
       },
-      sortedSistersWithCurrentTaxon: function() {
-        let newarr = this.sister_taxa.push(this.taxon);
-        return _.orderBy(newarr,'taxon');
-      },
+
+      taxonomicTreeIsLoaded: function() {
+        return this.isSiblingsLoaded && this.isSisterTaxaLoaded && this.isHierarchyLoaded
+      }
 
     },
     methods: {
-
+      initialData : function() {
+        return {
+          taxon : {},
+          parent : {},
+          description : {},
+          taxon_image : {},
+          sister_taxa : {},
+          taxon_page : {},
+          common_names : {},
+          taxon_list : {},
+          taxon_occurrence : {},
+          children : {},
+          siblings : {},
+          synonyms : {},
+          taxon_type_specimen : {},
+          specimen_identification : {},
+          speciment_attachment : {},
+          hierarchy : {},
+          isMapLoaded : false,
+          lang_ : 'ee',
+          numberOfSpecimen: {},
+          requestingData: false,
+          isSisterTaxaLoaded: false,
+          isSiblingsLoaded: false,
+          isHierarchyLoaded: false,
+          taxonomicTree: {nodes: []}
+        }
+      },
       getLocationsObject : function(object) {
         if (object === undefined) return;
         let locations = [];
@@ -343,10 +362,7 @@
         });
         return locations
       },
-      isParentForSiblings : function(sibling) {
-        if(this.taxon === undefined) return false;
-        return sibling.parent_id === this.taxon.id;
-      },
+
       composeImageRequest : function(taxonImages) {
         if(taxonImages == undefined) return;
         let imagePaths = [];
@@ -369,23 +385,63 @@
           return itemID.indexOf(val.id) === -1;
         }, this);
       },
+      sort: function(arr, value) {
+        return
+      },
+
+      /**************************
+       *** TAXONOMIC TREE START ***
+       **************************/
+      composeTaxonomicTree: function() {
+        for (let idx in this.hierarchy) {
+          if (this.hierarchy[idx].id > this.taxon.id) continue;
+          let node = {i: idx, label: this.hierarchy[idx].taxon, id: this.hierarchy[idx].id, siblings: []};
+
+          for(let idx1 in this.siblings) {
+            if (this.hierarchy[idx].id === this.siblings[idx1].parent_id)
+              node.siblings.push({j: idx1, label: this.siblings[idx1].taxon, id: this.siblings[idx1].id});
+          }
+          this.taxonomicTree.nodes.push(node);
+
+          if (this.hierarchy[idx].id < this.taxon.id) continue;
+          for(let idx1 in this.sister_taxa) {
+              node = {i: idx, label: this.sister_taxa[idx1].taxon, id: this.sister_taxa[idx1].id, siblings: []};
+              this.taxonomicTree.nodes.push(node)
+          }
+        }
+      },
 
       loadFullTaxonInfo : function () {
         this.requestingData = true;
+        /**************************
+         *** REQUEST DATA START ***
+         **************************/
+
         this.getRequest(this.apiUrl+'/taxon/'+this.$route.params.id).then((response) => {
           this.taxon = response ? response[0] : {};
           this.requestingData = false;
-
 
           if (this.isDefinedAndNotNull(this.taxon.parent)){
             this.getRequest(this.apiUrl+'/taxon/'+this.taxon.parent).then((response) => {
               this.parent = response ? response[0] : {};
               // Sister taxa
-              this.getRequest(this.apiUrl+'//taxon/?parent_id='+this.taxon.parent+'&fields=taxon,id').then((response) => {
+              this.getRequest(this.apiUrl+'/taxon/?parent_id='+this.taxon.parent+'&fields=taxon,id').then((response) => {
                 this.sister_taxa = this.excludeCurrentTaxon(response, this.$route.params.id);
+                this.isSisterTaxaLoaded = true;
               });
             });
           }
+        });
+
+        this.getRequest(this.apiUrl+'/taxon/?parent='+this.$route.params.id).then((response) => {
+          this.children = response;
+          this.siblings = response;
+          this.isSiblingsLoaded = true;
+        });
+
+        this.getRequest(this.apiUrl+'/taxon?id__in=1,29,38,60,61,62,259,1081,2104&fields=id,taxon,rank__rank_en').then((response) => {
+          this.hierarchy = response;
+          this.isHierarchyLoaded = true;
         });
 
         this.getRequest(this.apiUrl+'/taxon_page/?taxon='+this.$route.params.id).then((response) => {
@@ -423,11 +479,6 @@
           }
         });
 
-        this.getRequest(this.apiUrl+'/taxon/?parent='+this.$route.params.id).then((response) => {
-          this.children = response;
-          this.siblings = response;
-        });
-
         this.getRequest(this.apiUrl+'/taxon_synonym/?taxon='+this.$route.params.id).then((response) => {
           this.synonyms = response;
         });
@@ -448,14 +499,14 @@
           this.speciment_attachment = response;
         });
 
-        this.getRequest(this.apiUrl+'/taxon?id__in=1,29,38,60,61,62,259,1081,2104&fields=id,taxon,rank__rank_en').then((response) => {
-          this.hierarchy = response;
-        });
-
         this.getRequest(this.apiUrl+'/specimen/?specimenidentification__taxon_id='+this.$route.params.id+'&fields=id&format=json&paginate_by=1', true).then((response) => {
           this.numberOfSpecimen = response;
         });
 
+
+        /**************************
+         *** REQUEST DATA END ***
+         **************************/
       },
 
     },
@@ -463,7 +514,15 @@
     watch: {
       '$route.params.id': {
         handler : function (newval, oldval) {
+          Object.assign(this.$data, this.initialData())
           this.loadFullTaxonInfo()
+        }
+      },
+
+      // WATCH if all taxonomic tree data is loaded
+      taxonomicTreeIsLoaded: {
+        handler : function (newval, oldval) {
+          if(newval) this.composeTaxonomicTree()
         }
       },
     },

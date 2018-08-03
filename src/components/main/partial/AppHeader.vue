@@ -35,14 +35,15 @@
       <div id="header3">
 
         <div id="search_box" style="position:relative;">
-          <autocomplete
-            source="http://127.0.0.1:8001/taxon-search/?q="
-            results-property="items"
-            results-display="name"
-            :placeholder="$t('search.fossils_search')"
-            v-if="hideAdvancedSearch"
-          >
-          </autocomplete>
+          <input type='text' id="searchfield" :placeholder="$t('search.fossils_search')"/>
+          <!--<autocomplete-->
+            <!--source="http://127.0.0.1:8001/taxon-search/?q="-->
+            <!--results-property="items"-->
+            <!--results-display="name"-->
+            <!--:placeholder="$t('search.fossils_search')"-->
+            <!--v-if="hideAdvancedSearch"-->
+          <!--&gt;-->
+          <!--</autocomplete>-->
           <!--<input type='text' id="searchfield" v-model="searchField" :placeholder="$t('search.fossils_search')" v-if="hideAdvancedSearch"-->
                  <!--@input="searchTaxon"/>-->
           <div v-if="!hideAdvancedSearch">
