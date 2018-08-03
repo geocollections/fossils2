@@ -126,6 +126,7 @@
     "results_species":"species"
   },
   "messages": {
+    "overlay": "Please wait",
     "langChange": "Changed language!"
   }
 }

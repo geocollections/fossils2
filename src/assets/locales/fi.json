@@ -126,6 +126,7 @@
   },
 
   "messages": {
+    "overlay": "Please wait",
     "langChange": "Changed language!"
   }
 }

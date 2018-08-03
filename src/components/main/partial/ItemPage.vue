@@ -1,6 +1,8 @@
 <template>
   <div id="content">
-    <div id="taxon-box">
+    <spinner v-show="requestingData" class="loading-overlay" size="massive" :message="$t('messages.overlay')"></spinner>
+
+    <div id="taxon-box" v-show="requestingData == false" >
       <div id="taxon-header">
         <div id="fossilgroup-icon">
           <router-link v-bind:to="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
@@ -31,7 +33,7 @@
       </div>
     </div>
     <!-- content left ends and menu begins -->
-    <div id="menu">
+    <div id="menu" v-show="requestingData == false" >
       <div id="species_hierarchy_container" style="position: relative;">
         <h3>{{$t('header.fossils_classification')}}</h3>
         <table>
@@ -80,8 +82,8 @@
           <!--{% endfor %}-->
         </div>
       </div>
-    </div>
-    <div id="content-left">
+    </div >
+    <div id="content-left" v-show="requestingData == false" >
       <div id="taxon-info" style="width:100%;">
         <div>
           <h3></h3>
@@ -278,10 +280,13 @@
 </template>
 <script>
   import MyMixin from '../../../mixins/mixin';
-
+  import Spinner from 'vue-simple-spinner'
   export default {
     mixins: [MyMixin],
     name: 'item-page',
+    components: {
+      Spinner
+    },
     data() {
       return {
         taxon : {},
@@ -303,7 +308,7 @@
         isMapLoaded : false,
         lang_ : 'ee',
         numberOfSpecimen: {},
-        taxonomic_tree : {}
+        requestingData: false,
       }
     },
     computed: {
@@ -366,8 +371,11 @@
       },
 
       loadFullTaxonInfo : function () {
+        this.requestingData = true;
         this.getRequest(this.apiUrl+'/taxon/'+this.$route.params.id).then((response) => {
           this.taxon = response ? response[0] : {};
+          this.requestingData = false;
+
 
           if (this.isDefinedAndNotNull(this.taxon.parent)){
             this.getRequest(this.apiUrl+'/taxon/'+this.taxon.parent).then((response) => {
@@ -378,7 +386,6 @@
               });
             });
           }
-
         });
 
         this.getRequest(this.apiUrl+'/taxon_page/?taxon='+this.$route.params.id).then((response) => {
