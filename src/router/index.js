@@ -27,7 +27,10 @@ const router = new Router({
         },
         {
           path: '/:id',
-          component: ItemPage
+          component: ItemPage,
+          meta: {
+            isSpecies: false
+          }
         },
         {
           path: '/page/:id',
@@ -36,6 +39,13 @@ const router = new Router({
         {
           path: '/search/detail',
           component: SearchResultsPage
+        },
+        {
+          path: '/:id/species',
+          component: ItemPage,
+          meta: {
+            isSpecies: true
+          }
         }
       ]
     },

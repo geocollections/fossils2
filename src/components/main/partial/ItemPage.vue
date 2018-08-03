@@ -99,8 +99,7 @@
     <div id="content-left" v-show="requestingData == false" >
       <div id="taxon-info" style="width:100%;">
         <div>
-          <h3></h3>
-          <div class="recordeditor">
+          <div class="recordeditor n">
             Taxon ID: <strong>{{taxon.id}}</strong>
             <span v-if="taxon.date_added"> | {{taxon.date_added | moment('YYYY-MM-DD')}}</span>
             <span v-if="taxon.date_changed">/ {{taxon.date_changed | moment('YYYY-MM-DD')}}</span>
@@ -128,37 +127,42 @@
             <br />
               <!--get_item_children-->
 
-            <div v-if="">
+            <div v-if="taxon.stratigraphy_base__stratigraphy || taxon.stratigraphy_top__stratigraphy">
               {{$t('header.f_stratigraphical_distribution')}}:
-              <strong v-if="taxon.stratigraphy_base__stratigraphy">
-                <span class="openwinlink">
-                      <!--:onclick="window.open(-->
-                        <!--'http://geokogud.info/stratigraphy/'+taxon.stratigraphy_base_id+'}',-->
-                        <!--'',-->
-                        <!--'width=500,height=500,scrollbars,resizable')"-->
+              <strong>
+                <span v-if="taxon.stratigraphy_base__stratigraphy" class="openwinlink"
+                      @click="openUrl({parent_url:'http://geokogud.info/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
                 {{taxon.stratigraphy_base__stratigraphy}}
-                </span>&ndash;
-                <span v-if="taxon.stratigraphy_top__stratigraphy
-                && taxon.stratigraphy_base__stratigraphy != taxon.stratigraphy_top__stratigraphy" class="openwinlink">
-                          <!--:onclick="window.open(-->
-                        <!--'http://geokogud.info/stratigraphy/'+content.stratigraphy.top_id,-->
-                        <!--'',-->
-                        <!--'width=500,height=500,scrollbars, resizable')"-->
-                {{taxon.stratigraphy_top__stratigraphy}}  | ~ ?age_base?{{taxon.age_base}}&ndash;?age_top?{{taxon.age_top}} Ma
                 </span>
+                <span v-if="taxon.stratigraphy_top__stratigraphy != null && taxon.stratigraphy_base__stratigraphy != null">&ndash;</span>
+                <span v-if="taxon.stratigraphy_top__stratigraphy
+                && taxon.stratigraphy_base__stratigraphy != taxon.stratigraphy_top__stratigraphy" class="openwinlink"
+                      @click="openUrl({parent_url:'http://geokogud.info/stratigraphy',object:taxon.stratigraphy_top_id, width:500,height:500})">
+                  {{taxon.stratigraphy_top__stratigraphy}}
+                </span>
+                <span v-if="taxon.stratigraphy_base__age_base != null">| ~ {{convertToTwoDecimal(taxon.stratigraphy_base__age_base)}}</span>
+                <span v-if="taxon.stratigraphy_top__age_top != null"> &ndash; {{convertToTwoDecimal(taxon.stratigraphy_top__age_top)}} Ma</span>
               </strong>
               <br />
             </div>
             <!--number of species-->
             <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'species'">
               {{$t('header.f_baltic_species')}}
-              <strong><a :href="'/'+taxon.id+'/species'">{{numberOfSpecimen}}</a></strong><br />
+              <strong><router-link v-bind:to="'/'+taxon.id+'/species'">{{numberOfSpecimen}}</router-link></strong><br />
             </div>
           </div>
         </div>
         <div style="clear:both;"></div>
       </div>
-
+      <div v-if="isSpecies">
+        <h3>{{$t('header.f_species_list')}}</h3>
+        <div v-if="isDefinedAndNotEmpty(specimen_identification)">
+          <ol style='font-size: 0.8em;'>
+            <li v-for="item in allSpecies"><em><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em></li>
+          </ol>
+        </div>
+        <h3 v-else>Selle rühma all ei ole liike registreeritud</h3>
+      </div>
       <div>
         <h3>{{$t('header.f_taxon_intro')}}</h3>
         <i style='font-size: 0.8em;'>
@@ -184,14 +188,14 @@
         </ul>
       </div>
       <div>
-        {{taxon}}
+        <!--{{taxon}}-->
         <!--{{parent}}-->
         <!--<br>{{description}}<br>-->
         <!--{{taxon_image}}-->
         <!--{{taxon_page}}-->
         <!--{{common_names}}-->
         <!--{{taxon_list}}-->
-        <!--{{taxon_occurrence}}-->
+        {{taxon_occurrence}}
         <!--{{children}}-->
         <!--{{siblings}}-->
         <!--{{synonyms}}-->
@@ -313,7 +317,7 @@
 
       taxonomicTreeIsLoaded: function() {
         return this.isSiblingsLoaded && this.isSisterTaxaLoaded && this.isHierarchyLoaded
-      }
+      },
 
     },
     methods: {
@@ -335,6 +339,7 @@
           specimen_identification : {},
           speciment_attachment : {},
           hierarchy : {},
+          allSpicies : [],
           isMapLoaded : false,
           lang_ : 'ee',
           numberOfSpecimen: {},
@@ -342,7 +347,8 @@
           isSisterTaxaLoaded: false,
           isSiblingsLoaded: false,
           isHierarchyLoaded: false,
-          taxonomicTree: {nodes: []}
+          taxonomicTree: {nodes: []},
+          isSpecies: false
         }
       },
       getLocationsObject : function(object) {
@@ -385,9 +391,6 @@
           return itemID.indexOf(val.id) === -1;
         }, this);
       },
-      sort: function(arr, value) {
-        return
-      },
 
       /**************************
        *** TAXONOMIC TREE START ***
@@ -410,8 +413,10 @@
           }
         }
       },
-
-      loadFullTaxonInfo : function () {
+      convertToTwoDecimal: function (value) {
+        return value.toFixed(1)
+      },
+      loadFullTaxonInfo: function () {
         this.requestingData = true;
         /**************************
          *** REQUEST DATA START ***
@@ -437,7 +442,10 @@
               this.numberOfSpecimen = response;
             });
 
-            // https://api.geocollections.info/taxon/?hierarchy_string__istartswith=$hierarchy_string&rank__rank_en=species&in_baltoscandia=1&fields=taxon,id&paginate_by=10
+            this.getRequest(this.apiUrl+'/taxon/?hierarchy_string__istartswith='+this.taxon.hierarchy_string+'&rank__rank_en=species&in_baltoscandia=1&fields=taxon,id&paginate_by=10').then((response) => {
+              this.allSpecies = response;
+              this.isSpecies = this.$route.meta.isSpecies;
+            });
           }
         });
 
@@ -526,6 +534,12 @@
           this.loadFullTaxonInfo()
         }
       },
+      '$route.meta.isSpecies': {
+        handler : function (newval, oldval) {
+          Object.assign(this.$data, this.initialData())
+          this.loadFullTaxonInfo()
+        }
+      },
 
       // WATCH if all taxonomic tree data is loaded
       taxonomicTreeIsLoaded: {
@@ -535,6 +549,7 @@
       },
     },
     created: function(){
+      Object.assign(this.$data, this.initialData())
       this.loadFullTaxonInfo();
       this.lang_ = this.lang;
     }
