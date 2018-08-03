@@ -152,7 +152,7 @@
             <!--number of species-->
             <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'species'">
               {{$t('header.f_baltic_species')}}
-              <strong><a :href="'/'+taxon.id+'/species'">?num_species?</a></strong><br />
+              <strong><a :href="'/'+taxon.id+'/species'">{{numberOfSpecimen}}</a></strong><br />
             </div>
           </div>
         </div>
@@ -184,7 +184,7 @@
         </ul>
       </div>
       <div>
-        <!--{{taxon}}-->
+        {{taxon}}
         <!--{{parent}}-->
         <!--<br>{{description}}<br>-->
         <!--{{taxon_image}}-->
@@ -430,6 +430,14 @@
                 this.isSisterTaxaLoaded = true;
               });
             });
+          }
+
+          if(this.taxon.rank__rank_en !== 'species'){
+            this.getRequest(this.apiUrl+'/taxon/?hierarchy_string__istartswith='+this.taxon.hierarchy_string+'&rank__rank_en=species&in_baltoscandia=1&fields=taxon,id&paginate_by=10', true).then((response) => {
+              this.numberOfSpecimen = response;
+            });
+
+            // https://api.geocollections.info/taxon/?hierarchy_string__istartswith=$hierarchy_string&rank__rank_en=species&in_baltoscandia=1&fields=taxon,id&paginate_by=10
           }
         });
 
