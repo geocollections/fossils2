@@ -11,9 +11,6 @@
   import MyMixin from '../../../mixins/mixin';
   export default {
     mixins: [MyMixin],
-    components: {
-
-    },
     name: 'static-page',
     data() {
       return {

@@ -3,7 +3,7 @@ let MyMixin = {
     return {
       apiUrl : 'https://api.geocollections.info',
       fileUrl :  'http://files.geocollections.info',
-      lang: '',
+      lang: 'ee',
     }
   },
 /*  watch: {

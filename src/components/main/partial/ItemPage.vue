@@ -1,5 +1,6 @@
 <template>
   <div id="content">
+    <h3>{{$t('header.zero')}}</h3>
     <spinner v-show="requestingData" class="loading-overlay" size="massive" :message="$t('messages.overlay')"></spinner>
 
     <div id="taxon-box" v-show="requestingData == false" >
@@ -145,7 +146,6 @@
               </strong>
               <br />
             </div>
-            <!--number of species-->
             <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'species'">
               {{$t('header.f_baltic_species')}}
               <strong><router-link v-bind:to="'/'+taxon.id+'/species'">{{numberOfSpecimen}}</router-link></strong><br />
@@ -250,7 +250,6 @@
               <span class="openwinlink" @click="openUrl({parent_url:'http://geokogud.info/specimen',object:item.specimen, width:500,height:500})">
                 <strong>{{item.specimen_number}}</strong>
               </span> ,
-                <!--, <span v-if="lang_ == 'ee'">{{item.locality__locality}}</span>-->
               <span v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></span>, {{item.specimen__depth}} m
             </li>
           </ul>
@@ -319,6 +318,13 @@
         return this.isSiblingsLoaded && this.isSisterTaxaLoaded && this.isHierarchyLoaded
       },
 
+      taxon_page: function() {
+        if (this.taxonPages.length === 0) return {}
+        if (this.lang_ ==='ee') return this.taxonPages[0];
+        else if (this.lang_ ==='en') return this.taxonPages[1];
+        else if (this.lang_ ==='fi') return this.taxonPages[2];
+        else if (this.lang_ ==='se') return this.taxonPages[3];
+      }
     },
     methods: {
       initialData : function() {
@@ -328,7 +334,7 @@
           description : {},
           taxon_image : {},
           sister_taxa : {},
-          taxon_page : {},
+          taxonPages : [],
           common_names : {},
           taxon_list : {},
           taxon_occurrence : {},
@@ -339,16 +345,15 @@
           specimen_identification : {},
           speciment_attachment : {},
           hierarchy : {},
-          allSpicies : [],
           isMapLoaded : false,
-          lang_ : 'ee',
+          lang_ : this.$localStorage.fossilsLang,
           numberOfSpecimen: {},
           requestingData: false,
           isSisterTaxaLoaded: false,
           isSiblingsLoaded: false,
           isHierarchyLoaded: false,
           taxonomicTree: {nodes: []},
-          isSpecies: false
+          isSpecies: false,
         }
       },
       getLocationsObject : function(object) {
@@ -438,11 +443,13 @@
           }
 
           if(this.taxon.rank__rank_en !== 'species'){
-            this.getRequest(this.apiUrl+'/taxon/?hierarchy_string__istartswith='+this.taxon.hierarchy_string+'&rank__rank_en=species&in_baltoscandia=1&fields=taxon,id&paginate_by=10', true).then((response) => {
+            let isInBaltoscandia = this.taxon.in_baltoscandia === true ? 1 : 0;
+
+            this.getRequest(this.apiUrl+'/taxon/?hierarchy_string__istartswith='+this.taxon.hierarchy_string+'&rank__rank_en=species&in_baltoscandia='+isInBaltoscandia+'&fields=taxon,id&paginate_by=10', true).then((response) => {
               this.numberOfSpecimen = response;
             });
 
-            this.getRequest(this.apiUrl+'/taxon/?hierarchy_string__istartswith='+this.taxon.hierarchy_string+'&rank__rank_en=species&in_baltoscandia=1&fields=taxon,id&paginate_by=10').then((response) => {
+            this.getRequest(this.apiUrl+'/taxon/?hierarchy_string__istartswith='+this.taxon.hierarchy_string+'&rank__rank_en=species&in_baltoscandia='+isInBaltoscandia+'&fields=taxon,id&paginate_by=100').then((response) => {
               this.allSpecies = response;
               this.isSpecies = this.$route.meta.isSpecies;
             });
@@ -461,7 +468,7 @@
         });
 
         this.getRequest(this.apiUrl+'/taxon_page/?taxon='+this.$route.params.id).then((response) => {
-          this.taxon_page = response ? response[0] : {};
+          this.taxonPages = response;
         });
 
         this.getRequest(this.apiUrl+'/taxon_image/?taxon='+this.$route.params.id).then((response) => {
@@ -547,11 +554,20 @@
           if(newval) this.composeTaxonomicTree()
         }
       },
+      lang_: {
+        handler : function (newval, oldval) {
+          if(newval) {
+
+          }
+        }
+      },
+    },
+    updated: function() {
+      this.lang_ = this.$localStorage.fossilsLang
     },
     created: function(){
       Object.assign(this.$data, this.initialData())
       this.loadFullTaxonInfo();
-      this.lang_ = this.lang;
     }
 
   }
