@@ -34,16 +34,15 @@
 
       <div id="header3">
 
-        <div id="search_box" style="position:relative;">
-          <input type='text' id="searchfield" :placeholder="$t('search.fossils_search')"/>
-          <!--<autocomplete-->
-            <!--source="http://127.0.0.1:8001/taxon-search/?q="-->
-            <!--results-property="items"-->
-            <!--results-display="name"-->
-            <!--:placeholder="$t('search.fossils_search')"-->
-            <!--v-if="hideAdvancedSearch"-->
-          <!--&gt;-->
-          <!--</autocomplete>-->
+        <div >
+          <autocomplete input-class="search_box" style="position:relative;"
+            :source="simpleTaxonSearchApiCall"
+            results-property="results"
+            min="3"
+            :results-display="displayResults"
+            :placeholder="$t('search.fossils_search')">
+          </autocomplete>
+
           <!--<input type='text' id="searchfield" v-model="searchField" :placeholder="$t('search.fossils_search')" v-if="hideAdvancedSearch"-->
                  <!--@input="searchTaxon"/>-->
           <div v-if="!hideAdvancedSearch">
@@ -118,17 +117,19 @@
 <script>
   import LangButtons from '@/components/main/partial/LangButtons'
   import Autocomplete from 'vuejs-auto-complete'
-
+  // import Autocomplete from 'vue2-autocomplete-js'
+  import MyMixin from '../../../mixins/mixin';
   export default {
     name: "app-header",
+    mixins: [MyMixin],
     components:  {
-        LangButtons,
-          Autocomplete
+        LangButtons, Autocomplete
     },
     data (){
       return {
         searchField:null,
         hideAdvancedSearch: true,
+        autocomplete: 'taxon',
         searchParams:
           {
               species:'',
@@ -139,7 +140,24 @@
           }
       }
     },
+
     methods: {
+      simpleTaxonSearchApiCall(value) {
+        return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=taxon,rank__rank_en&multi_search=value:'+value+';fields:taxon;lookuptype:icontains'
+      },
+
+      displayResults: function(result) {
+        let rank = result.rank__rank_en.toLowerCase()
+        switch (result.rank__rank_en.toLowerCase()) {
+          case 'species': rank = 'spe'; break;
+          case 'family': rank = 'fam'; break;
+          case 'order': rank = 'ord'; break;
+          case 'genus': rank = 'gen'; break;
+          default: break;
+        }
+        return rank+' '+result.taxon
+      },
+
       searchExtended() {
         if (this.$route.path != '/search/detail') {
           this.$router.push({ path: '/search/detail' , params: {'params': this.searchParams}})

@@ -22,6 +22,8 @@ import 'vue-multiselect/dist/vue-multiselect.min.css' // Select input
 // Custom styles
 import '@/assets/css/styles.css'
 
+// Autocomplete style
+import 'vue2-autocomplete-js/dist/style/vue2-autocomplete.css'
 
 Vue.use(VueResource)
 Vue.use(VueSession)
