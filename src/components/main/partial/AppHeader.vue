@@ -34,17 +34,17 @@
 
       <div id="header3">
 
-        <div >
-          <autocomplete input-class="search_box" style="position:relative;"
+        <div id="search_box" style="position:relative;">
+          <autocomplete
+            ref="autocomplete"
             :source="simpleTaxonSearchApiCall"
             results-property="results"
-            min="3"
             :results-display="displayResults"
-            :placeholder="$t('search.fossils_search')">
+            :placeholder="$t('search.fossils_search')"
+          >
           </autocomplete>
-
           <!--<input type='text' id="searchfield" v-model="searchField" :placeholder="$t('search.fossils_search')" v-if="hideAdvancedSearch"-->
-                 <!--@input="searchTaxon"/>-->
+          <!--@input="searchTaxon"/>-->
           <div v-if="!hideAdvancedSearch">
             <!--id="search-custom"  -->
             <form v-on:submit.prevent name="detailed-search">
@@ -103,9 +103,9 @@
           <!--<a href="http://stratigraafia.info/index.php?page=4">Geoloogiline aeg</a> |
       <a href="http://geokogud.info">{{ $t('menu.collections') }}</a> | -->
           <!--<span style="cursor:pointer"-->
-                <!--id="show-detailed-search-btn" @click="hideAdvancedSearch = !hideAdvancedSearch">-->
-            <!--<span v-if="hideAdvancedSearch">{{ $t('menu.detail_search ') }} </span>-->
-            <!--<span v-if="!hideAdvancedSearch">{{ $t('menu.search ') }} </span>-->
+          <!--id="show-detailed-search-btn" @click="hideAdvancedSearch = !hideAdvancedSearch">-->
+          <!--<span v-if="hideAdvancedSearch">{{ $t('menu.detail_search ') }} </span>-->
+          <!--<span v-if="!hideAdvancedSearch">{{ $t('menu.search ') }} </span>-->
           <!--</span>-->
         </div>
       </div><!-- header4 -->
@@ -117,30 +117,26 @@
 <script>
   import LangButtons from '@/components/main/partial/LangButtons'
   import Autocomplete from 'vuejs-auto-complete'
-  // import Autocomplete from 'vue2-autocomplete-js'
-  import MyMixin from '../../../mixins/mixin';
   export default {
     name: "app-header",
-    mixins: [MyMixin],
     components:  {
-        LangButtons, Autocomplete
+      LangButtons,
+      Autocomplete
     },
     data (){
       return {
         searchField:null,
         hideAdvancedSearch: true,
-        autocomplete: 'taxon',
         searchParams:
           {
-              species:'',
+            species:'',
             locality:'',
             region:'',
             stratigraphy:''
-
           }
       }
     },
-
+  
     methods: {
       simpleTaxonSearchApiCall(value) {
         return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=taxon,rank__rank_en&multi_search=value:'+value+';fields:taxon;lookuptype:icontains'
@@ -157,24 +153,21 @@
         }
         return rank+' '+result.taxon
       },
-
       searchExtended() {
         if (this.$route.path != '/search/detail') {
           this.$router.push({ path: '/search/detail' , params: {'params': this.searchParams}})
         } else {
-            console.log('doubled method')
-            this.$http.post('http://127.0.0.1:8001/search$',this.searchParams).then(response => {
-              if (response.status === 200) {
-                this.content = response.body.search_content
-                console.log( response.body.search_content[0])
-              }
-            }, errResponse => {
-              console.log('ERROR: ' + JSON.stringify(errResponse));
-            })
+          console.log('doubled method')
+          this.$http.post('http://127.0.0.1:8001/search$',this.searchParams).then(response => {
+            if (response.status === 200) {
+              this.content = response.body.search_content
+              console.log( response.body.search_content[0])
+            }
+          }, errResponse => {
+            console.log('ERROR: ' + JSON.stringify(errResponse));
+          })
         }
-
       }
     }
   }
-
 </script>
