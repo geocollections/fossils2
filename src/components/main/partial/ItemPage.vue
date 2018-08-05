@@ -319,7 +319,7 @@
       },
 
       taxon_page: function() {
-        if (this.taxonPages.length === 0) return {}
+        if (this.taxonPages ===undefined || this.taxonPages.length === 0) return {}
         if (this.lang_ ==='ee') return this.taxonPages[0];
         else if (this.lang_ ==='en') return this.taxonPages[1];
         else if (this.lang_ ==='fi') return this.taxonPages[2];

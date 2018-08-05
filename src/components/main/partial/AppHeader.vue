@@ -41,6 +41,8 @@
             results-property="results"
             :results-display="displayResults"
             :placeholder="$t('search.fossils_search')"
+            @selected="onSelect"
+            :showNoResults="$t('header.f_found_none')"
           >
           </autocomplete>
           <!--<input type='text' id="searchfield" v-model="searchField" :placeholder="$t('search.fossils_search')" v-if="hideAdvancedSearch"-->
@@ -136,38 +138,39 @@
           }
       }
     },
-  
+
     methods: {
+
       simpleTaxonSearchApiCall(value) {
-        return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=taxon,rank__rank_en&multi_search=value:'+value+';fields:taxon;lookuptype:icontains'
+        return 'https://api.geocollections.info/taxon/?paginate_by=10&format=json&fields=id,taxon,rank__rank_en&multi_search=value:' + value + ';fields:taxon;lookuptype:icontains'
       },
 
-      displayResults: function(result) {
+      displayResults: function (result) {
         let rank = result.rank__rank_en.toLowerCase()
         switch (result.rank__rank_en.toLowerCase()) {
-          case 'species': rank = 'spe'; break;
-          case 'family': rank = 'fam'; break;
-          case 'order': rank = 'ord'; break;
-          case 'genus': rank = 'gen'; break;
-          default: break;
+          case 'species':
+            rank = 'spe';
+            break;
+          case 'family':
+            rank = 'fam';
+            break;
+          case 'order':
+            rank = 'ord';
+            break;
+          case 'genus':
+            rank = 'gen';
+            break;
+          default:
+            break;
         }
-        return rank+' '+result.taxon
+        return rank + ' ' + result.taxon
       },
-      searchExtended() {
-        if (this.$route.path != '/search/detail') {
-          this.$router.push({ path: '/search/detail' , params: {'params': this.searchParams}})
-        } else {
-          console.log('doubled method')
-          this.$http.post('http://127.0.0.1:8001/search$',this.searchParams).then(response => {
-            if (response.status === 200) {
-              this.content = response.body.search_content
-              console.log( response.body.search_content[0])
-            }
-          }, errResponse => {
-            console.log('ERROR: ' + JSON.stringify(errResponse));
-          })
-        }
-      }
+
+      onSelect(value) {
+        this.$refs.autocomplete.clearValues()
+        this.$router.push({ path: '/'+value.selectedObject.id})
+      },
+
     }
   }
 </script>

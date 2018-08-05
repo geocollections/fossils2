@@ -20,7 +20,7 @@ import 'izitoast/dist/css/iziToast.min.css' // Pop-up messages style
 import 'flag-icon-css/css/flag-icon.min.css' // Flag icons
 import 'vue-multiselect/dist/vue-multiselect.min.css' // Select input
 // Custom styles
-import '@/assets/css/styles.css'
+import '@/assets/css/sarv.css'
 
 Vue.use(VueResource)
 Vue.use(VueSession)
