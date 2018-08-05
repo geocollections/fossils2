@@ -33,7 +33,6 @@
       </div>
 
       <div id="header3">
-
         <div id="search_box" style="position:relative;">
           <autocomplete
             ref="autocomplete"
@@ -42,55 +41,8 @@
             :results-display="displayResults"
             :placeholder="$t('search.fossils_search')"
             @selected="onSelect"
-            :showNoResults="$t('header.f_found_none')"
           >
           </autocomplete>
-          <!--<input type='text' id="searchfield" v-model="searchField" :placeholder="$t('search.fossils_search')" v-if="hideAdvancedSearch"-->
-          <!--@input="searchTaxon"/>-->
-          <div v-if="!hideAdvancedSearch">
-            <!--id="search-custom"  -->
-            <form v-on:submit.prevent name="detailed-search">
-              <table align="center">
-                <tr>
-                  <td>{{ $t('search.hightaxon ') }}:</td>
-                  <td>
-                    <autocomplete
-                      source="http://127.0.0.1:8001/taxon-detailed-search/?q="
-                      results-property="items"
-                      results-display="name"
-                    >
-                    </autocomplete>
-                    <!--<input type="text" name="taxon" id="searchfield-taxon" autocomplete="off"/>-->
-                  </td>
-                </tr>
-                <tr>
-                  <td>{{ $t('search.species ') }}:</td>
-                  <td><input type="text" name="species" ref="species" v-model="searchParams.species"/></td>
-                </tr>
-                <tr>
-                  <td>{{ $t('search.locality ') }}:</td>
-                  <td><input type="text" name="locality" ref="locality" v-model="searchParams.locality"/></td>
-                </tr>
-                <tr>
-                  <td>{{ $t('search.country ') }}:</td>
-                  <td><input type="text" name="region" ref="region" v-model="searchParams.region"/></td>
-                </tr>
-                <tr>
-                  <td>{{ $t('search.stratigraphy ') }}:</td>
-                  <td><input type="text" name="stratigraphy" id="searchfield-stratigraphy"
-                             autocomplete="off" ref="stratigraphy" v-model="searchParams.stratigraphy"/></td>
-                </tr>
-                <!--<tr><td>With occurrence records:</td><td><input type="checkbox" value="1" name="with_occurrence" /></td></tr>
-                <tr><td>Ainult piltidega:</td><td><input type="checkbox" value="1" name="with_images" /></td></tr>
-                <tr><td>Välista puuraugud:</td><td><input type="checkbox" value="1" name="no_drillcores" /></td></tr>-->
-                <tr>
-                  <td></td>
-                  <td><button type="submit" name="SEARCH" @click="searchExtended()" style="width: 100px;">{{ $t('search.button ') }}</button></td>
-                  <!-- INPUT -> Button -->
-                </tr>
-              </table>
-            </form>
-          </div>
         </div>
       </div><!-- header3 -->
       <div id="header4">

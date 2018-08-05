@@ -25,11 +25,11 @@ let MyMixin = {
     isDefinedAndNotNull(value) {
       return !!value && value !== null
     },
-    getRequest(url, isCount = false){
+    getRequest(url, isFullResponse = false){
       return new Promise((resolve, reject) => {
         this.$http.get(url).then(response => {
           if (response.status === 200) {
-            isCount ? resolve( response.body.count) : resolve( response.body.results)
+            isFullResponse ? resolve( response.body) : resolve( response.body.results)
           } else {
             //
             this.handleError()

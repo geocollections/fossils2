@@ -157,9 +157,14 @@
       <div v-if="isSpecies">
         <h3>{{$t('header.f_species_list')}}</h3>
         <div v-if="isDefinedAndNotEmpty(specimen_identification)">
-          <ol style='font-size: 0.8em;'>
-            <li v-for="item in allSpecies"><em><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em></li>
-          </ol>
+          <div style='font-size: 0.8em;' v-for="(item, idx) in allSpecies">
+            &ensp;&ensp;&ensp;{{calculateSpeciesIdx(idx)}}. <em><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em>
+          </div>
+          <div class="col-xs-12 col-xs-6 pagination-center">
+            <b-pagination
+              size="md" align="right" :limit="5" :hide-ellipsis="true" :total-rows="response.count" v-model="searchParameters.watched.page" :per-page="searchParameters.watched.paginateBy">
+            </b-pagination>
+          </div>
         </div>
         <h3 v-else>Selle rühma all ei ole liike registreeritud</h3>
       </div>
@@ -354,6 +359,16 @@
           isHierarchyLoaded: false,
           taxonomicTree: {nodes: []},
           isSpecies: false,
+          searchParameters: {
+            watched: {
+              page: 1,
+              paginateBy: 10
+            },
+          },
+          response: {
+            count: 0,
+            results: []
+          },
         }
       },
       getLocationsObject : function(object) {
@@ -373,7 +388,9 @@
         });
         return locations
       },
-
+      calculateSpeciesIdx: function(idx) {
+        return (idx+1) + this.searchParameters.watched.paginateBy * this.searchParameters.watched.page - this.searchParameters.watched.paginateBy
+      },
       composeImageRequest : function(taxonImages) {
         if(taxonImages == undefined) return;
         let imagePaths = [];
@@ -443,16 +460,7 @@
           }
 
           if(this.taxon.rank__rank_en !== 'species'){
-            let isInBaltoscandia = this.taxon.in_baltoscandia === true ? 1 : 0;
-
-            this.getRequest(this.apiUrl+'/taxon/?hierarchy_string__istartswith='+this.taxon.hierarchy_string+'&rank__rank_en=species&in_baltoscandia='+isInBaltoscandia+'&fields=taxon,id&paginate_by=10', true).then((response) => {
-              this.numberOfSpecimen = response;
-            });
-
-            this.getRequest(this.apiUrl+'/taxon/?hierarchy_string__istartswith='+this.taxon.hierarchy_string+'&rank__rank_en=species&in_baltoscandia='+isInBaltoscandia+'&fields=taxon,id&paginate_by=100').then((response) => {
-              this.allSpecies = response;
-              this.isSpecies = this.$route.meta.isSpecies;
-            });
+            this.searchSpecies(this.searchParameters)
           }
         });
 
@@ -522,16 +530,21 @@
           this.speciment_attachment = response;
         });
 
-        this.getRequest(this.apiUrl+'/specimen/?specimenidentification__taxon_id='+this.$route.params.id+'&fields=id&format=json&paginate_by=1', true).then((response) => {
-          this.numberOfSpecimen = response;
-        });
-
-
         /**************************
          *** REQUEST DATA END ***
          **************************/
       },
 
+      searchSpecies: function(searchParameters) {
+        let isInBaltoscandia = this.taxon.in_baltoscandia === true ? 1 : 0;
+        this.getRequest(this.apiUrl+'/taxon/?hierarchy_string__istartswith='+this.taxon.hierarchy_string+'&rank__rank_en=species&in_baltoscandia='+isInBaltoscandia+'&fields=taxon,id&page='+searchParameters.watched.page+'&paginate_by='+searchParameters.watched.paginateBy, true).then((response) => {
+          this.isSpecies = this.$route.meta.isSpecies;
+          this.allSpecies = response.results;
+          this.numberOfSpecimen = response.count;
+          this.response.count = response.count
+          this.response.results = response.results
+        });
+      }
     },
 
     watch: {
@@ -554,13 +567,12 @@
           if(newval) this.composeTaxonomicTree()
         }
       },
-      lang_: {
-        handler : function (newval, oldval) {
-          if(newval) {
-
-          }
-        }
-      },
+      'searchParameters.watched': {
+        handler: function () {
+          this.searchSpecies(this.searchParameters)
+        },
+        deep: true
+      }
     },
     updated: function() {
       this.lang_ = this.$localStorage.fossilsLang
