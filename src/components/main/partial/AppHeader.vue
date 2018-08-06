@@ -20,6 +20,10 @@
 
       <div id="lang-block-top">
         <lang-buttons lang-class="'header'"/>
+        <b-nav-item-dropdown :text="$localStorage.mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" right>
+          <b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="$localStorage.mode === 'in_global'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
+          <b-dropdown-item @click="changeMode('in_global')" v-if="$localStorage.mode === 'in_baltoscandia'">{{$t('header.global_mode')}}</b-dropdown-item>
+        </b-nav-item-dropdown>
       </div>
       <div id="header1">
         <!-- bd-logo -->
@@ -71,7 +75,9 @@
 <script>
   import LangButtons from '@/components/main/partial/LangButtons'
   import Autocomplete from 'vuejs-auto-complete'
+  import MyMixin from '../../../mixins/mixin';
   export default {
+    mixins: [MyMixin],
     name: "app-header",
     components:  {
       LangButtons,
@@ -79,6 +85,7 @@
     },
     data (){
       return {
+
         searchField:null,
         hideAdvancedSearch: true,
         searchParams:

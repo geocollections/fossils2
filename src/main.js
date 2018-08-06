@@ -120,6 +120,10 @@ new Vue({
       type: String,
       default: 'ee'
     },
+    mode: {
+      type: String,
+      default: 'in_baltoscandia'
+    }
   },
 
   components: { App},

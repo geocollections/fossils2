@@ -331,7 +331,12 @@
         else if (this.lang_ ==='en') return this.taxonPages[1];
         else if (this.lang_ ==='fi') return this.taxonPages[2];
         else if (this.lang_ ==='se') return this.taxonPages[3];
+      },
+      mode () {
+        console.log(this.$localStorage.mode)
+        return this.$localStorage.mode === 'in_baltoscandia'
       }
+
     },
     methods: {
       initialData : function() {
@@ -370,7 +375,7 @@
           response: {
             count: 0,
             results: []
-          },
+          }
         }
       },
       getLocationsObject : function(object) {
@@ -423,7 +428,6 @@
        *** TAXONOMIC TREE START ***
        **************************/
       composeTaxonomicTree: function() {
-        console.log(this.taxon.id)
         for (let idx in this.hierarchy) {
           let node = {};
           if(this.isTaxonInSisterTaxa(this.hierarchy[idx])){
@@ -474,7 +478,6 @@
       loadFullTaxonInfo: function () {
         this.requestingData = true;
 
-
         this.getRequest(this.apiUrl+'/taxon/'+this.$route.params.id).then((response) => {
           this.taxon = response ? response[0] : {};
           this.requestingData = false;
@@ -495,7 +498,7 @@
           }
         });
 
-        this.getRequest(this.apiUrl+'/taxon/?parent='+this.$route.params.id).then((response) => {
+        this.getRequest(this.apiUrl+'/taxon/?parent='+this.$route.params.id+'&in_baltoscandia='+this.isInBaltoscandia(this.$localStorage.mode)).then((response) => {
           this.children = response;
           this.siblings = response;
           this.isSiblingsLoaded = true;
@@ -575,6 +578,11 @@
           this.response.count = response.count
           this.response.results = response.results
         });
+      },
+
+      reloadPage: function() {
+        Object.assign(this.$data, this.initialData());
+        this.loadFullTaxonInfo();
       }
     },
 
@@ -591,7 +599,14 @@
           this.loadFullTaxonInfo()
         }
       },
-
+      '$route.meta.mode': {
+        handler : function (newval, oldval) {
+          if (newval === 'inBaltoscania')
+            this.inBaltoscania = true;
+          Object.assign(this.$data, this.initialData())
+          this.loadFullTaxonInfo()
+        }
+      },
       // WATCH if all taxonomic tree data is loaded
       taxonomicTreeIsLoaded: {
         handler : function (newval, oldval) {
@@ -603,13 +618,19 @@
           this.searchSpecies(this.searchParameters)
         },
         deep: true
+      },
+      '$localStorage.mode': {
+        handler: function () {
+          this.reloadPage()
+        },
+        deep: true
       }
     },
     updated: function() {
       this.lang_ = this.$localStorage.fossilsLang
     },
     created: function(){
-      Object.assign(this.$data, this.initialData())
+      Object.assign(this.$data, this.initialData());
       this.loadFullTaxonInfo();
     }
 

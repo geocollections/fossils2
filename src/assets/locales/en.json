@@ -10,6 +10,10 @@
     "button_show":"Tree view",
     "button_hide":"Hide",
 
+    "mode": "Mode",
+    "in_baltoscandia_mode": "Baltoscandia mode",
+    "global_mode": "Global mode",
+
     "f_weblinks":"See also:",
     "fossils_browse_tree":"Taxonomic tree",
     "fossils_classification":"Classification",

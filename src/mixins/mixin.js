@@ -3,7 +3,7 @@ let MyMixin = {
     return {
       apiUrl : 'https://api.geocollections.info',
       fileUrl :  'http://files.geocollections.info',
-      lang: 'ee',
+      lang: 'ee'
     }
   },
 /*  watch: {
@@ -19,6 +19,12 @@ let MyMixin = {
     setLangChanged (lang) {
       this.lang = lang
     },
+    changeMode: function(mode) {
+      this.$localStorage.mode = mode
+    },
+    isInBaltoscandia: function(mode) {
+      return mode === 'in_baltoscandia'
+    },
     isDefinedAndNotEmpty(value) {
       return !!value && value.length > 0
     },
@@ -27,7 +33,7 @@ let MyMixin = {
     },
     getRequest(url, isFullResponse = false){
       return new Promise((resolve, reject) => {
-        this.$http.get(url).then(response => {
+        this.$http.get(url,{}).then(response => {
           if (response.status === 200) {
             isFullResponse ? resolve( response.body) : resolve( response.body.results)
           } else {

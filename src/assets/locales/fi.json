@@ -11,6 +11,10 @@
     "button_show":"Show tree",
     "button_hide":"Hide",
 
+    "mode": "Mode",
+    "in_baltoscandia_mode": "Baltoscandia mode",
+    "global_mode": "Global mode",
+
     "f_weblinks":"Linkit",
     "fossils_browse_tree":"Selaa taksonomiapuuta",
     "fossils_classification":"Luokittelu",
