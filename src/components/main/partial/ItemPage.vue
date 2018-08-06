@@ -57,7 +57,7 @@
           <!--<span onclick="$('#tree').slideToggle();" style="cursor:pointer">{{strings_fossils.button_hide}}</span>-->
           <h3>{{$t('header.fossils_browse_tree')}}</h3>
           <ul v-for="(item,idx) in taxonomicTree.nodes">
-            <span v-for="i in idx" >&ensp;</span>
+            <span v-for="i in convertToNumber(item.i)" >&ensp;</span>
             <router-link v-bind:to="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</router-link>
             <span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>
             <ul v-for="sibling in item.siblings">
@@ -319,6 +319,8 @@
         return _.orderBy(this.sister_taxa,'taxon');
       },
 
+      // this.excludeCurrentTaxon(response, this.$route.params.id);
+      //
       taxonomicTreeIsLoaded: function() {
         return this.isSiblingsLoaded && this.isSisterTaxaLoaded && this.isHierarchyLoaded
       },
@@ -413,36 +415,65 @@
           return itemID.indexOf(val.id) === -1;
         }, this);
       },
+      convertToTwoDecimal: function (value) {
+        return value.toFixed(1)
+      },
 
       /**************************
        *** TAXONOMIC TREE START ***
        **************************/
       composeTaxonomicTree: function() {
+        console.log(this.taxon.id)
         for (let idx in this.hierarchy) {
-          if (this.hierarchy[idx].id > this.taxon.id) continue;
-          let node = {i: idx, label: this.hierarchy[idx].taxon, id: this.hierarchy[idx].id, siblings: []};
-
-          for(let idx1 in this.siblings) {
-            if (this.hierarchy[idx].id === this.siblings[idx1].parent_id)
-              node.siblings.push({j: idx1, label: this.siblings[idx1].taxon, id: this.siblings[idx1].id});
-          }
-          this.taxonomicTree.nodes.push(node);
-
-          if (this.hierarchy[idx].id < this.taxon.id) continue;
-          for(let idx1 in this.sister_taxa) {
-              node = {i: idx, label: this.sister_taxa[idx1].taxon, id: this.sister_taxa[idx1].id, siblings: []};
+          let node = {};
+          if(this.isTaxonInSisterTaxa(this.hierarchy[idx])){
+            node = {i: idx, label: this.hierarchy[idx].taxon, id: this.hierarchy[idx].id, siblings: []};
+            this.taxonomicTree.nodes.push(node)
+          } else {
+            let foundCurrentTaxon = false;
+            for(let idx1 in this.sortedSisters) {
+              node = {i: idx, label: this.sortedSisters[idx1].taxon, id: this.sortedSisters[idx1].id, siblings: []};
+              if (this.sortedSisters[idx1].id === this.taxon.id) {
+                foundCurrentTaxon = true;
+                this.addSiblingsIfExists(node)
+              }
               this.taxonomicTree.nodes.push(node)
+            }
+            if (foundCurrentTaxon === true) return;
+          }
+
+          if (this.hierarchy[idx].id === this.taxon.id) return;
+        }
+      },
+
+      addSiblingsIfExists: function(parent_node) {
+        if (this.isDefinedAndNotEmpty(this.sortedSiblings)) {
+          for(let idx1 in this.sortedSiblings) {
+            if (parent_node.id === this.sortedSiblings[idx1].parent_id)
+              parent_node.siblings.push({j: idx1, label: this.sortedSiblings[idx1].taxon, id: this.sortedSiblings[idx1].id});
           }
         }
       },
-      convertToTwoDecimal: function (value) {
-        return value.toFixed(1)
+      convertToNumber: function(str) {
+        return parseInt(str)
       },
+      isTaxonInSisterTaxa: function(taxon) {
+        let found = true;
+        this.sortedSisters.forEach(function(item){
+          if(item.id === taxon.id) found = false
+        });
+        return found
+      },
+      /**************************
+       *** TAXONOMIC TREE END ***
+       **************************/
+
+      /**************************
+       *** REQUEST DATA START ***
+       **************************/
       loadFullTaxonInfo: function () {
         this.requestingData = true;
-        /**************************
-         *** REQUEST DATA START ***
-         **************************/
+
 
         this.getRequest(this.apiUrl+'/taxon/'+this.$route.params.id).then((response) => {
           this.taxon = response ? response[0] : {};
@@ -453,7 +484,7 @@
               this.parent = response ? response[0] : {};
               // Sister taxa
               this.getRequest(this.apiUrl+'/taxon/?parent_id='+this.taxon.parent+'&fields=taxon,id').then((response) => {
-                this.sister_taxa = this.excludeCurrentTaxon(response, this.$route.params.id);
+                this.sister_taxa = response;
                 this.isSisterTaxaLoaded = true;
               });
             });
