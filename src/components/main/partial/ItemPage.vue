@@ -38,16 +38,16 @@
       <div id="species_hierarchy_container" style="position: relative;">
         <h3>{{$t('header.fossils_classification')}}</h3>
         <table>
-          <tbody class="hierarchy_tree" v-for="item in hierarchy">
-            <tr v-if="item.id != 29 && item.id < taxon.id">
-              <td align="right" style="color: #999;">{{item.rank__rank_en}}</td>
+          <tbody class="hierarchy_tree" v-for="item in filteredHierarhy">
+            <tr v-if="item.id == taxon.id">
+              <td align="right" style="color: #999;" v-translate="{et:item.rank__rank, en: item.rank__rank_en}"></td>
+              <td><strong>{{item.taxon}}</strong></td>
+            </tr>
+            <tr v-else>
+              <td align="right" style="color: #999;" v-translate="{et:item.rank__rank, en: item.rank__rank_en}"></td>
               <td>
                 <router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link>
               </td>
-            </tr>
-            <tr v-if="item.id == 29 || item.id == taxon.id">
-              <td align="right" style="color: #999;">{{item.rank__rank_en}}</td>
-              <td><strong>{{item.taxon}}</strong></td>
             </tr>
           </tbody>
         </table>
@@ -65,23 +65,6 @@
               <router-link v-bind:to="'/'+sibling.id">{{sibling.label}}</router-link>
             </ul>
           </ul>
-          <!--<ul v-for="(item,idx) in hierarchy" v-if="item.id <= taxon.id">-->
-            <!--<li>-->
-              <!--<span v-for="i in idx" >&ensp;</span>-->
-              <!--<router-link v-bind:to="'/'+item.id"   v-if="item.id != taxon.id">{{item.taxon}}</router-link>-->
-              <!--<span class="node_in_tree_selected" v-if="item.id == taxon.id">{{item.taxon}}</span>-->
-              <!--&lt;!&ndash;<span v-for="sibling in sortedSiblings" v-if="isParentForSiblings(sibling) && item.id == taxon.id">&ndash;&gt;-->
-                <!--&lt;!&ndash;<br/><span v-for="i in (idx+1)">&ensp;</span><router-link v-bind:to="'/'+sibling.id">{{sibling.taxon}}</router-link>&ndash;&gt;-->
-              <!--&lt;!&ndash;</span>&ndash;&gt;-->
-              <!--<span v-for="sibling in sortedSiblings" v-if="sibling.fossil_group__id == item.id">-->
-                <!--<br/><span v-for="i in (idx+1)">&ensp;</span>-->
-                <!--<router-link v-bind:to="'/'+sibling.id">{{sibling.taxon}}</router-link>-->
-              <!--</span>-->
-              <!--<span v-for="sister_taxa in sortedSisters" v-if="item.id == taxon.id">-->
-                <!--<br/><span v-for="i in (idx)">&ensp;</span><router-link v-bind:to="'/'+sister_taxa.id">{{sister_taxa.taxon}}</router-link>-->
-              <!--</span>-->
-            <!--</li>-->
-          <!--</ul>-->
         </ul>
       </div>
       <br />
@@ -112,11 +95,11 @@
               <router-link v-bind:to="'/'+parent.id">{{parent.taxon}}</router-link>
             </em>
             <br />
-            <div v-if="isDefinedAndNotEmpty(sister_taxa)">
+            <div v-if="isDefinedAndNotEmpty(sortedSistersWithoutCurrentTaxon)">
               {{$t('header.f_sister_taxa')}}:
-              <span v-for="(item,idx) in sortedSisters">
+              <span v-for="(item,idx) in sortedSistersWithoutCurrentTaxon">
                 <em style='font-weight: normal;'><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em>
-                <span v-if = 'idx != sortedSisters.length -1'> | </span>
+                <span v-if = 'idx != sortedSistersWithoutCurrentTaxon.length -1'> | </span>
               </span>
               <br />
             </div>
@@ -200,7 +183,7 @@
         <!--{{taxon_page}}-->
         <!--{{common_names}}-->
         <!--{{taxon_list}}-->
-        {{taxon_occurrence}}
+        <!--{{taxon_occurrence}}-->
         <!--{{children}}-->
         <!--{{siblings}}-->
         <!--{{synonyms}}-->
@@ -318,9 +301,26 @@
       sortedSisters: function() {
         return _.orderBy(this.sister_taxa,'taxon');
       },
+      filteredHierarhy: function() {
+        let filteredList = _.orderBy(this.hierarchy,'id').filter(function(val, i) {
+          return '29'.indexOf(val.id) === -1 && val.id <= this.taxon.fossil_group__id; //29 - Biota ID
+        }, this);
 
-      // this.excludeCurrentTaxon(response, this.$route.params.id);
-      //
+        let uniqueIds = Array.from(new Set(filteredList.map(item => item.id)));
+
+        if (!uniqueIds.includes(this.parent.parent_id))
+          filteredList.push({id:this.parent.parent_id, rank__rank: 'sugukond', rank__rank_en: 'Family', taxon: this.parent.parent__taxon})
+        if (!uniqueIds.includes(this.parent.id))
+          filteredList.push({id:this.parent.id, rank__rank: this.parent.rank__rank, rank__rank_en: this.parent.rank__rank_en, taxon: this.parent.taxon})
+        if (!uniqueIds.includes(this.taxon.id))
+          filteredList.push({id:this.taxon.id, rank__rank: this.taxon.rank__rank, rank__rank_en: this.taxon.rank__rank_en, taxon: this.taxon.taxon})
+        return filteredList
+      },
+
+      sortedSistersWithoutCurrentTaxon: function() {
+        return this.excludeCurrentTaxon(this.sortedSisters, this.$route.params.id);
+      },
+
       taxonomicTreeIsLoaded: function() {
         return this.isSiblingsLoaded && this.isSisterTaxaLoaded && this.isHierarchyLoaded
       },
@@ -427,47 +427,68 @@
       /**************************
        *** TAXONOMIC TREE START ***
        **************************/
-      composeTaxonomicTree: function() {
-        for (let idx in this.hierarchy) {
-          let node = {};
-          if(this.isTaxonInSisterTaxa(this.hierarchy[idx])){
-            node = {i: idx, label: this.hierarchy[idx].taxon, id: this.hierarchy[idx].id, siblings: []};
+      addHierarchy: function(filteredList,sisterIds) {
+        for(let idx in filteredList) {
+          let node = {i: idx, label: filteredList[idx].taxon, id: filteredList[idx].id, siblings: []};
+          if(!sisterIds.includes(filteredList[idx].id))
             this.taxonomicTree.nodes.push(node)
-          } else {
-            let foundCurrentTaxon = false;
-            for(let idx1 in this.sortedSisters) {
-              node = {i: idx, label: this.sortedSisters[idx1].taxon, id: this.sortedSisters[idx1].id, siblings: []};
-              if (this.sortedSisters[idx1].id === this.taxon.id) {
-                foundCurrentTaxon = true;
-                this.addSiblingsIfExists(node)
-              }
-              this.taxonomicTree.nodes.push(node)
-            }
-            if (foundCurrentTaxon === true) return;
-          }
-
-          if (this.hierarchy[idx].id === this.taxon.id) return;
         }
       },
+      addSisters: function(level) {
+        for(let idx in this.sortedSisters) {
+          let node = {i: level, label: this.formatName(this.sortedSisters[idx],this.parent), id: this.sortedSisters[idx].id, siblings: []};
+          if (this.sortedSisters[idx].id === this.taxon.id) {
+            this.addSiblingsIfExists(node)
+          }
+          this.taxonomicTree.nodes.push(node)
+        }
+      },
+      composeTaxonomicTree: function() {
+        let filteredList = _.orderBy(this.hierarchy,'id').filter(function(val, i) {
+          return val.id <= this.taxon.fossil_group__id; //29 - Biota ID
+        }, this);
 
+        let sisterIds = Array.from(this.sortedSisters.map(item => item.id));
+        let hierarchyIds = Array.from(this.hierarchy.map(item => item.id));
+
+        this.addHierarchy(filteredList,sisterIds)
+        let level = filteredList.length
+
+        if (!sisterIds.includes(this.parent.parent__id) && !hierarchyIds.includes(this.parent.parent_id)) {
+          let node = {i: level, label: this.parent.parent__taxon, id: this.parent.parent_id, siblings: []};
+          this.taxonomicTree.nodes.push(node)
+          level += 1;
+        }
+        if (!hierarchyIds.includes(this.parent.id)) {
+          let node = {i: level, label: this.parent.taxon, id: this.parent.id, siblings: []};
+          this.taxonomicTree.nodes.push(node)
+          level += 1;
+        }
+
+        this.addSisters(level)
+
+      },
+
+      formatName: function(taxon,parent) {
+        if(parent.label)
+          return _.includes(taxon.taxon, taxon.parent__taxon) ? taxon.taxon.replace(taxon.parent__taxon, "") : taxon.taxon;
+        return _.includes(taxon.taxon, parent.taxon) ? taxon.taxon.replace(parent.taxon, "") : taxon.taxon;
+
+
+      },
       addSiblingsIfExists: function(parent_node) {
         if (this.isDefinedAndNotEmpty(this.sortedSiblings)) {
           for(let idx1 in this.sortedSiblings) {
-            if (parent_node.id === this.sortedSiblings[idx1].parent_id)
-              parent_node.siblings.push({j: idx1, label: this.sortedSiblings[idx1].taxon, id: this.sortedSiblings[idx1].id});
+            if (parent_node.id === this.sortedSiblings[idx1].parent_id) {
+              parent_node.siblings.push({j: idx1, label: this.formatName(this.sortedSiblings[idx1],parent_node), id: this.sortedSiblings[idx1].id});
+            }
           }
         }
       },
       convertToNumber: function(str) {
         return parseInt(str)
       },
-      isTaxonInSisterTaxa: function(taxon) {
-        let found = true;
-        this.sortedSisters.forEach(function(item){
-          if(item.id === taxon.id) found = false
-        });
-        return found
-      },
+
       /**************************
        *** TAXONOMIC TREE END ***
        **************************/
@@ -486,7 +507,7 @@
             this.getRequest(this.apiUrl+'/taxon/'+this.taxon.parent).then((response) => {
               this.parent = response ? response[0] : {};
               // Sister taxa
-              this.getRequest(this.apiUrl+'/taxon/?parent_id='+this.taxon.parent+'&fields=taxon,id').then((response) => {
+              this.getRequest(this.apiUrl+'/taxon/?parent_id='+this.taxon.parent+'&in_baltoscandia='+this.isInBaltoscandia(this.$localStorage.mode)+'&fields=taxon,id').then((response) => {
                 this.sister_taxa = response;
                 this.isSisterTaxaLoaded = true;
               });
@@ -504,7 +525,7 @@
           this.isSiblingsLoaded = true;
         });
 
-        this.getRequest(this.apiUrl+'/taxon?id__in=1,29,38,60,61,62,259,1081,2104&fields=id,taxon,rank__rank_en').then((response) => {
+        this.getRequest(this.apiUrl+'/taxon?id__in=1,29,38,60,61,62,259,1081,2104&fields=id,taxon,rank__rank,rank__rank_en').then((response) => {
           this.hierarchy = response;
           this.isHierarchyLoaded = true;
         });
