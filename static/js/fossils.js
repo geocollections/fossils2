@@ -265,3 +265,16 @@ var displayFeatureInfo = function(pixel) {
 // $(function(fs) {
 //   initMap(fs);
 // })
+
+
+$(function(fs) {
+  $( '.swipebox' ).swipebox();
+})
+
+$(document).ready(function(){
+  // $(".zoomIcon").click(function(evt){
+  //   console.log(($(this).attr("id")));
+  //   let idx = ($(this).attr("id"))
+  //   $(this).siblings('a').attr('href','http://geokogud.info/git/di.php?f=specimen_image/315/315-45.jpg&w=1280'); $(this).siblings('a').trigger('dblclick'); $(this).siblings('a').attr('href','/1091'+idx);
+  // });
+});

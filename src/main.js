@@ -94,6 +94,18 @@ Vue.directive('translate',{
     el.innerHTML = Vue.localStorage.get('fossilsLang') === 'ee' ? binding.value.et : binding.value.en
   }
 });
+Vue.directive('show-image',{
+  componentUpdated: function (el, binding) {
+    let currentInnerHtml = el.innerHTML
+    currentInnerHtml +=
+    "   <div style=\"display:block;cursor:pointer;position:absolute;top:0;right:0;\" :id=\"1+'-'\" v-show=\"mouseOverImage === 'taxon_image_'+1\" \n" +
+    "               onclick=\"$(this).siblings('a').attr('href','http://geokogud.info/git/di.php?f=specimen_image/315/315-45.jpg&w=1280'); $(this).siblings('a').trigger('dblclick'); $(this).siblings('a').attr('href','/1091')\">\n" +
+    "\n" +
+    "          <img src=\"/static/imgs/zoom_in.png\" style=\"width: 32px;height: 32px;padding:2px 2px 0 0;\" />\n" +
+    "          </div>"
+    el.innerHTML = currentInnerHtml
+  }
+});
  let loopItems = function (item) {
    return "<div class=\'fossilgroup_box\'>"+
      "<a href=\'/#/"+ item.taxon+"\' :title=\"\"+item.frontpage+\" ("+item.taxon__taxon+")\" >" +

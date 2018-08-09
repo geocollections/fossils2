@@ -19,10 +19,12 @@
 
         <div id="taxon-title">
           <h1 style='color: #333;'>
-            <span style="color:#333; font-weight:bold" v-if="taxon_page.frontpage_title">{{taxon_page.title}}</span><br />
+            <span style="color:#333; font-weight:bold" v-if="taxon_page && taxon_page.frontpage_title">{{taxon_page.title}}</span><br />
+
+            <div v-if="taxon.rank__rank_en == 'Species' || taxon.rank__rank_en == 'Genus'">{{$t('header.f_fossil_group')}}:
+              <router-link v-bind:to="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</router-link></div>
             <span style="font-size: 0.7em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
-            <span v-if="taxon.fossil_group__id != null">{{taxon.fossil_group__taxon}}</span>
-            <span style="font-size: 0.7em;">{{taxon.author_year}}</span>
+            <span style="font-size: 0.7em;">{{taxon.taxon}} {{taxon.author_year}}</span>
           </h1>
           <div class="taxon_names" >
             <span v-if="common_names.length > 0" v-for="item in common_names">
@@ -103,14 +105,14 @@
               </span>
               <br />
             </div>
-            {{$t('header.f_contains')}}:
-            <span v-if="siblings" v-for="(sibling, idx) in sortedSiblings">
+            <div v-if="isDefinedAndNotEmpty(sortedSiblings)">
+              {{$t('header.f_contains')}}:
+              <span v-if="siblings" v-for="(sibling, idx) in sortedSiblings">
               <router-link v-bind:to="'/'+sibling.id">{{sibling.taxon}}</router-link>
               <span v-if = 'idx != siblings.length -1'> | </span>
             </span>
-            <br />
-              <!--get_item_children-->
-
+              <br />
+            </div>
             <div v-if="taxon.stratigraphy_base__stratigraphy || taxon.stratigraphy_top__stratigraphy">
               {{$t('header.f_stratigraphical_distribution')}}:
               <strong>
@@ -151,7 +153,7 @@
         </div>
         <h3 v-else>Selle rühma all ei ole liike registreeritud</h3>
       </div>
-      <div>
+      <div v-if="taxon_page && taxon_page.content">
         <h3>{{$t('header.f_taxon_intro')}}</h3>
         <i style='font-size: 0.8em;'>
           {{taxon_page.author_txt}} {{taxon_page.date_txt}}
@@ -196,16 +198,20 @@
       <div v-if="taxon_image">
       <div style="clear: both;"></div>
       <div class='photogallery'>
+
+        <!--<div style="position:relative;float:left;" @mouseover="showImageInfo('taxon_image_'+1)" @mouseout="hideImageInfo('taxon_image_'+1)">-->
+          <!--<a rel="gallery-1" href="http://files.geocollections.info/large/36/03/3603ff5e-671a-416d-9843-7d3db7319c5d.jpg" ref="link" onclick="return false;" class="swipebox" title="GIT 315-45 Kalloprion">-->
+            <!--<img src="h`tp://files.geocollections.info/36/03/3603ff5e-671a-416d-9843-7d3db7319c5d.jpg" alt="Kalloprionidae"-->
+                 <!--title="Kalloprion sp. A Hints, 2000: GIT 315-45" border="0" /></a>-->
+          <!--<div id = "2" class="zoomIcon" style="display:block;cursor:pointer;position:absolute;top:0;right:0;" v-show="mouseOverImage === 'taxon_image_'+1"-->
+               <!--onclick="">-->
+            <!--<img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />-->
+          <!--</div>-->
+        <!--</div>-->
         <h3>{{taxon.images_title}} ({{taxon.taxon}})</h3>
-        <div v-for="image in taxon_image">
-          <div style="position:relative;float:left;" :onmouseover="'$(\'#'+image.attachment+'-\').show();'" :onmouseout="'$(\'#'+image.attachment+'-\').hide();'">
-            <a :href="'http://geokogud.info/'+image.acro+'/di.php?f=specimen_image/'+image.link+'/'+image.attachment__uuid_filename+'&w=1280'" >
-              <img :src="image.path" :alt="taxon.taxon"
-                   :title="image.name+''+image.taxon+': '+image.number+''+image.diagnosis" border="0" /></a>
-          </div>
-          <div style="display:none;cursor:pointer;position:absolute;top:0;right:0;" :id="image.attachment+'-'" >
-            <img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />
-          </div>
+
+        <div v-for="(image,idx) in taxon_image">
+          <file-preview :image = "image" :idx = "idx" :title="image.link__taxon" isSpeciment="false"></file-preview>
         </div>
 
         <div style="clear:both;"></div>
@@ -274,8 +280,31 @@
       </div>
       <div id="taxon-right">
         <div style="padding: 0 0 0 10px;">
-          <!--content.genus.images-->
+          <h3>{{$t('header.f_taxon_images')}}</h3>
+          <div class="photogallery">
+            <div style="float: left; position: relative;" class="image_highlight"  v-for="(image,idx) in speciment_attachment">
+              <!--<a :href="image.path"  style="cursor:default" class="swipebox" onclick="return false;">-->
+                <!--<img style="vertical-align: top;" :src="image.path"-->
+                     <!--:alt="image.name+','+ image.number" :title="image.name+','+ image.number" border="0"/></a>-->
+              <!--<div v-show="mouseOverImage === 'speciment_attachment_'+idx" class="image_label" >-->
+                <!--<div style="padding: 3px;">-->
+                  <!--<strong> {{image.number}} {{image.name}} <br />-->
+                    <!--<span  @click="openUrl({parent_url:'http://geokogud.info/specimen',object:image.id, width:500,height:500})"-->
+                           <!--class="openwinlink">-->
+                        <!--INFO</span>-->
+                    <!--|-->
+                    <!--<span @click="openUrl({parent_url:'http://geokogud.info/specimen_image',object:image.id, width:500,height:500})"-->
+                          <!--class="openwinlink">-->
+                        <!--IMAGE</span></strong></div>-->
+              <!--</div>-->
+              <!--<div style="cursor:pointer;position:absolute;top:0;right:0;z-index:1000;" v-show="mouseOverImage === 'speciment_attachment_'+idx"-->
+                   <!--onclick="$(this).siblings('a').trigger('dblclick');">-->
+                <!--<img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />-->
+              <!--</div>-->
+              <file-preview :image = "image" :idx = "idx" :title="image.link__taxon" :taxon="taxon" :isSpecimen="true"></file-preview>
+            </div>
 
+          </div>
         </div>
       </div>
     </div>
@@ -284,12 +313,14 @@
 </template>
 <script>
   import MyMixin from '../../../mixins/mixin';
-  import Spinner from 'vue-simple-spinner'
+  import Spinner from 'vue-simple-spinner';
+  import FilePreview from "./FilePreview";
   export default {
     mixins: [MyMixin],
     name: 'item-page',
     components: {
-      Spinner
+      Spinner,
+      FilePreview
     },
     data () {
       return this.initialData()
@@ -333,9 +364,9 @@
         else if (this.lang_ ==='se') return this.taxonPages[3];
       },
       mode () {
-        console.log(this.$localStorage.mode)
         return this.$localStorage.mode === 'in_baltoscandia'
-      }
+      },
+
 
     },
     methods: {
@@ -366,6 +397,7 @@
           isHierarchyLoaded: false,
           taxonomicTree: {nodes: []},
           isSpecies: false,
+          mouseOverImage: null,
           searchParameters: {
             watched: {
               page: 1,
@@ -378,6 +410,27 @@
           }
         }
       },
+
+      // showImagePreview: function(idx) {
+      //   var idx_ = idx
+      //
+      //   $(".zoomIcon").click(function (evt) {
+      //
+      //     let idx = ($(this).attr("id"))
+      //     console.log($(this))
+      //     $(this).siblings('a').attr('href', 'http://geokogud.info/git/di.php?f=specimen_image/315/315-45.jpg&w=1280');
+      //     $(this).siblings('a').trigger('dblclick');
+      //     $(this).siblings('a').attr('href', '/1091' + idx);
+      //   });
+      //   //
+      //   // $(this).siblings('a').attr('href','http://geokogud.info/git/di.php?f=specimen_image/315/315-45.jpg&w=1280'); $(this).siblings('a').trigger('dblclick'); $(this).siblings('a').attr('href','/1091');
+      //   // this.$nextTick(function(){
+      //   //   console.log('test')
+      //   // $(this).siblings('a').attr('href','http://geokogud.info/git/di.php?f=specimen_image/315/315-45.jpg&w=1280'); $(this).siblings('a').trigger('dblclick'); $(this).siblings('a').attr('href','/1091'+idx);
+      //   // })
+      //   // // $(this).siblings('a').attr('href','http://geokogud.info/git/di.php?f=specimen_image/315/315-45.jpg&w=1280'); event.target.siblings('a').trigger('dblclick'); event.target.siblings('a').attr('href','/1091'+idx);
+      //
+      // },
       getLocationsObject : function(object) {
         if (object === undefined) return;
         let locations = [];
@@ -399,14 +452,18 @@
         return (idx+1) + this.searchParameters.watched.paginateBy * this.searchParameters.watched.page - this.searchParameters.watched.paginateBy
       },
       composeImageRequest : function(taxonImages) {
-        if(taxonImages == undefined) return;
-        let imagePaths = [];
-        let fileUrl = this.fileUrl;
+        if(taxonImages === undefined) return;
+        let self = this;
         taxonImages.forEach(function(element) {
-          if (element.attachment__uuid_filename != null) {
-            element.path = fileUrl + '/' + element.attachment__uuid_filename.substring(0,2)+'/'+
-              element.attachment__uuid_filename.substring(2,4)+'/'+ element.attachment__uuid_filename;
+          if (element.uuid_filename && element.uuid_filename != null) {
+            element.path = self.fileUrl + '/' + element.uuid_filename.substring(0,2)+'/'+ element.uuid_filename.substring(2,4)+'/'+ element.uuid_filename;
           }
+          else if(element.attachment__uuid_filename && element.attachment__uuid_filename != null) {
+            element.path = self.fileUrl + '/' + element.attachment__uuid_filename.substring(0,2)+'/'
+              + element.attachment__uuid_filename.substring(2,4)+'/'+ element.attachment__uuid_filename;
+
+          }
+
         });
         return taxonImages
       },
@@ -552,6 +609,7 @@
 
         this.getRequest(this.apiUrl+'/taxon_occurrence/?taxon='+this.$route.params.id).then((response) => {
           this.taxon_occurrence = response;
+          console.log(response)
           //load map
           let locations = this.getLocationsObject(this.taxon_occurrence)
           if (locations && locations.length > 0) {
@@ -571,18 +629,16 @@
 
         this.getRequest(this.apiUrl+'/taxon_type_specimen/?taxon='+this.$route.params.id).then((response) => {
           this.taxon_type_specimen = response;
+          console.log(this.taxon_type_specimen)
         });
 
         this.getRequest(this.apiUrl+'/specimen/?specimenidentification__taxon_id='+this.$route.params.id+'&fields=id&format=json').then((response) => {
           this.specimen_identification = response;
         });
 
-        this.getRequest(this.apiUrl+'/taxon_type_specimen/?taxon='+this.$route.params.id).then((response) => {
-          this.taxon_type_specimen = response;
-        });
-
-        this.getRequest(this.apiUrl+'/attachment/?specimen__specimenidentification__taxon__id='+this.$route.params.id+'&fields=uuid_filename&format=json').then((response) => {
-          this.speciment_attachment = response;
+        this.getRequest(this.apiUrl+'/attachment/?specimen__specimenidentification__taxon__id='+this.$route.params.id+
+          '&fields=id,specimen__specimen_id,database__acronym,uuid_filename&format=json').then((response) => {
+          this.speciment_attachment = this.composeImageRequest(response);
         });
 
         /**************************
@@ -653,7 +709,6 @@
     created: function(){
       Object.assign(this.$data, this.initialData());
       this.loadFullTaxonInfo();
-    }
-
+    },
   }
 </script>
