@@ -46,7 +46,7 @@
         ></classification-table>
         <br />
         <span onclick="$('#tree').slideToggle();" style="cursor:pointer;font-size: 0.9em; color: #ccc; text-transform:uppercase;">{{$t('header.button_show')}}</span>
-        <taxonomical-tree v-if="taxonomicTreeIsLoaded"
+        <taxonomical-tree v-if="isTaxonomicTreeIsLoaded"
           :taxon_="taxon"
           :parent_="parent"
           :hierarchy_="hierarchy"
@@ -131,7 +131,7 @@
       </div>
       <div v-if="isSpecies">
         <h3>{{$t('header.f_species_list')}}</h3>
-        <div v-if="isDefinedAndNotEmpty(specimen_identification)">
+        <div v-if="isDefinedAndNotEmpty(specimenIdentification)">
           <div style='font-size: 0.8em;' v-for="(item, idx) in allSpecies">
             &ensp;&ensp;&ensp;{{calculateSpeciesIdx(idx)}}. <em><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em>
           </div>
@@ -152,10 +152,10 @@
         <div id="taxon-details" v-html="taxon_page.content"></div>
       </div>
       <!--REFERENCES-->
-      <div style="margin:15px auto;" v-if="taxon_occurrence">
+      <div style="margin:15px auto;" v-if="taxonOccurrence">
         <h3>{{$t('header.f_taxon_references')}}</h3>
         <ul>
-          <li v-for=" reference in taxon_occurrence">
+          <li v-for=" reference in taxonOccurrence">
             <span class="openwinlink" @click="openUrl({parent_url:'http://geokogud.info/reference',object:reference.reference, width:500,height:500})">
               <strong>{{reference.reference__reference}}</strong>
             </span>. {{reference.reference__title}}.
@@ -175,12 +175,12 @@
         <!--{{taxon_page}}-->
         <!--{{common_names}}-->
         <!--{{taxon_list}}-->
-        <!--{{taxon_occurrence}}-->
+        <!--{{taxonOccurrence}}-->
         <!--{{children}}-->
         <!--{{siblings}}-->
         <!--{{synonyms}}-->
-        <!--{{taxon_type_specimen}}-->
-        <!--{{specimen_identification}}-->
+        <!--{{taxonTypeSpecimen}}-->
+        <!--{{specimenIdentification}}-->
         <!--{{speciment_attachment}}-->
         <!--{{hierarchy}}-->
       </div>
@@ -188,10 +188,11 @@
     </div>
     <div id="taxon-main">
       <div id="taxon-left">
-        <div v-if="isMapLoaded">
-          <h3>{{$t('header.f_distribution_map')}}</h3>
-          <div id="map" style="height: 300px;border-radius: 6px;"></div>
-        </div>
+        <map-component v-if="isMapDataLoaded"
+                       :taxonOccurrence="taxonOccurrence"
+                       :taxonTypeSpecimen="taxonTypeSpecimen"
+                       :specimenIdentification="specimenIdentification"
+        ></map-component>
 
         <div id="synonymy_list" v-if="synonyms && synonyms.length > 0">
           <h3>{{$t('header.f_species_synonymy')}}</h3>
@@ -205,10 +206,10 @@
         </div>
 
         <br />
-        <div id="species_type_data_list" v-if = "taxon_type_specimen">
+        <div id="species_type_data_list" v-if = "taxonTypeSpecimen">
           <h3>{{$t('header.f_species_type_data')}}</h3>
           <ul>
-            <li v-for="item in taxon_type_specimen">
+            <li v-for="item in taxonTypeSpecimen">
               {{item.type_type__value}}:
               <span class="openwinlink" @click="openUrl({parent_url:'http://geokogud.info/specimen',object:item.specimen, width:500,height:500})">
                 <strong>{{item.specimen_number}}</strong>
@@ -218,13 +219,13 @@
           </ul>
         </div>
         <br />
-        <div id="linked_specimens_list" v-if="specimen_identification">
+        <div id="linked_specimens_list" v-if="specimenIdentification">
           <h3>{{$t('header.f_species_linked_specimens')}}</h3>
           <ul>
             <li>
               <strong>
                 <span class="openwinlink" @click="openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+parent.taxon+'&currentTable=specimen', width:500,height:500})">
-                   {{specimen_identification.length}} {{$t('header.f_genus_identifications_link')}}
+                   {{specimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
                 </span>
               </strong><br />
             </li>
@@ -286,11 +287,13 @@
   import ImageGallery from "./ImageGallery";
   import TaxonomicalTree from "./TaxonomicalTree";
   import ClassificationTable from "./ClassificationTable";
+  import MapComponent from "./MapComponent";
 
   export default {
     mixins: [MyMixin],
     name: 'item-page',
     components: {
+      MapComponent,
       ClassificationTable,
       TaxonomicalTree,
       ImageGallery,
@@ -321,9 +324,13 @@
       mode () {
         return this.$localStorage.mode === 'in_baltoscandia'
       },
-      taxonomicTreeIsLoaded: function() {
+      isTaxonomicTreeIsLoaded: function() {
         return this.isSisterTaxaLoaded && this.isSiblingsLoaded && this.isHierarchyLoaded
       },
+
+      isMapDataLoaded:function() {
+        return this.isTaxonTypeSpecimenLoaded && this.isTaxonOccurrenceLoaded && this.isSpecimenIdentificationLoaded
+      }
 
     },
     methods: {
@@ -337,12 +344,15 @@
           taxonPages : [],
           common_names : {},
           taxon_list : {},
-          taxon_occurrence : {},
+          taxonOccurrence : {},
+          isTaxonOccurrenceLoaded: false,
+          isTaxonTypeSpecimenLoaded: false,
+          isSpecimenIdentificationLoaded:false,
           children : {},
           siblings : {},
           synonyms : {},
-          taxon_type_specimen : {},
-          specimen_identification : {},
+          taxonTypeSpecimen : null,
+          specimenIdentification : {},
           speciment_attachment : {},
           hierarchy : {},
           isMapLoaded : false,
@@ -376,23 +386,7 @@
       hideImageInfo: function(imageIdx){
         this.mouseOverImage = null
       },
-      getLocationsObject : function(object) {
-        if (object === undefined) return;
-        let locations = [];
-        let lang = this.lang;
-        object.forEach(function(element) {
-          if (element.locality != null) {
-            locations.push({
-              lat : element.locality__latitude,
-              long: element.locality__longitude,
-              locality: (lang === 'ee' ? element.locality__locality
-                : element.locality__locality_en),
-              locid: element.locality
-            });
-          }
-        });
-        return locations
-      },
+
       calculateSpeciesIdx: function(idx) {
         return (idx+1) + this.searchParameters.watched.paginateBy * this.searchParameters.watched.page - this.searchParameters.watched.paginateBy
       },
@@ -483,18 +477,8 @@
         });
 
         this.getRequest(this.apiUrl+'/taxon_occurrence/?taxon='+this.$route.params.id).then((response) => {
-          this.taxon_occurrence = response;
-          //load map
-          let locations = this.getLocationsObject(this.taxon_occurrence)
-          if (locations && locations.length > 0) {
-            this.isMapLoaded = true;
-            this.$nextTick(() => {
-              initMap(locations)
-            })
-            //
-          } else {
-            this.isMapLoaded = false;
-          }
+          this.taxonOccurrence = response;
+          this.isTaxonOccurrenceLoaded = true;
         });
 
         this.getRequest(this.apiUrl+'/taxon_synonym/?taxon='+this.$route.params.id).then((response) => {
@@ -502,11 +486,14 @@
         });
 
         this.getRequest(this.apiUrl+'/taxon_type_specimen/?taxon='+this.$route.params.id).then((response) => {
-          this.taxon_type_specimen = response;
+          this.taxonTypeSpecimen = response;
+          this.isTaxonTypeSpecimenLoaded = true;
         });
 
-        this.getRequest(this.apiUrl+'/specimen/?specimenidentification__taxon_id='+this.$route.params.id+'&fields=id&format=json').then((response) => {
-          this.specimen_identification = response;
+        this.getRequest(this.apiUrl+'/specimen/?specimenidentification__taxon_id='+this.$route.params.id+
+          '&fields=id,locality_id,locality__locality,locality__locality_en,locality__longitude,locality__latitude&format=json').then((response) => {
+          this.specimenIdentification = response;
+          this.isSpecimenIdentificationLoaded = true;
         });
 
         this.getRequest(this.apiUrl+'/attachment/?specimen__specimenidentification__taxon__id='+this.$route.params.id+

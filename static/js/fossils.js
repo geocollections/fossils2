@@ -153,9 +153,6 @@ var initMap = function (fs)
     	})
    });
 
-
-
-
 	function defaultStyle(feature, resolution)
 	{
 		return [
@@ -179,7 +176,28 @@ var initMap = function (fs)
 		]
 	};
 
-
+  function customeStyle(feature, resolution)
+  {
+    return [
+      new ol.style.Style({
+        image: new ol.style.Circle({
+          radius: 8,
+          fill: new ol.style.Fill({ color: 'rgba(236, 102, 37,0.7)', opacity: 0.9 }),
+          //stroke: new ol.style.Stroke({color: 'rgba(255,255,255,0)', width: 0})
+        }),
+        text: (resolution > 500 ? null : new ol.style.Text({
+          font: '10pt Arial, Helvetica, Helvetica Neue, Arial, sans-serif',
+          text: feature.name,
+          fill: new ol.style.Fill({ color: 'rgba(238,59,13,1)' }),
+          stroke: new ol.style.Stroke({color: '#fff', width: 3}),
+          textAlign: 'left',
+          textBaseline: 'bottom',
+          offsetX: 5,
+          offsetY: -5,
+        }))
+      })
+    ]
+  };
 
 	var vectorSource = new ol.source.Vector({
 		attributions: [new ol.Attribution({
@@ -187,19 +205,21 @@ var initMap = function (fs)
 	});
 
 	for (var i = 0; i < fs.length; i++){
-		console.log(fs[i].locid);
+		// console.log(fs[i].locid);
 		var centroidLL = ol.proj.transform([Number(fs[i].long), Number(fs[i].lat)], 'EPSG:4326', 'EPSG:3857');
 		var centroidPoint = new ol.geom.Point(centroidLL);
 		var feature = new ol.Feature({ geometry: centroidPoint });
 		feature.name = fs[i].locality;
 		feature.fid = fs[i].locid;
+    feature.hasLargerMarker = fs[i].isImportantLocality
 		vectorSource.addFeature(feature);
 	}
 
     var layerData = new ol.layer.Vector({
 			title: "Localities",
 			source: vectorSource,
-			style: function(feature, resolution) { return defaultStyle(feature, resolution); }
+			style: function(feature, resolution) {
+			  return feature.hasLargerMarker ? customeStyle(feature, resolution) : defaultStyle(feature, resolution); }
     })
 
     olMap.addLayer(layerData);
