@@ -36,8 +36,8 @@
       </div>
     </div>
     <!-- content left ends and menu begins -->
-    <div id="menu" v-show="requestingData == false" >
-      <div id="species_hierarchy_container" style="position: relative;">
+    <div id="menu" v-show="requestingData == false">
+      <div id="species_hierarchy_container" style="position: relative; ">
         <h3>{{$t('header.fossils_classification')}}</h3>
         <classification-table v-if="isHierarchyLoaded"
           :hierarchy ="hierarchy"
@@ -185,14 +185,15 @@
         <!--{{hierarchy}}-->
       </div>
       <image-gallery :images="taxon_images" v-if="taxon_images" ></image-gallery>
-    </div>
+
     <div id="taxon-main">
       <div id="taxon-left">
-        <map-component v-if="isMapDataLoaded"
-                       :taxonOccurrence="taxonOccurrence"
-                       :taxonTypeSpecimen="taxonTypeSpecimen"
-                       :specimenIdentification="specimenIdentification"
+        <map-component  v-if="isMapDataLoaded"
+                        :taxonOccurrence="taxonOccurrence"
+                        :taxonTypeSpecimen="taxonTypeSpecimen"
+                        :specimenIdentification="specimenIdentification"
         ></map-component>
+
 
         <div id="synonymy_list" v-if="synonyms && synonyms.length > 0">
           <h3>{{$t('header.f_species_synonymy')}}</h3>
@@ -204,7 +205,6 @@
             </li>
           </ul>
         </div>
-
         <br />
         <div id="species_type_data_list" v-if = "taxonTypeSpecimen">
           <h3>{{$t('header.f_species_type_data')}}</h3>
@@ -232,7 +232,6 @@
           </ul>
         </div>
         <br>
-
         <div id="identifications_list" v-if="hierarchy">
           <h3>{{$t('header.f_taxon_identifications')}}</h3>
           <ul>
@@ -247,8 +246,8 @@
             </li>
           </ul>
         </div>
+        <br>
       </div>
-
       <div id="taxon-right" >
         <div style="padding: 0 0 0 10px;">
           <h3>{{$t('header.f_taxon_images')}}</h3>
@@ -274,10 +273,10 @@
                 <img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />
               </div>
             </div>
-
           </div>
         </div>
       </div>
+    </div>
     </div>
   </div>
 </template>
