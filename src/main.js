@@ -96,6 +96,7 @@ Vue.directive('translate',{
 });
 Vue.directive('show-image',{
   componentUpdated: function (el, binding) {
+    console.log(el)
     let currentInnerHtml = el.innerHTML
     currentInnerHtml +=
     "   <div style=\"display:block;cursor:pointer;position:absolute;top:0;right:0;\" :id=\"1+'-'\" v-show=\"mouseOverImage === 'taxon_image_'+1\" \n" +
@@ -106,6 +107,8 @@ Vue.directive('show-image',{
     el.innerHTML = currentInnerHtml
   }
 });
+
+
  let loopItems = function (item) {
    return "<div class=\'fossilgroup_box\'>"+
      "<a href=\'/#/"+ item.taxon+"\' :title=\"\"+item.frontpage+\" ("+item.taxon__taxon+")\" >" +

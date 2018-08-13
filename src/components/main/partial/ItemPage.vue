@@ -39,35 +39,25 @@
     <div id="menu" v-show="requestingData == false" >
       <div id="species_hierarchy_container" style="position: relative;">
         <h3>{{$t('header.fossils_classification')}}</h3>
-        <table>
-          <tbody class="hierarchy_tree" v-for="item in filteredHierarhy">
-            <tr v-if="item.id == taxon.id">
-              <td align="right" style="color: #999;" v-translate="{et:item.rank__rank, en: item.rank__rank_en}"></td>
-              <td><strong>{{item.taxon}}</strong></td>
-            </tr>
-            <tr v-else>
-              <td align="right" style="color: #999;" v-translate="{et:item.rank__rank, en: item.rank__rank_en}"></td>
-              <td>
-                <router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <classification-table v-if="isHierarchyLoaded"
+          :hierarchy ="hierarchy"
+          :parent = "parent"
+          :taxon = "taxon"
+        ></classification-table>
         <br />
         <span onclick="$('#tree').slideToggle();" style="cursor:pointer;font-size: 0.9em; color: #ccc; text-transform:uppercase;">{{$t('header.button_show')}}</span>
-        <ul id="tree" style="position:relative;left:0;background-color:#fff;z-index:100;padding:0;margin-right: 10px;width:100%;">
-          <!--<span onclick="$('#tree').slideToggle();" style="cursor:pointer">{{strings_fossils.button_hide}}</span>-->
-          <h3>{{$t('header.fossils_browse_tree')}}</h3>
-          <ul v-for="(item,idx) in taxonomicTree.nodes">
-            <span v-for="i in convertToNumber(item.i)" >&ensp;</span>
-            <router-link v-bind:to="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</router-link>
-            <span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>
-            <ul v-for="sibling in item.siblings">
-              <span v-for="j in idx+1" >&ensp;</span>
-              <router-link v-bind:to="'/'+sibling.id">{{sibling.label}}</router-link>
-            </ul>
-          </ul>
-        </ul>
+        <taxonomical-tree v-if="taxonomicTreeIsLoaded"
+          :taxon_="taxon"
+          :parent_="parent"
+          :hierarchy_="hierarchy"
+          :sortedSistersWithoutCurrentTaxon_="sortedSistersWithoutCurrentTaxon"
+          :sortedSisters_ = "sortedSisters"
+          :sortedSiblings_ = "sortedSiblings"
+          :isSisterTaxaLoaded_ = "isSisterTaxaLoaded"
+          :isSiblingsLoaded_ = "isSiblingsLoaded"
+          :isHierarchyLoaded_ = "isHierarchyLoaded"
+        ></taxonomical-tree>
+
       </div>
       <br />
       <div>
@@ -181,7 +171,7 @@
         <!--{{taxon}}-->
         <!--{{parent}}-->
         <!--<br>{{description}}<br>-->
-        <!--{{taxon_image}}-->
+        <!--{{taxon_images}}-->
         <!--{{taxon_page}}-->
         <!--{{common_names}}-->
         <!--{{taxon_list}}-->
@@ -194,28 +184,7 @@
         <!--{{speciment_attachment}}-->
         <!--{{hierarchy}}-->
       </div>
-
-      <div v-if="taxon_image">
-      <div style="clear: both;"></div>
-      <div class='photogallery'>
-
-        <!--<div style="position:relative;float:left;" @mouseover="showImageInfo('taxon_image_'+1)" @mouseout="hideImageInfo('taxon_image_'+1)">-->
-          <!--<a rel="gallery-1" href="http://files.geocollections.info/large/36/03/3603ff5e-671a-416d-9843-7d3db7319c5d.jpg" ref="link" onclick="return false;" class="swipebox" title="GIT 315-45 Kalloprion">-->
-            <!--<img src="h`tp://files.geocollections.info/36/03/3603ff5e-671a-416d-9843-7d3db7319c5d.jpg" alt="Kalloprionidae"-->
-                 <!--title="Kalloprion sp. A Hints, 2000: GIT 315-45" border="0" /></a>-->
-          <!--<div id = "2" class="zoomIcon" style="display:block;cursor:pointer;position:absolute;top:0;right:0;" v-show="mouseOverImage === 'taxon_image_'+1"-->
-               <!--onclick="">-->
-            <!--<img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />-->
-          <!--</div>-->
-        <!--</div>-->
-        <h3>{{taxon.images_title}} ({{taxon.taxon}})</h3>
-
-        <div v-for="(image,idx) in taxon_image">
-          <file-preview :image = "image" :idx = "idx" :title="image.link__taxon" isSpeciment="false"></file-preview>
-        </div>
-
-        <div style="clear:both;"></div>
-      </div>
+      <image-gallery :images="taxon_images" v-if="taxon_images" ></image-gallery>
     </div>
     <div id="taxon-main">
       <div id="taxon-left">
@@ -278,82 +247,68 @@
           </ul>
         </div>
       </div>
-      <div id="taxon-right">
+
+      <div id="taxon-right" >
         <div style="padding: 0 0 0 10px;">
           <h3>{{$t('header.f_taxon_images')}}</h3>
           <div class="photogallery">
-            <div style="float: left; position: relative;" class="image_highlight"  v-for="(image,idx) in speciment_attachment">
-              <!--<a :href="image.path"  style="cursor:default" class="swipebox" onclick="return false;">-->
-                <!--<img style="vertical-align: top;" :src="image.path"-->
-                     <!--:alt="image.name+','+ image.number" :title="image.name+','+ image.number" border="0"/></a>-->
-              <!--<div v-show="mouseOverImage === 'speciment_attachment_'+idx" class="image_label" >-->
-                <!--<div style="padding: 3px;">-->
-                  <!--<strong> {{image.number}} {{image.name}} <br />-->
-                    <!--<span  @click="openUrl({parent_url:'http://geokogud.info/specimen',object:image.id, width:500,height:500})"-->
-                           <!--class="openwinlink">-->
-                        <!--INFO</span>-->
-                    <!--|-->
-                    <!--<span @click="openUrl({parent_url:'http://geokogud.info/specimen_image',object:image.id, width:500,height:500})"-->
-                          <!--class="openwinlink">-->
-                        <!--IMAGE</span></strong></div>-->
-              <!--</div>-->
-              <!--<div style="cursor:pointer;position:absolute;top:0;right:0;z-index:1000;" v-show="mouseOverImage === 'speciment_attachment_'+idx"-->
-                   <!--onclick="$(this).siblings('a').trigger('dblclick');">-->
-                <!--<img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />-->
-              <!--</div>-->
-              <file-preview :image = "image" :idx = "idx" :title="image.link__taxon" :taxon="taxon" :isSpecimen="true"></file-preview>
+            <div style="float: left; position: relative;" class="image_highlight"  v-for="(image,idx) in speciment_attachment"
+                 @mouseover="showImageInfo('speciment_attachment_'+idx)" @mouseout="hideImageInfo('speciment_attachment_'+idx)">
+              <a :href="image.path"  style="cursor:default" class="swipebox" >
+                <img style="vertical-align: top;" :src="image.path"
+                     :alt="image.name+','+ image.number" :title="image.name+','+ image.number" border="0"/></a>
+              <div v-show="mouseOverImage === 'speciment_attachment_'+idx" class="image_label" >
+                <div style="padding: 3px;">
+                  <strong> {{image.number}} {{image.name}} <br />
+                    <span  @click="openUrl({parent_url:'http://geokogud.info/specimen',object:image.id, width:500,height:500})"
+                           class="openwinlink">
+                        INFO</span>
+                    |
+                    <span @click="openUrl({parent_url:'http://geokogud.info/specimen_image',object:image.id, width:500,height:500})"
+                          class="openwinlink">
+                        IMAGE</span></strong></div>
+              </div>
+              <div style="cursor:pointer;position:absolute;top:0;right:0;z-index:1000;" v-show="mouseOverImage === 'speciment_attachment_'+idx"
+                   onclick="$(this).siblings('a').trigger('dblclick');">
+                <img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />
+              </div>
             </div>
 
           </div>
         </div>
       </div>
     </div>
-    </div>
   </div>
 </template>
 <script>
   import MyMixin from '../../../mixins/mixin';
   import Spinner from 'vue-simple-spinner';
-  import FilePreview from "./FilePreview";
+  import ImageGallery from "./ImageGallery";
+  import TaxonomicalTree from "./TaxonomicalTree";
+  import ClassificationTable from "./ClassificationTable";
+
   export default {
     mixins: [MyMixin],
     name: 'item-page',
     components: {
-      Spinner,
-      FilePreview
+      ClassificationTable,
+      TaxonomicalTree,
+      ImageGallery,
+      Spinner
     },
     data () {
       return this.initialData()
     },
     computed: {
+
       sortedSiblings: function() {
         return _.orderBy(this.siblings,'taxon');
       },
       sortedSisters: function() {
         return _.orderBy(this.sister_taxa,'taxon');
       },
-      filteredHierarhy: function() {
-        let filteredList = _.orderBy(this.hierarchy,'id').filter(function(val, i) {
-          return '29'.indexOf(val.id) === -1 && val.id <= this.taxon.fossil_group__id; //29 - Biota ID
-        }, this);
-
-        let uniqueIds = Array.from(new Set(filteredList.map(item => item.id)));
-
-        if (!uniqueIds.includes(this.parent.parent_id))
-          filteredList.push({id:this.parent.parent_id, rank__rank: 'sugukond', rank__rank_en: 'Family', taxon: this.parent.parent__taxon})
-        if (!uniqueIds.includes(this.parent.id))
-          filteredList.push({id:this.parent.id, rank__rank: this.parent.rank__rank, rank__rank_en: this.parent.rank__rank_en, taxon: this.parent.taxon})
-        if (!uniqueIds.includes(this.taxon.id))
-          filteredList.push({id:this.taxon.id, rank__rank: this.taxon.rank__rank, rank__rank_en: this.taxon.rank__rank_en, taxon: this.taxon.taxon})
-        return filteredList
-      },
-
       sortedSistersWithoutCurrentTaxon: function() {
         return this.excludeCurrentTaxon(this.sortedSisters, this.$route.params.id);
-      },
-
-      taxonomicTreeIsLoaded: function() {
-        return this.isSiblingsLoaded && this.isSisterTaxaLoaded && this.isHierarchyLoaded
       },
 
       taxon_page: function() {
@@ -366,7 +321,9 @@
       mode () {
         return this.$localStorage.mode === 'in_baltoscandia'
       },
-
+      taxonomicTreeIsLoaded: function() {
+        return this.isSisterTaxaLoaded && this.isSiblingsLoaded && this.isHierarchyLoaded
+      },
 
     },
     methods: {
@@ -375,7 +332,7 @@
           taxon : {},
           parent : {},
           description : {},
-          taxon_image : {},
+          taxon_images : [],
           sister_taxa : {},
           taxonPages : [],
           common_names : {},
@@ -398,6 +355,8 @@
           taxonomicTree: {nodes: []},
           isSpecies: false,
           mouseOverImage: null,
+          isTaxonImagesLoaded:false,
+          imagesLength: 100,
           searchParameters: {
             watched: {
               page: 1,
@@ -411,26 +370,12 @@
         }
       },
 
-      // showImagePreview: function(idx) {
-      //   var idx_ = idx
-      //
-      //   $(".zoomIcon").click(function (evt) {
-      //
-      //     let idx = ($(this).attr("id"))
-      //     console.log($(this))
-      //     $(this).siblings('a').attr('href', 'http://geokogud.info/git/di.php?f=specimen_image/315/315-45.jpg&w=1280');
-      //     $(this).siblings('a').trigger('dblclick');
-      //     $(this).siblings('a').attr('href', '/1091' + idx);
-      //   });
-      //   //
-      //   // $(this).siblings('a').attr('href','http://geokogud.info/git/di.php?f=specimen_image/315/315-45.jpg&w=1280'); $(this).siblings('a').trigger('dblclick'); $(this).siblings('a').attr('href','/1091');
-      //   // this.$nextTick(function(){
-      //   //   console.log('test')
-      //   // $(this).siblings('a').attr('href','http://geokogud.info/git/di.php?f=specimen_image/315/315-45.jpg&w=1280'); $(this).siblings('a').trigger('dblclick'); $(this).siblings('a').attr('href','/1091'+idx);
-      //   // })
-      //   // // $(this).siblings('a').attr('href','http://geokogud.info/git/di.php?f=specimen_image/315/315-45.jpg&w=1280'); event.target.siblings('a').trigger('dblclick'); event.target.siblings('a').attr('href','/1091'+idx);
-      //
-      // },
+      showImageInfo: function(imageIdx){
+        this.mouseOverImage = imageIdx
+      },
+      hideImageInfo: function(imageIdx){
+        this.mouseOverImage = null
+      },
       getLocationsObject : function(object) {
         if (object === undefined) return;
         let locations = [];
@@ -480,76 +425,6 @@
       convertToTwoDecimal: function (value) {
         return value.toFixed(1)
       },
-
-      /**************************
-       *** TAXONOMIC TREE START ***
-       **************************/
-      addHierarchy: function(filteredList,sisterIds) {
-        for(let idx in filteredList) {
-          let node = {i: idx, label: filteredList[idx].taxon, id: filteredList[idx].id, siblings: []};
-          if(!sisterIds.includes(filteredList[idx].id))
-            this.taxonomicTree.nodes.push(node)
-        }
-      },
-      addSisters: function(level) {
-        for(let idx in this.sortedSisters) {
-          let node = {i: level, label: this.formatName(this.sortedSisters[idx],this.parent), id: this.sortedSisters[idx].id, siblings: []};
-          if (this.sortedSisters[idx].id === this.taxon.id) {
-            this.addSiblingsIfExists(node)
-          }
-          this.taxonomicTree.nodes.push(node)
-        }
-      },
-      composeTaxonomicTree: function() {
-        let filteredList = _.orderBy(this.hierarchy,'id').filter(function(val, i) {
-          return val.id <= this.taxon.fossil_group__id; //29 - Biota ID
-        }, this);
-
-        let sisterIds = Array.from(this.sortedSisters.map(item => item.id));
-        let hierarchyIds = Array.from(this.hierarchy.map(item => item.id));
-
-        this.addHierarchy(filteredList,sisterIds)
-        let level = filteredList.length
-
-        if (!sisterIds.includes(this.parent.parent__id) && !hierarchyIds.includes(this.parent.parent_id)) {
-          let node = {i: level, label: this.parent.parent__taxon, id: this.parent.parent_id, siblings: []};
-          this.taxonomicTree.nodes.push(node)
-          level += 1;
-        }
-        if (!hierarchyIds.includes(this.parent.id)) {
-          let node = {i: level, label: this.parent.taxon, id: this.parent.id, siblings: []};
-          this.taxonomicTree.nodes.push(node)
-          level += 1;
-        }
-
-        this.addSisters(level)
-
-      },
-
-      formatName: function(taxon,parent) {
-        if(parent.label)
-          return _.includes(taxon.taxon, taxon.parent__taxon) ? taxon.taxon.replace(taxon.parent__taxon, "") : taxon.taxon;
-        return _.includes(taxon.taxon, parent.taxon) ? taxon.taxon.replace(parent.taxon, "") : taxon.taxon;
-
-
-      },
-      addSiblingsIfExists: function(parent_node) {
-        if (this.isDefinedAndNotEmpty(this.sortedSiblings)) {
-          for(let idx1 in this.sortedSiblings) {
-            if (parent_node.id === this.sortedSiblings[idx1].parent_id) {
-              parent_node.siblings.push({j: idx1, label: this.formatName(this.sortedSiblings[idx1],parent_node), id: this.sortedSiblings[idx1].id});
-            }
-          }
-        }
-      },
-      convertToNumber: function(str) {
-        return parseInt(str)
-      },
-
-      /**************************
-       *** TAXONOMIC TREE END ***
-       **************************/
-
       /**************************
        *** REQUEST DATA START ***
        **************************/
@@ -586,13 +461,13 @@
           this.hierarchy = response;
           this.isHierarchyLoaded = true;
         });
+        this.getRequest(this.apiUrl+'/taxon_image/?taxon='+this.$route.params.id).then((response) => {
+          this.taxon_images = this.composeImageRequest(response);
+          this.isTaxonImagesLoaded = true
 
+        });
         this.getRequest(this.apiUrl+'/taxon_page/?taxon='+this.$route.params.id).then((response) => {
           this.taxonPages = response;
-        });
-
-        this.getRequest(this.apiUrl+'/taxon_image/?taxon='+this.$route.params.id).then((response) => {
-          this.taxon_image = this.composeImageRequest(response)
         });
 
         this.getRequest(this.apiUrl+'/taxon_description/?taxon='+this.$route.params.id).then((response) => {
@@ -609,7 +484,6 @@
 
         this.getRequest(this.apiUrl+'/taxon_occurrence/?taxon='+this.$route.params.id).then((response) => {
           this.taxon_occurrence = response;
-          console.log(response)
           //load map
           let locations = this.getLocationsObject(this.taxon_occurrence)
           if (locations && locations.length > 0) {
@@ -629,7 +503,6 @@
 
         this.getRequest(this.apiUrl+'/taxon_type_specimen/?taxon='+this.$route.params.id).then((response) => {
           this.taxon_type_specimen = response;
-          console.log(this.taxon_type_specimen)
         });
 
         this.getRequest(this.apiUrl+'/specimen/?specimenidentification__taxon_id='+this.$route.params.id+'&fields=id&format=json').then((response) => {
@@ -684,12 +557,7 @@
           this.loadFullTaxonInfo()
         }
       },
-      // WATCH if all taxonomic tree data is loaded
-      taxonomicTreeIsLoaded: {
-        handler : function (newval, oldval) {
-          if(newval) this.composeTaxonomicTree()
-        }
-      },
+
       'searchParameters.watched': {
         handler: function () {
           this.searchSpecies(this.searchParameters)
@@ -706,7 +574,7 @@
     updated: function() {
       this.lang_ = this.$localStorage.fossilsLang
     },
-    created: function(){
+    created(){
       Object.assign(this.$data, this.initialData());
       this.loadFullTaxonInfo();
     },
