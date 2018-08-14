@@ -151,7 +151,7 @@
         <h3>{{$t('header.f_taxon_references')}}</h3>
         <ul>
           <li v-for=" reference in taxonOccurrence">
-            <span class="openwinlink" @click="openUrl({parent_url:'http://geokogud.info/reference',object:reference.reference, width:500,height:500})">
+            <span class="openwinlink" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
               <strong>{{reference.reference__reference}}</strong>
             </span>. {{reference.reference__title}}.
             <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
@@ -243,7 +243,7 @@
         </div>
         <br />
         <div id="taxon_description" v-if = "description && description.description">
-          <h3>{{$t('header.f_taxon_description_diagnosis')}} (<span class="openwinlink" @click="openUrl({parent_url:'http://geokogud.info/reference',object:description.reference, width:500,height:500})">
+          <h3>{{$t('header.f_taxon_description_diagnosis')}} (<span class="openwinlink" @click="openUrl({parent_url:'http://geocollections.info/reference',object:description.reference, width:500,height:500})">
               <strong>{{description.reference__reference}}</strong>)
           </span></h3>
 
