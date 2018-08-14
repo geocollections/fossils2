@@ -33,7 +33,7 @@
       </div>
 
       <div id="header2">
-        <h1><a href='/'>{{ $t('header.title') }}</a></h1>
+        <h1> <router-link v-bind:to="'/'">{{ $t('header.title') }}</router-link></h1>
       </div>
 
       <div id="header3">
