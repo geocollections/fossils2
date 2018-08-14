@@ -252,27 +252,7 @@
         <div style="padding: 0 0 0 10px;">
           <h3>{{$t('header.f_taxon_images')}}</h3>
           <div class="photogallery">
-            <div style="float: left; position: relative;" class="image_highlight"  v-for="(image,idx) in speciment_attachment"
-                 @mouseover="showImageInfo('speciment_attachment_'+idx)" @mouseout="hideImageInfo('speciment_attachment_'+idx)">
-              <a :href="image.path"  style="cursor:default" class="swipebox" >
-                <img style="vertical-align: top;" :src="image.path"
-                     :alt="image.name+','+ image.number" :title="image.name+','+ image.number" border="0"/></a>
-              <div v-show="mouseOverImage === 'speciment_attachment_'+idx" class="image_label" >
-                <div style="padding: 3px;">
-                  <strong> {{image.number}} {{image.name}} <br />
-                    <span  @click="openUrl({parent_url:'http://geokogud.info/specimen',object:image.id, width:500,height:500})"
-                           class="openwinlink">
-                        INFO</span>
-                    |
-                    <span @click="openUrl({parent_url:'http://geokogud.info/specimen_image',object:image.id, width:500,height:500})"
-                          class="openwinlink">
-                        IMAGE</span></strong></div>
-              </div>
-              <div style="cursor:pointer;position:absolute;top:0;right:0;z-index:1000;" v-show="mouseOverImage === 'speciment_attachment_'+idx"
-                   onclick="$(this).siblings('a').trigger('dblclick');">
-                <img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />
-              </div>
-            </div>
+            <image-gallery :images="speciment_attachment" v-if="speciment_attachment" :isSpecimen="true"></image-gallery>
           </div>
         </div>
       </div>
@@ -333,29 +313,29 @@
 
     },
     methods: {
-      initialData : function() {
+      initialData: function () {
         return {
-          taxon : {},
-          parent : {},
-          description : {},
-          taxon_images : [],
-          sister_taxa : {},
-          taxonPages : [],
-          common_names : {},
-          taxon_list : {},
-          taxonOccurrence : {},
+          taxon: {},
+          parent: {},
+          description: {},
+          taxon_images: [],
+          sister_taxa: {},
+          taxonPages: [],
+          common_names: {},
+          taxon_list: {},
+          taxonOccurrence: {},
           isTaxonOccurrenceLoaded: false,
           isTaxonTypeSpecimenLoaded: false,
-          isSpecimenIdentificationLoaded:false,
-          children : {},
-          siblings : {},
-          synonyms : {},
-          taxonTypeSpecimen : null,
-          specimenIdentification : {},
-          speciment_attachment : {},
-          hierarchy : {},
-          isMapLoaded : false,
-          lang_ : this.$localStorage.fossilsLang,
+          isSpecimenIdentificationLoaded: false,
+          children: {},
+          siblings: {},
+          synonyms: {},
+          taxonTypeSpecimen: null,
+          specimenIdentification: {},
+          speciment_attachment: {},
+          hierarchy: {},
+          isMapLoaded: false,
+          lang_: this.$localStorage.fossilsLang,
           numberOfSpecimen: {},
           requestingData: false,
           isSisterTaxaLoaded: false,
@@ -364,7 +344,7 @@
           taxonomicTree: {nodes: []},
           isSpecies: false,
           mouseOverImage: null,
-          isTaxonImagesLoaded:false,
+          isTaxonImagesLoaded: false,
           imagesLength: 100,
           searchParameters: {
             watched: {
@@ -379,39 +359,16 @@
         }
       },
 
-      showImageInfo: function(imageIdx){
-        this.mouseOverImage = imageIdx
-      },
-      hideImageInfo: function(imageIdx){
-        this.mouseOverImage = null
+      calculateSpeciesIdx: function (idx) {
+        return (idx + 1) + this.searchParameters.watched.paginateBy * this.searchParameters.watched.page - this.searchParameters.watched.paginateBy
       },
 
-      calculateSpeciesIdx: function(idx) {
-        return (idx+1) + this.searchParameters.watched.paginateBy * this.searchParameters.watched.page - this.searchParameters.watched.paginateBy
-      },
-      composeImageRequest : function(taxonImages) {
-        if(taxonImages === undefined) return;
-        let self = this;
-        taxonImages.forEach(function(element) {
-          if (element.uuid_filename && element.uuid_filename != null) {
-            element.path = self.fileUrl + '/' + element.uuid_filename.substring(0,2)+'/'+ element.uuid_filename.substring(2,4)+'/'+ element.uuid_filename;
-          }
-          else if(element.attachment__uuid_filename && element.attachment__uuid_filename != null) {
-            element.path = self.fileUrl + '/' + element.attachment__uuid_filename.substring(0,2)+'/'
-              + element.attachment__uuid_filename.substring(2,4)+'/'+ element.attachment__uuid_filename;
-
-          }
-
-        });
-        return taxonImages
-      },
-
-      openUrl : function(params) {
+      openUrl: function (params) {
         window.open(params.parent_url + '/' + params.object, '', 'width=' + params.width +
-          ',height=' + params.height,scrollbars)
+          ',height=' + params.height, scrollbars)
       },
-      excludeCurrentTaxon : function(list, itemID) {
-        return list.filter(function(val, i) {
+      excludeCurrentTaxon: function (list, itemID) {
+        return list.filter(function (val, i) {
           return itemID.indexOf(val.id) === -1;
         }, this);
       },
@@ -424,80 +381,81 @@
       loadFullTaxonInfo: function () {
         this.requestingData = true;
 
-        this.getRequest(this.apiUrl+'/taxon/'+this.$route.params.id).then((response) => {
+        this.getRequest(this.apiUrl + '/taxon/' + this.$route.params.id).then((response) => {
           this.taxon = response ? response[0] : {};
           this.requestingData = false;
 
-          if (this.isDefinedAndNotNull(this.taxon.parent)){
-            this.getRequest(this.apiUrl+'/taxon/'+this.taxon.parent).then((response) => {
+          if (this.isDefinedAndNotNull(this.taxon.parent)) {
+            this.getRequest(this.apiUrl + '/taxon/' + this.taxon.parent).then((response) => {
               this.parent = response ? response[0] : {};
               // Sister taxa
-              this.getRequest(this.apiUrl+'/taxon/?parent_id='+this.taxon.parent+'&in_baltoscandia='+this.isInBaltoscandia(this.$localStorage.mode)+'&fields=taxon,id').then((response) => {
+              this.getRequest(this.apiUrl + '/taxon/?parent_id=' + this.taxon.parent + '&in_baltoscandia=' + this.isInBaltoscandia(this.$localStorage.mode) + '&fields=taxon,id').then((response) => {
                 this.sister_taxa = response;
                 this.isSisterTaxaLoaded = true;
               });
             });
           }
 
-          if(this.taxon.rank__rank_en !== 'species'){
+          if (this.taxon.rank__rank_en !== 'species') {
             this.searchSpecies(this.searchParameters)
           }
         });
 
-        this.getRequest(this.apiUrl+'/taxon/?parent='+this.$route.params.id+'&in_baltoscandia='+this.isInBaltoscandia(this.$localStorage.mode)).then((response) => {
+        this.getRequest(this.apiUrl + '/taxon/?parent=' + this.$route.params.id + '&in_baltoscandia=' + this.isInBaltoscandia(this.$localStorage.mode)).then((response) => {
           this.children = response;
           this.siblings = response;
           this.isSiblingsLoaded = true;
         });
 
-        this.getRequest(this.apiUrl+'/taxon?id__in=1,29,38,60,61,62,259,1081,2104&fields=id,taxon,rank__rank,rank__rank_en').then((response) => {
+        this.getRequest(this.apiUrl + '/taxon?id__in=1,29,38,60,61,62,259,1081,2104&fields=id,taxon,rank__rank,rank__rank_en').then((response) => {
           this.hierarchy = response;
           this.isHierarchyLoaded = true;
         });
-        this.getRequest(this.apiUrl+'/taxon_image/?taxon='+this.$route.params.id).then((response) => {
-          this.taxon_images = this.composeImageRequest(response);
+        this.getRequest(this.apiUrl + '/taxon_image/?taxon=' + this.$route.params.id).then((response) => {
+          this.taxon_images = response;
           this.isTaxonImagesLoaded = true
 
         });
-        this.getRequest(this.apiUrl+'/taxon_page/?taxon='+this.$route.params.id).then((response) => {
+        this.getRequest(this.apiUrl + '/taxon_page/?taxon=' + this.$route.params.id).then((response) => {
           this.taxonPages = response;
         });
 
-        this.getRequest(this.apiUrl+'/taxon_description/?taxon='+this.$route.params.id).then((response) => {
+        this.getRequest(this.apiUrl + '/taxon_description/?taxon=' + this.$route.params.id).then((response) => {
           this.description = response;
         });
 
-        this.getRequest(this.apiUrl+'/taxon_common_name/?taxon='+this.$route.params.id).then((response) => {
+        this.getRequest(this.apiUrl + '/taxon_common_name/?taxon=' + this.$route.params.id).then((response) => {
           this.common_names = response;
         });
 
-        this.getRequest(this.apiUrl+'/taxon_list/?taxon='+this.$route.params.id).then((response) => {
+        this.getRequest(this.apiUrl + '/taxon_list/?taxon=' + this.$route.params.id).then((response) => {
           this.taxon_list = response;
         });
 
-        this.getRequest(this.apiUrl+'/taxon_occurrence/?taxon='+this.$route.params.id).then((response) => {
+        this.getRequest(this.apiUrl + '/taxon_occurrence/?taxon=' + this.$route.params.id).then((response) => {
           this.taxonOccurrence = response;
           this.isTaxonOccurrenceLoaded = true;
         });
 
-        this.getRequest(this.apiUrl+'/taxon_synonym/?taxon='+this.$route.params.id).then((response) => {
+        this.getRequest(this.apiUrl + '/taxon_synonym/?taxon=' + this.$route.params.id).then((response) => {
           this.synonyms = response;
         });
 
-        this.getRequest(this.apiUrl+'/taxon_type_specimen/?taxon='+this.$route.params.id).then((response) => {
+        this.getRequest(this.apiUrl + '/taxon_type_specimen/?taxon=' + this.$route.params.id).then((response) => {
           this.taxonTypeSpecimen = response;
           this.isTaxonTypeSpecimenLoaded = true;
         });
 
-        this.getRequest(this.apiUrl+'/specimen/?specimenidentification__taxon_id='+this.$route.params.id+
+        this.getRequest(this.apiUrl + '/specimen/?specimenidentification__taxon_id=' + this.$route.params.id +
           '&fields=id,locality_id,locality__locality,locality__locality_en,locality__longitude,locality__latitude&format=json').then((response) => {
           this.specimenIdentification = response;
           this.isSpecimenIdentificationLoaded = true;
         });
 
-        this.getRequest(this.apiUrl+'/attachment/?specimen__specimenidentification__taxon__id='+this.$route.params.id+
-          '&fields=id,specimen__specimen_id,database__acronym,uuid_filename&format=json').then((response) => {
-          this.speciment_attachment = this.composeImageRequest(response);
+        this.getRequest(this.apiUrl + '/attachment/?specimen__specimenidentification__taxon__id=' + this.$route.params.id +
+          '&fields=id,specimen_id,specimen__specimen_id,database__acronym,uuid_filename&format=json').then((response) => {
+          this.speciment_attachment = response;
+          this.imagesLength = this.speciment_attachment.length
         });
 
         /**************************
@@ -505,9 +463,9 @@
          **************************/
       },
 
-      searchSpecies: function(searchParameters) {
+      searchSpecies: function (searchParameters) {
         let isInBaltoscandia = this.taxon.in_baltoscandia === true ? 1 : 0;
-        this.getRequest(this.apiUrl+'/taxon/?hierarchy_string__istartswith='+this.taxon.hierarchy_string+'&rank__rank_en=species&in_baltoscandia='+isInBaltoscandia+'&fields=taxon,id&page='+searchParameters.watched.page+'&paginate_by='+searchParameters.watched.paginateBy, true).then((response) => {
+        this.getRequest(this.apiUrl + '/taxon/?hierarchy_string__istartswith=' + this.taxon.hierarchy_string + '&rank__rank_en=species&in_baltoscandia=' + isInBaltoscandia + '&fields=taxon,id&page=' + searchParameters.watched.page + '&paginate_by=' + searchParameters.watched.paginateBy, true).then((response) => {
           this.isSpecies = this.$route.meta.isSpecies;
           this.allSpecies = response.results;
           this.numberOfSpecimen = response.count;
@@ -516,7 +474,7 @@
         });
       },
 
-      reloadPage: function() {
+      reloadPage: function () {
         Object.assign(this.$data, this.initialData());
         this.loadFullTaxonInfo();
       }

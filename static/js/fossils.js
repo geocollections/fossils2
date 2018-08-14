@@ -289,12 +289,11 @@ var displayFeatureInfo = function(pixel) {
 
 $(function(fs) {
   $( '.swipebox' ).swipebox();
+  $(".zoomIcon").click(function(evt){
+    let idx = ($(this).attr("id"))
+    $(this).siblings('a').trigger('dblclick');
+    //$(this).siblings('a').attr('href','/1091'+idx);
+  });
 })
 
 
-var clickImage = function(idx, path) {
-  console.log($(this).siblings('a'))
-
-  $(this).siblings('a').attr('href',path); $(this).siblings('a').trigger('dblclick'); $(this).siblings('a').attr('href','/1091'+idx);
-
-}
