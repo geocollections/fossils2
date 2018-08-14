@@ -163,21 +163,21 @@
         </ul>
       </div>
       <div>
-        {{taxon}}
-        {{parent}}
-        <br>{{description}}<br>
-        {{taxonImages}}
-        {{taxon_page}}
-        {{common_names}}
-        {{taxon_list}}
-        {{taxonOccurrence}}
-        {{children}}
-        {{siblings}}
-        {{synonyms}}
-        {{taxonTypeSpecimen}}
-        {{specimenIdentification}}
-        {{speciment_attachment}}
-        {{hierarchy}}
+        <!--{{taxon}}-->
+        <!--{{parent}}-->
+        <!--<br>{{description}}<br>-->
+        <!--{{taxonImages}}-->
+        <!--{{taxon_page}}-->
+        <!--{{common_names}}-->
+        <!--{{taxon_list}}-->
+        <!--{{taxonOccurrence}}-->
+        <!--{{children}}-->
+        <!--{{siblings}}-->
+        <!--{{synonyms}}-->
+        <!--{{taxonTypeSpecimen}}-->
+        <!--{{specimenIdentification}}-->
+        <!--{{speciment_attachment}}-->
+        <!--{{hierarchy}}-->
       </div>
       <image-gallery :images="taxonImages" v-if="taxonImages" ></image-gallery>
 
@@ -240,6 +240,14 @@
                 </span>
             </li>
           </ul>
+        </div>
+        <br />
+        <div id="taxon_description" v-if = "description && description.description">
+          <h3>{{$t('header.f_taxon_description_diagnosis')}} (<span class="openwinlink" @click="openUrl({parent_url:'http://geokogud.info/reference',object:description.reference, width:500,height:500})">
+              <strong>{{description.reference__reference}}</strong>)
+          </span></h3>
+
+          <div v-html="description.description"></div>
         </div>
         <br>
       </div>
@@ -416,7 +424,7 @@
         });
 
         this.getRequest(this.apiUrl + '/taxon_description/?taxon=' + this.$route.params.id).then((response) => {
-          this.description = response;
+          this.description = response[0];
         });
 
         this.getRequest(this.apiUrl + '/taxon_common_name/?taxon=' + this.$route.params.id).then((response) => {
