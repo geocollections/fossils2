@@ -9,11 +9,12 @@
           <router-link v-bind:to="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
             <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon"
                  :title="taxon.fossil_group__taxon" style="height: 80px; margin-top: 0px; padding-right: 0px;" />
-            <!--<br />{{taxon.fossil_group__taxon}}-->
+            <br />{{taxon.fossil_group__taxon}}
           </router-link>
           <router-link v-bind:to="'/'+taxon.id" v-else-if="taxon.is_fossil_group == 1">
             <img border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon"
                  :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" />
+            <br />{{taxon.fossil_group__taxon}}
           </router-link>
         </div>
 
@@ -169,7 +170,7 @@
         <!--{{taxonImages}}-->
         <!--{{taxon_page}}-->
         <!--{{common_names}}-->
-        <!--{{taxon_list}}-->
+        <!--{{taxonList}}-->
         <!--{{taxonOccurrence}}-->
         <!--{{children}}-->
         <!--{{siblings}}-->
@@ -241,6 +242,40 @@
             </li>
           </ul>
         </div>
+        <br/>
+        <div id="distribution_references" v-if="false">
+          <h3>{{$t('header.f_species_distribution_references')}}</h3>
+          <ul>
+            <li v-for=" reference in taxonOccurrence">
+            <span class="openwinlink" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
+              <strong>{{reference.reference__reference}}</strong>
+              <!--<span v-translate="{et:reference.sample__locality__locality,en:reference.sample__locality__locality_en}"></span>-->
+              <!--{{reference.sample__depth}} - {{reference.sample__depth_interval}}-->
+            </span>
+            </li>
+          </ul>
+        </div>
+        <div id="distribution_samples" v-if="false">
+          <h3>{{$t('header.f_species_distribution_samples')}}</h3>
+          <ul>
+            <li>
+            <!--<a href='http://geokogud.info/locality/{{sample.locality_id}}' target='_blank'>{{sample.locality}}</a>
+						{{sample.depth}}:
+						<a target='_blank' href='http://geokogud.info/search.php?taxon_1=1&taxon={{sample.species_name_original}}&taxon_2=1&locality_1=1&locality={{sample.locality}}&locality_2=1&currentTable=sample'>
+						{{sample.num}} {{strings_fossils.f_species_link_samples}}
+						</a>-->
+            </li>
+          </ul>
+        </div>
+        <div id="distribution_conop" v-if="false">
+          <h3>{{$t('header.f_species_distribution_samples')}} (CONOP):</h3>
+          <ul>
+            <li>
+
+            </li>
+          </ul>
+        </div>
+        <br />
         <br />
         <div id="taxon_description" v-if = "description && description.description">
           <h3>{{$t('header.f_taxon_description_diagnosis')}} (<span class="openwinlink" @click="openUrl({parent_url:'http://geocollections.info/reference',object:description.reference, width:500,height:500})">
@@ -325,7 +360,7 @@
           sister_taxa: {},
           taxonPages: [],
           common_names: {},
-          taxon_list: {},
+          taxonList: {},
           taxonOccurrence: {},
           isTaxonOccurrenceLoaded: false,
           isTaxonTypeSpecimenLoaded: false,
@@ -424,7 +459,7 @@
         });
 
         this.getRequest(this.apiUrl + '/taxon_description/?taxon=' + this.$route.params.id).then((response) => {
-          this.description = response[0];
+          this.description = response ? response[0] : response;
         });
 
         this.getRequest(this.apiUrl + '/taxon_common_name/?taxon=' + this.$route.params.id).then((response) => {
@@ -432,7 +467,7 @@
         });
 
         this.getRequest(this.apiUrl + '/taxon_list/?taxon=' + this.$route.params.id).then((response) => {
-          this.taxon_list = response;
+          this.taxonList = response;
         });
 
         this.getRequest(this.apiUrl + '/taxon_occurrence/?taxon=' + this.$route.params.id).then((response) => {
