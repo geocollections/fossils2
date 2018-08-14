@@ -60,15 +60,10 @@
 
       </div>
       <br />
-      <div>
+      <div v-if="taxon_page && taxon_page.link_wikipedia">
         <h3>{{$t('header.f_weblinks')}}</h3>
         <div id="taxon-links">
-        <span>
-
-        </span>
-          <!--{% for link in content.seealso_links %}-->
-          <!--<a href="{{link.url}}">{{link.name}}</a> {% if forloop.last %}{%else%} <br /> {% endif %}-->
-          <!--{% endfor %}-->
+          <a :href="'http://'+lang_+'.wikipedia.org/wiki/'+taxon_page.link_wikipedia">{{$t('header.f_link_wikipedia')}}</a>
         </div>
       </div>
     </div >
@@ -168,23 +163,23 @@
         </ul>
       </div>
       <div>
-        <!--{{taxon}}-->
-        <!--{{parent}}-->
-        <!--<br>{{description}}<br>-->
-        <!--{{taxon_images}}-->
-        <!--{{taxon_page}}-->
-        <!--{{common_names}}-->
-        <!--{{taxon_list}}-->
-        <!--{{taxonOccurrence}}-->
-        <!--{{children}}-->
-        <!--{{siblings}}-->
-        <!--{{synonyms}}-->
-        <!--{{taxonTypeSpecimen}}-->
-        <!--{{specimenIdentification}}-->
-        <!--{{speciment_attachment}}-->
-        <!--{{hierarchy}}-->
+        {{taxon}}
+        {{parent}}
+        <br>{{description}}<br>
+        {{taxonImages}}
+        {{taxon_page}}
+        {{common_names}}
+        {{taxon_list}}
+        {{taxonOccurrence}}
+        {{children}}
+        {{siblings}}
+        {{synonyms}}
+        {{taxonTypeSpecimen}}
+        {{specimenIdentification}}
+        {{speciment_attachment}}
+        {{hierarchy}}
       </div>
-      <image-gallery :images="taxon_images" v-if="taxon_images" ></image-gallery>
+      <image-gallery :images="taxonImages" v-if="taxonImages" ></image-gallery>
 
     <div id="taxon-main">
       <div id="taxon-left">
@@ -318,7 +313,7 @@
           taxon: {},
           parent: {},
           description: {},
-          taxon_images: [],
+          taxonImages: [],
           sister_taxa: {},
           taxonPages: [],
           common_names: {},
@@ -412,7 +407,7 @@
           this.isHierarchyLoaded = true;
         });
         this.getRequest(this.apiUrl + '/taxon_image/?taxon=' + this.$route.params.id).then((response) => {
-          this.taxon_images = response;
+          this.taxonImages = response;
           this.isTaxonImagesLoaded = true
 
         });

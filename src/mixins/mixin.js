@@ -3,7 +3,33 @@ let MyMixin = {
     return {
       apiUrl : 'https://api.geocollections.info',
       fileUrl :  'http://files.geocollections.info',
-      lang: 'ee'
+      lang: 'ee',
+      seealso_links : [
+        {
+          'keyword':'link_wikipedia',
+          'url':'http://%(language)s.wikipedia.org/wiki/%(slug)s',
+          'name':['f_link_wikipedia']},
+        {
+          'keyword':'taxon_id_tol',
+          'url':'http://tolweb.org/%(slug)s',
+          'name':['f_link_tolweb']},
+        {
+          'keyword':'taxon_id_eol',
+          'url':'http://www.eol.org/pages/%(slug)s',
+          'name':['f_link_eol']},
+        {
+          'keyword':'taxon_id_nrm',
+          'url':'http://naturforskaren.se/species/%(slug)s',
+          'name':['f_link_naturforskaren']},
+        {
+          'keyword':'taxon_id_plutof',
+          'url':'http://elurikkus.ut.ee/elr_tree.php?id=%(slug)s',
+          'name':['f_link_plutof']},
+        {
+          'keyword':'taxon_id_pbdb',
+          'url':'https://paleobiodb.org/cgi-bin/bridge.pl?a=checkTaxonInfo&taxon_no=%(slug)s',
+          'name':'Paleobiology Database'},
+      ]
     }
   },
 /*  watch: {
