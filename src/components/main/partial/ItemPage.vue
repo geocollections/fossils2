@@ -346,7 +346,7 @@
       },
 
       isMapDataLoaded:function() {
-        return this.isTaxonTypeSpecimenLoaded && this.isTaxonOccurrenceLoaded && this.isSpecimenIdentificationLoaded
+        return ['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && this.isTaxonTypeSpecimenLoaded && this.isTaxonOccurrenceLoaded && this.isSpecimenIdentificationLoaded
       }
 
     },
