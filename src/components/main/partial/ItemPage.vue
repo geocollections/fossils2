@@ -413,6 +413,9 @@
       convertToTwoDecimal: function (value) {
         return value.toFixed(1)
       },
+      formatHierarchyString: function(value) {
+        return value.replace(/-/g, ',');
+      },
       /**************************
        *** REQUEST DATA START ***
        **************************/
@@ -437,6 +440,11 @@
           if (this.taxon.rank__rank_en !== 'species') {
             this.searchSpecies(this.searchParameters)
           }
+
+          this.getRequest(this.apiUrl + '/taxon?id__in='+this.formatHierarchyString(this.taxon.hierarchy_string)+'&fields=id,taxon,rank__rank,rank__rank_en').then((response) => {
+            this.hierarchy = response;
+            this.isHierarchyLoaded = true;
+          });
         });
 
         this.getRequest(this.apiUrl + '/taxon/?parent=' + this.$route.params.id + '&in_baltoscandia=' + this.isInBaltoscandia(this.$localStorage.mode)).then((response) => {
@@ -445,10 +453,6 @@
           this.isSiblingsLoaded = true;
         });
 
-        this.getRequest(this.apiUrl + '/taxon?id__in=1,29,38,60,61,62,259,1081,2104&fields=id,taxon,rank__rank,rank__rank_en').then((response) => {
-          this.hierarchy = response;
-          this.isHierarchyLoaded = true;
-        });
         this.getRequest(this.apiUrl + '/taxon_image/?taxon=' + this.$route.params.id).then((response) => {
           this.taxonImages = response;
           this.isTaxonImagesLoaded = true
@@ -493,7 +497,8 @@
         this.getRequest(this.apiUrl + '/attachment/?specimen__specimenidentification__taxon__id=' + this.$route.params.id +
           '&fields=id,specimen_id,specimen__specimen_id,database__acronym,uuid_filename&format=json').then((response) => {
           this.speciment_attachment = response;
-          this.imagesLength = this.speciment_attachment.length
+          if(this.speciment_attachment !== undefined)
+            this.imagesLength = this.speciment_attachment.length
         });
 
         /**************************
