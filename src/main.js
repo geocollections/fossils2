@@ -92,6 +92,9 @@ Vue.mixin({
 Vue.directive('translate',{
   componentUpdated: function (el, binding) {
     el.innerHTML = Vue.localStorage.get('fossilsLang') === 'ee' ? binding.value.et : binding.value.en
+  },
+  bind: function (el, binding) {
+    el.innerHTML = Vue.localStorage.get('fossilsLang') === 'ee' ? binding.value.et : binding.value.en
   }
 });
 Vue.directive('show-image',{
