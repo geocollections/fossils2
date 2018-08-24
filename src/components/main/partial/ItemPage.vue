@@ -19,16 +19,20 @@
         </div>
 
         <div id="taxon-title">
-          <h1 style='color: #333;'>
-            <span style="color:#333; font-weight:bold" v-if="taxon_page && taxon_page.frontpage_title">{{taxon_page.title}}</span><br />
+          <h1 style='color: #333 !important;'>
+            <span style="color:#333 !important; font-weight:bold !important;">
+              <span  v-if="taxon_page && taxon_page.frontpage_title">{{taxon_page.title}}</span>
+              <span v-else-if="!(taxon_page && taxon_page.frontpage_title) && taxonTitle.length > 0"> {{taxonTitle[0].name}}</span>
+            </span><br />
 
-            <div v-if="taxon.rank__rank_en == 'Species' || taxon.rank__rank_en == 'Genus'">{{$t('header.f_fossil_group')}}:
+            <div v-if="taxon.fossil_group__id && (taxon.rank__rank_en == 'Species' || taxon.rank__rank_en == 'Genus')">{{$t('header.f_fossil_group')}}:
               <router-link v-bind:to="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</router-link></div>
-            <span style="font-size: 0.7em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
-            <span style="font-size: 0.7em;">{{taxon.taxon}} {{taxon.author_year}}</span>
+            <span style="font-size: 0.7em !important;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
+            <span style="font-size: 18pt">{{taxon.taxon}}</span>
+            <span style="font-size: 0.7em;">{{taxon.author_year}}</span>
           </h1>
           <div class="taxon_names" >
-            <span v-if="common_names.length > 0" v-for="item in common_names">
+            <span v-if="common_names.length > 0" v-for="item in filteredCommonNames">
               <strong>{{item.language}}</strong>: {{item.name}};
             </span>
           </div>
@@ -286,12 +290,10 @@
         </div>
         <br>
       </div>
-      <div id="taxon-right" >
+      <div id="taxon-right" v-if="['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en)">
         <div style="padding: 0 0 0 10px;">
           <h3>{{$t('header.f_taxon_images')}}</h3>
-          <div class="photogallery">
-            <image-gallery :images="speciment_attachment" v-if="speciment_attachment" :isSpecimen="true"></image-gallery>
-          </div>
+          <image-gallery :images="speciment_attachment" v-if="speciment_attachment" :isSpecimen="true"></image-gallery>
         </div>
       </div>
     </div>
@@ -320,7 +322,18 @@
       return this.initialData()
     },
     computed: {
-
+      taxonTitle: function() {
+        let lang = this.lang_;
+        if (lang === 'ee') lang = 'et';
+        return _.filter(this.common_names, function(o) {
+          return o.language === lang && o.is_preferred === 1});
+      },
+      filteredCommonNames: function() {
+        let lang = this.lang_;
+        if (lang === 'ee') lang = 'et';
+        return _.filter(this.common_names, function(o) {
+          return o.language !== lang});
+      },
       sortedSiblings: function() {
         return _.orderBy(this.siblings,'taxon');
       },
