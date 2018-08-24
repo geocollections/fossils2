@@ -508,7 +508,7 @@
         });
 
         this.getRequest(this.apiUrl + '/attachment/?specimen__specimenidentification__taxon__id=' + this.$route.params.id +
-          '&fields=id,specimen_id,specimen__specimen_id,database__acronym,uuid_filename&format=json').then((response) => {
+          '&fields=id,specimen_id,specimen__specimen_id,specimen_image_id,database__acronym,uuid_filename&format=json').then((response) => {
           this.speciment_attachment = response;
           if(this.speciment_attachment !== undefined)
             this.imagesLength = this.speciment_attachment.length
