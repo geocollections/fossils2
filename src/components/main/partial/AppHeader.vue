@@ -101,28 +101,12 @@
     methods: {
 
       simpleTaxonSearchApiCall(value) {
-        return 'https://api.geocollections.info/taxon/?paginate_by=10&format=json&fields=id,taxon,rank__rank_en&multi_search=value:' + value + ';fields:taxon;lookuptype:icontains'
+        return 'https://api.geocollections.info/taxon_common_name/?paginate_by=10&fields=id,taxon,name,taxon__rank__rank_short,taxon__taxon&multi_search=value:' + value + ';fields:taxon__taxon;lookuptype:icontains'
+        // return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=id,taxon,rank__rank_en&multi_search=value:' + value + ';fields:taxon;lookuptype:icontains'
       },
-
       displayResults: function (result) {
-        let rank = result.rank__rank_en.toLowerCase()
-        switch (result.rank__rank_en.toLowerCase()) {
-          case 'species':
-            rank = 'spe';
-            break;
-          case 'family':
-            rank = 'fam';
-            break;
-          case 'order':
-            rank = 'ord';
-            break;
-          case 'genus':
-            rank = 'gen';
-            break;
-          default:
-            break;
-        }
-        return rank + ' ' + result.taxon
+        // return result.taxon
+        return result.taxon__rank__rank_short + ' ' + result.taxon__taxon + ' (' + result.name + ')'
       },
 
       onSelect(value) {

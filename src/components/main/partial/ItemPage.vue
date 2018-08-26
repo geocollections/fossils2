@@ -2,7 +2,6 @@
   <div id="content">
     <h3>{{$t('header.zero')}}</h3>
     <spinner v-show="requestingData" class="loading-overlay" size="massive" :message="$t('messages.overlay')"></spinner>
-
     <div id="taxon-box" v-show="requestingData == false" >
       <div id="taxon-header">
         <div id="fossilgroup-icon">
@@ -65,10 +64,28 @@
 
       </div>
       <br />
-      <div v-if="taxon_page && taxon_page.link_wikipedia">
+      <div v-if="taxon_page && taxon_page.link_wikipedia != null
+      || taxon.taxon_id_tol != null|| taxon.taxon_id_eol != null|| taxon.taxon_id_nrm!= null || taxon.taxon_id_plutof!= null || taxon.taxon_id_pbdb != null">
         <h3>{{$t('header.f_weblinks')}}</h3>
         <div id="taxon-links">
-          <a :href="'http://'+lang_+'.wikipedia.org/wiki/'+taxon_page.link_wikipedia">{{$t('header.f_link_wikipedia')}}</a>
+          <span v-if="taxon_page.link_wikipedia != null" >
+            <a :href="'http://'+lang_+'.wikipedia.org/wiki/'+taxon_page.link_wikipedia">{{$t('header.f_link_wikipedia')}}</a><br/>
+          </span>
+          <span v-if="taxon.taxon_id_tol != null" >
+            <a :href="'http://tolweb.org/'+taxon.taxon_id_tol">{{$t('header.f_link_tolweb')}}</a><br/>
+          </span>
+          <span v-if="taxon.taxon_id_eol != null" >
+            <a :href="'http://www.eol.org/pages/'+taxon.taxon_id_eol">{{$t('header.f_link_eol')}}</a><br/>
+          </span>
+          <span v-if="taxon.taxon_id_nrm != null" >
+            <a v-if="taxon.taxon_id_nrm != null" :href="'http://naturforskaren.se/species/'+taxon.taxon_id_nrm">{{$t('header.f_link_naturforskaren')}}</a><br/>
+          </span>
+          <span v-if="taxon.taxon_id_plutof != null" >
+            <a v-if="taxon.taxon_id_plutof != null" :href="'http://elurikkus.ut.ee/elr_tree.php?id='+taxon.taxon_id_plutof">{{$t('header.f_link_plutof')}}</a><br/>
+          </span>
+          <span v-if="taxon.taxon_id_pbdb != null" >
+            <a v-if="taxon.taxon_id_pbdb != null" :href="'https://paleobiodb.org/cgi-bin/bridge.pl?a=checkTaxonInfo&taxon_no='+taxon.taxon_id_pbdb">Paleobiology Database</a>
+          </span>
         </div>
       </div>
     </div >
