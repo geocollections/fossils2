@@ -151,6 +151,8 @@
         <div v-if="isDefinedAndNotEmpty(specimenIdentification)">
           <div style='font-size: 0.8em;' v-for="(item, idx) in allSpecies">
             &ensp;&ensp;&ensp;{{calculateSpeciesIdx(idx)}}. <em><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em>
+            | <span v-translate="{et:item.stratigraphy_base__stratigraphy,  en: item.stratigraphy_base__stratigraphy_en}"></span>
+            <span v-if="item.stratigraphy_top__stratigraphy !=null"> → </span><span v-translate="{et:item.stratigraphy_top__stratigraphy,  en: item.stratigraphy_top__stratigraphy_en}"></span>
           </div>
           <div class="col-xs-12 col-xs-6 pagination-center">
             <b-pagination
@@ -351,6 +353,7 @@
         return _.filter(this.common_names, function(o) {
           return o.language !== lang});
       },
+
       sortedSiblings: function() {
         return _.orderBy(this.siblings,'taxon');
       },
@@ -486,7 +489,6 @@
         this.getRequest(this.apiUrl + '/taxon_image/?taxon=' + this.$route.params.id).then((response) => {
           this.taxonImages = response;
           this.isTaxonImagesLoaded = true
-
         });
         this.getRequest(this.apiUrl + '/taxon_page/?taxon=' + this.$route.params.id).then((response) => {
           this.taxonPages = response;
@@ -538,7 +540,7 @@
 
       searchSpecies: function (searchParameters) {
         let isInBaltoscandia = this.taxon.in_baltoscandia === true ? 1 : 0;
-        this.getRequest(this.apiUrl + '/taxon/?hierarchy_string__istartswith=' + this.taxon.hierarchy_string + '&rank__rank_en=species&in_baltoscandia=' + isInBaltoscandia + '&fields=taxon,id&page=' + searchParameters.watched.page + '&paginate_by=' + searchParameters.watched.paginateBy, true).then((response) => {
+        this.getRequest(this.apiUrl + '/taxon/?hierarchy_string__istartswith=' + this.taxon.hierarchy_string + '&rank__rank_en=species&in_baltoscandia=' + isInBaltoscandia + '&fields=taxon,id,stratigraphy_base__stratigraphy_en,stratigraphy_base__stratigraphy,stratigraphy_top__stratigraphy_en,stratigraphy_top__stratigraphy&page=' + searchParameters.watched.page + '&paginate_by=' + searchParameters.watched.paginateBy, true).then((response) => {
           this.isSpecies = this.$route.meta.isSpecies;
           this.allSpecies = response.results;
           this.numberOfSpecimen = response.count;
@@ -562,8 +564,8 @@
       },
       '$route.meta.isSpecies': {
         handler : function (newval, oldval) {
-          Object.assign(this.$data, this.initialData())
-          this.loadFullTaxonInfo()
+            Object.assign(this.$data, this.initialData())
+            this.loadFullTaxonInfo()
         }
       },
       '$route.meta.mode': {
