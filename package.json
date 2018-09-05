@@ -20,7 +20,6 @@
     "es6-promise": "^4.1.1",
     "express": "^4.16.2",
     "extract-text-webpack-plugin": "^3.0.2",
-    "firebase": "4.6.2",
     "flag-icon-css": "^3.0.0",
     "lru-cache": "^4.1.1",
     "postcss-loader": "^3.0.0",
@@ -54,11 +53,11 @@
     "vue-loader": "^15.4.1",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.5.16",
+    "vuejs-auto-complete": "^0.6.5",
     "webpack": "^3.8.1",
     "webpack-dev-middleware": "^1.12.0",
-    "webpack-hot-middleware": "^2.20.0",
+    "webpack-hot-middleware": "^2.23.1",
     "webpack-merge": "^4.1.1",
-    "webpack-node-externals": "^1.6.0",
-    "vuejs-auto-complete": "^0.6.5"
+    "webpack-node-externals": "^1.6.0"
   }
 }

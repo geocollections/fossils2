@@ -11,40 +11,54 @@ import {
 } from '../api'
 export default {
   name: 'static-page',
-
-  data() {
-      return {
-          content : ''
+  computed: {
+      content : function() {
+          return this.$store.state.page[this.$route.params.id][0]
       }
   },
-
-  // asyncData ({ store, route: { params: { id }}}) {
-  //     return store.dispatch('FETCH_PAGE', { id })
+  watch: {
+      // '$store.state.lang': {
+      //     handler: function(newVal,oldVal) {
+      //         let lang = this.$store.state.lang;
+      //         this.$store.dispatch('FETCH_STATIC_PAGE', { lang })
+      //     }
+      // }
+  },
+  asyncData ({ store, route : {params: { id }}}) {
+      return store.dispatch('FETCH_PAGE', { id })
+  },
+  // data() {
+  //     return {
+  //         content : ''
+  //     }
+  // },
+  //
+  // // asyncData ({ store, route: { params: { id }}}) {
+  // //     return store.dispatch('FETCH_PAGE', { id })
+  // // },
+  //
+  // watch: {
+  //     '$route.params.id': {
+  //         handler: function(newVal,oldVal) {
+  //             this.loadStaticContent()
+  //         }
+  //     }
+  // },
+  // created: function () {
+  //     this.loadStaticContent();
+  // },
+  // methods:  {
+  //     loadStaticContent: function() {
+  //         fetchStaticPage(this.$route.params.id).then((response) => {
+  //             this.content = response.results[0];
+  //         });
+  //     },
   // },
 
-  watch: {
-      '$route.params.id': {
-          handler: function(newVal,oldVal) {
-              this.loadStaticContent()
-          }
-      }
-  },
-  created: function () {
-      this.loadStaticContent();
-  },
-  methods:  {
-      loadStaticContent: function() {
-          fetchStaticPage(this.$route.params.id).then((response) => {
-              this.content = response.results[0];
-          });
-      },
-  },
-
   title () {
-    console.log(this.content)
     return this.content
-      ? this.content.id
-      : 'User not found'
+      ? this.content.menu_title_et
+      : ''
   }
 }
 </script>

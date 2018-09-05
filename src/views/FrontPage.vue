@@ -22,13 +22,13 @@ export default {
     '$store.state.lang': {
       handler: function(newVal,oldVal) {
         let lang = this.$store.state.lang;
-        this.$store.dispatch('FETCH_PAGE', { lang })
+        this.$store.dispatch('FETCH_FRONT_PAGE', { lang })
       }
     }
   },
   asyncData ({ store}) {
     let lang = store.state.lang
-    return store.dispatch('FETCH_PAGE', { lang })
+    return store.dispatch('FETCH_FRONT_PAGE', { lang })
   },
 
   title () {
