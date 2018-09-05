@@ -8,7 +8,7 @@ module.exports = {
   dev: {
 
     // Paths
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'public',
     assetsPublicPath: '/',
     proxyTable: {},
 
@@ -42,7 +42,7 @@ module.exports = {
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'public',
     // Changed that from '/' => '' because using in eurocore server under /upload
     assetsPublicPath: '',
 
