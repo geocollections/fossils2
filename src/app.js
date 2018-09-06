@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 // import VueIziToast from 'vue-izitoast'
+import VueMoment from 'vue-moment'
+import BootstrapVue from 'bootstrap-vue' // Bootstrap
 import VueI18n from 'vue-i18n'
 import { createStore } from './store'
 import { createRouter } from './router'
@@ -16,6 +18,8 @@ import * as directives from './util/customeDirectives'
 Vue.mixin(titleMixin)
 // Pop-up messages
 // Vue.use(VueIziToast)
+Vue.use(VueMoment)
+Vue.use(BootstrapVue)
 // Translations
 Vue.use(VueI18n)
 

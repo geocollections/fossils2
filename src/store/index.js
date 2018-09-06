@@ -17,11 +17,7 @@ export function createStore () {
       frontPage: {},
       page: {/* [id: string]: User */},
       lists: {
-        top: [/* number */],
-        new: [],
-        show: [],
-        ask: [],
-        job: []
+        ranks: []
       }
     },
     actions,
