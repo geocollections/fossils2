@@ -11,9 +11,12 @@ export default context => {
   return new Promise((resolve, reject) => {
     const s = isDev && Date.now()
     const { app, router, store } = createApp()
-
+    const meta = app.$meta()
+    context.meta = meta
     const { url } = context
     const { fullPath } = router.resolve(url).route
+
+
 
     if (fullPath !== url) {
       return reject({ url: fullPath })

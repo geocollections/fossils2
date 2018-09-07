@@ -79,40 +79,88 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
 app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
 
 function render (req, res) {
-  const s = Date.now()
+    const s = Date.now()
 
-  res.setHeader("Content-Type", "text/html")
-  res.setHeader("Server", serverInfo)
+    res.setHeader("Content-Type", "text/html")
+    res.setHeader("Server", serverInfo)
 
-  const handleError = err => {
-    if (err.url) {
-      res.redirect(err.url)
-    } else if(err.code === 404) {
-      res.status(404).send('404 | Page Not Found')
-    } else {
-      // Render Error Page or Redirect
-      res.status(500).send('500 | Internal Server Error')
-      console.error(`error during render : ${req.url}`)
-      console.error(err.stack)
+    const handleError = err => {
+        if (err.url) {
+            res.redirect(err.url)
+        } else if (err.code === 404) {
+            res.status(404).send('404 | Page Not Found')
+        } else {
+            // Render Error Page or Redirect
+            res.status(500).send('500 | Internal Server Error')
+            console.error(`error during render : ${req.url}`)
+            console.error(err.stack)
+        }
     }
-  }
 
-  const context = {
-    title: 'Fossils 2.0', // default title
-    meta: 'fossils',
-    url: req.url
-  }
-  renderer.renderToString(context, (err, html) => {
-    if (err) {
-      return handleError(err)
+    const context = {
+        title: 'Fossils 2.0', // default title
+        meta: 'fossils',
+        url: req.url
     }
-    res.send(html)
-    if (!isProd) {
-      console.log(`whole request: ${Date.now() - s}ms`)
-    }
-  })
+
+    // renderer.renderToString(context, (err, html) => {
+    //   if (err) {
+    //     return handleError(err)
+    //   }
+    //   res.send(html)
+    //   if (!isProd) {
+    //     console.log(`whole request: ${Date.now() - s}ms`)
+    //   }
+    // })
+
+    renderer.renderToString(context, (error, html) => {
+        if (error) return handleError(error)
+        const bodyOpt = { body: true }
+
+        const {
+            title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta
+        } = context.meta.inject()
+
+        return res.send(`
+<!DOCTYPE html>
+<html data-vue-meta-server-rendered ${htmlAttrs.text()} lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    ${meta.text()}
+    ${title.text()}
+    ${link.text()}
+    <link rel="stylesheet" href="/public/css/sarv.css" type="text/css"/>
+    <link rel="stylesheet" href="/public/css/sarv-fonts.css" type="text/css"/>
+    <link rel="stylesheet" href="/public/ol3/ol.css" type="text/css"/>
+    <link rel="shortcut icon"  sizes="48x48" href="/public/favicon.ico"/>
+    <link rel="stylesheet" href="/public/css/ui-lightness/jquery-ui-1.10.3.custom.min.css"/>
+    <link rel="stylesheet" href="/public/swipebox/swipebox.css"/>
+    ${style.text()}
+    ${script.text()}
+    ${noscript.text()}
+  </head>
+  <body ${bodyAttrs.text()}>
+    ${html}
+    <script src="/assets/vendor.bundle.js"></script>
+    <script src="/assets/client.bundle.js"></script>
+    <script type="text/javascript" src="/public/js/jquery.js"></script>
+    <script>window.jQuery || document.write(unescape('%3Cscript src="/public/js/jquery.js"%3E%3C/script%3E'))</script>
+    <script type="text/javascript" src="/public/js/jquery-ui_autocomplete.js"></script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.js"></script>
+    <script type="text/javascript" src="/public/ol3/ol.js"></script>
+    <script src="/public/swipebox/jquery.swipebox.min.js"></script>
+    <script>window.jQuery || document.write(unescape('%3Cscript src="/public/swipebox/jquery.swipebox.min.js"%3E%3C/script%3E'))</script>
+    <script type="text/javascript" src="/public/js/fossils.js"></script>
+    ${script.text(bodyOpt)}
+  </body>
+</html>
+    `)
+    })
 }
-
 app.get('*', isProd ? render : (req, res) => {
   readyPromise.then(() => render(req, res))
 })

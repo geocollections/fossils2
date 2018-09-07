@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>{{ title }}</title>
@@ -29,8 +29,14 @@
     <link rel="stylesheet" href="/public/swipebox/swipebox.css"/>
     <script type="text/javascript" src="/public/js/fossils.js"></script>
   </head>
-  <body>
-  <div id="skip"><a href="#app">skip to content</a></div>
+  <body>-->
+<style>
+  #skip a {  position:absolute;  left:-10000px;  top:auto;  width:1px;  height:1px;  overflow:hidden;  }
+  #skip a:focus {  position:static;  width:auto;  height:auto;  }
+</style>
+<div id="skip"><a href="#app">skip to content</a></div>
   <!--vue-ssr-outlet-->
+<!--
   </body>
 </html>
+-->

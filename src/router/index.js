@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Meta from 'vue-meta'
 
 Vue.use(Router)
+Vue.use(Meta,{ssrAttribute: 'data-vue-meta-server-rendered'})
 
 const StaticPage = () => import('../views/StaticPage.vue')
 const FrontPage = () => import('../views/FrontPage.vue')

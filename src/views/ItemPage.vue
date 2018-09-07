@@ -593,6 +593,13 @@
                     this.loadFullTaxonInfo()
                 }
             },
-        }
+        },
+
+        metaInfo () {
+            return {
+                title: this.taxon.taxon,
+                meta:  [{ vmid: 'keywords', name: 'keywords', content: this.parent.taxon}],
+            }
+        },
     }
 </script>

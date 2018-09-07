@@ -19,6 +19,10 @@
             AppHeader,
             AppContent
         },
-        name: 'App'
+        name: 'App',
+        metaInfo: {
+            title: 'Fossiilid.info',
+            titleTemplate: ' %s '
+        }
     }
 </script>
