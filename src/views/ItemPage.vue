@@ -7,12 +7,12 @@
       <div id="taxon-header">
         <div id="fossilgroup-icon">
           <router-link v-bind:to="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
-            <img border="0" :src="'/public/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon"
+            <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon"
                  :title="taxon.fossil_group__taxon" style="height: 80px; margin-top: 0px; padding-right: 0px;" />
             <br />{{ taxon.fossil_group__taxon }}
           </router-link>
           <router-link v-bind:to="'/'+taxon.id" v-else-if="taxon.is_fossil_group == 1">
-            <img border="0" :src="'/public/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon"
+            <img border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon"
                  :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" />
             <br />{{taxon.fossil_group__taxon}}
           </router-link>
@@ -404,6 +404,9 @@
 
             isClassificationTableLoaded: function () {
                 return this.isHierarchyLoaded && this.$store.state.lists.ranks.length > 0
+            },
+            metaInfo_ () {
+                return this.parent.taxon
             }
 
         },
@@ -598,7 +601,7 @@
         metaInfo () {
             return {
                 title: this.taxon.taxon,
-                meta:  [{ vmid: 'keywords', name: 'keywords', content: this.parent.taxon}],
+                meta:  [{ vmid: 'keywords', name: 'keywords', content: this.metaInfo_}],
             }
         },
     }

@@ -27,7 +27,7 @@
             <a class="cc-large" href="http://creativecommons.org/licences/by-nc/3.0/">
               <img width="88px" height="31px"
                    alt="Creative Commons Licence"
-                   src="/public/imgs/ccbync.png"
+                   src="/static/imgs/ccbync.png"
                    typeof="foaf:Image"></a>
             <br/>
 

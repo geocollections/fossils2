@@ -24,7 +24,7 @@
         <!--</b-nav-item-dropdown>-->
       </div>
       <div id="header1">
-        <a href="http://balticdiversity.eu"><img id="bd-logo" src="/public/imgs/bd_logo0.png" border="0"/></a>
+        <a href="http://balticdiversity.eu"><img id="bd-logo" src="/static/imgs/bd_logo0.png" border="0"/></a>
         <div id="slogan-block-top" style="text-transform: uppercase;">{{ $t('header.subtitle') }}</div>
       </div>
       <div id="header2">

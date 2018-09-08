@@ -4,7 +4,7 @@
     <div id='fossilgroups_box'>
       <div class='fossilgroup_box'  v-for="item in content">
         <router-link v-bind:to="'/'+item.taxon" :title="item.taxon__taxon" >
-          <img :src="'/public/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'" border="0" ><h2>{{item.frontpage}}</h2></router-link></div>"
+          <img :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'" border="0" ><h2>{{item.frontpage}}</h2></router-link></div>"
     </div>
 
   </div>
@@ -29,10 +29,6 @@ export default {
   asyncData ({ store}) {
     let lang = store.state.lang
     return store.dispatch('FETCH_FRONT_PAGE', { lang })
-  },
-
-  title () {
-    return ''
   }
 }
 </script>

@@ -3,7 +3,7 @@ body {
   background-color: #999; /*#f4f4e9;*/ /*#f2f0ea#f1f1f1*/
   color: #333;
   font-size: 10pt;
-  background: #f1f1f1 url(/public/imgs/page-bg.jpg) repeat left top fixed;
+  background: #f1f1f1 url(/static/imgs/page-bg.jpg) repeat left top fixed;
   margin: 0;
 }
 
@@ -152,13 +152,13 @@ h3 {
 
 #header-search-button {
   right: 6px;
-  background: transparent url('/public/imgs/search.png') no-repeat 1px 1px;
+  background: transparent url('/static/imgs/search.png') no-repeat 1px 1px;
 }
 
 #header-menu-button {
   left: 6px;
   font-size: 16px;
-  background: transparent url('/public/imgs/menu.png') no-repeat 1px 1px;
+  background: transparent url('/static/imgs/menu.png') no-repeat 1px 1px;
 }
 
 #mobile-menu {

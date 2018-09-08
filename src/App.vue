@@ -26,3 +26,8 @@
         }
     }
 </script>
+<style src="../static/css/sarv.css"></style>
+<style src="../static/css/sarv-fonts.css"></style>
+<!--<style src="../public/ol3/ol.css"></style>-->
+<!--<style src="../public/css/ui-lightness/jquery-ui-1.10.3.custom.min.css"></style>-->
+<!--<style src="../public/swipebox/swipebox.css"></style>-->
