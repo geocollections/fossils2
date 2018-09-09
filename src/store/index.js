@@ -16,6 +16,10 @@ export function createStore () {
       mode: 'in_baltoscandia',
       frontPage: {},
       page: {/* [id: string]: User */},
+      activeItem: {
+        taxon : {},
+        commonNames : []
+      },
       lists: {
         ranks: []
       }

@@ -13,7 +13,7 @@ function fetch (child) {
     return new Promise((resolve, reject) => {
         Vue.http.get(api.url+child, {}).then(response => {
             resolve(response.body);
-            //console.log(response)
+            // console.log(response)
         }, errResponse => {
             console.log('ERROR: ' + JSON.stringify(errResponse));
             reject(errResponse)
@@ -81,7 +81,7 @@ export function fetchTaxonOccurrence (id) {
 }
 
 export function fetchSynonims (id) {
-    return fetch(`taxon_synonym/?taxon=${id}`)
+    return fetch(`taxon_synonym/?taxon=${id}&format=json`)
 }
 
 export function fetchTypeSpecimen (id) {

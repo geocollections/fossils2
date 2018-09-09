@@ -24,13 +24,12 @@
           taxon : {},
           taxonomicTree: {nodes: []},
           isSisterTaxaLoaded: false,
-          isSiblingsLoaded: false,
           isHierarchyLoaded: false,
           ranks: []
         }
       },
       props: ['hierarchy_','parent_','taxon_','sortedSisters_','sortedSiblings_','sortedSistersWithoutCurrentTaxon_',
-      'isSisterTaxaLoaded_','isSiblingsLoaded_','isHierarchyLoaded_'],
+      'isSisterTaxaLoaded_','isHierarchyLoaded_'],
 
       created() {
         this.hierarchy = this.$props.hierarchy_;
@@ -39,7 +38,6 @@
         this.parent=this.$props.parent_;
         this.taxon = this.$props.taxon_;
         this.isSisterTaxaLoaded=this.$props.isSisterTaxaLoaded_;
-        this.isSiblingsLoaded = this.$props.isSiblingsLoaded_;
         this.isHierarchyLoaded = this.$props.isHierarchyLoaded_;
         this.sortedSistersWithoutCurrentTaxon = this.$props.sortedSistersWithoutCurrentTaxon_;
         this.composeTaxonomicTree_()

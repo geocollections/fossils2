@@ -121,8 +121,7 @@ function render (req, res) {
             title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta
         } = context.meta.inject()
 
-        return res.send(`
-<!DOCTYPE html>
+        return res.send(`<!DOCTYPE html>
 <html data-vue-meta-server-rendered ${htmlAttrs.text()} lang="en">
   <head>
     <meta charset="utf-8">

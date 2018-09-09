@@ -1,8 +1,9 @@
 <template>
   <div id="content">
     <h3>{{$t('header.zero')}}</h3>
-     <!-- Taxon info -->
-    <div id="taxon-box" v-if="taxon !== undefined" >
+    <!--<spinner v-show="requestingData" class="loading-overlay" size="massive" :message="$t('messages.overlay')"></spinner>-->
+    <!-- Taxon info -->
+    <div id="taxon-box" v-show="requestingData == false" >
       <div id="taxon-header">
         <div id="fossilgroup-icon">
           <router-link v-bind:to="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
@@ -20,8 +21,8 @@
         <div id="taxon-title">
           <h1 style='color: #333 !important;'>
             <span style="color:#333 !important; font-weight:bold !important;">
-              <span  v-if="taxonPage && taxonPage.frontpage_title">{{taxonPage.title}}</span>
-              <span v-else-if="!(taxonPage && taxonPage.frontpage_title) && taxonTitle.length > 0"> {{taxonTitle[0].name}}</span>
+              <span  v-if="taxon_page && taxon_page.frontpage_title">{{taxon_page.title}}</span>
+              <span v-else-if="!(taxon_page && taxon_page.frontpage_title) && taxonTitle.length > 0"> {{taxonTitle[0].name}}</span>
             </span><br />
 
             <div v-if="taxon.fossil_group__id && (taxon.rank__rank_en == 'Species' || taxon.rank__rank_en == 'Genus')"> {{$t('header.f_fossil_group')}}:
@@ -31,7 +32,7 @@
             <span style="font-size: 0.7em;"> {{taxon.author_year}}</span>
           </h1>
           <div class="taxon_names" >
-            <span v-if="commonNames.length > 0" v-for="item in filteredCommonNames">
+            <span v-if="common_names.length > 0" v-for="item in filteredCommonNames">
               <strong>{{item.language}}</strong>: {{item.name}};
             </span>
           </div>
@@ -60,17 +61,18 @@
                           :sortedSisters_ = "sortedSisters"
                           :sortedSiblings_ = "sortedSiblings"
                           :isSisterTaxaLoaded_ = "isSisterTaxaLoaded"
+                          :isSiblingsLoaded_ = "isSiblingsLoaded"
                           :isHierarchyLoaded_ = "isHierarchyLoaded"
         ></taxonomical-tree>
 
       </div>
       <br />
-      <div v-if="taxonPage && taxonPage.link_wikipedia != null
+      <div v-if="taxon_page && taxon_page.link_wikipedia != null
       || taxon.taxon_id_tol != null|| taxon.taxon_id_eol != null|| taxon.taxon_id_nrm!= null || taxon.taxon_id_plutof!= null || taxon.taxon_id_pbdb != null">
         <h3>{{$t('header.f_weblinks')}}</h3>
         <div id="taxon-links">
-          <span v-if="taxonPage.link_wikipedia != null" >
-            <a :href="'http://'+lang_+'.wikipedia.org/wiki/'+taxonPage.link_wikipedia">{{$t('header.f_link_wikipedia')}}</a><br/>
+          <span v-if="taxon_page.link_wikipedia != null" >
+            <a :href="'http://'+lang_+'.wikipedia.org/wiki/'+taxon_page.link_wikipedia">{{$t('header.f_link_wikipedia')}}</a><br/>
           </span>
           <span v-if="taxon.taxon_id_tol != null" >
             <a :href="'http://tolweb.org/'+taxon.taxon_id_tol">{{$t('header.f_link_tolweb')}}</a><br/>
@@ -166,13 +168,13 @@
         </div>
         <h3 v-else>Selle rühma all ei ole liike registreeritud</h3>
       </div>
-      <div v-if="taxonPage && taxonPage.content">
+      <div v-if="taxon_page && taxon_page.content">
         <h3>{{$t('header.f_taxon_intro')}}</h3>
         <i style='font-size: 0.8em;'>
-          {{taxonPage.author_txt}} {{taxonPage.date_txt}}
+          {{taxon_page.author_txt}} {{taxon_page.date_txt}}
         </i>
         <br />
-        <div id="taxon-details" v-html="taxonPage.content"></div>
+        <div id="taxon-details" v-html="taxon_page.content"></div>
       </div>
       <!--REFERENCES-->
       <div style="margin:15px auto;" v-if="taxonOccurrence">
@@ -190,19 +192,32 @@
           </li>
         </ul>
       </div>
-
-      <div v-if="['None','Phylum', 'Kingdom', 'None', 'Class', 'Order'].includes(taxon.rank__rank_en) && taxonImages !== undefined ">
-        <image-gallery :images="taxonImages"></image-gallery>
+      <div>
+        <!--{{taxon}}-->
+        <!--{{parent}}-->
+        <!--<br>{{description}}<br>-->
+        <!--{{taxonImages}}-->
+        <!--{{taxonPage}}-->
+        <!--{{common_names}}-->
+        <!--{{taxonList}}-->
+        <!--{{taxonOccurrence}}-->
+        <!--{{children}}-->
+        <!--{{siblings}}-->
+        <!--{{synonyms}}-->
+        <!--{{taxonTypeSpecimen}}-->
+        <!--{{specimenIdentification}}-->
+        <!--{{speciment_attachment}}-->
+        <!--{{hierarchy}}-->
       </div>
-
+      <!--<image-gallery :images="taxonImages" v-if="taxonImages" ></image-gallery>-->
 
       <div id="taxon-main">
         <div id="taxon-left">
-          <map-component v-if="isMapDataLoaded"
-          :taxonOccurrence="taxonOccurrence"
-          :taxonTypeSpecimen="taxonTypeSpecimen"
-          :specimenIdentification="specimenIdentification"
-          ></map-component>
+          <!--<map-component  v-if="isMapDataLoaded"-->
+                          <!--:taxonOccurrence="taxonOccurrence"-->
+                          <!--:taxonTypeSpecimen="taxonTypeSpecimen"-->
+                          <!--:specimenIdentification="specimenIdentification"-->
+          <!--&gt;</map-component>-->
 
 
           <div id="synonymy_list" v-if="synonyms && synonyms.length > 0">
@@ -303,7 +318,7 @@
         <div id="taxon-right" v-if="['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en)">
           <div style="padding: 0 0 0 10px;">
             <h3>{{$t('header.f_taxon_images')}}</h3>
-            <image-gallery :images="speciment_attachment" v-if="speciment_attachment" :isSpecimen="true"></image-gallery>
+            <!--<image-gallery :images="speciment_attachment" v-if="speciment_attachment" :isSpecimen="true"></image-gallery>-->
           </div>
         </div>
       </div>
@@ -313,17 +328,25 @@
 </template>
 
 <script>
+    // import Spinner from 'vue-simple-spinner';
     import TaxonomicalTree from "../components/TaxonomicalTree.vue";
     import ClassificationTable from "../components/ClassificationTable.vue";
-    import ImageGallery from "../components/ImageGallery.vue";
-    import MapComponent from "../components/MapComponent.vue";
     import _ from 'lodash';
     import {
         fetchTaxon,
         fetchSisterTaxa,
         fetchSpecies,
         fetchHierarchy,
+        fetchChildren,
         fetchImages,
+        fetchTaxonPages,
+        fetchTaxonDescription,
+        fetchTaxonCommonName,
+        fetchTaxonList,
+        fetchTaxonOccurrence,
+        fetchSynonims,
+        fetchTypeSpecimen,
+        fetchSpecimenIdentification,
         fetchAttachment
     } from '../api'
 
@@ -331,34 +354,23 @@
         name: 'item-page',
         components: {
             TaxonomicalTree,
-            ClassificationTable,
-            ImageGallery,
-            MapComponent
+            ClassificationTable
         },
         data() {
             return this.initialData()
         },
 
         computed: {
-            taxon () { return this.$store.state.activeItem['taxon'] },
-            commonNames () { return this.$store.state.activeItem['commonNames'] },
-            taxonPage () { return this.$store.state.activeItem['taxonPage'] },
-            taxonTypeSpecimen () { return this.$store.state.activeItem['typeSpecimen'] },
-            specimenIdentification () { return this.$store.state.activeItem['specimenIdentification'] },
-            taxonOccurrence () { return this.$store.state.activeItem['taxonOccurrence'] },
-            siblings () { return this.$store.state.activeItem['children'] },
-            synonyms () { return this.$store.state.activeItem['synonims'] },
-            description () { return this.$store.state.activeItem['description'] },
-            taxonList () { return this.$store.state.activeItem['taxonList'] },
             taxonTitle: function() {
-                let lang = this.$store.state.lang;
-                return _.filter(this.commonNames, function(o) {
+                let lang = this.lang_;
+                if (lang === 'ee') lang = 'et';
+                return _.filter(this.common_names, function(o) {
                     return o.language === lang && o.is_preferred === 1});
             },
             filteredCommonNames: function() {
                 let lang = this.lang_;
                 if (lang === 'ee') lang = 'et';
-                return _.filter(this.commonNames, function(o) {
+                return _.filter(this.common_names, function(o) {
                     return o.language !== lang});
             },
 
@@ -372,7 +384,7 @@
                 return this.excludeCurrentTaxon(this.sortedSisters, this.$route.params.id);
             },
 
-            taxonPage: function() {
+            taxon_page: function() {
                 if (this.taxonPages ===undefined || this.taxonPages.length === 0) return {}
                 if (this.lang_ ==='ee') return this.taxonPages[0];
                 else if (this.lang_ ==='en') return this.taxonPages[1];
@@ -383,42 +395,19 @@
                 return this.$store.state.mode === 'in_baltoscandia'
             },
             isTaxonomicTreeIsLoaded: function() {
-                return this.isSisterTaxaLoaded && this.isHierarchyLoaded
+                return this.isSisterTaxaLoaded && this.isSiblingsLoaded && this.isHierarchyLoaded
             },
 
             isMapDataLoaded:function() {
-                return ['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en)
-                    && this.isTaxonOccurrenceLoaded
+                return ['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && this.isTaxonTypeSpecimenLoaded && this.isTaxonOccurrenceLoaded && this.isSpecimenIdentificationLoaded
             },
-            commonNamesStrings () {
-                return _.map(this.commonNames, 'name');
-            },
-            childrenStrings () {
-                return _.map(this.sortedSiblings, 'taxon');
-            },
+
             isClassificationTableLoaded: function () {
                 return this.isHierarchyLoaded && this.$store.state.lists.ranks.length > 0
             },
             meta () {
-                return [this.taxon.parent__taxon, this.taxon.taxon, this.taxon.fossil_group__taxon,
-                    this.commonNamesStrings, this.childrenStrings].join(", ")
+                return [this.parent.taxon, this.taxon.taxon].join(", ")
             }
-
-        },
-
-         asyncData ({ store, route : {params: { id }}}) {
-            return Promise.all([
-                store.dispatch('FETCH_TAXON', { id }),
-                store.dispatch('FETCH_COMMON_NAMES', { id }),
-                store.dispatch('FETCH_TAXON_PAGE', { id }),
-                store.dispatch('FETCH_TYPE_SPECIMEN', { id }),
-                store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
-                store.dispatch('FETCH_TAXON_OCCURRENCE', { id }),
-                store.dispatch('FETCH_CHILDREN', { id }),
-                store.dispatch('FETCH_SYNONIMS', { id }),
-                store.dispatch('FETCH_TAXON_LIST', { id }),
-                store.dispatch('FETCH_DESCRIPTION', { id })
-            ])
 
         },
 
@@ -431,9 +420,23 @@
         methods: {
             initialData: function () {
                 return {
+                    taxon: {},
                     parent: {},
+                    description: {},
                     taxonImages: [],
                     sister_taxa: {},
+                    taxonPages: [],
+                    common_names: {},
+                    taxonList: {},
+                    taxonOccurrence: {},
+                    isTaxonOccurrenceLoaded: false,
+                    isTaxonTypeSpecimenLoaded: false,
+                    isSpecimenIdentificationLoaded: false,
+                    children: {},
+                    siblings: {},
+                    synonyms: {},
+                    taxonTypeSpecimen: null,
+                    specimenIdentification: {},
                     speciment_attachment: {},
                     hierarchy: {},
                     isMapLoaded: false,
@@ -441,6 +444,7 @@
                     numberOfSpecimen: {},
                     requestingData: false,
                     isSisterTaxaLoaded: false,
+                    isSiblingsLoaded: false,
                     isHierarchyLoaded: false,
                     taxonomicTree: {nodes: []},
                     isSpecies: false,
@@ -460,36 +464,82 @@
                 }
             },
             loadFullTaxonInfo: function(){
+                this.requestingData = true;
+                fetchTaxon(this.$route.params.id).then((response) => {
+                    this.taxon = response.results ? response.results[0] : {};
+                    this.requestingData = false;
+                    if (this.isDefinedAndNotNull(this.taxon.parent)) {
+                        fetchTaxon(this.taxon.parent).then((response) => {
+                            this.parent = response.results ? response.results[0] : {};
+                            // Sister taxa
+                            fetchSisterTaxa(this.taxon.parent, this.$store.state.mode).then((response) => {
+                                this.sister_taxa = response.results;
+                                this.isSisterTaxaLoaded = true;
+                            });
+                        });
+                    }
 
-                if (this.isDefinedAndNotNull(this.taxon.parent)) {
-                    fetchTaxon(this.taxon.parent).then((response) => {
-                        this.parent = response.results ? response.results[0] : {};
-                        // Sister taxa
+                    if (this.taxon.rank__rank_en !== 'species') {
+                        this.searchSpecies(this.searchParameters)
+                    }
+
+                    fetchHierarchy(this.formatHierarchyString(this.taxon.hierarchy_string)).then((response) => {
+                        this.hierarchy = response.results;
+                        this.isHierarchyLoaded = true;
                     });
+                });
 
-                    fetchSisterTaxa(this.taxon.parent, this.$store.state.mode).then((response) => {
-                        this.sister_taxa = response.results;
-                        this.isSisterTaxaLoaded = true;
-                    });
-                }
-
-                if (this.taxon.rank__rank_en !== 'species') {
-                    this.searchSpecies(this.searchParameters)
-                }
-
-                fetchHierarchy(this.formatHierarchyString(this.taxon.hierarchy_string)).then((response) => {
-                    this.hierarchy = response.results;
-                    this.isHierarchyLoaded = true;
+                fetchChildren(this.$route.params.id, this.$store.state.mode).then((response) => {
+                    this.children = response.results;
+                    this.siblings = response.results;
+                    this.isSiblingsLoaded = true;
                 });
 
                 fetchImages(this.$route.params.id).then((response) => {
                     this.taxonImages = response.results;
-                    console.log(response)
                     this.isTaxonImagesLoaded = true
+                });
+
+                fetchTaxonPages(this.$route.params.id).then((response) => {
+                    this.taxonPages = response.results;
+                });
+
+                fetchTaxonDescription(this.$route.params.id).then((response) => {
+                    this.description = response.results ? response.results[0] : response;
+                });
+
+                fetchTaxonCommonName(this.$route.params.id).then((response) => {
+                    this.common_names = response.results;
+                });
+
+                fetchTaxonList(this.$route.params.id).then((response) => {
+                    this.taxonList = response.results;
+                });
+
+                fetchTaxonOccurrence(this.$route.params.id).then((response) => {
+                    this.taxonOccurrence = response.results;
+                    this.isTaxonOccurrenceLoaded = true;
+                });
+
+                fetchSynonims(this.$route.params.id).then((response) => {
+                    this.synonyms = response.results;
+                });
+
+                fetchTypeSpecimen(this.$route.params.id).then((response) => {
+                    this.taxonTypeSpecimen = response;
+                    this.isTaxonTypeSpecimenLoaded = true;
+                });
+
+                fetchSpecimenIdentification(this.$route.params.id).then((response) => {
+                    this.specimenIdentification = response.results;
+                    this.isSpecimenIdentificationLoaded = true;
                 });
 
                 fetchAttachment(this.$route.params.id).then((response) => {
                     this.speciment_attachment = response.results;
+                    if(this.speciment_attachment !== undefined){
+                        this.imagesLength = this.speciment_attachment.length
+                    }
                 });
             },
             //todo: utils
@@ -534,7 +584,8 @@
             },
 
             reloadPage: function () {
-                // location.reload();
+                Object.assign(this.$data, this.initialData());
+                this.loadFullTaxonInfo();
             }
         },
 
@@ -545,19 +596,6 @@
                     this.loadFullTaxonInfo()
                 }
             },
-            '$store.state.mode': {
-                handler: function (newVal) {
-                    this.reloadPage()
-                },
-                deep: true
-            },
-            '$route.meta.isSpecies': {
-                handler : function (newval, oldval) {
-                    Object.assign(this.$data, this.initialData())
-                    this.loadFullTaxonInfo()
-                }
-            },
-
         },
 
         metaInfo () {

@@ -86,7 +86,9 @@
         return result.taxon
         //return result.rank__rank_short + ' ' + result.taxon + ' (' + result.common_name__name + ')'
       },
-
+      changeMode: function(mode) {
+          this.$store.state.mode = mode
+      },
       onSelect(value) {
         this.$refs.autocomplete.clearValues()
         this.$router.push({ path: '/'+value.selectedObject.id})
