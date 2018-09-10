@@ -431,6 +431,7 @@
         methods: {
             initialData: function () {
                 return {
+                    loading: true,
                     parent: {},
                     taxonImages: [],
                     sister_taxa: {},
@@ -460,7 +461,6 @@
                 }
             },
             loadFullTaxonInfo: function(){
-
                 if (this.isDefinedAndNotNull(this.taxon.parent)) {
                     fetchTaxon(this.taxon.parent).then((response) => {
                         this.parent = response.results ? response.results[0] : {};
@@ -471,6 +471,7 @@
                         this.sister_taxa = response.results;
                         this.isSisterTaxaLoaded = true;
                     });
+
                 }
 
                 if (this.taxon.rank__rank_en !== 'species') {

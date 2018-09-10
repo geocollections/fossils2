@@ -12,9 +12,6 @@ import metaMixin from './util/meta'
 import * as filters from './util/filters'
 import * as directives from './util/customeDirectives'
 
-//TODO: css loading problem
-// import 'flag-icon-css/css/flag-icon.min.css' // Flag icons
-
 // mixin for handling title
 Vue.mixin(titleMixin)
 Vue.mixin(metaMixin)

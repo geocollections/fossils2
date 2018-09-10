@@ -1,5 +1,6 @@
 'use strict'
 const path = require('path')
+const utils = require('./utils')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const packageConfig = require('../package.json')
 const config = require('../config')
@@ -13,6 +14,7 @@ exports.assetsPath = function (_path) {
 
 exports.cssLoaders = function (options) {
   options = options || {}
+
 
   const cssLoader = {
     loader: 'css-loader',
@@ -30,7 +32,7 @@ exports.cssLoaders = function (options) {
 
   // generate loader string to be used with extract text plugin
   function generateLoaders (loader, loaderOptions) {
-    const loaders = options.usePostCSS ? [cssLoader, postcssLoader] : [cssLoader]
+    const loaders = [cssLoader]
 
     if (loader) {
       loaders.push({
@@ -77,7 +79,6 @@ exports.styleLoaders = function (options) {
       use: loader
     })
   }
-
   return output
 }
 

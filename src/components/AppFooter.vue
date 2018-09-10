@@ -60,7 +60,7 @@
       </a>
 
       <a href="http://centralbaltic.eu">
-        <img src="/public/imgs/programme-logo.png" alt="" border="0" style="max-width: 316px; width:100%; margin-left: 25px;"/>
+        <img src="/static/imgs/programme-logo.png" alt="centralbaltic.eu logo" border="0" style="max-width: 316px; width:100%; margin-left: 25px;"/>
       </a>
     </div>
   </div>
@@ -76,7 +76,9 @@
     }
   }
 </script>
+<style src="../../node_modules/flag-icon-css/css/flag-icon.min.css">
 
+</style>
 <style lang="stylus" scoped>
   footer
     background-color: #f8f9fa
