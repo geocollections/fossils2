@@ -1,6 +1,14 @@
 import Vue from 'vue'
 
 export default {
+    SET_LANG: (state, { lang }) => {
+        Vue.set(state, 'lang', lang || false) /* false means page not found */
+    },
+
+    SET_MODE: (state, { mode }) => {
+        Vue.set(state, 'mode', mode || false) /* false means page not found */
+    },
+
   SET_PAGE: (state, { id, page }) => {
     Vue.set(state.page, id, page.results || false) /* false means page not found */
   },

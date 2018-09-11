@@ -60,7 +60,7 @@ export default {
     },
 
     FETCH_CHILDREN: ({ commit, state }, { id}) => {
-        return fetchChildren(id).then(children => commit('SET_CHILDREN', { children }))
+        return fetchChildren(id, state.mode).then(children => commit('SET_CHILDREN', { children }))
     },
 
     FETCH_SYNONIMS: ({ commit, state }, { id}) => {

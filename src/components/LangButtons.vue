@@ -8,6 +8,7 @@
 </template>
 
 <script>
+  import Vue from 'vue'
 
   export default {
 
@@ -17,15 +18,17 @@
     },
     methods: {
       langButtonsStyle () {
-          console.log(this.$props.langClass)
         return this.$props.langClass === 'header' ? 'lang-buttons p-3' : 'footer-lang-buttons p-3'
       },
       changeLang(lang) {
         this.$i18n.locale = lang
         if (lang === 'ee') lang = 'et'
-        this.$store.state.lang = lang
+        this.$store.commit('SET_LANG', {lang})
+        // this.$store.commit('CHANGE_LANG', lang ).then(function () {
+        //     this.$store.state.lang = lang
+        // });
+
         // this.toastInfo(this.$t('messages.langChange'))
-        // this.setLangChanged(lang)
       },
       //
       // toastInfo(text) {

@@ -1,5 +1,6 @@
 <template>
   <div id="content">
+    <!--<spinner :show="loading"></spinner>-->
     <h3>{{$t('header.zero')}}</h3>
      <!-- Taxon info -->
     <div id="taxon-box" v-if="taxon !== undefined" >
@@ -19,10 +20,7 @@
 
         <div id="taxon-title">
           <h1 style='color: #333 !important;'>
-            <span style="color:#333 !important; font-weight:bold !important;">
-              <span  v-if="taxonPage && taxonPage.frontpage_title">{{taxonPage.title}}</span>
-              <span v-else-if="!(taxonPage && taxonPage.frontpage_title) && taxonTitle.length > 0"> {{taxonTitle[0].name}}</span>
-            </span><br />
+            <span style="color:#333 !important; font-weight:bold !important;"> {{taxonTitle}} </span><br />
 
             <div v-if="taxon.fossil_group__id && (taxon.rank__rank_en == 'Species' || taxon.rank__rank_en == 'Genus')"> {{$t('header.f_fossil_group')}}:
               <router-link v-bind:to="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</router-link></div>
@@ -70,7 +68,7 @@
         <h3>{{$t('header.f_weblinks')}}</h3>
         <div id="taxon-links">
           <span v-if="taxonPage.link_wikipedia != null" >
-            <a :href="'http://'+lang_+'.wikipedia.org/wiki/'+taxonPage.link_wikipedia">{{$t('header.f_link_wikipedia')}}</a><br/>
+            <a :href="'http://'+$store.state.lang+'.wikipedia.org/wiki/'+taxonPage.link_wikipedia">{{$t('header.f_link_wikipedia')}}</a><br/>
           </span>
           <span v-if="taxon.taxon_id_tol != null" >
             <a :href="'http://tolweb.org/'+taxon.taxon_id_tol">{{$t('header.f_link_tolweb')}}</a><br/>
@@ -313,6 +311,7 @@
 </template>
 
 <script>
+    import Spinner from '../components/Spinner.vue'
     import TaxonomicalTree from "../components/TaxonomicalTree.vue";
     import ClassificationTable from "../components/ClassificationTable.vue";
     import ImageGallery from "../components/ImageGallery.vue";
@@ -333,7 +332,8 @@
             TaxonomicalTree,
             ClassificationTable,
             ImageGallery,
-            MapComponent
+            MapComponent,
+            Spinner
         },
         data() {
             return this.initialData()
@@ -342,22 +342,35 @@
         computed: {
             taxon () { return this.$store.state.activeItem['taxon'] },
             commonNames () { return this.$store.state.activeItem['commonNames'] },
-            taxonPage () { return this.$store.state.activeItem['taxonPage'] },
+            taxonPages () { return this.$store.state.activeItem['taxonPage'] },
             taxonTypeSpecimen () { return this.$store.state.activeItem['typeSpecimen'] },
             specimenIdentification () { return this.$store.state.activeItem['specimenIdentification'] },
             taxonOccurrence () { return this.$store.state.activeItem['taxonOccurrence'] },
-            siblings () { return this.$store.state.activeItem['children'] },
+            siblings () { console.log(this.$store.state)
+                return this.$store.state.activeItem['children'] },
             synonyms () { return this.$store.state.activeItem['synonims'] },
             description () { return this.$store.state.activeItem['description'] },
             taxonList () { return this.$store.state.activeItem['taxonList'] },
             taxonTitle: function() {
                 let lang = this.$store.state.lang;
-                return _.filter(this.commonNames, function(o) {
+                if (this.taxonPage && this.taxonPage.title)
+                    return this.taxonPage.title
+                let activeCommonName = _.filter(this.commonNames, function(o) {
                     return o.language === lang && o.is_preferred === 1});
+
+                if (activeCommonName.length > 0)
+                    return activeCommonName[0].name
+            },
+            taxonPage: function() {
+                if (this.taxonPages === undefined || this.taxonPages.length === 0) return {}
+                let lang = this.$store.state.lang;
+                if (lang ==='et') return this.taxonPages[0];
+                else if (lang ==='en') return this.taxonPages[1];
+                else if (lang ==='fi') return this.taxonPages[2];
+                else if (lang ==='se') return this.taxonPages[3];
             },
             filteredCommonNames: function() {
-                let lang = this.lang_;
-                if (lang === 'ee') lang = 'et';
+                let lang = this.$store.state.lang;
                 return _.filter(this.commonNames, function(o) {
                     return o.language !== lang});
             },
@@ -372,16 +385,6 @@
                 return this.excludeCurrentTaxon(this.sortedSisters, this.$route.params.id);
             },
 
-            taxonPage: function() {
-                if (this.taxonPages ===undefined || this.taxonPages.length === 0) return {}
-                if (this.lang_ ==='ee') return this.taxonPages[0];
-                else if (this.lang_ ==='en') return this.taxonPages[1];
-                else if (this.lang_ ==='fi') return this.taxonPages[2];
-                else if (this.lang_ ==='se') return this.taxonPages[3];
-            },
-            mode () {
-                return this.$store.state.mode === 'in_baltoscandia'
-            },
             isTaxonomicTreeIsLoaded: function() {
                 return this.isSisterTaxaLoaded && this.isHierarchyLoaded
             },
@@ -438,7 +441,6 @@
                     speciment_attachment: {},
                     hierarchy: {},
                     isMapLoaded: false,
-                    lang_: this.$store.state.lang,
                     numberOfSpecimen: {},
                     requestingData: false,
                     isSisterTaxaLoaded: false,
@@ -485,7 +487,6 @@
 
                 fetchImages(this.$route.params.id).then((response) => {
                     this.taxonImages = response.results;
-                    console.log(response)
                     this.isTaxonImagesLoaded = true
                 });
 
@@ -534,8 +535,18 @@
                 });
             },
 
-            reloadPage: function () {
-                // location.reload();
+            changeMode: function () {
+                this.isSisterTaxaLoaded = false;
+                if (this.isDefinedAndNotNull(this.taxon.parent)) {
+                    fetchSisterTaxa(this.taxon.parent, this.$store.state.mode).then((response) => {
+                        this.sister_taxa = response.results;
+                        console.log(this.$store.state.mode)
+                        this.isSisterTaxaLoaded = true;
+                    });
+                }
+
+                return Promise.all([this.$store.dispatch('FETCH_CHILDREN', this.taxon.id )])
+
             }
         },
 
@@ -548,10 +559,11 @@
             },
             '$store.state.mode': {
                 handler: function (newVal) {
-                    this.reloadPage()
+                    this.changeMode()
                 },
                 deep: true
             },
+
             '$route.meta.isSpecies': {
                 handler : function (newval, oldval) {
                     Object.assign(this.$data, this.initialData())
@@ -564,7 +576,8 @@
         metaInfo () {
             return {
                 title: this.taxon.taxon,
-                meta:  [{ vmid: 'keywords', name: 'keywords', content: this.meta}],
+                meta:  [{ vmid: 'keywords', name: 'keywords', content: this.meta},
+                    { vmid: 'description', name: 'description', content: ''}]
             }
         },
     }

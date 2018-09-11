@@ -18,7 +18,7 @@
     <div id="header-box">
       <div id="lang-block-top">
         <lang-buttons lang-class="'header'"/>
-        <b-nav-item-dropdown :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" right>
+        <b-nav-item-dropdown style="list-style-type: none; margin-top: 45px" :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" right>
           <b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode === 'in_global'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
           <b-dropdown-item @click="changeMode('in_global')" v-if="mode === 'in_baltoscandia'">{{$t('header.global_mode')}}</b-dropdown-item>
         </b-nav-item-dropdown>
@@ -30,8 +30,8 @@
       <div id="header2">
         <h1> <router-link v-bind:to="'/'">{{ $t('header.title') }}</router-link></h1>
       </div>
-      <div id="header3" v-if="isMounted === true">
-        <div id="search_box" style="position:relative;">
+      <div id="header3" v-if="isMounted === true" style="position:relative;margin-top: 25px">
+        <div id="search_box">
           <autocomplete
             ref="autocomplete"
             :source="simpleTaxonSearchApiCall"
@@ -65,29 +65,32 @@
       LangButtons,
       Autocomplete
     },
+
     data ()  {
         return {isMounted : false}
     },
     computed: {
         mode () {
             return this.$store.state.mode
+        },
+        filteredSearchResult () {
+            return _.groupBy(this.$refs.autocomplete.results,'id')
         }
     },
     mounted: function(){
         this.isMounted = true;
     },
     methods: {
-        //todo:
       simpleTaxonSearchApiCall(value) {
-        // return 'https://api.geocollections.info/taxon/?paginate_by=10&fields=id,taxon,common_name__name,rank__rank_short&multi_search=value:' + value + ';fields:taxon,common_name__name;lookuptype:icontains'
+        return 'https://api.geocollections.info/taxon/?paginate_by=10&fields=id,taxon,common_name__name,rank__rank_short&multi_search=value:' + value + ';fields:taxon,common_name__name;lookuptype:icontains'
         // return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=id,taxon,rank__rank_en&multi_search=value:' + value + ';fields:taxon;lookuptype:icontains'
       },
       displayResults: function (result) {
-        return result.taxon
-        //return result.rank__rank_short + ' ' + result.taxon + ' (' + result.common_name__name + ')'
+          // console.log(this.$refs.autocomplete)
+        return result.rank__rank_short + ' ' + result.taxon + ' (' + result.common_name__name + ')'
       },
       changeMode: function(mode) {
-          this.$store.state.mode = mode
+          this.$store.commit('SET_MODE', {mode})
       },
       onSelect(value) {
         this.$refs.autocomplete.clearValues()

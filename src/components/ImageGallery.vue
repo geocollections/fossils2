@@ -4,8 +4,8 @@
     <div class='photogallery'>
       <h3 v-if="!$props.isSpecimen">{{$t('header.f_higher_taxon_images_title_visualtool')}} ({{$parent.taxon.taxon}})</h3>
       <!--<h3 v-else>{{$t('header.f_higher_taxon_images_title_gallery')}}</h3>-->
-      <div v-for="idx in imagesLength" style="position:relative;float:left;" @mouseover="showImageInfo(imageName+'_'+idx)" v-bind:class="$props.isSpecimen === true ? 'image_highlight' : ''" @mouseout="hideImageInfo(imageName+'_'+idx)">
-        <a :rel="$props.isSpecimen === true ? 'gallery-1' : 'gallery-2'" :href="getImage(idx, true)" ref="link" onclick="return false;" class="swipebox" title="">
+      <div v-for="idx in imagesLength" style="position:relative;float:left;" @mouseover="showImageInfo(imageName+'_'+idx)" v-bind:class="$props.isSpecimen === true ? 'image_highlight' : ''" @mouseout="hideImageInfo(imageName+'_'+idx)" @click="navigate(idx)">
+        <a :rel="$props.isSpecimen === true ? 'gallery-1' : 'gallery-2'" :href="getImage(idx, true)" ref="link" onclick="return false;" class="swipebox" :title="imageTitle(idx)">
           <img style="vertical-align: top;" :src="getImage(idx, false)" :alt="imageTitle(idx)" :title="imageTitle(idx)" border="0" /></a>
         <div v-show="$props.isSpecimen === true && mouseOverImage === imageName+'_'+idx" class="image_label" >
           <div style="padding: 3px;">
@@ -76,7 +76,9 @@
       }
     },
     methods: {
-
+      navigate (idx)  {
+          this.$router.push({ path: '/'+this.taxonImages[idx-1].link})
+      },
       getImage(idx, isFull) {
         if(this.taxonImages[idx-1] === undefined) return;
         return this.taxonImages[idx-1].path

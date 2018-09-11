@@ -9,7 +9,7 @@ const api = {
 };
 
 function fetch (child) {
-  logRequests && console.log(`fetching ${child}...`);
+  // logRequests && console.log(`fetching ${child}...`);
     return new Promise((resolve, reject) => {
         Vue.http.get(api.url+child, {}).then(response => {
             resolve(response.body);
