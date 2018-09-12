@@ -20,10 +20,14 @@
             AppContent
         },
         name: 'App',
-        metaInfo: {
-            title: 'Fossiilid.info',
-            titleTemplate: ' %s '
-        }
+
+        metaInfo () {
+            return {
+                title: 'Fossiilid.info',
+                meta:  [{ vmid: 'keywords', name: 'keywords', content: ''},
+                    { vmid: 'description', name: 'description', content: ''}]
+            }
+        },
     }
 </script>
 <style src="../node_modules/bootstrap/dist/css/bootstrap.css"></style>
