@@ -316,7 +316,9 @@
     import ClassificationTable from "../components/ClassificationTable.vue";
     import ImageGallery from "../components/ImageGallery.vue";
     import MapComponent from "../components/MapComponent.vue";
-    import _ from 'lodash';
+    import filter from 'lodash/filter';
+    import orderBy from 'lodash/orderBy';
+    import map from 'lodash/map';
     import {
         fetchTaxon,
         fetchSisterTaxa,
@@ -355,7 +357,7 @@
                 let lang = this.$store.state.lang;
                 if (this.taxonPage && this.taxonPage.title)
                     return this.taxonPage.title
-                let activeCommonName = _.filter(this.commonNames, function(o) {
+                let activeCommonName = filter(this.commonNames, function(o) {
                     return o.language === lang && o.is_preferred === 1});
 
                 if (activeCommonName.length > 0)
@@ -371,15 +373,15 @@
             },
             filteredCommonNames: function() {
                 let lang = this.$store.state.lang;
-                return _.filter(this.commonNames, function(o) {
+                return filter(this.commonNames, function(o) {
                     return o.language !== lang});
             },
 
             sortedSiblings: function() {
-                return _.orderBy(this.siblings,'taxon');
+                return orderBy(this.siblings,'taxon');
             },
             sortedSisters: function() {
-                return _.orderBy(this.sister_taxa,'taxon');
+                return orderBy(this.sister_taxa,'taxon');
             },
             sortedSistersWithoutCurrentTaxon: function() {
                 return this.excludeCurrentTaxon(this.sortedSisters, this.$route.params.id);
@@ -394,10 +396,10 @@
                     && this.isTaxonOccurrenceLoaded
             },
             commonNamesStrings () {
-                return _.map(this.commonNames, 'name');
+                return map(this.commonNames, 'name');
             },
             childrenStrings () {
-                return _.map(this.sortedSiblings, 'taxon');
+                return map(this.sortedSiblings, 'taxon');
             },
             isClassificationTableLoaded: function () {
                 return this.isHierarchyLoaded && this.$store.state.lists.ranks.length > 0

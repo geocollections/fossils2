@@ -76,9 +76,9 @@
     }
   }
 </script>
-<style src="../../node_modules/flag-icon-css/css/flag-icon.min.css">
+<!--<style src="../../node_modules/flag-icon-css/css/flag-icon.min.css">-->
 
-</style>
+<!--</style>-->
 <style lang="stylus" scoped>
   footer
     background-color: #f8f9fa

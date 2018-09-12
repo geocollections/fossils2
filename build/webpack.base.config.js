@@ -49,7 +49,7 @@ const baseLoaders = [
 ];
 
 module.exports = {
-  devtool: isProd
+  devtool: 'cheap-module-source-map'
     ? false
     : '#cheap-module-source-map',
   output: {
@@ -65,48 +65,6 @@ module.exports = {
   module: {
     noParse: /es6-promise\.js$/, // avoid webpack shimming process
     rules: utils.styleLoaders({ sourceMap: true, usePostCSS: true }).concat(baseLoaders),
-    // rules: [
-    //       {
-    //           test: /\.vue$/,
-    //           loader: 'vue-loader',
-    //           options: {
-    //               compilerOptions: {
-    //                   preserveWhitespace: false,
-    //                   // enable CSS extraction
-    //                   extractCSS: isProd
-    //               }
-    //           }
-    //       },
-    //       {
-    //           test: /\.js$/,
-    //           loader: 'babel-loader',
-    //           exclude: /node_modules/
-    //       },
-    //       {
-    //           test: /\.(png|jpg|gif|svg)$/,
-    //           loader: 'url-loader',
-    //           options: {
-    //               limit: 10000,
-    //               name: '[name].[ext]?[hash]'
-    //           }
-    //       },
-    //       {
-    //           test: /\.(styl(us)|css)$/,
-    //           use: isProd
-    //               ? ExtractTextPlugin.extract({
-    //                   use: [
-    //                       {
-    //                           loader: 'css-loader',
-    //                           options: { minimize: true, sourceMap: true }
-    //                       },
-    //                       'stylus-loader'
-    //                   ],
-    //                   fallback: 'vue-style-loader'
-    //               })
-    //               : ['vue-style-loader', 'css-loader', 'stylus-loader']
-    //       },
-    //
-    //   ]
   },
   performance: {
     maxEntrypointSize: 300000,
