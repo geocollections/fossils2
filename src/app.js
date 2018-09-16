@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 // import VueIziToast from 'vue-izitoast'
 import VueMoment from 'vue-moment'
+import VueLocalStorage from 'vue-localstorage' // VueLocalStorage for using local storage
 import BootstrapVue from 'bootstrap-vue' // Bootstrap
 import VueI18n from 'vue-i18n'
 import { createStore } from './store'
@@ -18,6 +19,7 @@ Vue.mixin(metaMixin)
 // Pop-up messages
 // Vue.use(VueIziToast)
 Vue.use(VueMoment)
+Vue.use(VueLocalStorage)
 Vue.use(BootstrapVue)
 // Translations
 Vue.use(VueI18n)
@@ -38,7 +40,15 @@ export function createApp () {
   // this registers `store.state.route`
   sync(store, router);
 
-
+    router.beforeEach((to, from, next) => {
+        if (!to.query.lang) {
+            to.query.lang = store.state.lang;
+            to.query.mode = store.state.mode;
+            next({ path: to.path, query: to.query });
+        } else {
+            next();
+        }
+    });
     /******************************
      *** TRANSLATION CODE START ***
      ******************************/
@@ -71,7 +81,6 @@ export function createApp () {
 
     Vue.directive('show-image',{
         componentUpdated: function (el, binding) {
-            console.log(el)
             let currentInnerHtml = el.innerHTML
             currentInnerHtml +=
                 "   <div style=\"display:block;cursor:pointer;position:absolute;top:0;right:0;\" :id=\"1+'-'\" v-show=\"mouseOverImage === 'taxon_image_'+1\" \n" +
@@ -86,7 +95,23 @@ export function createApp () {
   // create the app instance.
   // here we inject the router, store and ssr context to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
-  const app = new Vue({i18n,
+  const app = new Vue({
+      i18n,
+  localStorage: {
+      lang: {
+          type: String,
+          default: 'en'
+      },
+      mode: {
+          type: String,
+          default: 'in_baltoscania'
+      },
+      vuex : {
+          type: String,
+          default: {lang : 'et', mode: 'in_baltoscania'}
+      }
+
+  },
     router,
     store,
     render: h => h(App)

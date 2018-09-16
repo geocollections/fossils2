@@ -16,8 +16,6 @@ export default context => {
     const { url } = context
     const { fullPath } = router.resolve(url).route
 
-
-
     if (fullPath !== url) {
       return reject({ url: fullPath })
     }
@@ -27,10 +25,21 @@ export default context => {
 
     // wait until router has resolved possible async hooks
     router.onReady(() => {
+
       const matchedComponents = router.getMatchedComponents()
       // no matched routes
       if (!matchedComponents.length) {
         return reject({ code: 404 })
+      }
+
+      let lang = router.currentRoute.query.lang
+      if (router.currentRoute.query.lang) {
+        store.commit('SET_LANG', {lang})
+          // store.state.lang = router.currentRoute.query.lang
+      }
+      let mode = router.currentRoute.query.mode
+      if (router.currentRoute.query.mode) {
+          store.commit('SET_MODE', {mode})
       }
       // Call fetchData hooks on components matched by the route.
       // A preFetch hook dispatches a store action and returns a Promise,
@@ -47,7 +56,6 @@ export default context => {
         // inline the state in the HTML response. This allows the client-side
         // store to pick-up the server-side state without having to duplicate
         // the initial data fetching on the client.
-          console.log(store.state )
         context.state = store.state
         resolve(app)
       }).catch(reject)

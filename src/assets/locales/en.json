@@ -40,6 +40,7 @@
     "f_stratigraphical_distribution":"Stratigraphic range",
     "f_baltic_genera":"Baltoscandian genera (in database)",
     "f_baltic_species":"Baltoscandian species (in database): ",
+    "f_global_species":"Worldwide species (in database): ",
     "f_recent":"Recent",
     "f_species_list":"List of Baltoscandian species (may not be complete, up to 1000 species displayed)",
     "f_taxon_intro":"Taxon overview",

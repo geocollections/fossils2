@@ -33,6 +33,7 @@ if (window.__INITIAL_STATE__) {
 // wait until router has resolved all async before hooks
 // and async components...
 router.onReady(() => {
+
   // Add router hook for handling asyncData.
   // Doing it after initial route is resolved so that we don't double-fetch
   // the data that we already have. Using router.beforeResolve() so that all
@@ -57,7 +58,6 @@ router.onReady(() => {
       })
       .catch(next)
   })
-
   // actually mount to DOM
   app.$mount('#app')
 })

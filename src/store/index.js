@@ -22,7 +22,13 @@ export function createStore () {
       },
       lists: {
         ranks: []
-      }
+      },
+      searchParameters: {
+          watched: {
+              page: 1,
+              paginateBy: 10
+          },
+      },
     },
     actions,
     mutations,

@@ -91,6 +91,7 @@
       },
       changeMode: function(mode) {
           this.$store.commit('SET_MODE', {mode})
+          this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode} })
       },
       onSelect(value) {
         this.$refs.autocomplete.clearValues()

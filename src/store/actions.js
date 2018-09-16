@@ -8,7 +8,7 @@ import {
     fetchTypeSpecimen,
     fetchAttachment,
     fetchSpecimenIdentification,
-    fetchTaxonOccurrence, fetchChildren, fetchSynonims, fetchTaxonList, fetchTaxonDescription
+    fetchTaxonOccurrence, fetchChildren, fetchSynonims, fetchTaxonList, fetchTaxonDescription, fetchSpecies
 } from '../api'
 
 export default {

@@ -63,11 +63,11 @@
 
       </div>
       <br />
-      <div v-if="taxonPage && taxonPage.link_wikipedia != null
+      <div v-if="(taxonPage && taxonPage.link_wikipedia != null)
       || taxon.taxon_id_tol != null|| taxon.taxon_id_eol != null|| taxon.taxon_id_nrm!= null || taxon.taxon_id_plutof!= null || taxon.taxon_id_pbdb != null">
         <h3>{{$t('header.f_weblinks')}}</h3>
         <div id="taxon-links">
-          <span v-if="taxonPage.link_wikipedia != null" >
+          <span v-if="taxonPage && taxonPage.link_wikipedia != null" >
             <a :href="'http://'+$store.state.lang+'.wikipedia.org/wiki/'+taxonPage.link_wikipedia">{{$t('header.f_link_wikipedia')}}</a><br/>
           </span>
           <span v-if="taxon.taxon_id_tol != null" >
@@ -141,7 +141,8 @@
               <br />
             </div>
             <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'species'">
-              {{$t('header.f_baltic_species')}}
+              <span v-if="$store.state.mode === 'in_baltoscandia'">{{$t('header.f_baltic_species')}}</span>
+              <span v-else>{{$t('header.f_global_species')}}</span>
               <strong><router-link v-bind:to="'/'+taxon.id+'/species'">{{numberOfSpecimen}}</router-link></strong><br />
             </div>
           </div>
@@ -158,7 +159,7 @@
           </div>
           <div class="col-xs-12 col-xs-6 pagination-center">
             <b-pagination
-                    size="md" align="right" :limit="5" :hide-ellipsis="true" :total-rows="response.count" v-model="searchParameters.watched.page" :per-page="searchParameters.watched.paginateBy">
+                    size="md" align="right" :limit="5" :hide-ellipsis="true" :total-rows="response.count" v-model="$store.state.searchParameters.watched.page" :per-page="$store.state.searchParameters.watched.paginateBy">
             </b-pagination>
           </div>
         </div>
@@ -311,6 +312,7 @@
 </template>
 
 <script>
+    import Vue from 'vue'
     import Spinner from '../components/Spinner.vue'
     import TaxonomicalTree from "../components/TaxonomicalTree.vue";
     import ClassificationTable from "../components/ClassificationTable.vue";
@@ -348,7 +350,7 @@
             taxonTypeSpecimen () { return this.$store.state.activeItem['typeSpecimen'] },
             specimenIdentification () { return this.$store.state.activeItem['specimenIdentification'] },
             taxonOccurrence () { return this.$store.state.activeItem['taxonOccurrence'] },
-            siblings () { console.log(this.$store.state)
+            siblings () {
                 return this.$store.state.activeItem['children'] },
             synonyms () { return this.$store.state.activeItem['synonims'] },
             description () { return this.$store.state.activeItem['description'] },
@@ -452,12 +454,6 @@
                     mouseOverImage: null,
                     isTaxonImagesLoaded: false,
                     imagesLength: 100,
-                    searchParameters: {
-                        watched: {
-                            page: 1,
-                            paginateBy: 10
-                        },
-                    },
                     response: {
                         count: 0,
                         results: []
@@ -479,7 +475,7 @@
                 }
 
                 if (this.taxon.rank__rank_en !== 'species') {
-                    this.searchSpecies(this.searchParameters)
+                    this.searchSpecies()
                 }
 
                 fetchHierarchy(this.formatHierarchyString(this.taxon.hierarchy_string)).then((response) => {
@@ -491,10 +487,12 @@
                     this.taxonImages = response.results;
                     this.isTaxonImagesLoaded = true
                 });
+                if (this.isDefinedAndNotNull(this.taxon.taxon)) {
+                    fetchAttachment(this.taxon.taxon).then((response) => {
+                        this.speciment_attachment = response.results;
+                    });
+                }
 
-                fetchAttachment(this.$route.params.id).then((response) => {
-                    this.speciment_attachment = response.results;
-                });
             },
             //todo: utils
             isDefinedAndNotEmpty(value) {
@@ -506,7 +504,7 @@
                 return !!value && value !== null
             },
             calculateSpeciesIdx: function (idx) {
-                return (idx + 1) + this.searchParameters.watched.paginateBy * this.searchParameters.watched.page - this.searchParameters.watched.paginateBy
+                return (idx + 1) + this.$store.state.searchParameters.watched.paginateBy * this.$store.state.searchParameters.watched.page - this.$store.state.searchParameters.watched.paginateBy
             },
             //todo: utils
             openUrl: function (params) {
@@ -527,28 +525,14 @@
                 return value.replace(/-/g, ',');
             },
 
-            searchSpecies: function (searchParameters) {
-                fetchSpecies(this.taxon.hierarchy_string,this.taxon.in_baltoscandia,searchParameters).then((response) => {
+            searchSpecies: function () {
+                fetchSpecies(this.taxon.hierarchy_string,this.$store.state.mode, this.$store.state.searchParameters).then((response) => {
                     this.isSpecies = this.$route.meta.isSpecies;
                     this.allSpecies = response.results;
                     this.numberOfSpecimen = response.count;
                     this.response.count = response.count
                     this.response.results = response.results
                 });
-            },
-
-            changeMode: function () {
-                this.isSisterTaxaLoaded = false;
-                if (this.isDefinedAndNotNull(this.taxon.parent)) {
-                    fetchSisterTaxa(this.taxon.parent, this.$store.state.mode).then((response) => {
-                        this.sister_taxa = response.results;
-                        console.log(this.$store.state.mode)
-                        this.isSisterTaxaLoaded = true;
-                    });
-                }
-
-                return Promise.all([this.$store.dispatch('FETCH_CHILDREN', this.taxon.id )])
-
             }
         },
 
@@ -559,12 +543,6 @@
                     this.loadFullTaxonInfo()
                 }
             },
-            '$store.state.mode': {
-                handler: function (newVal) {
-                    this.changeMode()
-                },
-                deep: true
-            },
 
             '$route.meta.isSpecies': {
                 handler : function (newval, oldval) {
@@ -572,6 +550,19 @@
                     this.loadFullTaxonInfo()
                 }
             },
+
+            '$store.state.searchParameters.watched': {
+                handler: function () {
+                    this.searchSpecies()
+                },
+                deep: true
+            },
+            '$store.state.mode': {
+                handler: function () {
+                    this.searchSpecies()
+                },
+                deep: true
+            }
 
         },
 

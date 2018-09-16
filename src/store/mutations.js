@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 export default {
     SET_LANG: (state, { lang }) => {
+        console.log('language '+ lang)
         Vue.set(state, 'lang', lang || false) /* false means page not found */
     },
 

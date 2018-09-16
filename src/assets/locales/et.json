@@ -39,6 +39,7 @@
     "f_stratigraphical_distribution":"Stratigraafiline levik",
     "f_baltic_genera":"Eestist leitud perekonnad (andmebaasis)",
     "f_baltic_species":"Baltoskandiast leitud liigid (andmebaasis): ",
+    "f_global_species":"Maailmas leitud liigid (andmebaasis): ",
     "f_recent":"Tänapäev",
     "f_species_list":"Eestist leitud liigid (ei pruugi olla täielik, kuvatakse kuni 1000 liiki)",
     "f_taxon_intro":"Taksoni iseloomustus",

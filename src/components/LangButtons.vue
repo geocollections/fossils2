@@ -24,9 +24,10 @@
         this.$i18n.locale = lang
         if (lang === 'ee') lang = 'et'
         this.$store.commit('SET_LANG', {lang})
-        // this.$store.commit('CHANGE_LANG', lang ).then(function () {
-        //     this.$store.state.lang = lang
-        // });
+        this.$localStorage.set('lang', lang)
+        let query = this.$router.currentRoute.query
+        query.lang = lang
+        this.$router.push({ path: this.$router.currentRoute.path, query: query })
 
         // this.toastInfo(this.$t('messages.langChange'))
       },
