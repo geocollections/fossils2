@@ -93,7 +93,7 @@ export function fetchSpecimenIdentification (id) {
 }
 
 export function fetchAttachment (taxon) {
-    return fetch(`attachment/?specimen__specimenidentification__taxon__taxon__istartswith==${taxon}&fields=id,specimen_id,specimen__specimen_id,specimen_image_id,database__acronym,uuid_filename&format=json&distinct=true&order_by=stars`)
+    return fetch(`attachment/?specimen__specimenidentification__taxon__taxon__istartswith=${taxon}&fields=id,specimen_id,specimen__specimen_id,specimen_image_id,database__acronym,uuid_filename&format=json&distinct=true&order_by=stars`)
 }
 
 export function fetchRanks () {

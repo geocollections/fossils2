@@ -140,5 +140,13 @@
   "messages": {
     "overlay": "Please wait",
     "langChange": "Changed language!"
+  },
+  "tabs": {
+    "overview" : "Overview",
+    "gallery" : "Gallery",
+    "names" : "Names",
+    "classification" : "Classification",
+    "literature" : "Literature",
+    "species" : "Species"
   }
 }

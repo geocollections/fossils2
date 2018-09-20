@@ -132,22 +132,29 @@ function render (req, res) {
     ${meta.text()}
     ${title.text()}
     ${link.text()}
-    <link rel="stylesheet" href="/static/css/sarv.css" type="text/css"/>
-    <link rel="stylesheet" href="/static/css/sarv-fonts.css" type="text/css"/>
+    <!--<link rel="stylesheet" href="/static/css/sarv.css" type="text/css"/>-->
+    <!--<link rel="stylesheet" href="/static/css/sarv-fonts.css" type="text/css"/>-->
+  
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/fonts.css">
+    <link rel="stylesheet" href="/static/css/creative.css">
+    <link rel="stylesheet" href="/static/css/mainpage.css">
+    <link rel="stylesheet" href="/static/css/picture.galery.css">
     <link rel="stylesheet" href="/static/ol3/ol.css" type="text/css"/>
     <link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
-    <link rel="stylesheet" href="/static/css/ui-lightness/jquery-ui-1.10.3.custom.min.css"/>
+    <!--<link rel="stylesheet" href="/static/css/ui-lightness/jquery-ui-1.10.3.custom.min.css"/>-->
     <link rel="stylesheet" href="/static/swipebox/swipebox.css"/>
     ${style.text()}
     ${script.text()}
     ${noscript.text()}
   </head>
-  <body ${bodyAttrs.text()}>
+  <body ${bodyAttrs.text()} id="page-top">
     ${html}
     
     <script src="/assets/vendor.bundle.js"></script>
     <script src="/assets/client.bundle.js"></script>
     <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script>window.jQuery || document.write(unescape('%3Cscript src="/static/js/jquery.js"%3E%3C/script%3E'))</script>
     <script type="text/javascript" src="/static/js/jquery-ui_autocomplete.js"></script>
     <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.js"></script>
@@ -155,6 +162,7 @@ function render (req, res) {
     <script src="/static/swipebox/jquery.swipebox.min.js"></script>
     <script>window.jQuery || document.write(unescape('%3Cscript src="/static/swipebox/jquery.swipebox.min.js"%3E%3C/script%3E'))</script>
     <script type="text/javascript" src="/static/js/fossils.js"></script>
+    <script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
     ${script.text(bodyOpt)}
   </body>
 </html>

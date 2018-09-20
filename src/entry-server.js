@@ -41,6 +41,8 @@ export default context => {
       if (router.currentRoute.query.mode) {
           store.commit('SET_MODE', {mode})
       }
+      let process = 'server';
+      store.commit('SET_PROCESS', {process})
       // Call fetchData hooks on components matched by the route.
       // A preFetch hook dispatches a store action and returns a Promise,
       // which is resolved when the action is complete and store state has been

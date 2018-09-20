@@ -2,12 +2,18 @@ import Vue from 'vue'
 
 export default {
     SET_LANG: (state, { lang }) => {
-        console.log('language '+ lang)
         Vue.set(state, 'lang', lang || false) /* false means page not found */
+    },
+    SET_ACTIVE_TAB: (state, { tab }) => {
+        Vue.set(state, 'activeTab', tab || false) /* false means page not found */
     },
 
     SET_MODE: (state, { mode }) => {
         Vue.set(state, 'mode', mode || false) /* false means page not found */
+    },
+
+    SET_PROCESS: (state, { process }) => {
+        Vue.set(state, 'process', process || false) /* false means page not found */
     },
 
   SET_PAGE: (state, { id, page }) => {

@@ -1,6 +1,5 @@
 <template>
-  <ul id="tree" style="position:relative;left:0;background-color:#fff;z-index:100;padding:0;margin-right: 10px;width:100%;">
-    <h3>{{$t('header.fossils_browse_tree')}}</h3>
+  <ul style="position:relative;left:0;background-color:#fff;z-index:100;padding:0;margin-right: 10px;width:100%;">
     <ul v-for="(item,idx) in taxonomicTree.nodes">
       <span v-for="i in convertToNumber(item.i)" >&ensp;</span>
       <router-link v-bind:to="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</router-link>
@@ -23,13 +22,10 @@
           sortedSistersWithoutCurrentTaxon : {},
           taxon : {},
           taxonomicTree: {nodes: []},
-          isSisterTaxaLoaded: false,
-          isHierarchyLoaded: false,
           ranks: []
         }
       },
-      props: ['hierarchy_','parent_','taxon_','sortedSisters_','sortedSiblings_','sortedSistersWithoutCurrentTaxon_',
-      'isSisterTaxaLoaded_','isHierarchyLoaded_'],
+      props: ['hierarchy_','parent_','taxon_','sortedSisters_','sortedSiblings_','sortedSistersWithoutCurrentTaxon_'],
 
       created() {
         this.hierarchy = this.$props.hierarchy_;
@@ -37,8 +33,6 @@
         this.sortedSiblings = this.$props.sortedSiblings_;
         this.parent=this.$props.parent_;
         this.taxon = this.$props.taxon_;
-        this.isSisterTaxaLoaded=this.$props.isSisterTaxaLoaded_;
-        this.isHierarchyLoaded = this.$props.isHierarchyLoaded_;
         this.sortedSistersWithoutCurrentTaxon = this.$props.sortedSistersWithoutCurrentTaxon_;
         this.composeTaxonomicTree_()
       },

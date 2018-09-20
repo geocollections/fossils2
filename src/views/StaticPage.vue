@@ -1,7 +1,7 @@
 <template>
-  <div id='content' v-if="content">
-    <div id="article">
-      <span v-html="currentContent"></span>
+  <div class="container-fluid">
+    <div class="card" v-if="content">
+      <span class="card-body" v-html="currentContent"></span>
     </div>
   </div>
 </template>

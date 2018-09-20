@@ -41,9 +41,9 @@ export function createApp () {
   sync(store, router);
 
     router.beforeEach((to, from, next) => {
-        if (!to.query.lang) {
-            to.query.lang = store.state.lang;
+        if (!to.query.lang || !to.query.mode) {
             to.query.mode = store.state.mode;
+            to.query.lang = store.state.lang;
             next({ path: to.path, query: to.query });
         } else {
             next();
@@ -105,12 +105,7 @@ export function createApp () {
       mode: {
           type: String,
           default: 'in_baltoscania'
-      },
-      vuex : {
-          type: String,
-          default: {lang : 'et', mode: 'in_baltoscania'}
       }
-
   },
     router,
     store,

@@ -1,11 +1,8 @@
 <template>
   <div id="app">
-    <div id="pagewrap">
-      <app-header/>
-      <app-content/>
-      <div style="clear: both;"></div>
-      <app-footer/>
-    </div>
+    <app-header/>
+    <app-content/>
+    <app-footer/>
   </div>
 </template>
 <script>
@@ -20,7 +17,11 @@
             AppContent
         },
         name: 'App',
-
+        mounted() {
+            // let jquery = document.createElement('script');
+            // jquery.setAttribute('src',"/static/js/jquery.js");
+            // document.head.appendChild(jquery);
+        },
         metaInfo () {
             return {
                 title: 'Fossiilid.info',
@@ -30,7 +31,14 @@
         },
     }
 </script>
+
 <style src="../node_modules/bootstrap/dist/css/bootstrap.css"></style>
-<style src="../node_modules/bootstrap-vue/dist/bootstrap-vue.css"></style>
-<style src="../static/css/sarv.css"></style>
-<style src="../static/css/sarv-fonts.css"></style>
+<!--<style src="../node_modules/bootstrap-vue/dist/bootstrap-vue.css"></style>-->
+<style src="../static/css/fonts.css"></style>
+<style src="../static/css/creative.css"></style>
+<style src="../static/css/mainpage.css"></style>
+<style src="../static/css/picture.galery.css"></style>
+
+
+<!--<style src="../static/css/sarv.css"></style>-->
+<!--<style src="../static/css/sarv-fonts.css"></style>-->

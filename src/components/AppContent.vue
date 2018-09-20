@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <section>
     <transition name="fade" mode="out-in">
       <router-view></router-view>
     </transition>
-  </div>
+  </section>
+
 </template>
 
 <script>

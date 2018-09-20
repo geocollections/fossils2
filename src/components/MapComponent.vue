@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <h3>{{$t('header.f_distribution_map')}}</h3>
     <div id="map" style="height: 300px;border-radius: 6px;"></div>
-  </div>
 </template>
 
 <script>
@@ -18,7 +15,6 @@
         props: ['taxonOccurrence','taxonTypeSpecimen','specimenIdentification'],
 
         mounted (){
-            console.log(this.$store.state)
           this.getLocationsObject(this.$props.taxonOccurrence);
           this.getLocationsObject(this.$props.taxonTypeSpecimen, true);
           this.getLocationsObject(this.uniqueLocations(this.$props.specimenIdentification));

@@ -9,7 +9,8 @@ Vue.use(Vuex)
 export function createStore () {
   return new Vuex.Store({
     state: {
-      activeType: null,
+      process: 'server',
+      activeTab: 'overview',
       itemsPerPage: 20,
       items: {/* [id: number]: Item */},
       lang: 'en',

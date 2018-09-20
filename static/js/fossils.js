@@ -288,6 +288,12 @@ var displayFeatureInfo = function(pixel) {
 
 
 $(function(fs) {
+	// $('#mainNav').affix({
+	// 	offset: {
+	// 		top: 100
+	// 	}
+	// });
+	// $("#globalQuery").focus();
   $( '.swipebox' ).swipebox();
   $(".zoomIcon").click(function(evt){
     let idx = ($(this).attr("id"))

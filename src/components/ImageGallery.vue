@@ -1,29 +1,47 @@
 <template>
   <div>
     <h3>{{$t('header.zero')}}</h3>
-    <div class='photogallery'>
-      <h3 v-if="!$props.isSpecimen">{{$t('header.f_higher_taxon_images_title_visualtool')}} ({{$parent.taxon.taxon}})</h3>
-      <!--<h3 v-else>{{$t('header.f_higher_taxon_images_title_gallery')}}</h3>-->
-      <div v-for="idx in imagesLength" style="position:relative;float:left;" @mouseover="showImageInfo(imageName+'_'+idx)" v-bind:class="$props.isSpecimen === true ? 'image_highlight' : ''" @mouseout="hideImageInfo(imageName+'_'+idx)" @click="navigate(idx)">
-        <a :rel="$props.isSpecimen === true ? 'gallery-1' : 'gallery-2'" :href="getImage(idx, true)" ref="link" onclick="return false;" class="swipebox" :title="imageTitle(idx)">
-          <img style="vertical-align: top;" :src="getImage(idx, false)" :alt="imageTitle(idx)" :title="imageTitle(idx)" border="0" /></a>
-        <div v-show="$props.isSpecimen === true && mouseOverImage === imageName+'_'+idx" class="image_label" >
-          <div style="padding: 3px;">
-            <strong>{{imageTitle(idx)}} <br />
-              <span  @click="$parent.openUrl({parent_url:'http://geokogud.info/specimen',object:getImageId(idx), width:500,height:500})"
-                     class="openwinlink">
-                      INFO</span>
-              |
-              <span @click="$parent.openUrl({parent_url:'http://geokogud.info/specimen_image',object:getSpecimenImageId(idx), width:500,height:500})"
-                    class="openwinlink">
-                      IMAGE</span></strong></div>
+    <div class="container">
+      <div class="d-flex  flex-row">
+        <div class="d-flex  flex-column">
+          <img class="img-fluid" :src="getImage(idx, false)" v-for="idx in [1,2]"/>
         </div>
-        <div :id = "imageName+'_'+idx" class="zoomIcon" style="display:block;cursor:pointer;position:absolute;top:0;right:0;" v-show="mouseOverImage === imageName+ '_'+idx">
-          <img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />
+
+        <div class="d-flex  flex-column">
+          <img class="img-fluid" :src="getImage(idx, false)" v-for="idx in [3,4]"/>
+        </div>
+
+        <div class="d-flex  flex-column">
+          <img class="img-fluid" :src="getImage(idx, false)" v-for="idx in [5,6]"/>
+        </div>
+
+        <div class="d-flex  flex-column">
+          <img class="img-fluid" :src="getImage(idx, false)" v-for="idx in [7,8]"/>
         </div>
       </div>
     </div>
-    <div style="clear:both;"></div>
+    <!--<div class='photogallery'>-->
+      <!--<h3 v-if="!$props.isSpecimen">{{$t('header.f_higher_taxon_images_title_visualtool')}} ({{$parent.taxon.taxon}})</h3>-->
+      <!--&lt;!&ndash;<h3 v-else>{{$t('header.f_higher_taxon_images_title_gallery')}}</h3>&ndash;&gt;-->
+      <!--<div v-for="idx in imagesLength" style="position:relative;float:left;" @mouseover="showImageInfo(imageName+'_'+idx)" v-bind:class="$props.isSpecimen === true ? 'image_highlight' : ''" @mouseout="hideImageInfo(imageName+'_'+idx)" @click="navigate(idx)">-->
+        <!--<a :rel="$props.isSpecimen === true ? 'gallery-1' : 'gallery-2'" :href="getImage(idx, true)" ref="link" onclick="return false;" class="swipebox" :title="imageTitle(idx)">-->
+          <!--<img style="vertical-align: top;" :src="getImage(idx, false)" :alt="imageTitle(idx)" :title="imageTitle(idx)" border="0" /></a>-->
+        <!--<div v-show="$props.isSpecimen === true && mouseOverImage === imageName+'_'+idx" class="image_label" >-->
+          <!--<div style="padding: 3px;">-->
+            <!--<strong>{{imageTitle(idx)}} <br />-->
+              <!--<span  @click="$parent.openUrl({parent_url:'http://geokogud.info/specimen',object:getImageId(idx), width:500,height:500})"-->
+                     <!--class="openwinlink">-->
+                      <!--INFO</span>-->
+              <!--|-->
+              <!--<span @click="$parent.openUrl({parent_url:'http://geokogud.info/specimen_image',object:getSpecimenImageId(idx), width:500,height:500})"-->
+                    <!--class="openwinlink">-->
+                      <!--IMAGE</span></strong></div>-->
+        <!--</div>-->
+        <!--<div :id = "imageName+'_'+idx" class="zoomIcon" style="display:block;cursor:pointer;position:absolute;top:0;right:0;" v-show="mouseOverImage === imageName+ '_'+idx">-->
+          <!--<img src="/static/imgs/zoom_in.png" style="width: 32px;height: 32px;padding:2px 2px 0 0;" />-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -133,5 +151,14 @@
 </script>
 
 <style scoped>
+  .flex-column {
+    max-width : 260px;
+  }
+  .container {
+    background: #f9f9f9;
+  }
 
+  img {
+    margin: 5px;
+  }
 </style>
