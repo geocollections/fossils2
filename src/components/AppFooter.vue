@@ -1,5 +1,5 @@
 <template>
-  <footer class="hidden-xs">
+  <footer>
     <!--<div class="container">-->
       <!--<div class="row">-->
         <!--<div class="col-lg-12">-->
@@ -59,7 +59,7 @@
         </td>
         <td valign="top" style="border-left: solid 0px #ccc; border-right: dotted 0px #ccc;">
           <div id='lang-flags'>
-            <lang-buttons lang-class="'footer'"/>
+            <!--<lang-buttons lang-class="'footer'"/>-->
           </div>
           {{ $t(' footer.licence ') }}
           <div><br/>
@@ -107,11 +107,11 @@
 </template>
 
 <script>
-  import LangButtons from '../components/LangButtons.vue'
+  // import LangButtons from '../components/LangButtons.vue'
   export default {
     name: "app-footer",
     components:  {
-      LangButtons
+      // LangButtons
     }
   }
 </script>
