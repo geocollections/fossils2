@@ -11,9 +11,15 @@
             <div class="row">Name: {{currentImage.link__taxon}}</div>
             <div class="row" v-if="currentImage.attachment__author__agent != null">Author: {{currentImage.attachment__author__agent}}</div>
             <div class="row" v-if="currentImage.attachment__date_created != null">Created: {{currentImage.attachment__date_created}}</div>
-            <div class="row" v-if="$props.isSpecimen === true">{{currentImage}}</div>
+            <div class="row" v-if="$props.isSpecimen">{{currentImage}}</div>
             <div class="row p-3">
-              <button type="button" class="btn btn-info" @click="navigate(currentImage.link)">{{$t('main.button_read_more')}}</button></div>
+              <button v-if="!$props.isSpecimen" type="button" class="btn btn-info" @click="$navigate(currentImage.link)">{{$t('main.button_read_more')}}</button>
+              <div v-if="$props.isSpecimen">
+                <button type="button" class="btn btn-info"  @click="$parent.openUrl({parent_url:'http://geokogud.info/specimen',object:currentImage.specimen_id, width:500,height:500})">INFO</button>
+                <button type="button" class="btn btn-secondary"  @click="$parent.openUrl({parent_url:'http://geokogud.info/specimen_image',object:currentImage.specimen_image_id, width:500,height:500})">IMAGE</button>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -69,7 +75,7 @@
           let images = [];
           if (this.taxonImages.length === 0) return [];
           for (let i = 1; i < this.taxonImages.length; i ++) {
-              images.push({src:this.getImageX(i, false), thumbnail:this.getImageX(i, false), caption: this.imageTitle(i)})
+              images.push({src:this.getImage(i, false), thumbnail:this.getImage(i, false), caption: this.imageTitle(i)})
           }
           return images
       },
@@ -92,39 +98,15 @@
         },
         deep: true
       },
-      '$props.isSpecimen':{
-        handler: function (newval) {
-          if(newval && newval.length > 0) {
-
-          }
-        },
-        deep: true
-      }
-      ,'nonEmptyImages':{
-        handler: function (newval) {
-          // console.log(newval)
-        },
-        deep: true
-      },
     },
 
     methods: {
       navigate (link)  {
           this.$router.push({ path: '/'+link})
       },
-      getImageX(idx, isFull) {
+      getImage(idx, isFull) {
         if(this.taxonImages[idx-1] === undefined) return;
-        return this.taxonImages[idx-1].path
-      },
-
-      getImageId(idx) {
-        if(this.taxonImages[idx-1] === undefined) return;
-        return this.taxonImages[idx-1].specimen_id
-      },
-
-      getSpecimenImageId(idx) {
-        if(this.taxonImages[idx-1] === undefined) return;
-        return this.taxonImages[idx-1].specimen_image_id
+        return isFull === true ? this.taxonImages[idx-1].fullPath : this.taxonImages[idx-1].path
       },
 
       imageTitle: function(idx) {
@@ -149,12 +131,12 @@
         taxonImages.forEach(function(element) {
           if (element.uuid_filename && element.uuid_filename != null) {
             element.path = fileUrl + '/small/' + element.uuid_filename.substring(0,2)+'/'+ element.uuid_filename.substring(2,4)+'/'+ element.uuid_filename;
-            element.fullPath = self.fileUrl + '/' + element.uuid_filename.substring(0,2)+'/'+ element.uuid_filename.substring(2,4)+'/'+ element.uuid_filename;
+            element.fullPath = self.fileUrl + '/large/' + element.uuid_filename.substring(0,2)+'/'+ element.uuid_filename.substring(2,4)+'/'+ element.uuid_filename;
           }
           else if(element.attachment__uuid_filename && element.attachment__uuid_filename != null) {
             element.path = fileUrl + '/small/' + element.attachment__uuid_filename.substring(0,2)+'/'
               + element.attachment__uuid_filename.substring(2,4)+'/'+ element.attachment__uuid_filename;
-            element.fullpath = fileUrl + '/' + element.attachment__uuid_filename.substring(0,2)+'/'
+            element.fullpath = fileUrl + '/large/' + element.attachment__uuid_filename.substring(0,2)+'/'
               + element.attachment__uuid_filename.substring(2,4)+'/'+ element.attachment__uuid_filename;
           }
 

@@ -3,7 +3,10 @@
     ($store.state.process === 'client' && $store.state.activeTab === 'overview')}" role="tabpanel">
         <div class="row p-3"><h2 v-show="$store.state.process === 'server'">Overview</h2></div>
         <div class="row  p-3">
-            <div class="col-lg-12">
+            <div class="col-lg-4" v-if="images && images.length > 0">
+                <lingallery ref="lingallery" :width="400" :height="250" :items="images"/>
+            </div>
+            <div v-bind:class="images && images.length > 0 ? 'col-lg-8' : 'col-lg-12'">
                 <div class="card">
                     <!--<div class="card-header"></div>-->
                     <div class="card-body">
@@ -55,21 +58,24 @@
             </div>
         </div>
         <div class="row  p-3">
-            <div class="col-lg-8">
-                <div class="container"></div>
-            </div>
-            <div class="col-lg-4"   v-if="isMapDataLoaded">
+            <div class="col-lg-4" >
                 <div class="card">
                     <div class="card-header">{{$t('header.f_distribution_map')}}</div>
                     <div class="card-body">
-                        <map-component
-                                :taxonOccurrence="taxonOccurrence"
-                                :taxonTypeSpecimen="taxonTypeSpecimen"
-                                :specimenIdentification="specimenIdentification"
-                        ></map-component>
+                        <div v-if="isMapLoaded === true">
+                            <map-component
+                                    :taxonOccurrence="taxonOccurrence"
+                                    :taxonTypeSpecimen="taxonOccurrence"
+                                    :specimenIdentification="specimenIdentification"
+                            ></map-component>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-8">
+
+            </div>
+
         </div>
 
         <!-- Row contains Overview and also links-->
@@ -174,25 +180,41 @@
 <script>
     import SeeAlso from "../SeeAlso.vue";
     import MapComponent from "../MapComponent.vue";
+    import Lingallery from "../Lingallery.vue";
     export default {
         name: "TabOverview",
         components:{
+            Lingallery,
             SeeAlso,
             MapComponent
         },
+        data () {
+            return { isMapLoaded : true }
+        },
+
         computed: {
             taxon () { return this.$store.state.activeItem['taxon'] },
+            images () { return this.$parent.images.slice(1, 5) },
             parent () { return this.$parent.parent },
             description () { return this.$store.state.activeItem['description'] },
             taxonPage () {return this.$parent.taxonPage},
             sortedSistersWithoutCurrentTaxon () {return this.$parent.sortedSistersWithoutCurrentTaxon},
             sortedSiblings () {return this.$parent.sortedSiblings},
             numberOfSpecimen () {return this.$parent.numberOfSpecimen},
-            taxonTypeSpecimen () {return this.$parent.taxonTypeSpecimen},
-            specimenIdentification () {return this.$parent.specimenIdentification},
-            taxonOccurrence () {return this.$parent.taxonOccurrence},
-            isMapDataLoaded:function() {
-                return ['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en)
+            taxonTypeSpecimen () {return this.$store.state.activeItem['taxonTypeSpecimen']},
+            specimenIdentification () {return this.$store.state.activeItem['specimenIdentification']},
+            taxonOccurrence () {return this.$store.state.activeItem['taxonOccurrence']},
+
+        },
+        watch: {
+            '$parent.isMapLoaded': {
+                handler: function (newval, oldval) {
+                    console.log('newval' + newval + 'oldval' + oldval)
+                    // if(newval === oldval) {
+                    //     this.$emit("mounted", true)
+                    //     this.isMapLoaded = true
+                    // }
+                }
             },
         },
         methods:{

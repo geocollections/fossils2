@@ -7,7 +7,6 @@
         name: "map-component",
         data() {
           return {
-            isMapLoaded : false,
             locations : [],
 
           }
@@ -23,12 +22,9 @@
         methods: {
           loadMap : function(arr) {
             if (this.locations && this.locations.length > 0) {
-              this.isMapLoaded = true;
               this.$nextTick(() => {
                 initMap(this.locations)
               })
-            } else {
-              this.isMapLoaded = false;
             }
           },
           getLocationsObject : function(object, isImportantLocality = false) {

@@ -1,10 +1,11 @@
 <template>
     <div id="lingallery" :style="lingalleryStyle">
         <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" :style="figureStyle">
-            <!--<div id="lingallery_spinner">-->
+            <div id="lingallery_spinner">
+                <div v-if="isLoading">Loading</div>
                 <!--<half-circle-spinner :animation-duration="1000" :size="60" :color="accentColor" v-if="isLoading"/>-->
-            <!--</div>-->
-            <img :src="currentImage" @click="showNextImage" :class="{ loading: isLoading }">
+            </div>
+            <img rel="prefetch" :src="currentImage" @click="showNextImage" :class="{ loading: isLoading }">
             <!--<div class="lingallery_caption" v-if="currentCaption" :style="captionStyle">-->
                 <!--{{ currentCaption }}-->
             <!--</div>-->
@@ -16,6 +17,7 @@
                 <div v-for="(item, index) in items" class="lingallery_thumbnails_content_elem" :key="index">
                     <img :alt="item.caption" style="height: 100px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="64" :style="thumbnailStyle(index)">
                 </div>
+                <button class="btn btn-outline-info ">More</button>
             </div>
         </div>
     </div>

@@ -4,7 +4,7 @@
     <taxon-title></taxon-title>
     <taxon-tabs></taxon-tabs>
     <div class="tab-content">
-      <tab-overview></tab-overview>
+      <tab-overview v-on:mounted="preventTwiceMounting"></tab-overview>
       <tab-names></tab-names>
       <tab-gallery></tab-gallery>
       <tab-classification></tab-classification>
@@ -113,7 +113,6 @@
                 return this.$store.state.activeItem['children'] },
             synonyms () { return this.$store.state.activeItem['synonims'] },
             taxonList () { return this.$store.state.activeItem['taxonList'] },
-
             taxonPage: function() {
                 if (this.taxonPages === undefined || this.taxonPages.length === 0) return {}
                 let lang = this.$store.state.lang;
@@ -183,9 +182,9 @@
             initialData: function () {
                 return {
                     parent: {},
-                    taxonImages: [],
+                    images: [],
+                    isSpecimen: false,
                     sister_taxa: {},
-                    speciment_attachment: {},
                     hierarchy: {},
                     numberOfSpecimen: {},
                     requestingData: false,
@@ -196,6 +195,7 @@
                     isTaxonImagesLoaded: false,
                     imagesLength: 100,
                     allSpecies:[],
+                    isMapLoaded: false,
                     response: {
                         count: 0,
                         results: []
@@ -224,15 +224,18 @@
                     this.hierarchy = response.results;
                     this.isHierarchyLoaded = true;
                 });
+                if(['None','Phylum', 'Kingdom', 'None', 'Class', 'Order'].includes(this.taxon.rank__rank_en) ) {
+                    fetchImages(this.$route.params.id).then((response) => {
+                        this.images = this.composeImageRequest(response.results)
+                        this.isTaxonImagesLoaded = true
+                    });
 
-                fetchImages(this.$route.params.id).then((response) => {
-                    this.taxonImages = response.results;
-                    this.isTaxonImagesLoaded = true
-                });
-                if (this.isDefinedAndNotNull(this.taxon.taxon)) {
+                }
+                if(['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && this.isDefinedAndNotNull(this.taxon.taxon)) {
+                    this.isMapLoaded = true
                     fetchAttachment(this.taxon.taxon).then((response) => {
-                        console.log(response)
-                        this.speciment_attachment = response.results;
+                        this.isSpecimen = true;
+                        this.images = this.composeImageRequest(response.results);
                     });
                 }
 
@@ -267,6 +270,33 @@
             formatHierarchyString: function(value) {
                 return value.replace(/-/g, ',');
             },
+            //todo: utils
+            composeImageRequest : function(taxonImages) {
+                if(taxonImages === undefined || taxonImages === {} || taxonImages.length === 0) ;
+                if (taxonImages.length > 0) {
+                    let taxon = this.taxon
+                    let fileUrl = 'http://files.geocollections.info';
+                    taxonImages.forEach(function(el) {
+                        if (el.uuid_filename && el.uuid_filename != null) {
+                            el.thumbnail = fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
+                            el.src = fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
+                            el.caption = el.database__acronym +' '+ el.specimen__specimen_id + ' '
+                                + taxon.taxon+ ' ' + taxon.author_year
+                        }
+                        else if(el.attachment__uuid_filename && el.attachment__uuid_filename != null) {
+                            el.thumbnail = fileUrl + '/small/' + el.attachment__uuid_filename.substring(0,2)+'/'
+                                + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
+                            el.src = fileUrl + '/small/' + el.attachment__uuid_filename.substring(0,2)+'/'
+                                + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
+
+
+                            el.caption = el.link__taxon;
+                        }
+                    });
+                    return taxonImages
+                }
+                return []
+            },
 
             searchSpecies: function () {
                 fetchSpecies(this.taxon.hierarchy_string,this.$store.state.mode, this.$store.state.searchParameters).then((response) => {
@@ -275,7 +305,8 @@
                     this.response.count = response.count
                     this.response.results = response.results
                 });
-            }
+            },
+            preventTwiceMounting () { this.isMapLoaded = false}
         },
 
         watch: {

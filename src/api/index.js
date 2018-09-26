@@ -57,7 +57,7 @@ export function fetchChildren (id, mode) {
 }
 
 export function fetchImages (id) {
-    return fetch(`taxon_image/?taxon=${id}`)
+    return fetch(`taxon_image/?taxon=${id}&order_by=sort`)
 }
 
 export function fetchTaxonPages (id) {
