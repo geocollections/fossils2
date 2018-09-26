@@ -5,7 +5,7 @@
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
       <div class="collapse navbar-collapse" id="nav_collapse">
-        <ul class="navbar-nav mr-auto ">
+        <ul class="navbar-nav mr-auto">
           <b-nav-item href="/page/28">{{ $t('menu.fossils') }}</b-nav-item>
           <b-nav-item href="/page/29">{{ $t('menu.collecting') }}</b-nav-item>
           <b-nav-item href="/page/30">{{ $t('menu.identifying') }}</b-nav-item>
@@ -70,11 +70,10 @@
         <div class="col-lg-4"></div>
         <div class="col-lg-4">
           <a href="/">
-            <h1 id="homeHeading" style="color:white">{{ $t('header.title') }}</h1>
+            <h1 style="color:white">{{ $t('header.title') }}</h1>
           </a>
           <hr>
-          <div>
-            <autocomplete id="globalQuery"
+            <autocomplete class="p-1" id="globalQuery"
                           ref="autocomplete"
                           :source="simpleTaxonSearchApiCall"
                           results-property="results"
@@ -83,8 +82,6 @@
                           @selected="onSelect"
             >
             </autocomplete>
-          </div>
-
         </div>
         <div class="col-lg-4"></div>
       </div>
@@ -160,4 +157,13 @@
     text-align: center;
     color: white;
   }
+
+  .navbar {
+    position: fixed;
+    width: 100%;
+    transition: background 0.15s ease-out;
+    background: transparent;
+    z-index: 10000;
+  }
+
 </style>

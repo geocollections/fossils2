@@ -172,8 +172,8 @@
 </template>
 
 <script>
-    import SeeAlso from "../components/SeeAlso.vue";
-    import MapComponent from "../components/MapComponent.vue";
+    import SeeAlso from "../SeeAlso.vue";
+    import MapComponent from "../MapComponent.vue";
     export default {
         name: "TabOverview",
         components:{

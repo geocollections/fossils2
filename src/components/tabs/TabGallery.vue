@@ -20,7 +20,7 @@
 
 <script>
 
-    import ImageGallery from "../components/ImageGallery.vue"
+    import ImageGallery from "../ImageGallery.vue"
     export default {
         name: "TabGallery",
         computed: {

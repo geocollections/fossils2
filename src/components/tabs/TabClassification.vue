@@ -33,8 +33,8 @@
 </template>
 
 <script>
-    import ClassificationTable from "../components/ClassificationTable.vue";
-    import TaxonomicalTree from "../components/TaxonomicalTree.vue";
+    import ClassificationTable from "../ClassificationTable.vue";
+    import TaxonomicalTree from "../TaxonomicalTree.vue";
     export default {
         name: "TabClassification",
         components: {

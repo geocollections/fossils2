@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-header/>
-    <app-content/>
+    <app-content style="margin-top: -15%"/>
     <app-footer/>
   </div>
 </template>
@@ -9,12 +9,19 @@
     import AppFooter from './components/AppFooter.vue'
     import AppHeader from './components/AppHeader.vue'
     import AppContent from './components/AppContent.vue'
+    import FixedHeader from 'vue-fixed-header'
 
     export default {
         components: {
             AppFooter,
             AppHeader,
-            AppContent
+            AppContent,
+            FixedHeader
+        },
+        data () {
+            return {
+                isFixed: false
+            }
         },
         name: 'App',
         mounted() {
@@ -38,7 +45,6 @@
 <style src="../static/css/creative.css"></style>
 <style src="../static/css/mainpage.css"></style>
 <style src="../static/css/picture.galery.css"></style>
-
 
 <!--<style src="../static/css/sarv.css"></style>-->
 <!--<style src="../static/css/sarv-fonts.css"></style>-->
