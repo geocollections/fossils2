@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-header/>
-    <app-content style="margin-top: -15%"/>
+    <app-content/>
     <app-footer/>
   </div>
 </template>
@@ -9,14 +9,12 @@
     import AppFooter from './components/AppFooter.vue'
     import AppHeader from './components/AppHeader.vue'
     import AppContent from './components/AppContent.vue'
-    import FixedHeader from 'vue-fixed-header'
 
     export default {
         components: {
             AppFooter,
             AppHeader,
-            AppContent,
-            FixedHeader
+            AppContent
         },
         data () {
             return {

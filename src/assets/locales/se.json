@@ -1,6 +1,8 @@
 {
   "main": {
-    "pagination": "Kuva {num} kaupa"
+    "pagination": "Kuva {num} kaupa",
+
+    "button_read_more":"Read more"
   },
   "header": {
     "zero" : "",
@@ -11,6 +13,7 @@
     "button_show":"Show tree",
     "button_hide":"Hide",
 
+    "button_read_more":"Read more",
     "mode": "Mode",
     "in_baltoscandia_mode": "Baltoscandia mode",
     "global_mode": "Global mode",

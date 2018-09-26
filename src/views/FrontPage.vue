@@ -1,6 +1,5 @@
 <template>
-    <div class="container-fluid">
-
+    <div class="container-fluid" style="margin-top: -15%">
         <div class="row" v-if="content">
             <div class="col-lg-1"></div>
             <div class="col-lg-10">

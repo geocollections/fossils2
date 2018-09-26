@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 // import VueIziToast from 'vue-izitoast'
+import AsyncComputed from 'vue-async-computed'
 import VueMoment from 'vue-moment'
 import VueLocalStorage from 'vue-localstorage' // VueLocalStorage for using local storage
 import BootstrapVue from 'bootstrap-vue' // Bootstrap
@@ -18,6 +19,7 @@ Vue.mixin(titleMixin)
 Vue.mixin(metaMixin)
 // Pop-up messages
 // Vue.use(VueIziToast)
+Vue.use(AsyncComputed)
 Vue.use(VueMoment)
 Vue.use(VueLocalStorage)
 Vue.use(BootstrapVue)

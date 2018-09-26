@@ -1,6 +1,8 @@
 {
   "main": {
-    "pagination": "Kuva {num} kaupa"
+    "pagination": "Kuva {num} kaupa",
+
+    "button_read_more":"Read more"
   },
   "header": {
     "zero" : "",

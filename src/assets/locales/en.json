@@ -1,6 +1,7 @@
 {
   "main": {
-    "pagination": "Show {num} results per page"
+    "pagination": "Show {num} results per page",
+    "button_read_more":"Read more"
   },
   "header": {
     "zero" : "",
@@ -9,7 +10,6 @@
 
     "button_show":"Tree view",
     "button_hide":"Hide",
-
     "mode": "Mode",
     "in_baltoscandia_mode": "Baltoscandia mode",
     "global_mode": "Global mode",
