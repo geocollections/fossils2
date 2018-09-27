@@ -157,9 +157,10 @@
                             <li v-for=" reference in taxonOccurrence">
                                 <button class="btn btn-link" @click="$parent.openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
                                   <strong>{{reference.reference__reference}}</strong>
-                                  <span v-translate="{et:reference.sample__locality__locality,en:reference.sample__locality__locality_en}"></span>
-                                    <span v-if="reference.sample__depth || reference.sample__depth_interval">{{reference.sample__depth}} - {{reference.sample__depth_interval}}</span>
                                 </button>
+                                <span v-translate="{et:reference.locality__locality,en:reference.locality__locality_en}"></span>
+                                <span v-if="reference.depth || reference.depth_interval">{{reference.depth}} - {{reference.depth_interval}}</span>
+                                <span v-translate="{et:reference.stratigraphy_base__stratigraphy,en:reference.stratigraphy_base__stratigraphy_en}"></span>
                             </li>
                         </ul>
                     </div>
