@@ -13,9 +13,9 @@ function fetch (child) {
     return new Promise((resolve, reject) => {
         Vue.http.get(api.url+child, {}).then(response => {
             resolve(response.body);
-            // console.log(response)
+            console.log(response.url)
         }, errResponse => {
-            // console.log('ERROR: ' + JSON.stringify(errResponse));
+            console.log('ERROR: ' + JSON.stringify(errResponse));
             reject(errResponse)
         });
     });

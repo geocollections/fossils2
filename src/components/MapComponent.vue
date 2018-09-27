@@ -11,24 +11,29 @@
 
           }
         },
-        props: ['taxonOccurrence','taxonTypeSpecimen','specimenIdentification'],
 
+        computed : {
+            taxonOccurrence () {return this.$store.state.activeItem['taxonOccurrence']},
+            taxonTypeSpecimen () {return this.$store.state.activeItem['taxonTypeSpecimen']},
+            specimenIdentification () {return this.$store.state.activeItem['specimenIdentification']}
+        },
         mounted (){
-          this.getLocationsObject(this.$props.taxonOccurrence);
-          this.getLocationsObject(this.$props.taxonTypeSpecimen, true);
-          this.getLocationsObject(this.uniqueLocations(this.$props.specimenIdentification));
+          this.getLocationsObject(this.taxonOccurrence);
+          this.getLocationsObject(this.taxonTypeSpecimen, true);
+          this.getLocationsObject(this.uniqueLocations(this.specimenIdentification));
           this.loadMap()
         },
         methods: {
           loadMap : function(arr) {
             if (this.locations && this.locations.length > 0) {
               this.$nextTick(() => {
-                initMap(this.locations)
+                  initMap(this.locations)
               })
+
             }
           },
           getLocationsObject : function(object, isImportantLocality = false) {
-            if (object === undefined) return;
+            if (object === undefined || object === {} || object === false || object.length === 0) return;
             let lang = this.lang;
             let this_ = this
             object.forEach(function(element) {
@@ -46,7 +51,7 @@
             });
           },
           uniqueLocations : function(locs) {
-            if (locs === undefined) return
+            if (locs === undefined || locs === false) return
             return locs.filter((s1, pos, arr) => arr.findIndex((s2)=>s2.locality_id === s1.locality_id) === pos)
           }
         }

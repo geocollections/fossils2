@@ -57,26 +57,22 @@
                 </div>
             </div>
         </div>
-        <div class="row  p-3">
-            <div class="col-lg-4" >
-                <div class="card">
-                    <div class="card-header">{{$t('header.f_distribution_map')}}</div>
-                    <div class="card-body">
-                        <div v-if="isMapLoaded === true">
-                            <map-component
-                                    :taxonOccurrence="taxonOccurrence"
-                                    :taxonTypeSpecimen="taxonOccurrence"
-                                    :specimenIdentification="specimenIdentification"
-                            ></map-component>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-8">
+        <!--<div class="row  p-3">-->
+            <!--<div class="col-lg-4" >-->
+                <!--<div class="card">-->
+                    <!--<div class="card-header">{{$t('header.f_distribution_map')}}</div>-->
+                    <!--<div class="card-body">-->
+                        <!--<div v-if="isMapLoaded === true">-->
+                            <!--<map-component></map-component>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-lg-8">-->
 
-            </div>
+            <!--</div>-->
 
-        </div>
+        <!--</div>-->
 
         <!-- Row contains Overview and also links-->
         <div class="row  p-3">
@@ -203,19 +199,7 @@
             numberOfSpecimen () {return this.$parent.numberOfSpecimen},
             taxonTypeSpecimen () {return this.$store.state.activeItem['taxonTypeSpecimen']},
             specimenIdentification () {return this.$store.state.activeItem['specimenIdentification']},
-            taxonOccurrence () {return this.$store.state.activeItem['taxonOccurrence']},
 
-        },
-        watch: {
-            '$parent.isMapLoaded': {
-                handler: function (newval, oldval) {
-                    console.log('newval' + newval + 'oldval' + oldval)
-                    // if(newval === oldval) {
-                    //     this.$emit("mounted", true)
-                    //     this.isMapLoaded = true
-                    // }
-                }
-            },
         },
         methods:{
             setActiveTab: function(tab) {

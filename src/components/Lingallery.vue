@@ -17,7 +17,7 @@
                 <div v-for="(item, index) in items" class="lingallery_thumbnails_content_elem" :key="index">
                     <img :alt="item.caption" style="height: 100px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="64" :style="thumbnailStyle(index)">
                 </div>
-                <button class="btn btn-outline-info ">More</button>
+                <button v-if="$store.state.activeTab === 'overview'" class="btn btn-outline-info" type="button" v-on:click="setActiveTab('gallery')"> more</button>
             </div>
         </div>
     </div>
@@ -161,7 +161,10 @@ export default {
       }
 
       this.pickImage(this.currentIndex)
-    }
+    },
+      setActiveTab: function(tab) {
+          this.$store.commit('SET_ACTIVE_TAB', {tab})
+      }
   },
   mounted () {
     this.currentImage = this.items[this.startImage].src

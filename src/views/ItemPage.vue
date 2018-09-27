@@ -4,8 +4,22 @@
     <taxon-title></taxon-title>
     <taxon-tabs></taxon-tabs>
     <div class="tab-content">
-      <tab-overview v-on:mounted="preventTwiceMounting"></tab-overview>
-      <tab-names></tab-names>
+      <tab-overview></tab-overview>
+        <div class="row  p-3" v-if="$store.state.activeTab === 'overview' && isMapLoaded">
+            <div class="col-lg-4" >
+                <div class="card">
+                    <div class="card-header">{{$t('header.f_distribution_map')}}</div>
+                    <div class="card-body">
+                        <div>
+                            <map-component></map-component>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8"></div>
+        </div>
+
+        <tab-names></tab-names>
       <tab-gallery></tab-gallery>
       <tab-classification></tab-classification>
       <tab-literature></tab-literature>
@@ -52,7 +66,6 @@
             </ul>
           </div>
         </div>
-
       </div>
     </div>
     <!-- content -->
@@ -82,11 +95,13 @@
         fetchImages,
         fetchAttachment
     } from '../api'
+    import MapComponent from "../components/MapComponent.vue";
 
 
     export default {
         name: 'item-page',
         components: {
+            MapComponent,
             TabSpecies,
             TabLiterature,
             TaxonomicalTree,
@@ -150,6 +165,10 @@
             meta () {
                 return [this.taxon.parent__taxon, this.taxon.taxon, this.taxon.fossil_group__taxon,
                     this.commonNamesStrings, this.childrenStrings].join(", ")
+            },
+            isMapLoaded() {
+                return !!((this.mapDataLoaded)
+                    && ['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && this.isDefinedAndNotNull(this.taxon.taxon))
             }
 
         },
@@ -176,6 +195,9 @@
             this.$store.dispatch('FETCH_RANKS');
             Object.assign(this.$data, this.initialData());
             this.loadFullTaxonInfo()
+            this.mapDataLoaded = !!((this.isDefinedAndNotNull(this.taxonOccurrence) && this.taxonOccurrence.length > 0)
+                || (this.isDefinedAndNotNull(this.specimenIdentification) && this.specimenIdentification.length > 0)
+                || (this.isDefinedAndNotNull(this.taxonTypeSpecimen) && this.taxonTypeSpecimen.length > 0))
         },
 
         methods: {
@@ -183,6 +205,7 @@
                 return {
                     parent: {},
                     images: [],
+                    mapDataLoaded: false,
                     isSpecimen: false,
                     sister_taxa: {},
                     hierarchy: {},
@@ -195,7 +218,6 @@
                     isTaxonImagesLoaded: false,
                     imagesLength: 100,
                     allSpecies:[],
-                    isMapLoaded: false,
                     response: {
                         count: 0,
                         results: []
@@ -232,7 +254,6 @@
 
                 }
                 if(['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && this.isDefinedAndNotNull(this.taxon.taxon)) {
-                    this.isMapLoaded = true
                     fetchAttachment(this.taxon.taxon).then((response) => {
                         this.isSpecimen = true;
                         this.images = this.composeImageRequest(response.results);
@@ -306,7 +327,6 @@
                     this.response.results = response.results
                 });
             },
-            preventTwiceMounting () { this.isMapLoaded = false}
         },
 
         watch: {
