@@ -33,15 +33,15 @@
                             </div>
                             <div v-if="taxon.stratigraphy_base__stratigraphy || taxon.stratigraphy_top__stratigraphy"> {{$t('header.f_stratigraphical_distribution')}}:
                                 <strong>
-                                    <span v-if="taxon.stratigraphy_base__stratigraphy" class="openwinlink"
+                                    <button class="btn btn-link" v-if="taxon.stratigraphy_base__stratigraphy"
                                             @click="$parent.openUrl({parent_url:'http://geokogud.info/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
-                                            {{taxon.stratigraphy_base__stratigraphy}}</span>
+                                            {{taxon.stratigraphy_base__stratigraphy}}</button>
                                             <span v-if="taxon.stratigraphy_top__stratigraphy != null && taxon.stratigraphy_base__stratigraphy != null">&ndash;</span>
-                                            <span v-if="taxon.stratigraphy_top__stratigraphy
-                                            && taxon.stratigraphy_base__stratigraphy != taxon.stratigraphy_top__stratigraphy" class="openwinlink"
+                                            <button class="btn btn-link" v-if="taxon.stratigraphy_top__stratigraphy
+                                            && taxon.stratigraphy_base__stratigraphy != taxon.stratigraphy_top__stratigraphy"
                                                                       @click="$parent.openUrl({parent_url:'http://geokogud.info/stratigraphy',object:taxon.stratigraphy_top_id, width:500,height:500})">
                                               {{taxon.stratigraphy_top__stratigraphy}}
-                                        </span>
+                                            </button>
                                         <span v-if="taxon.stratigraphy_base__age_base != null">| ~ {{$parent.convertToTwoDecimal(taxon.stratigraphy_base__age_base)}}</span>
                                         <span v-if="taxon.stratigraphy_top__age_top != null"> &ndash; {{$parent.convertToTwoDecimal(taxon.stratigraphy_top__age_top)}} Ma</span>
                                 </strong>
@@ -104,9 +104,9 @@
         <div class="row p-3" v-if = "description && description.description">
             <div class="col-lg-12">
                 <div>
-                    <h3>{{$t('header.f_taxon_description_diagnosis')}} (<span class="openwinlink"
+                    <h3>{{$t('header.f_taxon_description_diagnosis')}} (<button class="btn btn-link"
                     @click="openUrl({parent_url:'http://geocollections.info/reference',object:description.reference, width:500,height:500})">
-                    <strong>{{description.reference__reference}}</strong>)</span></h3>
+                        <strong>{{description.reference__reference}}</strong>)</button></h3>
                     <div v-html="description.description"></div>
                 </div>
             </div>
@@ -120,9 +120,9 @@
                     <div class="card-body">
                         <ul>
                             <li v-for="item in taxonTypeSpecimen"> {{item.type_type__value}}:
-                                <span class="openwinlink" @click="$parent.openUrl({parent_url:'http://geokogud.info/specimen',object:item.specimen, width:500,height:500})">
+                                <button class="btn btn-link" @click="$parent.openUrl({parent_url:'http://geokogud.info/specimen',object:item.specimen, width:500,height:500})">
                                     <strong>{{item.specimen_number}}</strong>
-                                  </span> ,
+                                </button> ,
                                 <span v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></span>, {{item.specimen__depth}} m
                             </li>
                         </ul>
@@ -135,9 +135,9 @@
                     <div class="card-body">
                         <ul>
                             <li><strong>
-                                    <span class="openwinlink" @click="$parent.openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+parent.taxon+'&currentTable=specimen', width:500,height:500})">
+                                    <button class="btn btn-link" @click="$parent.openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+parent.taxon+'&currentTable=specimen', width:500,height:500})">
                                        {{specimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
-                                    </span>
+                                    </button>
                             </strong>
                             </li>
                         </ul>
@@ -148,20 +148,37 @@
         </div>
 
         <!-- Row contains Type specimen data-->
-        <div class="row p-3" v-if = "numberOfSpecimen">
-            <div class="col-lg-12">
+        <div class="row p-3" v-if = "numberOfSpecimen || taxonOccurrence">
+            <div class="col-lg-6" v-if="taxonOccurrence">
+                <div class="card">
+                    <div class="card-header">{{$t('header.f_species_distribution_references')}}</div>
+                    <div class="card-body">
+                        <ul>
+                            <li v-for=" reference in taxonOccurrence">
+                                <button class="btn btn-link" @click="$parent.openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
+                                  <strong>{{reference.reference__reference}}</strong>
+                                  <span v-translate="{et:reference.sample__locality__locality,en:reference.sample__locality__locality_en}"></span>
+                                    <span v-if="reference.sample__depth || reference.sample__depth_interval">{{reference.sample__depth}} - {{reference.sample__depth_interval}}</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">{{$t('header.f_taxon_identifications')}}</div>
                     <div class="card-body">
                         <ul>
                             <li>
                                 <em>{{taxon.taxon}} {{taxon.author_year}}</em> :
-                                <span class="openwinlink" @click="$parent.openUrl({
+                                <button class="btn btn-link" @click="$parent.openUrl({
                               parent_url:'http://geokogud.info',
                               object:'search.php?taxon_1=1&taxon='+taxon.taxon+' '+taxon.author_year +'&currentTable=specimen',
                                width:500,height:500})">
                                    {{numberOfSpecimen}} {{$t('header.f_genus_identifications_link')}}
-                                </span>
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -199,6 +216,7 @@
             numberOfSpecimen () {return this.$parent.numberOfSpecimen},
             taxonTypeSpecimen () {return this.$store.state.activeItem['taxonTypeSpecimen']},
             specimenIdentification () {return this.$store.state.activeItem['specimenIdentification']},
+            taxonOccurrence () {return this.$store.state.activeItem['taxonOccurrence']},
 
         },
         methods:{

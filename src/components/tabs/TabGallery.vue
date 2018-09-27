@@ -6,7 +6,7 @@
                 <div class="card-header" v-if="!isSpecimen">{{ $t( 'header.f_higher_taxon_images_title_visualtool') }}</div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-8">
+                        <div class="col-lg-8" if="$store.state.process === 'client'">
                             <lingallery ref="lingallery" :items="images" @currentIndex="setCurrentIndex"/>
                         </div>
                         <div class="card col-lg-4" v-if="currentImage != undefined">

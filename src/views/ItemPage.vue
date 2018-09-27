@@ -5,7 +5,7 @@
     <taxon-tabs></taxon-tabs>
     <div class="tab-content">
       <tab-overview></tab-overview>
-        <div class="row  p-3" v-if="$store.state.activeTab === 'overview' && isMapLoaded">
+        <div class="row  p-3" v-if="$store.state.activeTab === 'overview' && isMapLoaded && $store.state.process === 'client'">
             <div class="col-lg-4" >
                 <div class="card">
                     <div class="card-header">{{$t('header.f_distribution_map')}}</div>
@@ -33,18 +33,7 @@
       <div id="taxon-main">
         <div id="taxon-left">
           <br/>
-          <div id="distribution_references" v-if="false">
-            <h3>{{$t('header.f_species_distribution_references')}}</h3>
-            <ul>
-              <li v-for=" reference in taxonOccurrence">
-            <span class="openwinlink" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
-              <strong>{{reference.reference__reference}}</strong>
-              <!--<span v-translate="{et:reference.sample__locality__locality,en:reference.sample__locality__locality_en}"></span>-->
-              <!--{{reference.sample__depth}} - {{reference.sample__depth_interval}}-->
-            </span>
-              </li>
-            </ul>
-          </div>
+
           <div id="distribution_samples" v-if="false">
             <h3>{{$t('header.f_species_distribution_samples')}}</h3>
             <ul>

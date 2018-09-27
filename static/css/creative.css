@@ -600,3 +600,6 @@ img {
     height: auto;
     width: auto\9; /* ie8 */
 }
+
+.btn.btn-link { color: #eb3812; text-decoration: none;}
+.btn.btn-link:hover { color: #930; cursor : pointer; text-decoration: underline;}
