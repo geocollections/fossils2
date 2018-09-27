@@ -227,7 +227,7 @@
 
                 }
 
-                if (this.taxon.rank__rank_en !== 'species') {
+                if (this.taxon.rank__rank_en !== 'Species') {
                     this.searchSpecies()
                 }
 
