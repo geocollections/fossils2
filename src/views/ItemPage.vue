@@ -282,7 +282,7 @@
             },
             //todo: utils
             composeImageRequest : function(taxonImages) {
-                if(taxonImages === undefined || taxonImages === {} || taxonImages.length === 0) ;
+                if(taxonImages === undefined || taxonImages === {} || taxonImages.length === 0) return ;
                 if (taxonImages.length > 0) {
                     let taxon = this.taxon
                     let fileUrl = 'http://files.geocollections.info';

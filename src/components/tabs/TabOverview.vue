@@ -113,7 +113,7 @@
         </div>
 
         <!-- Row contains Type specimen data-->
-        <div class="row p-3" v-if = "taxon.rank__rank_en === 'Species' && (taxonTypeSpecimen || specimenIdentification)">
+        <div class="row p-3" v-if = "['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && (taxonTypeSpecimen || specimenIdentification)">
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">{{$t('header.f_species_type_data')}}</div>
@@ -148,7 +148,7 @@
         </div>
 
         <!-- Row contains Type specimen data-->
-        <div class="row p-3" v-if = "taxon.rank__rank_en === 'Species' && (numberOfSpecimen || taxonOccurrence)">
+        <div class="row p-3" v-if = "['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && (numberOfSpecimen || taxonOccurrence)">
             <div class="col-lg-6" v-if="taxonOccurrence">
                 <div class="card">
                     <div class="card-header">{{$t('header.f_species_distribution_references')}}</div>
@@ -208,7 +208,7 @@
 
         computed: {
             taxon () { return this.$store.state.activeItem['taxon'] },
-            images () { return this.$parent.images.slice(1, 5) },
+            images () { return this.$parent.images ? this.$parent.images.slice(1, 5) : []},
             parent () { return this.$parent.parent },
             description () { return this.$store.state.activeItem['description'] },
             taxonPage () {return this.$parent.taxonPage},
