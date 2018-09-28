@@ -290,14 +290,14 @@
                     taxonImages.forEach(function(el) {
                         if (el.uuid_filename && el.uuid_filename != null) {
                             el.thumbnail = fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
-                            el.src = fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
+                            el.src = fileUrl + '/large/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
                             el.caption = el.database__acronym +' '+ el.specimen__specimen_id + ' '
                                 + taxon.taxon+ ' ' + taxon.author_year
                         }
                         else if(el.attachment__uuid_filename && el.attachment__uuid_filename != null) {
                             el.thumbnail = fileUrl + '/small/' + el.attachment__uuid_filename.substring(0,2)+'/'
                                 + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
-                            el.src = fileUrl + '/small/' + el.attachment__uuid_filename.substring(0,2)+'/'
+                            el.src = fileUrl + '/large/' + el.attachment__uuid_filename.substring(0,2)+'/'
                                 + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
 
 

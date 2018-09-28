@@ -142,6 +142,8 @@ function render (req, res) {
     <link rel="stylesheet" href="/static/css/picture.galery.css">
     <link rel="stylesheet" href="/static/ol3/ol.css" type="text/css"/>
     <link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.css" />
+    
     <!--<link rel="stylesheet" href="/static/css/ui-lightness/jquery-ui-1.10.3.custom.min.css"/>-->
     <link rel="stylesheet" href="/static/swipebox/swipebox.css"/>
     ${style.text()}
@@ -164,6 +166,10 @@ function render (req, res) {
     <script src="/static/swipebox/jquery.swipebox.min.js"></script>
     <script>window.jQuery || document.write(unescape('%3Cscript src="/static/swipebox/jquery.swipebox.min.js"%3E%3C/script%3E'))</script>
     <script type="text/javascript" src="/static/js/fossils.js"></script>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>
+
+
     <!--<script type="text/javascript" src="/static/js/mainpage.js"></script>-->
     ${script.text(bodyOpt)}
   </body>

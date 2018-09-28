@@ -5,17 +5,18 @@
                 <div v-if="isLoading">Loading</div>
                 <!--<half-circle-spinner :animation-duration="1000" :size="60" :color="accentColor" v-if="isLoading"/>-->
             </div>
-            <img rel="prefetch" :src="currentImage" @click="showNextImage" :class="{ loading: isLoading }">
-            <!--<div class="lingallery_caption" v-if="currentCaption" :style="captionStyle">-->
-                <!--{{ currentCaption }}-->
-            <!--</div>-->
+            <a data-fancybox="gallery" :href="currentImage.src" :data-caption="currentImage.caption">
+                <img :src="currentImage" :class="{ loading: isLoading }">
+            </a>
             <a class="control left" @click="showPreviousImage">&#9664;</a>
             <a class="control right" @click="showNextImage">&#9654;</a>
         </figure>
         <div class="lingallery_thumbnails" v-if="showThumbnails">
             <div class="lingallery_thumbnails_content">
                 <div v-for="(item, index) in items" class="lingallery_thumbnails_content_elem" :key="index">
-                    <img :alt="item.caption" style="height: 100px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="64" :style="thumbnailStyle(index)">
+                    <a data-fancybox="gallery" :href="item.src" :data-caption="item.caption">
+                        <img :alt="item.caption" style="height: 100px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="64" :style="thumbnailStyle(index)">
+                    </a>
                 </div>
                 <button v-if="$store.state.activeTab === 'overview'" class="btn btn-outline-info" type="button" v-on:click="setActiveTab('gallery')"> more</button>
             </div>
