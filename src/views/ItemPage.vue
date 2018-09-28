@@ -227,9 +227,10 @@
 
                 }
 
-                if (this.taxon.rank__rank_en !== 'Species') {
-                    this.searchSpecies()
-                }
+                // if (this.taxon.rank__rank_en !== 'Species') {
+                //
+                // }
+                this.searchSpecies()
 
                 fetchHierarchy(this.formatHierarchyString(this.taxon.hierarchy_string)).then((response) => {
                     this.hierarchy = response.results;

@@ -163,7 +163,7 @@ function render (req, res) {
     <script type="text/javascript" src="/static/ol3/ol.js"></script>
     <script src="/static/swipebox/jquery.swipebox.min.js"></script>
     <script>window.jQuery || document.write(unescape('%3Cscript src="/static/swipebox/jquery.swipebox.min.js"%3E%3C/script%3E'))</script>
-    <!--<script type="text/javascript" src="/static/js/fossils.js"></script>-->
+    <script type="text/javascript" src="/static/js/fossils.js"></script>
     <!--<script type="text/javascript" src="/static/js/mainpage.js"></script>-->
     ${script.text(bodyOpt)}
   </body>
