@@ -1,5 +1,5 @@
 <template>
-  <ul style="position:relative;left:0;background-color:#fff;z-index:100;padding:0;margin-right: 10px;width:100%;">
+  <ul style="padding-left: 0 !important;">
     <ul v-for="(item,idx) in taxonomicTree.nodes">
       <span v-for="i in convertToNumber(item.i)" >&ensp;</span>
       <router-link v-bind:to="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</router-link>

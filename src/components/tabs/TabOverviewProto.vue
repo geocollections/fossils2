@@ -2,12 +2,38 @@
     <div id="#tab-overview" class="tab-pane" :class="{active: $store.state.process === 'server' ||
     ($store.state.process === 'client' && $store.state.activeTab === 'overview')}" role="tabpanel">
         <div class="row p-3"><h2 v-show="$store.state.process === 'server'">Overview</h2></div>
-        <div class="row  p-3">
-            <div class="col-lg-4" v-if="images && images.length > 0">
-                <lingallery ref="lingallery" :width="400" :height="250" :items="images"/>
+        <div  class="row p-1">
+            <aside class="col-lg-4 mr-auto">
+                <div class="card  rounded-0">
+                    <div class="card-header">{{$t('header.fossils_browse_tree')}}</div>
+                    <div class="card-body">
+                        <taxonomical-tree v-if="isTaxonomicTreeIsLoaded"
+                                          :taxon_="taxon"
+                                          :parent_="parent"
+                                          :hierarchy_="hierarchy"
+                                          :sortedSistersWithoutCurrentTaxon_="sortedSistersWithoutCurrentTaxon"
+                                          :sortedSisters_ = "sortedSisters"
+                                          :sortedSiblings_ = "sortedSiblings"
+                        ></taxonomical-tree>
+                    </div>
+                </div>
+            </aside>
+            <div class="col-lg-4 ml-auto ">
+                <div class="card rounded-0">
+                    <div class="card-header">{{$t('header.fossils_classification')}}</div>
+                    <div class="card-body">
+                        <classification-table :hierarchy ="hierarchy"
+                                              :parent = "parent"
+                                              :taxon = "taxon"
+                        ></classification-table>
+                    </div>
+                </div>
             </div>
-            <div v-bind:class="images && images.length > 0 ? 'col-lg-8' : 'col-lg-12'">
-                <div class="card">
+        </div>
+
+        <div class="row p-1">
+            <div class="col-lg-4 ml-auto ">
+                <div class="card rounded-0">
                     <!--<div class="card-header"></div>-->
                     <div class="card-body">
                         <div>
@@ -35,19 +61,19 @@
                                 <strong>
                                     <button class="btn btn-link" v-if="taxon.stratigraphy_base__stratigraphy"
                                             @click="$parent.openUrl({parent_url:'http://geokogud.info/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
-                                            {{taxon.stratigraphy_base__stratigraphy}}</button>
-                                            <span v-if="taxon.stratigraphy_top__stratigraphy != null && taxon.stratigraphy_base__stratigraphy != null">&ndash;</span>
-                                            <button class="btn btn-link" v-if="taxon.stratigraphy_top__stratigraphy
+                                        {{taxon.stratigraphy_base__stratigraphy}}</button>
+                                    <span v-if="taxon.stratigraphy_top__stratigraphy != null && taxon.stratigraphy_base__stratigraphy != null">&ndash;</span>
+                                    <button class="btn btn-link" v-if="taxon.stratigraphy_top__stratigraphy
                                             && taxon.stratigraphy_base__stratigraphy != taxon.stratigraphy_top__stratigraphy"
-                                                                      @click="$parent.openUrl({parent_url:'http://geokogud.info/stratigraphy',object:taxon.stratigraphy_top_id, width:500,height:500})">
-                                              {{taxon.stratigraphy_top__stratigraphy}}
-                                            </button>
-                                        <span v-if="taxon.stratigraphy_base__age_base != null">| ~ {{$parent.convertToTwoDecimal(taxon.stratigraphy_base__age_base)}}</span>
-                                        <span v-if="taxon.stratigraphy_top__age_top != null"> &ndash; {{$parent.convertToTwoDecimal(taxon.stratigraphy_top__age_top)}} Ma</span>
+                                            @click="$parent.openUrl({parent_url:'http://geokogud.info/stratigraphy',object:taxon.stratigraphy_top_id, width:500,height:500})">
+                                        {{taxon.stratigraphy_top__stratigraphy}}
+                                    </button>
+                                    <span v-if="taxon.stratigraphy_base__age_base != null">| ~ {{$parent.convertToTwoDecimal(taxon.stratigraphy_base__age_base)}}</span>
+                                    <span v-if="taxon.stratigraphy_top__age_top != null"> &ndash; {{$parent.convertToTwoDecimal(taxon.stratigraphy_top__age_top)}} Ma</span>
                                 </strong>
                                 <br />
                             </div>
-                            <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'Species'">
+                            <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'species'">
                                 <span v-if="$store.state.mode === 'in_baltoscandia'">{{$t('header.f_baltic_species')}}</span>
                                 <span v-else>{{$t('header.f_global_species')}}</span>
                                 <strong><a href="#tab-species"  v-on:click="setActiveTab('species')">{{numberOfSpecimen}}</a></strong>
@@ -57,6 +83,7 @@
                 </div>
             </div>
         </div>
+
         <!--<div class="row  p-3">-->
             <!--<div class="col-lg-4" >-->
                 <!--<div class="card">-->
@@ -76,7 +103,7 @@
 
         <!-- Row contains Overview and also links-->
         <div class="row  p-3">
-            <div class="col-lg-8" v-if="taxonPage && taxonPage.content">
+            <div class="col-lg-8 mr-auto" v-if="taxonPage && taxonPage.content">
                 <div class="card">
                     <div class="card-header">
                         <h3>{{$t('header.f_taxon_intro')}}</h3>
@@ -195,9 +222,13 @@
     import SeeAlso from "../SeeAlso.vue";
     import MapComponent from "../MapComponent.vue";
     import Lingallery from "../Lingallery.vue";
+    import ClassificationTable from "../ClassificationTable.vue";
+    import TaxonomicalTree from "../TaxonomicalTree.vue";
     export default {
-        name: "TabOverview",
+        name: "TabOverviewProto",
         components:{
+            TaxonomicalTree,
+            ClassificationTable,
             Lingallery,
             SeeAlso,
             MapComponent
@@ -208,16 +239,19 @@
 
         computed: {
             taxon () { return this.$store.state.activeItem['taxon'] },
+            hierarchy () {return this.$parent.hierarchy},
             images () { return this.$parent.images ? this.$parent.images.slice(1, 5) : []},
             parent () { return this.$parent.parent },
             description () { return this.$store.state.activeItem['description'] },
             taxonPage () {return this.$parent.taxonPage},
             sortedSistersWithoutCurrentTaxon () {return this.$parent.sortedSistersWithoutCurrentTaxon},
+            sortedSisters () {return this.$parent.sortedSisters},
             sortedSiblings () {return this.$parent.sortedSiblings},
             numberOfSpecimen () {return this.$parent.numberOfSpecimen},
             taxonTypeSpecimen () {return this.$store.state.activeItem['taxonTypeSpecimen']},
             specimenIdentification () {return this.$store.state.activeItem['specimenIdentification']},
             taxonOccurrence () {return this.$store.state.activeItem['taxonOccurrence']},
+            isTaxonomicTreeIsLoaded () {return this.$parent.isTaxonomicTreeIsLoaded}
 
         },
         methods:{

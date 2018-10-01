@@ -56,8 +56,8 @@ export function fetchChildren (id, mode) {
         :  fetch(`taxon/?parent=${id}`)
 }
 
-export function fetchImages (id) {
-    return fetch(`taxon_image/?taxon=${id}&order_by=sort`)
+export function fetchImages (name) {
+    return fetch(`taxon_image/?taxon__taxon__icontains=${name}&order_by=sort`)
 }
 
 export function fetchTaxonPages (id) {
@@ -76,20 +76,21 @@ export function fetchTaxonList (id) {
     return fetch(`taxon_list/?taxon=${id}`)
 }
 
-export function fetchTaxonOccurrence (id) {
-    return fetch(`taxon_occurrence/?taxon=${id}`)
+export function fetchTaxonOccurrence (name) {
+    // return fetch(`taxon_occurrence/?taxon=${id}`)
+    return fetch(`taxon_occurrence/?taxon__taxon__icontains=${name}`)
 }
 
 export function fetchSynonims (id) {
     return fetch(`taxon_synonym/?taxon=${id}&format=json`)
 }
 
-export function fetchTypeSpecimen (id) {
-    return fetch(`taxon_type_specimen/?taxon=${id}`)
+export function fetchTypeSpecimen (name) {
+    return fetch(`taxon_type_specimen/?taxon__taxon__icontains==${name}`)
 }
 
-export function fetchSpecimenIdentification (id) {
-    return fetch(`specimen/?specimenidentification__taxon_id=${id}&fields=id,locality_id,locality__locality,locality__locality_en,locality__longitude,locality__latitude&format=json`)
+export function fetchSpecimenIdentification (taxon) {
+    return fetch(`specimen/?specimenidentification__name__icontains=${taxon}&fields=id,locality_id,locality__locality,locality__locality_en,locality__longitude,locality__latitude&format=json`)
 }
 
 export function fetchAttachment (taxon) {

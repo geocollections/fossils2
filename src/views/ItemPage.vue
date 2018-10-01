@@ -169,7 +169,7 @@
                 store.dispatch('FETCH_TAXON_PAGE', { id }),
                 store.dispatch('FETCH_TYPE_SPECIMEN', { id }),
                 store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
-                store.dispatch('FETCH_TAXON_OCCURRENCE', { id }),
+                store.dispatch('FETCH_TAXON_OCCURRENCE'),
                 store.dispatch('FETCH_CHILDREN', { id }),
                 store.dispatch('FETCH_SYNONIMS', { id }),
                 store.dispatch('FETCH_TAXON_LIST', { id }),
@@ -237,7 +237,7 @@
                     this.isHierarchyLoaded = true;
                 });
                 if(['None','Phylum', 'Kingdom', 'None', 'Class', 'Order'].includes(this.taxon.rank__rank_en) ) {
-                    fetchImages(this.$route.params.id).then((response) => {
+                    fetchImages(this.taxon.taxon).then((response) => {
                         this.images = this.composeImageRequest(response.results)
                         this.isTaxonImagesLoaded = true
                     });

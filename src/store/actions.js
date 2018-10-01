@@ -44,15 +44,15 @@ export default {
     },
 
     FETCH_TYPE_SPECIMEN: ({ commit, state }, { id }) => {
-        return fetchTypeSpecimen(id).then(typeSpecimen => commit('SET_TAXON_TYPE_SPECIMEN', { typeSpecimen }))
+        return fetchTypeSpecimen(state.activeItem.taxon.taxon).then(typeSpecimen => commit('SET_TAXON_TYPE_SPECIMEN', { typeSpecimen }))
     },
 
     FETCH_TYPE_IDENTIFICATION: ({ commit, state }, { id }) => {
-        return fetchSpecimenIdentification(id).then(specimenIdentification => commit('SET_SPECIMEN_IDENTIFICATION', { specimenIdentification }))
+        return fetchSpecimenIdentification(state.activeItem.taxon.taxon).then(specimenIdentification => commit('SET_SPECIMEN_IDENTIFICATION', { specimenIdentification }))
     },
 
-    FETCH_TAXON_OCCURRENCE: ({ commit, state }, { id }) => {
-        return fetchTaxonOccurrence(id).then(taxonOccurrence => commit('SET_TAXON_OCCURRENCE', { taxonOccurrence }))
+    FETCH_TAXON_OCCURRENCE: ({ commit, state }) => {
+        return fetchTaxonOccurrence(state.activeItem.taxon.taxon).then(taxonOccurrence => commit('SET_TAXON_OCCURRENCE', { taxonOccurrence }))
     },
 
     FETCH_TAXON_PAGE: ({ commit, state }, { id }) => {

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <app-header/>
+    <app-header v-if="$router.currentRoute.name !== 'Proto' "/>
     <app-content/>
     <app-footer/>
   </div>
