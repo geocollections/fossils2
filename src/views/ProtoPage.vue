@@ -549,18 +549,30 @@
             formatHierarchyString: function(value) {
                 return value.replace(/-/g, ',');
             },
+            navigate (link)  {
+                this.$router.push({ path: '/'+link})
+            },
+            setFancyBoxCaption: function(el, this_, isSpecimen) {
+               let text="";
+                text += isSpecimen ? "<div><span>"+el.link__taxon+"</span> " : "<div><span><strong>" + el.database__acronym +" "+ el.specimen__specimen_id + " " + this_.taxon.taxon+ " " + this_.taxon.author_year + "</strong></span> ";
+                text += isSpecimen ? "<a class='btn btn-sm btn-info' href='/" + el.link + "'> Read more </a></div>"
+                    : "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('http://geokogud.info/specimen/"+el.specimen_id+"')\">INFO</button>" +
+                    " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('http://geokogud.info/specimen_image/"+el.specimen_image_id+"')\">IMAGE</button>"
+
+                text += "</div>";
+                return text
+            },
             //todo: utils
             composeImageRequest : function(taxonImages) {
                 if(taxonImages === undefined || taxonImages === {} || taxonImages.length === 0) return ;
                 if (taxonImages.length > 0) {
-                    let taxon = this.taxon
+                    let this_ = this
                     let fileUrl = 'http://files.geocollections.info';
                     taxonImages.forEach(function(el) {
                         if (el.uuid_filename && el.uuid_filename != null) {
                             el.thumbnail = fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
                             el.src = fileUrl + '/large/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
-                            el.caption = el.database__acronym +' '+ el.specimen__specimen_id + ' '
-                                + taxon.taxon+ ' ' + taxon.author_year
+                            el.caption = this_.setFancyBoxCaption(el, this_, false)
                         }
                         else if(el.attachment__uuid_filename && el.attachment__uuid_filename != null) {
                             el.thumbnail = fileUrl + '/small/' + el.attachment__uuid_filename.substring(0,2)+'/'
@@ -569,7 +581,7 @@
                                 + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
 
 
-                            el.caption = el.link__taxon;
+                            el.caption = this_.setFancyBoxCaption(el, this_, true)
                         }
                     });
                     return taxonImages
