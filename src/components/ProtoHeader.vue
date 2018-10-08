@@ -74,12 +74,14 @@
           this.$router.push({ path: this.$router.currentRoute.path, query: {lang:lang} });
       },
       simpleTaxonSearchApiCall(value) {
-        return 'https://api.geocollections.info/taxon/?paginate_by=10&fields=id,taxon,common_name__name,rank__rank_short&multi_search=value:' + value + ';fields:taxon,common_name__name;lookuptype:icontains'
+          return 'https://api.geocollections.info/taxon/?sql=simple_taxon_search&keyword=='+ value;
+          //return 'https://api.geocollections.info/taxon/?paginate_by=10&fields=id,taxon,common_name__name,rank__rank_short&multi_search=value:' + value + ';fields:taxon,common_name__name;lookuptype:icontains'
         // return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=id,taxon,rank__rank_en&multi_search=value:' + value + ';fields:taxon;lookuptype:icontains'
       },
       displayResults: function (result) {
+          return result.name
           // console.log(this.$refs.autocomplete)
-        return result.rank__rank_short + ' ' + result.taxon + (result.common_name__name === null ? '' :' (' + result.common_name__name + ')')
+        //return result.rank__rank_short + ' ' + result.taxon + (result.common_name__name === null ? '' :' (' + result.common_name__name + ')')
       },
       changeMode: function(mode) {
           this.$store.commit('SET_MODE', {mode})
