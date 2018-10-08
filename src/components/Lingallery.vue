@@ -1,6 +1,6 @@
 <template>
     <div id="lingallery" :style="lingalleryStyle">
-        <figure v-if="currentImage && $router.currentRoute.name !== 'Proto'" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" :style="figureStyle">
+        <figure v-if="currentImage && false" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" :style="figureStyle">
             <div id="lingallery_spinner">
                 <div v-if="isLoading">Loading</div>
                 <!--<half-circle-spinner :animation-duration="1000" :size="60" :color="accentColor" v-if="isLoading"/>-->
@@ -15,10 +15,9 @@
             <div class="lingallery_thumbnails_content">
                 <div v-for="(item, index) in items" class="lingallery_thumbnails_content_elem" :key="index">
                     <a data-fancybox="gallery" :href="item.src" :data-caption="item.caption">
-                        <img :alt="item.caption" style="height: 100px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="100" :style="thumbnailStyle(index)">
+                        <img :alt="item.caption" style="height: 150px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="100" :style="thumbnailStyle(index)">
                     </a>
                 </div>
-                <button v-if="$store.state.activeTab === 'overview' && $router.currentRoute.name !== 'Proto'" class="btn btn-outline-info" type="button" v-on:click="setActiveTab('gallery')"> more</button>
             </div>
         </div>
     </div>
@@ -162,10 +161,7 @@ export default {
       }
 
       this.pickImage(this.currentIndex)
-    },
-      setActiveTab: function(tab) {
-          this.$store.commit('SET_ACTIVE_TAB', {tab})
-      }
+    }
   },
   mounted () {
     this.currentImage = this.items[this.startImage].src

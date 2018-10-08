@@ -16,8 +16,8 @@ export function createRouter () {
     fallback: false,
     scrollBehavior: () => ({ y: 0 }),
     routes: [
-      { path: '/:id(\\d+)', component: ItemPage , meta: { isSpecies: false} },
-      { path: '/proto/:id(\\d+)', name: 'Proto', component: ProtoPage , meta: { isSpecies: false} },
+      { path: '/:id(\\d+)',name: 'ItemPage', component: ProtoPage , meta: { isSpecies: false} },
+      { path: '/proto/:id(\\d+)', name: 'Proto', component: ItemPage , meta: { isSpecies: false} },
       { path: '/page/:id', component: StaticPage },
       { path: '/', component: FrontPage },
       { path: '*', redirect: '/' }

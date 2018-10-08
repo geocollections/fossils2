@@ -1,24 +1,32 @@
 <template>
     <header>
-      <b-navbar toggleable="md" type="dark" variant="primary" id="mainNav" class="navbar-default  navbar-fixed-top"
-                style="background-image: url('../../static/imgs/img_header.jpg') !important;">
+      <b-navbar toggleable="md" type="dark"id="mainNav" class="navbar-default  navbar-fixed-top" style="background-color: #020F20 !important;">
+                <!--style="background-image: url('../../static/imgs/img_header.jpg') !important;"  variant="warning" -->
+
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-        <b-navbar-brand href="http://balticdiversity.eu">{{ $t('header.subtitle') }}</b-navbar-brand>
+        <b-navbar-brand style=" letter-spacing: 3px;" href="/"><h2 class="text-uppercase" >{{ $t('header.title') }}</h2></b-navbar-brand>
         <b-collapse is-nav id="nav_collapse">
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
+            <form class="form-inline my-2 my-lg-0">
+            <autocomplete v-if="isMounted"
+                          ref="autocomplete"
+                          :source="simpleTaxonSearchApiCall"
+                          results-property="results"
+                          :results-display="displayResults"
+                          :placeholder="$t('search.fossils_search')"
+                          @selected="onSelect"></autocomplete></form>
             <b-nav-item href="/page/28">{{ $t('menu.fossils') }}</b-nav-item>
             <b-nav-item href="/page/29">{{ $t('menu.collecting') }}</b-nav-item>
             <b-nav-item href="/page/30">{{ $t('menu.identifying') }}</b-nav-item>
-
-            <b-nav-item-dropdown :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" right>
+            <b-nav-item-dropdown :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" right v-if="$router.currentRoute.name==='ItemPage'">
               <b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode === 'in_global'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
               <b-dropdown-item @click="changeMode('in_global')" v-if="mode === 'in_baltoscandia'">{{$t('header.global_mode')}}</b-dropdown-item>
             </b-nav-item-dropdown>
-            <b-nav-item-dropdown>
 
+            <b-nav-item-dropdown>
               <template slot="button-content">
-                <em>lang</em>
+                <em>Lang</em>
               </template>
 
               <b-dropdown-item  @click="changeLang('ee')" class="p-2">EST &nbsp;<span class="flag-icon flag-icon-ee flag-icon-squared circle-flag"></span></b-dropdown-item>
@@ -30,29 +38,6 @@
         </b-collapse>
       </b-navbar>
     </header>
-    <!--<section class="header-content">-->
-      <!--<div class="row">-->
-        <!--<div class="col-lg-4"></div>-->
-        <!--<div class="col-lg-4">-->
-          <!--<a href="/">-->
-            <!--<h1 style="color:white">{{ $t('header.title') }}</h1>-->
-          <!--</a>-->
-          <!--<hr>-->
-            <!--<autocomplete v-if="isMounted" class="p-1"-->
-                          <!--ref="autocomplete"-->
-                          <!--:source="simpleTaxonSearchApiCall"-->
-                          <!--results-property="results"-->
-                          <!--:results-display="displayResults"-->
-                          <!--:placeholder="$t('search.fossils_search')"-->
-                          <!--@selected="onSelect"-->
-            <!--&gt;-->
-            <!--</autocomplete>-->
-        <!--</div>-->
-        <!--<div class="col-lg-4"></div>-->
-      <!--</div>-->
-    <!--</section>-->
-
-
 </template>
 <script>
   import LangButtons from '../components/LangButtons.vue'
@@ -78,6 +63,7 @@
     },
     mounted: function(){
         this.isMounted = true;
+        console.log(this.$router.currentRoute.name)
     },
 
     methods: {
@@ -93,7 +79,7 @@
       },
       displayResults: function (result) {
           // console.log(this.$refs.autocomplete)
-        return result.rank__rank_short + ' ' + result.taxon + ' (' + result.common_name__name + ')'
+        return result.rank__rank_short + ' ' + result.taxon + (result.common_name__name === null ? '' :' (' + result.common_name__name + ')')
       },
       changeMode: function(mode) {
           this.$store.commit('SET_MODE', {mode})

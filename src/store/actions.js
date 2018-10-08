@@ -8,7 +8,13 @@ import {
     fetchTypeSpecimen,
     fetchAttachment,
     fetchSpecimenIdentification,
-    fetchTaxonOccurrence, fetchChildren, fetchSynonims, fetchTaxonList, fetchTaxonDescription, fetchSpecies
+    fetchTaxonOccurrence,
+    fetchChildren,
+    fetchSynonims,
+    fetchTaxonList,
+    fetchTaxonDescription,
+    fetchSpecies,
+    fetchReferences, fetchReferences2
 } from '../api'
 
 export default {
@@ -53,6 +59,14 @@ export default {
 
     FETCH_TAXON_OCCURRENCE: ({ commit, state }) => {
         return fetchTaxonOccurrence(state.activeItem.taxon.taxon).then(taxonOccurrence => commit('SET_TAXON_OCCURRENCE', { taxonOccurrence }))
+    },
+
+    FETCH_REFERENCES: ({ commit, state }) => {
+        return fetchReferences(state.activeItem.taxon.hierarchy_string).then(references => commit('SET_REFERENCES', { references }))
+    },
+
+    FETCH_REFERENCES2: ({ commit, state }) => {
+        return fetchReferences2(state.activeItem.taxon.hierarchy_string).then(references2 => commit('SET_REFERENCES2', { references2 }))
     },
 
     FETCH_TAXON_PAGE: ({ commit, state }, { id }) => {

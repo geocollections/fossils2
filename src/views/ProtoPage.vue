@@ -1,10 +1,9 @@
 <template>
    <div v-if="taxon">
-       <proto-header></proto-header>
        <b-container fluid>
            <b-row class="p-5">
                <div class="col-lg-8">
-                   <div class="mx-auto row m-3">
+                   <div class="mx-auto row m-5">
                        <div class="col-lg-2">
                            <router-link v-bind:to="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
                                <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon"
@@ -18,12 +17,13 @@
                            </router-link>
                        </div>
                        <div :class="'col-lg-10'">
-                           <span> {{taxonTitle}} </span><br />
-                           <div v-if="taxon.fossil_group__id && (taxon.rank__rank_en === 'Species' || taxon.rank__rank_en === 'Genus')"> {{$t('header.f_fossil_group')}}:
+                           <h3><strong>{{taxonTitle}}</strong></h3>
+                           <div v-if="taxon.fossil_group__id && (taxon.rank__rank_en === 'Species' || taxon.rank__rank_en === 'Genus')">
+                               <strong>{{$t('header.f_fossil_group')}}:</strong>
                                <router-link v-bind:to="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</router-link></div>
-                           <span style="font-size: 0.7em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
-                           <span style="font-size: 18pt"> {{taxon.taxon}}</span>
-                           <span style="font-size: 0.7em;"> {{taxon.author_year}}</span>
+                           <span style="font-size: 0.9em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
+                           <span class="text-uppercase" style="font-size: 28pt"><strong>{{taxon.taxon}}</strong></span>
+                           <span style="font-size: 0.9em;"> {{taxon.author_year}}</span>
                            <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length > 0">
                                         <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span>
                                     </span>
@@ -187,22 +187,23 @@
                            </div>
                        </div>
                    </b-row>
-                   <b-row class="m-1" v-if="taxonOccurrence">
+                   <b-row class="m-1" v-if="references">
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-header">{{$t('header.f_taxon_references')}}</div>
                            <div class="card-body">
-                               <ul>
-                                   <li v-for=" reference in taxonOccurrence">
+                                   <div :class="idx === references.length -1 ? '' : 'border-bottom my-3'" v-for=" reference,idx in references">
                                        <button class="btn btn-link" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
-                                           <strong>{{reference.reference__reference}}</strong>
+                                           <strong>{{reference.reference__reference}}.</strong>
                                        </button>
                                        <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
-                                       <span>. {{reference.reference__title}}.{{reference.reference__journal__journal_name}}:</span>
+                                       <span>{{reference.reference__title}}. {{reference.reference__journal__journal_name}}:</span>
                                        <span v-if="reference.reference__book != null">{{reference.reference__book}}</span>
-                                       <span v-else>{{reference.reference__number}}</span>, {{reference.reference__pages}}. DOI:
-                                       <a v-if="reference.reference__doi" :href="'http://dx.doi.org/'+reference.reference__doi" target="_blank">{{reference.reference__doi}}</a>
-                                   </li>
-                               </ul></div>
+                                       <span v-else>{{reference.reference__number}}</span>
+                                       <span v-if="reference.reference__pages != null">, {{reference.reference__pages}}</span>
+                                       <span v-if="reference.reference__doi !== null" >. DOI: <a :href="'http://dx.doi.org/'+reference.reference__doi" target="_blank">{{reference.reference__doi}}</a>
+                                       </span>
+                                   </div>
+                               </div>
                        </div>
                    </b-row>
                    <b-row class="m-1" v-if="taxon.rank__rank_en !== 'Species'">
@@ -252,7 +253,7 @@
                </div>
                <div class="col-lg-4">
                    <b-row class="mt-4">
-                       <lingallery v-if="images && images.length > 0 && $router.currentRoute.name === 'Proto' " ref="lingallery" :width="400" :height="350" :items="images "/>
+                       <lingallery v-if="images && images.length > 0" ref="lingallery" :width="400" :height="350" :items="images "/>
                    </b-row>
 
                    <b-row>
@@ -321,6 +322,7 @@
     import TabSpecies from "../components/tabs/TabSpecies.vue";
     import filter from 'lodash/filter';
     import orderBy from 'lodash/orderBy';
+    import uniqBy from 'lodash/uniqBy';
     import map from 'lodash/map';
     import {
         fetchTaxon,
@@ -379,6 +381,12 @@
             taxonTypeSpecimen () { return this.$store.state.activeItem['typeSpecimen'] },
             specimenIdentification () { return this.$store.state.activeItem['specimenIdentification'] },
             taxonOccurrence () { return this.$store.state.activeItem['taxonOccurrence'] },
+            references () {
+                if(this.$store.state.activeItem['references'] === [] && this.$store.state.activeItem['references2'] === [] ) return {}
+                console.log(this.$store.state.activeItem['references'] === false)
+                let refs = this.$store.state.activeItem['references'].concat(this.$store.state.activeItem['references2']);
+                return orderBy(uniqBy(refs,'reference'),'reference__year',['desc'])
+            },
             siblings () {
                 return this.$store.state.activeItem['children'] },
             synonyms () { return this.$store.state.activeItem['synonims'] },
@@ -436,6 +444,8 @@
                 store.dispatch('FETCH_TYPE_SPECIMEN', { id }),
                 store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
                 store.dispatch('FETCH_TAXON_OCCURRENCE'),
+                store.dispatch('FETCH_REFERENCES'),
+                store.dispatch('FETCH_REFERENCES2'),
                 store.dispatch('FETCH_CHILDREN', { id }),
                 store.dispatch('FETCH_SYNONIMS', { id }),
                 store.dispatch('FETCH_TAXON_LIST', { id }),

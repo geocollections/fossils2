@@ -54,6 +54,12 @@ export default {
   SET_TAXON_OCCURRENCE: (state, { taxonOccurrence }) => {
       Vue.set(state.activeItem, 'taxonOccurrence', taxonOccurrence.results || false)
   },
+    SET_REFERENCES: (state, { references }) => {
+        Vue.set(state.activeItem, 'references', references.results || [])
+    },
+    SET_REFERENCES2: (state, { references2 }) => {
+        Vue.set(state.activeItem, 'references2', references2.results || [])
+    },
   SET_CHILDREN: (state, { children }) => {
       Vue.set(state.activeItem, 'children', children.results || false)
   },

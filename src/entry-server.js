@@ -45,7 +45,7 @@ export default context => {
       store.commit('SET_PROCESS', {process})
 
       let id = router.currentRoute.params.id;
-      if (id) {
+      if (router.currentRoute.name === 'ItemPage') {
           Promise.all([
               store.dispatch('FETCH_TAXON', { id })
           ]).then(() => {

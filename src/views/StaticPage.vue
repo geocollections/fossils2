@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid p-5">
     <div class="card" v-if="content">
       <span class="card-body" v-html="currentContent"></span>
     </div>
