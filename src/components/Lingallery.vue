@@ -27,7 +27,7 @@
 
 export default {
   name: 'Lingallery',
-  data () {
+    data () {
     return {
       currentImage: null,
       currentIndex: 0,

@@ -1,10 +1,10 @@
 <template>
-    <div class="container-fluid p-5">
+    <div  id='content'>
         <div id='fossilgroups_box'>
             <div class='fossilgroup_box'  v-for = "item in content">
-                <router-link v-bind:to="'/'+item.taxon" :title="item.taxon__taxon" >
+                <a :href="'/'+item.taxon" :title="item.taxon__taxon" >
                         <img :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'">{{item.frontpage}}
-                </router-link>
+                </a>
             </div>
         </div>
         <!--<div class="row" v-if="content">-->

@@ -56,8 +56,10 @@ export function fetchChildren (id, mode) {
         :  fetch(`taxon/?parent=${id}`)
 }
 
-export function fetchImages (name) {
-    return fetch(`taxon_image/?taxon__taxon__icontains=${name}&order_by=sort`)
+export function fetchImages (hierarchy_string) {
+    // return fetch(`taxon_image/?taxon=${taxon}&order_by=sort`)
+    // return fetch(`taxon_image/?taxon__hierarchy_string__istartswith=${hierarchy_string}&order_by=sort`)
+    return fetch(`/taxon/?sql=get_taxon_images&keyword=${hierarchy_string}`)
 }
 
 export function fetchTaxonPages (id) {
@@ -91,15 +93,31 @@ export function fetchSynonims (id) {
 }
 
 export function fetchTypeSpecimen (name) {
-    return fetch(`taxon_type_specimen/?taxon__taxon__icontains==${name}`)
+    return fetch(`taxon_type_specimen/?taxon__taxon__icontains=${name}`)
 }
+
+export function fetchDistributionSamples (name) {
+    return fetch(`/taxon/?sql=get_species_distribution_sample&keyword=${name}`)
+}
+export function fetchDistributionConop (name) {
+    return fetch(`/taxon/?sql=get_species_distribution_conop&keyword=${name}`)
+}
+
+export function fetchSpeciesMap (name) {
+    return fetch(`/taxon/?sql=get_species_map&keyword=${name}`)
+}
+
 
 export function fetchSpecimenIdentification (taxon) {
     return fetch(`specimen/?specimenidentification__name__icontains=${taxon}&fields=id,locality_id,locality__locality,locality__locality_en,locality__longitude,locality__latitude&format=json`)
 }
 
-export function fetchAttachment (taxon) {
-    return fetch(`attachment/?specimen__specimenidentification__taxon__taxon__istartswith=${taxon}&fields=id,specimen_id,specimen__specimen_id,specimen_image_id,database__acronym,uuid_filename&format=json&distinct=true&order_by=stars`)
+export function fetchNumberOfSpecimenIdentifications (id) {
+    return fetch(`specimen_identification/?taxon_id=${id}`)
+}
+
+export function fetchAttachment (hierarchy_string) {
+    return fetch(`attachment/?specimen__specimenidentification__taxon__hierarchy_string__istartswith=${hierarchy_string}&fields=id,specimen_id,specimen__specimen_id,specimen_image_id,database__acronym,uuid_filename&format=json&distinct=true&order_by=stars`)
 }
 
 export function fetchRanks () {

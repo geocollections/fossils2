@@ -1,7 +1,17 @@
 <template>
    <div v-if="taxon">
-       <b-container fluid>
-           <b-row class="p-5">
+       <b-container>
+           <b-row class="mt-3">
+               <div class="ml-auto">
+                   <b-dropdown id="ddown1" :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" class="m-md-2" variant="primary" style="">
+                       <b-dropdown-item disabled>Mode</b-dropdown-item>
+                       <b-dropdown-divider></b-dropdown-divider>
+                       <b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode === 'in_global'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
+                       <b-dropdown-item @click="changeMode('in_global')" v-if="mode === 'in_baltoscandia'">{{$t('header.global_mode')}}</b-dropdown-item>
+                   </b-dropdown>
+               </div>
+           </b-row>
+           <b-row>
                <div class="col-lg-8">
                    <div class="mx-auto row m-5">
                        <div class="col-lg-2">
@@ -74,7 +84,7 @@
                                    <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'Species'">
                                        <span v-if="$store.state.mode === 'in_baltoscandia'">{{$t('header.f_baltic_species')}}</span>
                                        <span v-else>{{$t('header.f_global_species')}}</span>
-                                       <strong><a href="#tab-species"  v-on:click="setActiveTab('species')">{{numberOfSpecimen}}</a></strong>
+                                       <strong><a href="#species">{{numberOfSpecimen}}</a></strong>
                                    </div>
                                </div>
                            </div>
@@ -102,7 +112,7 @@
                            </div>
                        </div>
                    </b-row>
-                   <b-row class="m-1" v-if = "['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && (taxonTypeSpecimen)">
+                   <b-row class="m-1" v-if = "taxonTypeSpecimen">
                            <div class="card rounded-0" style="width: 100%" >
                                <div class="card-header">{{$t('header.f_species_type_data')}}</div>
                                <div class="card-body">
@@ -110,21 +120,21 @@
                                        <li v-for="item in taxonTypeSpecimen"> {{item.type_type__value}}:
                                            <button class="btn btn-link" @click="openUrl({parent_url:'http://geokogud.info/specimen',object:item.specimen, width:500,height:500})">
                                                <strong>{{item.specimen_number}}</strong>
-                                           </button> ,
+                                           </button>,
                                            <span v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></span>, {{item.specimen__depth}} m
                                        </li>
                                    </ul>
                                </div>
                            </div>
                    </b-row>
-                   <b-row class="m-1"  v-if = "['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && (taxonTypeSpecimen)">
+                   <b-row class="m-1"  v-if = "isDefinedAndNotEmpty(cntSpecimenIdentification)">
                        <div class="card  rounded-0" style="width: 100%" >
                            <div class="card-header">{{$t('header.f_species_linked_specimens')}}</div>
                            <div class="card-body">
                                <ul>
                                    <li><strong>
-                                       <button class="btn btn-link" @click="openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+parent.taxon+'&currentTable=specimen', width:500,height:500})">
-                                           {{specimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
+                                       <button class="btn btn-link" @click="openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+taxon.taxon+'&currentTable=specimen', width:500,height:500})">
+                                           {{cntSpecimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
                                        </button>
                                    </strong>
                                    </li>
@@ -153,18 +163,15 @@
                            </div>
                    </b-row>
 
-                   <b-row class="m-1" v-if = "['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && (numberOfSpecimen)">
+                   <b-row class="m-1" v-if = "isDefinedAndNotEmpty(specimenIdentification)">
                        <div class="card rounded-0" style="width:100%;">
                            <div class="card-header">{{$t('header.f_taxon_identifications')}}</div>
                            <div class="card-body">
                                <ul>
                                    <li>
                                        <em>{{taxon.taxon}} {{taxon.author_year}}</em> :
-                                       <button class="btn btn-link" @click="openUrl({
-                                  parent_url:'http://geokogud.info',
-                                  object:'search.php?taxon_1=1&taxon='+taxon.taxon+' '+taxon.author_year +'&currentTable=specimen',
-                                   width:500,height:500})">
-                                           {{numberOfSpecimen}} {{$t('header.f_genus_identifications_link')}}
+                                       <button class="btn btn-link" @click="openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+taxon.taxon+' '+taxon.author_year +'&currentTable=specimen',width:500,height:500})">
+                                           {{specimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
                                        </button>
                                    </li>
                                </ul>
@@ -172,20 +179,19 @@
                        </div>
                    </b-row>
                    <b-row class="m-1" v-if="synonyms && synonyms.length > 0">
-                       <div class="col-lg-12" style="width: 100%">
-                           <div class="card">
-                               <div class="card-header">{{$t('header.f_species_synonymy')}}</div>
-                               <div class="card-body">
-                                   <ul>
-                                       <li v-for="synonym in synonyms">
-                                           <em>{{synonym.taxon_synonym}}</em>:
-                                           {{synonym.author}}, {{synonym.year}}, lk. {{synonym.pages}},
-                                           joon. {{synonym.figures}}
-                                       </li>
-                                   </ul>
-                               </div>
+                       <div class="card rounded-0" style="width:100%;">
+                           <div class="card-header">{{$t('header.f_species_synonymy')}}</div>
+                           <div class="card-body">
+                               <ul>
+                                   <li v-for="synonym in synonyms">
+                                       <em>{{synonym.taxon_synonym}}</em>:
+                                       {{synonym.author}}, {{synonym.year}}, lk. {{synonym.pages}},
+                                       joon. {{synonym.figures}}
+                                   </li>
+                               </ul>
                            </div>
                        </div>
+
                    </b-row>
                    <b-row class="m-1" v-if="references">
                        <div class="card rounded-0" style="width: 100%">
@@ -206,11 +212,11 @@
                                </div>
                        </div>
                    </b-row>
-                   <b-row class="m-1" v-if="taxon.rank__rank_en !== 'Species'">
+                   <b-row class="m-1" v-if="allSpecies && allSpecies.length > 0" id="species">
                        <div class="card rounded-0"   style="width: 100%">
                            <div class="card-header">{{$t('header.f_species_list')}}</div>
-                           <div class="card-body"  v-if="allSpecies && allSpecies.length > 0">
-                               <div v-if="isDefinedAndNotEmpty(specimenIdentification)">
+                           <div class="card-body">
+                               <div v-if="allSpecies && allSpecies.length > 0">
                                    <div style='font-size: 0.8em;' v-for="(item, idx) in allSpecies">
                                        &ensp;&ensp;&ensp;{{calculateSpeciesIdx(idx)}}. <em><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em>
                                        | <span v-translate="{et:item.stratigraphy_base__stratigraphy,  en: item.stratigraphy_base__stratigraphy_en}"></span>
@@ -226,20 +232,21 @@
                            </div>
                        </div>
                    </b-row>
-                   <b-row>
-                       <!--???-->
-                       <div id="distribution_samples" v-if="false">
-                           <h3>{{$t('header.f_species_distribution_samples')}}</h3>
-                           <ul>
-                               <li>
-                                   <!--<a href='http://geokogud.info/locality/{{sample.locality_id}}' target='_blank'>{{sample.locality}}</a>
-                                               {{sample.depth}}:
-                                               <a target='_blank' href='http://geokogud.info/search.php?taxon_1=1&taxon={{sample.species_name_original}}&taxon_2=1&locality_1=1&locality={{sample.locality}}&locality_2=1&currentTable=sample'>
-                                               {{sample.num}} {{strings_fossils.f_species_link_samples}}
-                                               </a>-->
-                               </li>
-                           </ul>
+                   <b-row class="m-1" v-if="isDefinedAndNotEmpty(distributionSamples)">
+                       <div class="card rounded-0"   style="width: 100%">
+                           <div class="card-header">{{$t('header.f_species_distribution_samples')}}</div>
+                           <div class="card-body">
+                               <div class="my-2" v-for="sample in distributionSamples">
+                                   <a :href="'http://geocollections.info/locality/'+sample.locality_id" target='_blank'><i v-translate="{et:sample.locality_et,en:sample.locality_en}"></i></a>
+                                   <span>({{sample.depth_min}}  ... {{sample.depth_max}}):</span>
+                                   <a target='_blank' :href="'http://geokogud.info/search.php?taxon_1=1&taxon='+taxon.taxon+'&taxon_2=1&locality_1=1&locality='+sample.locality_en+'&locality_2=1&currentTable=sample'">
+                                       {{sample.num}} {{$t('header.f_species_link_samples')}}
+                                   </a>
+                               </div>
+                           </div>
                        </div>
+                   </b-row>
+                   <b-row>
                        <div id="distribution_conop" v-if="false">
                            <h3>{{$t('header.f_species_distribution_samples')}} (CONOP):</h3>
                            <ul>
@@ -256,20 +263,6 @@
                        <lingallery v-if="images && images.length > 0" ref="lingallery" :width="400" :height="350" :items="images "/>
                    </b-row>
 
-                   <b-row>
-
-                   </b-row>
-                   <b-row class="mt-3" >
-                       <div class="card rounded-0"  style="width: 100%">
-                           <div class="card-header">{{$t('header.fossils_classification')}}</div>
-                           <div class="card-body">
-                               <classification-table :hierarchy ="hierarchy"
-                                                     :parent = "parent"
-                                                     :taxon = "taxon"
-                               ></classification-table>
-                           </div>
-                       </div>
-                    </b-row>
                    <b-row class="mt-1" v-if="isTaxonomicTreeIsLoaded">
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-header">{{$t('header.fossils_browse_tree')}}</div>
@@ -284,6 +277,18 @@
                            </div>
                        </div>
                    </b-row>
+                   <b-row class="mt-3" >
+                       <div class="card rounded-0"  style="width: 100%">
+                           <div class="card-header">{{$t('header.fossils_classification')}}</div>
+                           <div class="card-body">
+                               <classification-table :hierarchy ="hierarchy"
+                                                     :parent = "parent"
+                                                     :taxon = "taxon"
+                               ></classification-table>
+                           </div>
+                       </div>
+                    </b-row>
+
                    <b-row class="mt-1" v-if="isMapLoaded && $store.state.process === 'client'">
                        <div class="card rounded-0">
                            <div class="card-header">{{$t('header.f_distribution_map')}}</div>
@@ -379,11 +384,15 @@
             commonNames () { return this.$store.state.activeItem['commonNames'] },
             taxonPages () { return this.$store.state.activeItem['taxonPage'] },
             taxonTypeSpecimen () { return this.$store.state.activeItem['typeSpecimen'] },
+            distributionSamples () { return this.$store.state.activeItem['distributionSamples'] },
             specimenIdentification () { return this.$store.state.activeItem['specimenIdentification'] },
+            cntSpecimenIdentification () { return this.$store.state.activeItem['cntSpecimenIdentification'] },
             taxonOccurrence () { return this.$store.state.activeItem['taxonOccurrence'] },
             references () {
-                if(this.$store.state.activeItem['references'] === [] && this.$store.state.activeItem['references2'] === [] ) return {}
-                console.log(this.$store.state.activeItem['references'] === false)
+                if((this.$store.state.activeItem['references'] === [] && this.$store.state.activeItem['references2'] === []) ||
+                    this.$store.state.activeItem['references'] === false || this.references2 === false
+                    || this.$store.state.activeItem['references'] === undefined
+                    || this.$store.state.activeItem['references2'] === undefined) return {}
                 let refs = this.$store.state.activeItem['references'].concat(this.$store.state.activeItem['references2']);
                 return orderBy(uniqBy(refs,'reference'),'reference__year',['desc'])
             },
@@ -429,41 +438,61 @@
                 return [this.taxon.parent__taxon, this.taxon.taxon, this.taxon.fossil_group__taxon,
                     this.commonNamesStrings, this.childrenStrings].join(", ")
             },
+            map () { return this.$store.state.activeItem['map'] },
             isMapLoaded() {
-                return !!((this.mapDataLoaded)
-                    && ['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && this.isDefinedAndNotNull(this.taxon.taxon))
-            }
+                return !!( this.map
+                    && ['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(this.taxon.rank__rank_en) && this.isDefinedAndNotNull(this.taxon.taxon))
+            },
+            mode () {
+                return this.$store.state.mode
+            },
 
         },
 
          asyncData ({ store, route : {params: { id }}}) {
-            return Promise.all([
-                store.dispatch('FETCH_TAXON', { id }),
+            let queries = [
+                // store.dispatch('FETCH_TAXON', { id }),
                 store.dispatch('FETCH_COMMON_NAMES', { id }),
                 store.dispatch('FETCH_TAXON_PAGE', { id }),
-                store.dispatch('FETCH_TYPE_SPECIMEN', { id }),
-                store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
                 store.dispatch('FETCH_TAXON_OCCURRENCE'),
                 store.dispatch('FETCH_REFERENCES'),
                 store.dispatch('FETCH_REFERENCES2'),
                 store.dispatch('FETCH_CHILDREN', { id }),
-                store.dispatch('FETCH_SYNONIMS', { id }),
+
                 store.dispatch('FETCH_TAXON_LIST', { id }),
-                store.dispatch('FETCH_DESCRIPTION', { id })
-            ])
+                store.dispatch('FETCH_DESCRIPTION', { id }),
+            ];
+            if (['Species','Subspecies'].includes(store.state.activeItem.taxon.rank__rank_en)) {
+                queries.join([
+                    store.dispatch('FETCH_SYNONIMS', { id }),
+                    store.dispatch('FETCH_TYPE_SPECIMEN', { id }),
+                    store.dispatch('FETCH_DISTRIBUTION_SAMPLES', { id }),
+                    store.dispatch('FETCH_DISTRIBUTION_CONOP', { id }),
+                ])
+            }
+
+            if (['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(store.state.activeItem.taxon.rank__rank_en)){
+                queries.join([
+                    store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
+                    store.dispatch('FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION', { id }),
+                    //map and images
+                    store.dispatch('FETCH_SPECIES_MAP', { id }),
+                ])
+            }
+            return Promise.all(queries)
 
         },
 
         mounted () {
-            console.log(this.$router.currentRoute.name)
             let process = 'client'
             this.$store.commit('SET_PROCESS',{process})
             this.$store.dispatch('FETCH_RANKS');
             Object.assign(this.$data, this.initialData());
             this.loadFullTaxonInfo()
-            this.mapDataLoaded = !!((this.isDefinedAndNotNull(this.taxonOccurrence) && this.taxonOccurrence.length > 0)
-                || (this.isDefinedAndNotNull(this.specimenIdentification) && this.specimenIdentification.length > 0)
-                || (this.isDefinedAndNotNull(this.taxonTypeSpecimen) && this.taxonTypeSpecimen.length > 0))
+
+                //   this.mapDataLoaded = !!((this.isDefinedAndNotNull(this.taxonOccurrence) && this.taxonOccurrence.length > 0)
+                // || (this.isDefinedAndNotNull(this.specimenIdentification) && this.specimenIdentification.length > 0)
+                // || (this.isDefinedAndNotNull(this.taxonTypeSpecimen) && this.taxonTypeSpecimen.length > 0))
         },
 
         methods: {
@@ -514,19 +543,25 @@
                     this.hierarchy = response.results;
                     this.isHierarchyLoaded = true;
                 });
-                if(['None','Phylum', 'Kingdom', 'None', 'Class', 'Order'].includes(this.taxon.rank__rank_en) ) {
-                    fetchImages(this.taxon.taxon).then((response) => {
-                        this.images = this.composeImageRequest(response.results)
-                        this.isTaxonImagesLoaded = true
-                    });
+                // if(['None','Phylum', 'Kingdom', 'None', 'Class', 'Order'].includes(this.taxon.rank__rank_en) ) {
 
-                }
-                if(['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && this.isDefinedAndNotNull(this.taxon.taxon)) {
-                    fetchAttachment(this.taxon.taxon).then((response) => {
-                        this.isSpecimen = true;
-                        this.images = this.composeImageRequest(response.results);
-                    });
-                }
+
+
+                // if(['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && this.isDefinedAndNotNull(this.taxon.taxon)) {
+                //     fetchAttachment(this.taxon.hierarchy_string).then((response) => {
+                //         this.isSpecimen = true;
+                //         this.images = this.composeImageRequest(response.results);
+                //     });
+                // } else {
+                //     fetchImages(this.taxon.id).then((response) => {
+                //         this.images = this.composeImageRequest(response.results)
+                //         this.isTaxonImagesLoaded = true
+                //     });
+                // }
+                fetchImages(this.taxon.hierarchy_string).then((response) => {
+                    this.images = this.composeImageRequest(response.results)
+                    this.isTaxonImagesLoaded = true
+                });
 
             },
             //todo: utils
@@ -536,7 +571,7 @@
 
             //todo: utils
             isDefinedAndNotNull(value) {
-                return !!value && value !== null
+                return !!value && value !== null && value !== false
             },
             calculateSpeciesIdx: function (idx) {
                 return (idx + 1) + this.$store.state.searchParameters.watched.paginateBy * this.$store.state.searchParameters.watched.page - this.$store.state.searchParameters.watched.paginateBy
@@ -563,15 +598,27 @@
                 this.$router.push({ path: '/'+link})
             },
             setFancyBoxCaption: function(el, this_, isSpecimen) {
-               let text="";
-                text += isSpecimen ? "<div><span>"+el.link__taxon+"</span> " : "<div><span><strong>" + el.database__acronym +" "+ el.specimen__specimen_id + " " + this_.taxon.taxon+ " " + this_.taxon.author_year + "</strong></span> ";
-                text += isSpecimen ? "<a class='btn btn-sm btn-info' href='/" + el.link + "'> Read more </a></div>"
-                    : "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('http://geokogud.info/specimen/"+el.specimen_id+"')\">INFO</button>" +
-                    " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('http://geokogud.info/specimen_image/"+el.specimen_image_id+"')\">IMAGE</button>"
+                let text="";
+                text += "<div><span>"+el.number + ' ' + el.name+"</span> " ;
+                text +=
+                    // "<a class='btn btn-sm btn-info' href='/" + el.link + "'> Read more </a></div>" +
+                    "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('http://geocollections.info/specimen/"+el.id+"')\">INFO</button>" +
+                    " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('http://geocollections.info/file/"+el.specimen_image_id+"')\">IMAGE</button>"
 
                 text += "</div>";
                 return text
             },
+            // setFancyBoxCaption: function(el, this_, isSpecimen) {
+            //    let text="";
+            //     text += isSpecimen ? "<div><span>"+el.link__taxon+"</span> " : "<div><span><strong>" + el.name + "</strong></span> ";
+            //     // "<div><span><strong>" + el.database__acronym +" "+ el.specimen__specimen_id + " " + this_.taxon.taxon+ " " + this_.taxon.author_year + "</strong></span> ";
+            //     text += isSpecimen ? "<a class='btn btn-sm btn-info' href='/" + el.link + "'> Read more </a></div>"
+            //         : "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('http://geokogud.info/specimen/"+el.specimen_id+"')\">INFO</button>" +
+            //         " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('http://geokogud.info/specimen_image/"+el.specimen_image_id+"')\">IMAGE</button>"
+            //
+            //     text += "</div>";
+            //     return text
+            // },
             //todo: utils
             composeImageRequest : function(taxonImages) {
                 if(taxonImages === undefined || taxonImages === {} || taxonImages.length === 0) return ;
@@ -579,20 +626,25 @@
                     let this_ = this
                     let fileUrl = 'http://files.geocollections.info';
                     taxonImages.forEach(function(el) {
-                        if (el.uuid_filename && el.uuid_filename != null) {
-                            el.thumbnail = fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
-                            el.src = fileUrl + '/large/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
-                            el.caption = this_.setFancyBoxCaption(el, this_, false)
-                        }
-                        else if(el.attachment__uuid_filename && el.attachment__uuid_filename != null) {
-                            el.thumbnail = fileUrl + '/small/' + el.attachment__uuid_filename.substring(0,2)+'/'
-                                + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
-                            el.src = fileUrl + '/large/' + el.attachment__uuid_filename.substring(0,2)+'/'
-                                + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
-
-
+                        // if (el.uuid_filename && el.uuid_filename != null) {
+                        //     el.thumbnail = fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
+                        //     el.src = fileUrl + '/large/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
+                        //     el.caption = this_.setFancyBoxCaption(el, this_, false)
+                        // }
+                        // else if(el.attachment__uuid_filename && el.attachment__uuid_filename != null) {
+                        //     el.thumbnail = fileUrl + '/small/' + el.attachment__uuid_filename.substring(0,2)+'/'
+                        //         + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
+                        //     el.src = fileUrl + '/large/' + el.attachment__uuid_filename.substring(0,2)+'/'
+                        //         + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
+                        //
+                        //
+                        //     el.caption = this_.setFancyBoxCaption(el, this_, true)
+                        // }
+                        // else if(el.preview !== null) {
+                            el.thumbnail = fileUrl + el.preview;
+                            el.src = fileUrl + el.img_to_url;
                             el.caption = this_.setFancyBoxCaption(el, this_, true)
-                        }
+                        // }
                     });
                     return taxonImages
                 }
@@ -607,16 +659,10 @@
                     this.response.results = response.results
                 });
             },
-
-                // scrollIntoView (evt) {
-                //     evt.preventDefault()
-                //     console.log(this.$router.currentRoute)
-                //     const href = evt.target.getAttribute('href')
-                //     const el = href ? document.querySelector(href) : null
-                //     if (el) {
-                //         this.$refs.content.scrollTop = el.offsetTop
-                //     }
-                // }
+            changeMode: function(mode) {
+                this.$store.commit('SET_MODE', {mode})
+                this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode} })
+            },
         },
 
         watch: {
@@ -660,3 +706,6 @@
         },
     }
 </script>
+<style>
+    
+</style>

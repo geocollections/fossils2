@@ -1,6 +1,6 @@
 <template>
-    <header>
-      <b-navbar toggleable="md" type="dark"id="mainNav" class="navbar-default  navbar-fixed-top" style="background-color: #020F20 !important;">
+    <header class="border-bottom">
+      <b-navbar toggleable="md" type="light"id="mainNav" class="navbar-default  navbar-fixed-top">
                 <!--style="background-image: url('../../static/imgs/img_header.jpg') !important;"  variant="warning" -->
 
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
@@ -8,7 +8,7 @@
         <b-collapse is-nav id="nav_collapse">
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-            <form class="form-inline my-2 my-lg-0">
+            <form class="form-inline my-2 my-lg-0" style="color:red !important; ">
             <autocomplete v-if="isMounted"
                           ref="autocomplete"
                           :source="simpleTaxonSearchApiCall"
@@ -19,10 +19,10 @@
             <b-nav-item href="/page/28">{{ $t('menu.fossils') }}</b-nav-item>
             <b-nav-item href="/page/29">{{ $t('menu.collecting') }}</b-nav-item>
             <b-nav-item href="/page/30">{{ $t('menu.identifying') }}</b-nav-item>
-            <b-nav-item-dropdown :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" right v-if="$router.currentRoute.name==='ItemPage'">
-              <b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode === 'in_global'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
-              <b-dropdown-item @click="changeMode('in_global')" v-if="mode === 'in_baltoscandia'">{{$t('header.global_mode')}}</b-dropdown-item>
-            </b-nav-item-dropdown>
+            <!--<b-nav-item-dropdown :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" right v-if="$router.currentRoute.name==='ItemPage'">-->
+              <!--<b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode === 'in_global'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>-->
+              <!--<b-dropdown-item @click="changeMode('in_global')" v-if="mode === 'in_baltoscandia'">{{$t('header.global_mode')}}</b-dropdown-item>-->
+            <!--</b-nav-item-dropdown>-->
 
             <b-nav-item-dropdown>
               <template slot="button-content">
@@ -96,5 +96,9 @@
   }
 </script>
 <style scoped>
-
+  .autocomplete__box {
+    border:2px solid #eb3812 !important;
+    border-radius: 2px !important;
+    padding: 1px 5px !important;
+  }
 </style>

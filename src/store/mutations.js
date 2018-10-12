@@ -40,17 +40,23 @@ export default {
       Vue.set(state.activeItem, 'attachment', images.results || false)
   },
 
-  SET_TYPE_SPECIMEN: (state, { specimen }) => {
-      Vue.set(state.activeItem, 'typeSpecimen', specimen.results || false)
-  },
-
   SET_TAXON_TYPE_SPECIMEN: (state, { typeSpecimen }) => {
       Vue.set(state.activeItem, 'typeSpecimen', typeSpecimen.results || false)
   },
 
+    SET_DISTRIBUTION_SAMPLES: (state, { distributionSamples }) => {
+        Vue.set(state.activeItem, 'distributionSamples', distributionSamples.results || false)
+    },
+    SET_DISTRIBUTION_CONOP: (state, { distributionConop }) => {
+        Vue.set(state.activeItem, 'distributionConop', distributionConop.results || false)
+    },
+
   SET_SPECIMEN_IDENTIFICATION: (state, { specimenIdentification }) => {
       Vue.set(state.activeItem, 'specimenIdentification', specimenIdentification.results || false)
   },
+    SET_NUMBER_OF_SPECIMEN_IDENTIFICATION: (state, { number }) => {
+        Vue.set(state.activeItem, 'cntSpecimenIdentification', number.results || false)
+    },
   SET_TAXON_OCCURRENCE: (state, { taxonOccurrence }) => {
       Vue.set(state.activeItem, 'taxonOccurrence', taxonOccurrence.results || false)
   },
@@ -70,6 +76,9 @@ export default {
   SET_TAXON_LIST: (state, { list }) => {
     Vue.set(state.activeItem, 'taxonList', list.results || false)
   },
+    SET_SPECIES_MAP: (state, { map }) => {
+        Vue.set(state.activeItem, 'map', map.results || false)
+    },
   SET_DESCRIPTION: (state, { description }) => {
     Vue.set(state.activeItem, 'description', description.results || false)
   },

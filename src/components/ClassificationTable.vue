@@ -6,7 +6,7 @@
       <tr>
         <td align="right" style="color: #999;" v-translate="{et:item.rank__rank, en: item.rank__rank_en}"></td>
         <td v-if="item.id === $parent.taxon.id">&ensp;<strong>{{item.taxon}}</strong></td>
-        <td v-else>&ensp;<router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></td>
+        <td v-else>&ensp;<a :href="'/'+item.id">{{item.taxon}}</a></td>
       </tr>
       </tbody>
     </table>

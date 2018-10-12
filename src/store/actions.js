@@ -14,7 +14,8 @@ import {
     fetchTaxonList,
     fetchTaxonDescription,
     fetchSpecies,
-    fetchReferences, fetchReferences2
+    fetchDistributionSamples,
+    fetchReferences, fetchReferences2, fetchSpeciesMap, fetchNumberOfSpecimenIdentifications
 } from '../api'
 
 export default {
@@ -46,15 +47,25 @@ export default {
     },
 
     FETCH_SPECIMEN_ATTACHMENT: ({ commit, state }, { id }) => {
-        return fetchAttachment(id).then(images => commit('SET_SPECIMEN_ATTACHMENT', { images }))
+        return fetchAttachment(state.activeItem.taxon.hierarchy_string).then(images => commit('SET_SPECIMEN_ATTACHMENT', { images }))
     },
 
     FETCH_TYPE_SPECIMEN: ({ commit, state }, { id }) => {
         return fetchTypeSpecimen(state.activeItem.taxon.taxon).then(typeSpecimen => commit('SET_TAXON_TYPE_SPECIMEN', { typeSpecimen }))
     },
 
+    FETCH_DISTRIBUTION_SAMPLES: ({ commit, state }, { id }) => {
+        return fetchDistributionSamples(state.activeItem.taxon.taxon).then(distributionSamples => commit('SET_DISTRIBUTION_SAMPLES', { distributionSamples }))
+    },
+    FETCH_DISTRIBUTION_CONOP: ({ commit, state }, { id }) => {
+        return fetchDistributionSamples(state.activeItem.taxon.taxon).then(distributionConop => commit('SET_DISTRIBUTION_CONOP', { distributionConop }))
+    },
+
     FETCH_TYPE_IDENTIFICATION: ({ commit, state }, { id }) => {
         return fetchSpecimenIdentification(state.activeItem.taxon.taxon).then(specimenIdentification => commit('SET_SPECIMEN_IDENTIFICATION', { specimenIdentification }))
+    },
+    FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION: ({ commit, state }, { id }) => {
+        return fetchNumberOfSpecimenIdentifications(state.activeItem.taxon.id).then(number => commit('SET_NUMBER_OF_SPECIMEN_IDENTIFICATION', { number }))
     },
 
     FETCH_TAXON_OCCURRENCE: ({ commit, state }) => {
@@ -83,6 +94,10 @@ export default {
 
     FETCH_TAXON_LIST: ({ commit, state }, { id}) => {
         return fetchTaxonList(id).then(list => commit('SET_TAXON_LIST', { list }))
+    },
+
+    FETCH_SPECIES_MAP: ({ commit, state }, { id}) => {
+        return fetchSpeciesMap(state.activeItem.taxon.taxon).then(map => commit('SET_SPECIES_MAP', { map }))
     },
 
     FETCH_DESCRIPTION: ({ commit, state }, { id}) => {
