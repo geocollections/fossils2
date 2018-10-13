@@ -59,7 +59,7 @@ export function fetchChildren (id, mode) {
 export function fetchImages (hierarchy_string) {
     // return fetch(`taxon_image/?taxon=${taxon}&order_by=sort`)
     // return fetch(`taxon_image/?taxon__hierarchy_string__istartswith=${hierarchy_string}&order_by=sort`)
-    return fetch(`/taxon/?sql=get_taxon_images&keyword=${hierarchy_string}`)
+    return fetch(`taxon/?sql=get_taxon_images&keyword=${hierarchy_string}`)
 }
 
 export function fetchTaxonPages (id) {
@@ -97,14 +97,14 @@ export function fetchTypeSpecimen (name) {
 }
 
 export function fetchDistributionSamples (name) {
-    return fetch(`/taxon/?sql=get_species_distribution_sample&keyword=${name}`)
+    return fetch(`taxon/?sql=get_species_distribution_sample&keyword=${name}`)
 }
 export function fetchDistributionConop (name) {
-    return fetch(`/taxon/?sql=get_species_distribution_conop&keyword=${name}`)
+    return fetch(`taxon/?sql=get_species_distribution_conop&keyword=${name}`)
 }
 
 export function fetchSpeciesMap (name) {
-    return fetch(`/taxon/?sql=get_species_map&keyword=${name}`)
+    return fetch(`taxon/?sql=get_species_map&keyword=${name}`)
 }
 
 

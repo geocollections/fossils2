@@ -1,9 +1,10 @@
 <template>
-    <div  id='content'>
-        <div id='fossilgroups_box'>
-            <div class='fossilgroup_box'  v-for = "item in content">
+    <section style="margin-top: -50px">
+        <div class="container-fluid">
+            <div class='fossilgroup_box container-fluid'  v-for = "item in content">
                 <a :href="'/'+item.taxon" :title="item.taxon__taxon" >
-                        <img :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'">{{item.frontpage}}
+                        <img :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'">
+                    {{item.frontpage}}
                 </a>
             </div>
         </div>
@@ -27,7 +28,7 @@
             <!--</div>-->
             <!--<div class="col-lg-1"></div>-->
         <!--</div>-->
-    </div>
+    </section>
 </template>
 
 <script>
@@ -65,6 +66,7 @@ export default {
       handler: function(newVal,oldVal) {
         let lang = this.$store.state.lang;
         this.$store.dispatch('FETCH_FRONT_PAGE', { lang })
+          console.log(this.$store.state)
       }
     }
   },

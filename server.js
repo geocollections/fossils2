@@ -157,7 +157,6 @@ function render (req, res) {
     <!--<script type="text/javascript"  src="/static/bootstrap/dist/js/bootstrap.min.js"></script>-->
     <!--<script type="text/javascript" src="/static/js/jquery.easing.min.js"></script>-->
     <!--&lt;!&ndash;<script type="text/javascript" src="/static/js/scrollreveal.min.js"></script>&ndash;&gt;-->
-    <script>window.jQuery || document.write(unescape('%3Cscript src="/static/js/jquery.js"%3E%3C/script%3E'))</script>
     <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.js"></script>
     <script type="text/javascript" src="/static/ol3/ol.js"></script>
     <script type="text/javascript" src="/static/js/fossils.js"></script>

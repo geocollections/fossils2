@@ -20,8 +20,8 @@ export default {
     Vue.set(state.page, id, page.results || false) /* false means page not found */
   },
 
-  SET_FRONT_PAGE: (state, { lang, page }) => {
-    Vue.set(state.frontPage, lang, page.results || false) /* false means user not found */
+  SET_FRONT_PAGE: (state, { lang, frontPage }) => {
+    Vue.set(state.frontPage, lang, frontPage.results || false) /* false means user not found */
   },
 
   SET_RANK: (state, { rank }) => {

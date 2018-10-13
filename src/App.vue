@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!--<app-header v-if="$router.currentRoute.name !== 'Proto' "/>-->
-    <proto-header></proto-header>
+    <app-header></app-header>
     <app-content/>
     <app-footer/>
   </div>
@@ -9,13 +9,12 @@
 <script>
     import AppFooter from './components/AppFooter.vue'
     import AppHeader from './components/AppHeader.vue'
-    import ProtoHeader from './components/ProtoHeader.vue'
     import AppContent from './components/AppContent.vue'
 
     export default {
         components: {
             AppFooter,
-            ProtoHeader,
+            AppHeader,
             AppContent
         },
         data () {

@@ -5,7 +5,7 @@
       <router-link v-bind:to="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</router-link>
       <span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>
       <ul v-for="sibling in item.siblings">
-        <!--<span v-for="j in convertToNumber(item.i)-1" >&ensp;</span>-->
+        <span v-for="j in convertToNumber(item.i)" >&ensp;</span>
         <a :href="'/'+sibling.id">&ensp;&ensp;{{sibling.label}}</a>
       </ul>
     </ul>

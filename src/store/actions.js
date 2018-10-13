@@ -13,6 +13,7 @@ import {
     fetchSynonims,
     fetchTaxonList,
     fetchTaxonDescription,
+    fetchDistributionConop,
     fetchSpecies,
     fetchDistributionSamples,
     fetchReferences, fetchReferences2, fetchSpeciesMap, fetchNumberOfSpecimenIdentifications
@@ -29,7 +30,7 @@ export default {
     FETCH_FRONT_PAGE: ({ commit, state }, { lang }) => {
       return state.frontPage[lang]
           ? Promise.resolve(state.frontPage[lang])
-          : fetchFrontPage(lang).then(page => commit('SET_FRONT_PAGE', { lang, page }))
+          : fetchFrontPage(lang).then(frontPage => commit('SET_FRONT_PAGE', { lang, frontPage }))
     },
 
     FETCH_RANKS: ({ commit, state }) => {
@@ -58,7 +59,7 @@ export default {
         return fetchDistributionSamples(state.activeItem.taxon.taxon).then(distributionSamples => commit('SET_DISTRIBUTION_SAMPLES', { distributionSamples }))
     },
     FETCH_DISTRIBUTION_CONOP: ({ commit, state }, { id }) => {
-        return fetchDistributionSamples(state.activeItem.taxon.taxon).then(distributionConop => commit('SET_DISTRIBUTION_CONOP', { distributionConop }))
+        return fetchDistributionConop(state.activeItem.taxon.taxon).then(distributionConop => commit('SET_DISTRIBUTION_CONOP', { distributionConop }))
     },
 
     FETCH_TYPE_IDENTIFICATION: ({ commit, state }, { id }) => {

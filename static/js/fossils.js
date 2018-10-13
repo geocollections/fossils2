@@ -287,8 +287,4 @@ var displayFeatureInfo = function(pixel) {
 // })
 
 
-$(function(fs) {
-
-})
-
 
