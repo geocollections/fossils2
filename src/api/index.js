@@ -31,7 +31,7 @@ export function fetchFrontPage (lang) {
 
 /* Item page request */
 export function fetchTaxon (id) {
-    return fetch(`taxon/${id}`)
+    return fetch(`taxon/?id=${id}&fields=id,taxon,parent,parent__taxon,rank__rank_en,fossil_group__id,is_fossil_group,fossil_group__taxon,hierarchy_string,author_year,date_added,date_changed,stratigraphy_base__stratigraphy,stratigraphy_base_id,stratigraphy_top_id,stratigraphy_base__age_base,stratigraphy_top__age_top,stratigraphy_top__stratigraphy,taxon_id_tol,taxon_id_eol,taxon_id_nrm,taxon_id_plutof,taxon_id_pbdb`)
 }
 
 export function fetchSisterTaxa (id, mode) {
@@ -51,9 +51,10 @@ export function fetchHierarchy (hierarchy_string) {
 }
 
 export function fetchChildren (id, mode) {
+    let returningFields = "id,taxon"
     return mode === 'in_baltoscandia'
-        ?  fetch(`taxon/?parent=${id}&in_baltoscandia=1`)
-        :  fetch(`taxon/?parent=${id}`)
+        ?  fetch(`taxon/?parent=${id}&in_baltoscandia=1&fields=${returningFields}`)
+        :  fetch(`taxon/?parent=${id}&fields=${returningFields}`)
 }
 
 export function fetchImages (hierarchy_string) {
@@ -63,15 +64,15 @@ export function fetchImages (hierarchy_string) {
 }
 
 export function fetchTaxonPages (id) {
-    return fetch(`taxon_page/?taxon=${id}`)
+    return fetch(`taxon_page/?taxon=${id}&fields=content,author_txt,date_txt,link_wikipedia,title`)
 }
 
 export function fetchTaxonDescription (id) {
-    return fetch(`taxon_description/?taxon=${id}`)
+    return fetch(`taxon_description/?taxon=${id}&fields=reference,reference__reference,description`)
 }
 
 export function fetchTaxonCommonName (id) {
-    return fetch(`taxon_common_name/?taxon=${id}&is_preferred=1`)
+    return fetch(`taxon_common_name/?taxon=${id}&is_preferred=1&fields=language,name,is_preferred`)
 }
 
 export function fetchTaxonList (id) {
@@ -80,7 +81,7 @@ export function fetchTaxonList (id) {
 
 export function fetchTaxonOccurrence (name) {
     // return fetch(`taxon_occurrence/?taxon=${id}`)
-    return fetch(`taxon_occurrence/?taxon__taxon__icontains=${name}`)
+    return fetch(`taxon_occurrence/?taxon__taxon__icontains=${name}&fields=reference,reference__reference,locality__locality,locality__locality_en,depth_interval,depth,stratigraphy_base__stratigraphy,stratigraphy_base__stratigraphy_en`)
 }
 export function fetchReferences (hierarchy_string) {
     return fetch(`taxon_occurrence/?taxon__hierarchy_string__istartswith=${hierarchy_string}&reference!=null&order_by=-reference__year&fields=reference,reference__reference,reference__title,reference__journal__journal_name,reference__book,reference__number,reference__doi,reference__year&distinct=true`)
@@ -113,7 +114,7 @@ export function fetchSpecimenIdentification (taxon) {
 }
 
 export function fetchNumberOfSpecimenIdentifications (id) {
-    return fetch(`specimen_identification/?taxon_id=${id}`)
+    return fetch(`specimen_identification/?taxon_id=${id}&fields=id`)
 }
 
 export function fetchAttachment (hierarchy_string) {

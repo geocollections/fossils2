@@ -53,20 +53,19 @@
                                    Taxon ID: <strong>{{taxon.id}}</strong>
                                    <span v-if="taxon.date_added"> | {{taxon.date_added | moment('YYYY-MM-DD')}}</span>
                                    <span v-if="taxon.date_changed">/ {{taxon.date_changed | moment('YYYY-MM-DD')}}</span>
-                                   <span v-if="taxon.user_authorized"> | {{taxon.user_authorized | moment('YYYY-MM-DD')}}</span>
                                </div>
                                <div v-if="taxon.id != 29">
                                    {{$t('header.f_belongs_to')}}:
                                    <em><router-link v-bind:to="'/'+parent.id">{{parent.taxon}}</router-link></em>
                                    <div v-if="isDefinedAndNotEmpty(sortedSistersWithoutCurrentTaxon)">{{$t('header.f_sister_taxa')}}:
                                        <span v-for="(item,idx) in sortedSistersWithoutCurrentTaxon">
-                                    <em><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em>
+                                    <em><a :href="'/'+item.id">{{item.taxon}}</a></em>
                                     <span v-if = 'idx != sortedSistersWithoutCurrentTaxon.length -1'> | </span>
                                 </span>
                                    </div>
                                    <div v-if="isDefinedAndNotEmpty(sortedSiblings)">{{$t('header.f_contains')}}:
                                        <span v-if="sortedSiblings" v-for="(sibling, idx) in sortedSiblings">
-                                    <router-link v-bind:to="'/'+sibling.id">{{sibling.taxon}}</router-link>
+                                    <a :href="'/'+sibling.id">{{sibling.taxon}}</a>
                                     <span v-if = 'idx != sortedSiblings.length -1'> | </span>
                                 </span>
                                    </div>
@@ -395,6 +394,7 @@
             siblings () {
                 return this.$store.state.activeItem['children'] },
             synonyms () { return this.$store.state.activeItem['synonims'] },
+            //is not actually used
             taxonList () { return this.$store.state.activeItem['taxonList'] },
             taxonPage: function() {
                 if (this.taxonPages === undefined || this.taxonPages.length === 0) return {}
@@ -446,19 +446,14 @@
 
          asyncData ({ store, route : {params: { id }}}) {
             let queries = [
-                // store.dispatch('FETCH_TAXON', { id }),
                 store.dispatch('FETCH_COMMON_NAMES', { id }),
                 store.dispatch('FETCH_TAXON_PAGE', { id }),
                 store.dispatch('FETCH_TAXON_OCCURRENCE'),
                 store.dispatch('FETCH_REFERENCES'),
                 store.dispatch('FETCH_REFERENCES2'),
                 store.dispatch('FETCH_CHILDREN', { id }),
-                store.dispatch('FETCH_TAXON_LIST', { id }),
+                // store.dispatch('FETCH_TAXON_LIST', { id }),
                 store.dispatch('FETCH_DESCRIPTION', { id }),
-                // store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
-                // store.dispatch('FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION', { id }),
-                // //map and images
-                // store.dispatch('FETCH_SPECIES_MAP', { id }),
             ];
             if (['Species','Subspecies'].includes(store.state.activeItem.taxon.rank__rank_en)) {
                 queries = Array.prototype.concat.apply([
