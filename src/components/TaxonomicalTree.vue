@@ -2,7 +2,7 @@
   <ul style="padding-left: 0 !important;">
     <ul v-for="(item,idx) in taxonomicTree.nodes">
       <span v-for="i in convertToNumber(item.i)" >&ensp;</span>
-      <router-link v-bind:to="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</router-link>
+      <a :href="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</a>
       <span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>
       <ul v-for="sibling in item.siblings">
         <span v-for="j in convertToNumber(item.i)" >&ensp;</span>
