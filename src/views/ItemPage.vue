@@ -702,7 +702,7 @@
             return {
                 title: this.taxon.taxon,
                 meta:  [{ vmid: 'keywords', name: 'keywords', content: this.meta},
-                    { vmid: 'description', name: 'description', content: ''}]
+                    { vmid: 'description', name: 'description', content: 'description'}]
             }
         },
     }

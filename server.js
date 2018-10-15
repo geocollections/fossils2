@@ -149,6 +149,8 @@ function render (req, res) {
     ${noscript.text()}
   </head>
   <body ${bodyAttrs.text()} id="page-top">
+    <noscript>This web page needs Javascript to work properly!</noscript>
+    <script type="text/javascript"> var _paq = _paq || []; /* tracker methods like "setCustomDimension" should be called before "trackPageView" */ _paq.push(['trackPageView']); _paq.push(['enableLinkTracking']); (function() { var u="//geocollections.info/statistikat/"; _paq.push(['setTrackerUrl', u+'piwik.php']); _paq.push(['setSiteId', '13']); var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s); })(); </script>
     ${html}
     
     <script src="/assets/vendor.bundle.js"></script>

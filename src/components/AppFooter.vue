@@ -73,7 +73,6 @@
           </div>
         </td>
         <td valign="top" style="width: 33%;">
-          <a href="http://www.balticdiversity.eu"><strong>BALTICDIVERSITY 2012-2013</strong></a><br/><br/>
           <a href="http://www.gi.ee">{{ $t(' footer.gi ') }}</a><br/>
           <a href="http://natmuseum.ut.ee">{{ $t(' footer.ut ') }}</a><br/>
           <a href="http://emu.ee">{{ $t(' footer.emu ') }}</a><br/>
