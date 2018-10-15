@@ -51,7 +51,7 @@ export function fetchHierarchy (hierarchy_string) {
 }
 
 export function fetchChildren (id, mode) {
-    let returningFields = "id,taxon,parent__taxon,parent_id"
+    let returningFields = "id,taxon,parent__taxon,parent_id,rank__rank_en"
     return mode === 'in_baltoscandia'
         ?  fetch(`taxon/?parent=${id}&in_baltoscandia=1&fields=${returningFields}`)
         :  fetch(`taxon/?parent=${id}&fields=${returningFields}`)

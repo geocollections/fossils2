@@ -1,12 +1,39 @@
 <template>
    <div v-if="taxon">
-       <div class="m-md-5">
+       <div class="m-md-3">
            <b-row class="mt-3" v-show="scroll">
                <span class="ml-auto" >
                    <button  onclick="location.href='#top'" type="button" class="btn btn-primary fixed-bottom m-md-2" variant="primary" ><span style="color:white !important;font-weight: bolder!important;font-size: 2em !important;">&uarr;</span></button>
                </span>
            </b-row>
-           <b-row class="mt-3">
+           <b-row class="mt-1">
+               <div class="mx-auto row">
+                   <div class="col-lg-2">
+                       <a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
+                           <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon"
+                                :title="taxon.fossil_group__taxon" style="height: 80px; margin-top: 0px; padding-right: 0px;" />
+                           <br />{{ taxon.fossil_group__taxon }}
+                       </a>
+                       <a :href="'/'+taxon.id" v-else-if="taxon.is_fossil_group == 1">
+                           <img border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon"
+                                :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" />
+                           <br />{{taxon.fossil_group__taxon}}
+                       </a>
+                   </div>
+                   <div class="col-lg-10">
+                       <h3><strong>{{taxonTitle}}</strong></h3>
+                       <div v-if="taxon.fossil_group__id && (taxon.rank__rank_en === 'Species' || taxon.rank__rank_en === 'Genus')">
+                           <strong>{{$t('header.f_fossil_group')}}:</strong>
+                           <a :href="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</a></div>
+                       <span style="font-size: 0.9em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
+                       <span style="font-size: 28pt"><strong>{{taxon.taxon}}</strong></span>
+                       <span style="font-size: 0.9em;"> {{taxon.author_year}}</span>
+                       <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length > 0">
+                                        <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span>
+                                    </span>
+                       <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length === 0"></span>
+                   </div>
+               </div>
                <div class="ml-auto">
                    <b-dropdown id="ddown1" :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" class="m-md-2" variant="primary" style="">
                        <b-dropdown-item disabled>Mode</b-dropdown-item>
@@ -18,33 +45,6 @@
            </b-row>
            <b-row>
                <div class="col-lg-8">
-                   <div class="mx-auto row m-5">
-                       <div class="col-lg-2">
-                           <router-link v-bind:to="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
-                               <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon"
-                                    :title="taxon.fossil_group__taxon" style="height: 80px; margin-top: 0px; padding-right: 0px;" />
-                               <br />{{ taxon.fossil_group__taxon }}
-                           </router-link>
-                           <router-link v-bind:to="'/'+taxon.id" v-else-if="taxon.is_fossil_group == 1">
-                               <img border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon"
-                                    :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" />
-                               <br />{{taxon.fossil_group__taxon}}
-                           </router-link>
-                       </div>
-                       <div :class="'col-lg-10'">
-                           <h3><strong>{{taxonTitle}}</strong></h3>
-                           <div v-if="taxon.fossil_group__id && (taxon.rank__rank_en === 'Species' || taxon.rank__rank_en === 'Genus')">
-                               <strong>{{$t('header.f_fossil_group')}}:</strong>
-                               <router-link v-bind:to="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</router-link></div>
-                           <span style="font-size: 0.9em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
-                           <span class="text-uppercase" style="font-size: 28pt"><strong>{{taxon.taxon}}</strong></span>
-                           <span style="font-size: 0.9em;"> {{taxon.author_year}}</span>
-                           <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length > 0">
-                                        <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span>
-                                    </span>
-                           <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length === 0"></span>
-                       </div>
-                   </div>
                    <b-row class="m-1">
                        <div class="card rounded-0" style="width: 100%">
                            <!--<div class="card-header"></div>-->
@@ -56,10 +56,10 @@
                                </div>
                                <div v-if="taxon.id != 29">
                                    {{$t('header.f_belongs_to')}}:
-                                   <em><router-link v-bind:to="'/'+parent.id">{{parent.taxon}}</router-link></em>
+                                   <a :class="!isHigherTaxon(parent.rank__rank_en) ? '' : 'font-italic'" :href="'/'+parent.id">{{parent.taxon}}</a>
                                    <div v-if="isDefinedAndNotEmpty(sortedSistersWithoutCurrentTaxon)">{{$t('header.f_sister_taxa')}}:
                                        <span v-for="(item,idx) in sortedSistersWithoutCurrentTaxon">
-                                    <em><a :href="'/'+item.id">{{item.taxon}}</a></em>
+                                    <a :class="!isHigherTaxon(item.rank__rank_en) ? '' : 'font-italic'" :href="'/'+item.id">{{item.taxon}}</a>
                                     <span v-if = 'idx != sortedSistersWithoutCurrentTaxon.length -1'> | </span>
                                 </span>
                                    </div>
@@ -222,7 +222,7 @@
                            <div class="card-body">
                                <div v-if="allSpecies && allSpecies.length > 0">
                                    <div style='font-size: 0.8em;' v-for="(item, idx) in allSpecies">
-                                       &ensp;&ensp;&ensp;{{calculateSpeciesIdx(idx)}}. <em><router-link v-bind:to="'/'+item.id">{{item.taxon}}</router-link></em>
+                                       &ensp;&ensp;&ensp;{{calculateSpeciesIdx(idx)}}. <em><a :href="'/'+item.id">{{item.taxon}}</a></em>
                                        | <span v-translate="{et:item.stratigraphy_base__stratigraphy,  en: item.stratigraphy_base__stratigraphy_en}"></span>
                                        <span v-if="item.stratigraphy_top__stratigraphy !=null"> → </span><span v-translate="{et:item.stratigraphy_top__stratigraphy,  en: item.stratigraphy_top__stratigraphy_en}"></span>
                                    </div>
@@ -563,14 +563,11 @@
 
             },
             //todo: utils
-            isDefinedAndNotEmpty(value) {
-                return !!value && value.length > 0
-            },
+            isDefinedAndNotEmpty(value) { return !!value && value.length > 0 },
 
             //todo: utils
-            isDefinedAndNotNull(value) {
-                return !!value && value !== null
-            },
+            isDefinedAndNotNull(value) { return !!value && value !== null },
+            isHigherTaxon(rank) { return !!['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(rank) },
             calculateSpeciesIdx: function (idx) {
                 return (idx + 1) + this.$store.state.searchParameters.watched.paginateBy * this.$store.state.searchParameters.watched.page - this.$store.state.searchParameters.watched.paginateBy
             },
