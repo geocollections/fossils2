@@ -31,7 +31,7 @@ export function fetchFrontPage (lang) {
 
 /* Item page request */
 export function fetchTaxon (id) {
-    return fetch(`taxon/?id=${id}&fields=id,taxon,parent,parent__taxon,rank__rank_en,fossil_group__id,is_fossil_group,fossil_group__taxon,hierarchy_string,author_year,date_added,date_changed,stratigraphy_base__stratigraphy,stratigraphy_base_id,stratigraphy_top_id,stratigraphy_base__age_base,stratigraphy_top__age_top,stratigraphy_top__stratigraphy,taxon_id_tol,taxon_id_eol,taxon_id_nrm,taxon_id_plutof,taxon_id_pbdb`)
+    return fetch(`taxon/?id=${id}&fields=id,taxon,parent,parent__taxon,rank__rank,rank__rank_en,fossil_group__id,is_fossil_group,fossil_group__taxon,hierarchy_string,author_year,date_added,date_changed,stratigraphy_base__stratigraphy,stratigraphy_base_id,stratigraphy_top_id,stratigraphy_base__age_base,stratigraphy_top__age_top,stratigraphy_top__stratigraphy,taxon_id_tol,taxon_id_eol,taxon_id_nrm,taxon_id_plutof,taxon_id_pbdb`)
 }
 
 export function fetchSisterTaxa (id, mode) {
@@ -51,7 +51,7 @@ export function fetchHierarchy (hierarchy_string) {
 }
 
 export function fetchChildren (id, mode) {
-    let returningFields = "id,taxon"
+    let returningFields = "id,taxon,parent__taxon,parent_id"
     return mode === 'in_baltoscandia'
         ?  fetch(`taxon/?parent=${id}&in_baltoscandia=1&fields=${returningFields}`)
         :  fetch(`taxon/?parent=${id}&fields=${returningFields}`)
@@ -63,8 +63,8 @@ export function fetchImages (hierarchy_string) {
     return fetch(`taxon/?sql=get_taxon_images&keyword=${hierarchy_string}`)
 }
 
-export function fetchTaxonPages (id) {
-    return fetch(`taxon_page/?taxon=${id}&fields=content,author_txt,date_txt,link_wikipedia,title`)
+export function fetchTaxonPages (id,lang) {
+    return fetch(`taxon_page/?taxon=${id}&language=${lang}&fields=content,author_txt,date_txt,link_wikipedia,title`)
 }
 
 export function fetchTaxonDescription (id) {

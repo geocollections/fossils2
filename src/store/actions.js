@@ -82,7 +82,7 @@ export default {
     },
 
     FETCH_TAXON_PAGE: ({ commit, state }, { id }) => {
-        return fetchTaxonPages(id).then(page => commit('SET_TAXON_PAGE', { page }))
+        return fetchTaxonPages(id,state.lang).then(page => commit('SET_TAXON_PAGE', { page }))
     },
 
     FETCH_CHILDREN: ({ commit, state }, { id}) => {

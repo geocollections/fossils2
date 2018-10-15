@@ -1,6 +1,6 @@
 <template>
    <div v-if="taxon">
-       <b-container>
+       <div class="m-md-5">
            <b-row class="mt-3" v-show="scroll">
                <span class="ml-auto" >
                    <button  onclick="location.href='#top'" type="button" class="btn btn-primary fixed-bottom m-md-2" variant="primary" ><span style="color:white !important;font-weight: bolder!important;font-size: 2em !important;">&uarr;</span></button>
@@ -315,7 +315,7 @@
                    </b-row>
                </div>
            </b-row>
-       </b-container>
+       </div>
    </div>
 
 </template>
@@ -368,7 +368,7 @@
                 let lang = this.$store.state.lang;
                 if (this.taxonPage && this.taxonPage.title)
                     return this.taxonPage.title
-                let activeCommonName = filter(this.$parent.commonNames, function(o) {
+                let activeCommonName = filter(this.commonNames, function(o) {
                     return o.language === lang && o.is_preferred === 1});
 
                 if (activeCommonName.length > 0)
