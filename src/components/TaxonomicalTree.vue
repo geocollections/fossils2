@@ -1,14 +1,33 @@
 <template>
   <ul style="padding-left: 0 !important;">
-    <ul v-for="(item,idx) in taxonomicTree.nodes">
-      <span v-for="i in convertToNumber(item.i)" >&ensp;</span>
-      <a :href="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</a>
-      <span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>
-      <ul v-for="sibling in item.siblings">
-        <span v-for="j in convertToNumber(item.i)" >&ensp;</span>
-        <a :href="'/'+sibling.id">&ensp;&ensp;{{sibling.label}}</a>
-      </ul>
-    </ul>
+    <table v-if="isDefinedAndNotEmpty(ranks)">
+      <tbody class="hierarchy_tree">
+      <tr  v-for="item in taxonomicTree.nodes">
+        <td v-if="isHigherRank(item.rank_en) || item.id === taxon.id" align="right" valign="top" style="color: #999;" v-translate="{et:item.rank, en: item.rank_en}"></td>
+        <td v-else></td>
+        <td>
+          <span v-for="i in convertToNumber(item.i)" >&ensp;</span>
+          <a :href="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</a>
+          <span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>
+          <ul v-for="sibling in item.siblings">
+            <span v-for="j in convertToNumber(item.i)-2">&ensp;</span>
+            <a :href="'/'+sibling.id">&ensp;&ensp;{{sibling.label}}</a>
+          </ul>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <!--<ul v-for="(item,idx) in taxonomicTree.nodes">-->
+    <!--<span v-for="i in convertToNumber(item.i)" >&ensp;</span>-->
+    <!--<span style="color: #999;" v-translate="{et:item.rank, en: item.rank_en}"></span>-->
+    <!--<a :href="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</a>-->
+    <!--<span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>-->
+    <!--<ul v-for="sibling in item.siblings">-->
+      <!--<span v-for="j in convertToNumber(item.i)-2">&ensp;</span>-->
+      <!--<span style="color: #999;" v-translate="{et:sibling.rank, en: sibling.rank_en}"></span>-->
+      <!--<a :href="'/'+sibling.id">&ensp;&ensp;{{sibling.label}}</a>-->
+    <!--</ul>-->
+  <!--</ul>-->
   </ul>
 </template>
 
@@ -28,25 +47,29 @@
       props: ['hierarchy_','parent_','taxon_','sortedSisters_','sortedSiblings_','sortedSistersWithoutCurrentTaxon_'],
 
       created() {
+
         this.hierarchy = this.$props.hierarchy_;
         this.sortedSisters = this.$props.sortedSisters_;
         this.sortedSiblings = this.$props.sortedSiblings_;
         this.parent=this.$props.parent_;
         this.taxon = this.$props.taxon_;
+        this.ranks = this.getHigherRanks(this.taxon.rank__rank_en);
         this.sortedSistersWithoutCurrentTaxon = this.$props.sortedSistersWithoutCurrentTaxon_;
         this.composeTaxonomicTree_()
       },
       methods: {
         addHierarchy: function(filteredList,sisterIds) {
           for(let idx in filteredList) {
-            let node = {i: idx, label: filteredList[idx].taxon, id: filteredList[idx].id, siblings: []};
+            let node = {i: idx, rank: filteredList[idx].rank__rank, rank_en: filteredList[idx].rank__rank_en,
+                label: filteredList[idx].taxon, id: filteredList[idx].id, siblings: []};
             if(!sisterIds.includes(filteredList[idx].id))
               this.taxonomicTree.nodes.push(node)
           }
         },
         addSisters: function(level) {
           for(let idx in this.sortedSisters) {
-            let node = {i: level, label: this.formatName(this.sortedSisters[idx],this.parent), id: this.sortedSisters[idx].id, siblings: []};
+            let node = {i: level, rank: this.sortedSisters[idx].rank__rank, rank_en: this.sortedSisters[idx].rank__rank_en,
+                label: this.formatName(this.sortedSisters[idx],this.parent), id: this.sortedSisters[idx].id, siblings: []};
             if (this.sortedSisters[idx].id === this.taxon.id) {
               this.addSiblingsIfExists(node)
             }
@@ -87,19 +110,22 @@
           if (this.isDefinedAndNotEmpty(this.sortedSiblings)) {
             for(let idx1 in this.sortedSiblings) {
               if (parent_node.id === this.sortedSiblings[idx1].parent_id) {
-                parent_node.siblings.push({j: idx1, label: this.formatName(this.sortedSiblings[idx1],parent_node), id: this.sortedSiblings[idx1].id});
+                parent_node.siblings.push({j: idx1, rank: this.sortedSiblings[idx1].rank__rank, rank_en: this.sortedSiblings[idx1].rank__rank_en,
+                    label: this.formatName(this.sortedSiblings[idx1],parent_node), id: this.sortedSiblings[idx1].id});
               }
             }
           }
         },
 
-        convertToNumber: function(str) {
-          return parseInt(str)
+        convertToNumber: function(str) { return parseInt(str) },
+        isDefinedAndNotEmpty(value) { return !!value && value.length > 0 },
+        getHigherRanks(currentTaxonRank) {
+            let rank_ = _.find(this.$store.state.lists.ranks, function(o) { return currentTaxonRank === o.rank_en; });
+            return _.map(_.filter(this.$store.state.lists.ranks, function(o) { return rank_.sort > o.sort; }),"rank_en");
         },
-
-        isDefinedAndNotEmpty(value) {
-          return !!value && value.length > 0
-        },
+        isHigherRank(rank) {
+            return this.ranks.includes(rank)
+        }
       }
     }
 </script>

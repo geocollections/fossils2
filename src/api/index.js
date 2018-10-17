@@ -35,9 +35,10 @@ export function fetchTaxon (id) {
 }
 
 export function fetchSisterTaxa (id, mode) {
+    let returningFields = "id,taxon,parent__taxon,parent_id,rank__rank_en,rank__rank"
     return mode === 'in_baltoscandia'
-        ?  fetch(`taxon/?parent_id=${id}&in_baltoscandia=1&fields=taxon,id`)
-        :  fetch(`taxon/?parent_id=${id}&fields=taxon,id`)
+        ?  fetch(`taxon/?parent_id=${id}&in_baltoscandia=1&fields=${returningFields}`)
+        :  fetch(`taxon/?parent_id=${id}&fields=${returningFields}`)
 }
 
 export function fetchSpecies (hierarchy_string,mode,searchParameters) {
@@ -51,7 +52,7 @@ export function fetchHierarchy (hierarchy_string) {
 }
 
 export function fetchChildren (id, mode) {
-    let returningFields = "id,taxon,parent__taxon,parent_id,rank__rank_en"
+    let returningFields = "id,taxon,parent__taxon,parent_id,rank__rank_en,rank__rank"
     return mode === 'in_baltoscandia'
         ?  fetch(`taxon/?parent=${id}&in_baltoscandia=1&fields=${returningFields}`)
         :  fetch(`taxon/?parent=${id}&fields=${returningFields}`)

@@ -271,7 +271,9 @@
 
                    <b-row class="mt-1" v-if="isTaxonomicTreeIsLoaded">
                        <div class="card rounded-0" style="width: 100%">
-                           <div class="card-header">{{$t('header.fossils_browse_tree')}}</div>
+                           <div class="card-header">{{$t('header.fossils_classification')}}</div>
+
+                           <!--<div class="card-header">{{$t('header.fossils_browse_tree')}}</div>-->
                            <div class="card-body">
                                <taxonomical-tree :taxon_="taxon"
                                                  :parent_="parent"
@@ -283,17 +285,17 @@
                            </div>
                        </div>
                    </b-row>
-                   <b-row class="mt-3" >
-                       <div class="card rounded-0"  style="width: 100%">
-                           <div class="card-header">{{$t('header.fossils_classification')}}</div>
-                           <div class="card-body">
-                               <classification-table :hierarchy ="hierarchy"
-                                                     :parent = "parent"
-                                                     :taxon = "taxon"
-                               ></classification-table>
-                           </div>
-                       </div>
-                    </b-row>
+                   <!--<b-row class="mt-3" >-->
+                       <!--<div class="card rounded-0"  style="width: 100%">-->
+                           <!--<div class="card-header">{{$t('header.fossils_classification')}}</div>-->
+                           <!--<div class="card-body">-->
+                               <!--<classification-table :hierarchy ="hierarchy"-->
+                                                     <!--:parent = "parent"-->
+                                                     <!--:taxon = "taxon"-->
+                               <!--&gt;</classification-table>-->
+                           <!--</div>-->
+                       <!--</div>-->
+                    <!--</b-row>-->
 
                    <b-row class="mt-1" v-if="isMapLoaded && $store.state.process === 'client'">
                        <div class="card rounded-0">
