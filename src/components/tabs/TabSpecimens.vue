@@ -2,7 +2,7 @@
     <div id="#tab-specimens" class="tab-pane" :class="{active:$store.state.activeTab === 'specimens'}" role="tabpanel">
         <b-row v-if="loading">
             <spinner :show="loading"></spinner><span class="p-2">{{$t('messages.pageLoading')}}</span></b-row>
-        <b-row class="m-1 table-responsive" v-if="$parent.isDefinedAndNotEmpty(response.results)">
+        <b-row class="m-1 table-responsive" v-if="$parent.isDefinedAndNotEmpty(response.results) && !loading">
             <div class="col-xs-12 pagination-center">
                 <b-pagination
                         size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="response.count" v-model="$store.state.searchParameters.specimens.page" :per-page="$store.state.searchParameters.specimens.paginateBy">
@@ -100,7 +100,9 @@
                         <span v-if="item.original_status__value != null && item.original_status__value_en != null"
                               v-translate="{et:item.original_status__value,en:item.original_status__value_en}"></span>
                     </td>
-                    <td></td>
+                    <td>
+                        <img class="img-thumbnail previewImage" :src="composeUrl(item.attachment__filename)"/>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -156,6 +158,12 @@
                 return {
                     count: 0,
                     results: []
+                }
+            },
+            composeUrl(uuid_filename,startSubstring,endSubstring) {
+                console.log(uuid_filename)
+                if (uuid_filename && uuid_filename != null) {
+                    return this.$parent.fileUrl + '/small/' + uuid_filename.substring(0,2)+'/'+ uuid_filename.substring(2,4)+'/'+ uuid_filename;
                 }
             }
         },

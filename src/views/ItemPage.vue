@@ -497,6 +497,7 @@
                     geocollectionUrl: "http://geocollections.info",
                     fossilsUrl: "http://fossils.info",
                     kividUrl: "http://www.kivid.info",
+                    fileUrl:'http://files.geocollections.info',
                     scroll: false,
                     parent: {},
                     images: [],
@@ -634,7 +635,6 @@
                 if(taxonImages === undefined || taxonImages === {} || taxonImages.length === 0) return ;
                 if (taxonImages.length > 0) {
                     let this_ = this
-                    let fileUrl = 'http://files.geocollections.info';
                     taxonImages.forEach(function(el) {
                         // if (el.uuid_filename && el.uuid_filename != null) {
                         //     el.thumbnail = fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
@@ -651,8 +651,8 @@
                         //     el.caption = this_.setFancyBoxCaption(el, this_, true)
                         // }
                         // else if(el.preview !== null) {
-                            el.thumbnail = fileUrl + el.preview;
-                            el.src = fileUrl + el.img_to_url;
+                            el.thumbnail = this_.fileUrl + el.preview;
+                            el.src = this_.fileUrl + el.img_to_url;
                             el.caption = this_.setFancyBoxCaption(el, this_, true)
                         // }
                     });
