@@ -131,16 +131,22 @@
                                </div>
                            </div>
                    </b-row>
-                   <b-row class="m-1"  v-if = "isDefinedAndNotEmpty(cntSpecimenIdentification)">
+                   <b-row class="m-1"  v-if = "isDefinedAndNotEmpty(cntSpecimenIdentification) || isDefinedAndNotEmpty(specimenIdentification)">
                        <div class="card  rounded-0" style="width: 100%" >
-                           <div class="card-header">{{$t('header.f_species_linked_specimens')}}</div>
+                           <div class="card-header">{{$t('header.f_species_specimens')}}</div>
                            <div class="card-body">
                                <ul>
-                                   <li><strong>
+                                   <li v-if = "isDefinedAndNotEmpty(cntSpecimenIdentification)">{{$t('header.f_species_linked_specimens')}}: <strong>
                                        <button class="btn btn-link" @click="openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+taxon.taxon+'&currentTable=specimen', width:500,height:500})">
                                            {{cntSpecimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
                                        </button>
                                    </strong>
+                                   </li>
+                                   <li v-if = "isDefinedAndNotEmpty(specimenIdentification)">
+                                       <em>{{taxon.taxon}} {{taxon.author_year}}</em> :
+                                       <button class="btn btn-link" @click="openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+taxon.taxon+' '+taxon.author_year +'&currentTable=specimen',width:500,height:500})">
+                                           {{specimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
+                                       </button>
                                    </li>
                                </ul>
                            </div>
@@ -167,21 +173,6 @@
                            </div>
                    </b-row>
 
-                   <b-row class="m-1" v-if = "isDefinedAndNotEmpty(specimenIdentification)">
-                       <div class="card rounded-0" style="width:100%;">
-                           <div class="card-header">{{$t('header.f_taxon_identifications')}}</div>
-                           <div class="card-body">
-                               <ul>
-                                   <li>
-                                       <em>{{taxon.taxon}} {{taxon.author_year}}</em> :
-                                       <button class="btn btn-link" @click="openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+taxon.taxon+' '+taxon.author_year +'&currentTable=specimen',width:500,height:500})">
-                                           {{specimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
-                                       </button>
-                                   </li>
-                               </ul>
-                           </div>
-                       </div>
-                   </b-row>
                    <b-row class="m-1" v-if="synonyms && synonyms.length > 0">
                        <div class="card rounded-0" style="width:100%;">
                            <div class="card-header">{{$t('header.f_species_synonymy')}}</div>

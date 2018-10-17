@@ -66,6 +66,7 @@
 
     "f_species_identifications":"Collection specimens with similar identifications",
     "f_species_linked_specimens":"Collection specimens linked to species",
+    "f_species_specimens":"Specimens collection",
     "f_species_synonymy":"Synonymy list",
     "f_species_geographic_distribution":"Geographic distribution",
     "f_species_stratigraphic_distribution":"Stratigraphic distribution",
