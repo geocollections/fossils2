@@ -89,7 +89,10 @@
       },
       onSelect(value) {
         this.$refs.autocomplete.clearValues()
-        this.$router.push({ path: '/'+value.selectedObject.id})
+          //Hard refresh is not working
+        // this.$router.push({ path: '/'+value.selectedObject.id})
+          location.replace('/'+value.selectedObject.id)
+
       },
 
     }

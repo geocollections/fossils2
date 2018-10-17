@@ -1,6 +1,6 @@
 <template>
     <section style="margin-top: -50px">
-        <div class="container-fluid">
+        <div class="container-fluid" style="max-width: 800px !important;">
             <div class='fossilgroup_box container-fluid'  v-for = "item in content">
                 <a :href="'/'+item.taxon" :title="item.taxon__taxon" >
                         <img :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'">

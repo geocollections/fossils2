@@ -25,10 +25,8 @@ export function createStore () {
         ranks: []
       },
       searchParameters: {
-          watched: {
-              page: 1,
-              paginateBy: 10
-          },
+          species: { page: 1, paginateBy: 10 },
+          specimens: { page: 1, paginateBy: 10 },
       },
     },
     actions,

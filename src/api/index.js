@@ -43,8 +43,8 @@ export function fetchSisterTaxa (id, mode) {
 
 export function fetchSpecies (hierarchy_string,mode,searchParameters) {
     return mode === 'in_baltoscandia'
-        ?  fetch(`taxon/?hierarchy_string__istartswith=${hierarchy_string}&rank__rank_en=species&in_baltoscandia=1&fields=taxon,id,stratigraphy_base__stratigraphy_en,stratigraphy_base__stratigraphy,stratigraphy_top__stratigraphy_en,stratigraphy_top__stratigraphy&page=${searchParameters.watched.page}&paginate_by=${searchParameters.watched.paginateBy}`)
-        :  fetch(`taxon/?hierarchy_string__istartswith=${hierarchy_string}&rank__rank_en=species&fields=taxon,id,stratigraphy_base__stratigraphy_en,stratigraphy_base__stratigraphy,stratigraphy_top__stratigraphy_en,stratigraphy_top__stratigraphy&page=${searchParameters.watched.page}&paginate_by=${searchParameters.watched.paginateBy}`)
+        ?  fetch(`taxon/?hierarchy_string__istartswith=${hierarchy_string}&rank__rank_en=species&in_baltoscandia=1&fields=taxon,id,stratigraphy_base__stratigraphy_en,stratigraphy_base__stratigraphy,stratigraphy_top__stratigraphy_en,stratigraphy_top__stratigraphy&page=${searchParameters.species.page}&paginate_by=${searchParameters.species.paginateBy}`)
+        :  fetch(`taxon/?hierarchy_string__istartswith=${hierarchy_string}&rank__rank_en=species&fields=taxon,id,stratigraphy_base__stratigraphy_en,stratigraphy_base__stratigraphy,stratigraphy_top__stratigraphy_en,stratigraphy_top__stratigraphy&page=${searchParameters.species.page}&paginate_by=${searchParameters.species.paginateBy}`)
 }
 
 export function fetchHierarchy (hierarchy_string) {
@@ -123,5 +123,20 @@ export function fetchAttachment (hierarchy_string) {
 }
 
 export function fetchRanks () {
-    return fetch(`/taxon_rank/?order_by=sort`)
+    return fetch(`taxon_rank/?order_by=sort`)
+}
+
+export function cntSpecimenCollection(taxon) {
+    let returningFields='&fields=id'
+    let paginateBy='1'
+    return fetch(`specimen/?specimenidentification__taxon__taxon__hierarchy=${taxon}${returningFields}&paginate_by=${paginateBy}`)
+}
+
+export function fetchSpecimenCollection(taxon,searchParameters) {
+    let returningFields='&fields=id,specimenidentification__name,coll__number,specimen_id,specimen_nr,locality__locality,' +
+        'locality__locality_en,locality_free,depth_interval,depth,stratigraphy_id,stratigraphy__stratigraphy,stratigraphy__stratigraphy_en,' +
+        'lithostratigraphy__stratigraphy_en,lithostratigraphy_id,lithostratigraphy__stratigraphy,specimenidentification__taxon_id,specimenidentification__taxon__taxon,specimenidentificationgeologies__rock__id,' +
+        'specimenidentificationgeologies__name,specimenidentificationgeologies__name_en,specimenidentificationgeologies__rock__name,specimenidentificationgeologies__rock__name_en,' +
+        'agent_collected__agent,agent_collected__forename,agent_collected__surename,original_status__value,original_status__value_en'
+    return fetch(`specimen/?specimenidentification__taxon__taxon__hierarchy=${taxon}&order_by=-id${returningFields}&page=${searchParameters.specimens.page}&paginate_by=${searchParameters.specimens.paginateBy}`)
 }

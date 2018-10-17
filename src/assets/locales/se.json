@@ -137,7 +137,8 @@
   },
   "messages": {
     "overlay": "Please wait",
-    "langChange": "Changed language!"
+    "langChange": "Changed language!",
+    "pageLoading": "Please wait. The page is loading."
   },
   "tabs": {
     "overview" : "Overview",
@@ -145,6 +146,6 @@
     "names" : "Names",
     "classification" : "Classification",
     "literature" : "Literature",
-    "species" : "Species"
+    "specimens" : "Specimens"
   }
 }

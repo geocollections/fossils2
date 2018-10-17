@@ -35,7 +35,7 @@
                    </div>
                </div>
                <div class="ml-auto">
-                   <b-dropdown id="ddown1" :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" class="m-md-2" variant="primary" style="">
+                   <b-dropdown size="md" id="ddown1" :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" class="m-md-2" variant="primary" style="">
                        <b-dropdown-item disabled>Mode</b-dropdown-item>
                        <b-dropdown-divider></b-dropdown-divider>
                        <b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode === 'in_global'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
@@ -43,6 +43,9 @@
                    </b-dropdown>
                </div>
            </b-row>
+           <taxon-tabs v-if="isHigherTaxon(taxon.rank__rank_en)"></taxon-tabs>
+           <tab-specimens v-if="$store.state.activeTab === 'specimens' && isHigherTaxon(taxon.rank__rank_en)"></tab-specimens>
+           <div v-if="$store.state.activeTab === 'overview'">
            <b-row>
                <div class="col-lg-8">
                    <b-row class="m-1">
@@ -150,7 +153,6 @@
                                    </li>
                                </ul>
                            </div>
-
                        </div>
                    </b-row>
 
@@ -219,7 +221,7 @@
                                    </div>
                                    <div class="col-xs-12 col-xs-6 pagination-center">
                                        <b-pagination
-                                               size="md" align="right" :limit="5" :hide-ellipsis="true" :total-rows="response.count" v-model="$store.state.searchParameters.watched.page" :per-page="$store.state.searchParameters.watched.paginateBy">
+                                               size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="response.count" v-model="$store.state.searchParameters.species.page" :per-page="$store.state.searchParameters.species.paginateBy">
                                        </b-pagination>
                                    </div>
                                </div>
@@ -256,8 +258,8 @@
 
                </div>
                <div class="col-lg-4">
-                   <b-row class="mt-4">
-                       <lingallery v-if="images && images.length > 0" ref="lingallery" :width="400" :height="350" :items="images "/>
+                   <b-row class="mt-1">
+                       <lingallery  style="width: 100%" v-if="images && images.length > 0" ref="lingallery" :width="400" :height="350" :items="images "/>
                    </b-row>
 
                    <b-row class="mt-1" v-if="isTaxonomicTreeIsLoaded">
@@ -308,6 +310,8 @@
                    </b-row>
                </div>
            </b-row>
+
+           </div>
        </div>
    </div>
 
@@ -329,18 +333,21 @@
         fetchSpecies,
         fetchHierarchy,
         fetchImages,
-        fetchAttachment
+        fetchAttachment,
+        fetchSpecimenCollection, cntSpecimenCollection
     } from '../api'
     import MapComponent from "../components/MapComponent.vue";
     import ProtoHeader from "../components/AppHeader.vue";
     import Lingallery from "../components/Lingallery.vue";
     import ClassificationTable from "../components/ClassificationTable.vue";
     import SeeAlso from "../components/SeeAlso.vue";
+    import TabSpecimens from "../components/tabs/TabSpecimens.vue";
 
 
     export default {
         name: 'item-page',
         components: {
+            TabSpecimens,
             SeeAlso,
             ClassificationTable,
             Lingallery,
@@ -354,7 +361,6 @@
         data() {
             return this.initialData()
         },
-
         computed: {
             taxon () { return this.$store.state.activeItem['taxon'] },
             taxonTitle: function() {
@@ -464,7 +470,6 @@
                     store.dispatch('FETCH_SPECIES_MAP', { id }),
                 ],queries)
             }
-            console.log(queries)
             return Promise.all(queries)
 
         },
@@ -489,10 +494,17 @@
         methods: {
             initialData: function () {
                 return {
+                    geocollectionUrl: "http://geocollections.info",
+                    fossilsUrl: "http://fossils.info",
+                    kividUrl: "http://www.kivid.info",
                     scroll: false,
                     parent: {},
                     images: [],
                     activeSection: 'overview',
+                    specimenCollectionCnt: false,
+                    loaders : {
+                        isSpecimenCollectionLoaded : false
+                    },
                     mapDataLoaded: false,
                     isSpecimen: false,
                     sister_taxa: {},
@@ -516,7 +528,6 @@
                 if (this.isDefinedAndNotNull(this.taxon.parent)) {
                     fetchTaxon(this.taxon.parent).then((response) => {
                         this.parent = response.results ? response.results[0] : {};
-                        // Sister taxa
                     });
 
                     fetchSisterTaxa(this.taxon.parent, this.$store.state.mode).then((response) => {
@@ -553,7 +564,18 @@
                     this.images = this.composeImageRequest(response.results)
                     this.isTaxonImagesLoaded = true
                 });
+                //
+                if (this.isHigherTaxon(this.taxon.rank__rank_en)){
+                    cntSpecimenCollection(this.taxon.taxon).then((response) => {
+                        this.specimenCollectionCnt = response.count;
 
+                    });
+                }
+
+            },
+
+            isHigherTaxon(value) {
+                return !['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(value)
             },
             //todo: utils
             isDefinedAndNotEmpty(value) { return !!value && value.length > 0 },
@@ -562,7 +584,7 @@
             isDefinedAndNotNull(value) { return !!value && value !== null },
             isHigherTaxon(rank) { return !!['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(rank) },
             calculateSpeciesIdx: function (idx) {
-                return (idx + 1) + this.$store.state.searchParameters.watched.paginateBy * this.$store.state.searchParameters.watched.page - this.$store.state.searchParameters.watched.paginateBy
+                return (idx + 1) + this.$store.state.searchParameters.species.paginateBy * this.$store.state.searchParameters.species.page - this.$store.state.searchParameters.species.paginateBy
             },
             //todo: utils
             openUrl: function (params) {
@@ -673,7 +695,7 @@
                 }
             },
 
-            '$store.state.searchParameters.watched': {
+            '$store.state.searchParameters.species': {
                 handler: function () {
                     this.searchSpecies()
                 },
@@ -698,5 +720,124 @@
     }
 </script>
 <style>
+    /* search table*/
 
+    .thead-default th {
+        background-color: #eceeef;
+        color:#464a4c;
+    }
+    #table-search td {
+        color: #292b2c;
+    }
+    #table-search td:first-child {
+        font-weight:700;
+    }
+
+    #table-search tr > th > a {
+        color:#464a4c;
+    }
+    #table-search tr > td > a {
+        color:#eb3812;
+    }
+    #table-search tr > td > a:hover {
+        color:#FF2F00;
+    }
+
+    table tr > td:first-child {
+        font-weight: 700;
+    }
+    #table-search {
+        empty-cells: show;
+    }
+
+    @media only screen and (max-width: 800px) {
+        .table-responsive {
+            border: 0px;
+        }
+        /* Force table to not be like tables anymore */
+        #table-search table,
+        #table-search thead,
+        #table-search tbody,
+        #table-search th,
+        #table-search td,
+        #table-search tr {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* Hide table headers (but not display: none;, for accessibility) */
+        #table-search thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        #table-search tr { border: 1px solid #ccc; }
+
+        #table-search td {
+            /* Behave  like a "row" */
+            border: none;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 50%;
+            white-space: normal;
+            text-align: left;
+        }
+
+        #table-search td:empty {
+            padding-top: 20px;
+        }
+        #table-search td:before {
+            /* Now like a table header */
+            position: absolute;
+            /* Top/left values mimic padding */
+            top: 6px;
+            left: 6px;
+            width: 45%;
+            padding-right: 10px;
+            white-space: nowrap;
+            text-align:left;
+            font-weight: bold;
+        }
+
+        /*
+        Label the data
+        */
+        #table-search td:before { content: attr(data-title); }
+    }
+    #table-search .btn.btn-link {
+        font-size: medium;
+        font-weight: 700;
+        text-transform: none;
+        white-space:normal;
+        text-align: left;
+    }
+    #table-search span {
+
+    }
+    /******************************
+     *** MOBILE TABLE FIX START ***
+     ******************************/
+
+    @media (max-width: 450px) {
+        .mobile-padding-fix > tbody > tr > td {
+            padding: 3%;
+        }
+    }
+
+    @media (max-width: 450px) {
+        .mobile-padding-fix > tbody > tr > td {
+            padding: 4%;
+        }
+    }
+
+    @media (max-width: 420px) {
+        .mobile-padding-fix > tbody > tr > td {
+            padding: 5%;
+        }
+    }
+
+    /******************************
+     ***  MOBILE TABLE FIX END  ***
+     ******************************/
 </style>

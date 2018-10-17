@@ -145,7 +145,8 @@
 
   "messages": {
     "overlay": "Palun oodake",
-    "langChange": "Vahetasite keelt!"
+    "langChange": "Vahetasite keelt!",
+    "pageLoading": "Please wait. The page is loading."
   },
   "tabs": {
     "overview" : "Üldinfo",
@@ -153,6 +154,6 @@
     "names" : "Names",
     "classification" : "Klassificatsioon",
     "literature" : "Literature",
-    "species" : "Species"
+    "specimens" : "Eksemplarid"
   }
 }
