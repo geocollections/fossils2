@@ -720,91 +720,7 @@
     }
 </script>
 <style>
-    /* search table*/
-
-    .thead-default th {
-        background-color: #eceeef;
-        color:#464a4c;
-    }
-    #table-search td {
-        color: #292b2c;
-    }
-    #table-search td:first-child {
-        font-weight:700;
-    }
-
-    #table-search tr > th > a {
-        color:#464a4c;
-    }
-    #table-search tr > td > a {
-        color:#eb3812;
-    }
-    #table-search tr > td > a:hover {
-        color:#FF2F00;
-    }
-
-    table tr > td:first-child {
-        font-weight: 700;
-    }
-    #table-search {
-        empty-cells: show;
-    }
-
-    @media only screen and (max-width: 800px) {
-        .table-responsive {
-            border: 0px;
-        }
-        /* Force table to not be like tables anymore */
-        #table-search table,
-        #table-search thead,
-        #table-search tbody,
-        #table-search th,
-        #table-search td,
-        #table-search tr {
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        /* Hide table headers (but not display: none;, for accessibility) */
-        #table-search thead tr {
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-        }
-
-        #table-search tr { border: 1px solid #ccc; }
-
-        #table-search td {
-            /* Behave  like a "row" */
-            border: none;
-            border-bottom: 1px solid #eee;
-            position: relative;
-            padding-left: 50%;
-            white-space: normal;
-            text-align: left;
-        }
-
-        #table-search td:empty {
-            padding-top: 20px;
-        }
-        #table-search td:before {
-            /* Now like a table header */
-            position: absolute;
-            /* Top/left values mimic padding */
-            top: 6px;
-            left: 6px;
-            width: 45%;
-            padding-right: 10px;
-            white-space: nowrap;
-            text-align:left;
-            font-weight: bold;
-        }
-
-        /*
-        Label the data
-        */
-        #table-search td:before { content: attr(data-title); }
-    }
+   
     #table-search .btn.btn-link {
         font-size: medium;
         font-weight: 700;
@@ -812,32 +728,5 @@
         white-space:normal;
         text-align: left;
     }
-    #table-search span {
 
-    }
-    /******************************
-     *** MOBILE TABLE FIX START ***
-     ******************************/
-
-    @media (max-width: 450px) {
-        .mobile-padding-fix > tbody > tr > td {
-            padding: 3%;
-        }
-    }
-
-    @media (max-width: 450px) {
-        .mobile-padding-fix > tbody > tr > td {
-            padding: 4%;
-        }
-    }
-
-    @media (max-width: 420px) {
-        .mobile-padding-fix > tbody > tr > td {
-            padding: 5%;
-        }
-    }
-
-    /******************************
-     ***  MOBILE TABLE FIX END  ***
-     ******************************/
 </style>

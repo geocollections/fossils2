@@ -253,9 +253,20 @@ footer {
 #table-search td:first-child {
     font-weight:700;
 }
-
-#table-search tr > th > a {
+#table-search tr > th span,em{
+    font-size: small !important;
+}
+#table-search tr > th > em > .btn{
     color:#464a4c;
+    text-decoration: none;
+    font-style: italic;
+}
+#table-search tr > th > .btn{
+    color:#464a4c;
+    text-decoration: none;
+}
+#table-search tr > th > .btn:hover{
+    color: #270807;
 }
 #table-search tr > td > a {
     color:#eb3812;
