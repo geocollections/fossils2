@@ -26,7 +26,7 @@ export function createStore () {
       },
       searchParameters: {
           species: { page: 1, paginateBy: 10 },
-          specimens: { page: 1, paginateBy: 10 },
+          specimens: { page: 1, paginateBy: 10, sortBy: 'id',  sortByAsc: true, order: "ASCENDING"},
       },
     },
     actions,

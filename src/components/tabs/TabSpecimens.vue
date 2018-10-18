@@ -11,24 +11,22 @@
             <table class="table table-bordered table-hover mobile-padding-fix" style="font-size: smaller;" id="table-search">
                 <thead class="thead-default">
                 <tr>
-                    <th>Specimen number</th><th>Old nr.</th><th>Name Part/element</th><th>Locality</th><th>Depth (m)</th>
-                    <th>Stratigraphy | Lithostratigraphy</th><th>Collector</th><th>Status</th><th>Images</th>
-                    <!--<th><sort-field value = "id" name="SEARCH.SPECIMENS.NUMBER"></sort-field></th>-->
-                    <!--<th><sort-field value = "specimen_nr" name="SEARCH.SPECIMENS.OLD_SPECIMEN_NUMBER"></sort-field></th>-->
-                    <!--<th><sort-field value = "specimenidentification__taxon__taxon" name="SEARCH.SPECIMENS.NAME_PART_ELEMENT"></sort-field></th>-->
-                    <!--<th><sort-field value = "locality__locality,locality__locality_en" name="SEARCH.SPECIMENS.LOCALITY"></sort-field></th>-->
-                    <!--<th><sort-field value = "depth" name="SEARCH.SPECIMENS.DEPHT_M"></sort-field></th>-->
-                    <!--<th>-->
-                    <!--<sort-field value = "stratigraphy__stratigraphy,stratigraphy__stratigraphy_en"-->
-                    <!--name="SEARCH.SPECIMENS.STRATIGRAPHY"/>-->
-                    <!--|-->
-                    <!--<em>-->
-                    <!--<sort-field value="lithostratigraphy__stratigraphy,lithostratigraphy__stratigraphy_en" name="SEARCH.SPECIMENS.LITHOSTRATIGRAPHY"/>-->
-                    <!--</em>-->
-                    <!--</th>-->
-                    <!--<th><sort-field value = "agent_collected__agent" name="SEARCH.SPECIMENS.COLLECTOR"></sort-field></th>-->
-                    <!--<th><sort-field value = "original_status__value,original_status__value_en" name="SEARCH.SPECIMENS.STATUS"></sort-field></th>-->
-                    <!--<th>{{ 'SEARCH.SPECIMENS.IMAGES' | translate }}</th>-->
+                    <th><sort-field value = "id" name="search.specimen.number"></sort-field></th>
+                    <th><sort-field value = "specimen_nr" name="search.specimen.old_specimen_number"></sort-field></th>
+                    <th><sort-field value = "specimenidentification__taxon__taxon" name="search.specimen.name_part_element"></sort-field></th>
+                    <th><sort-field value = "locality__locality,locality__locality_en" name="search.specimen.locality"></sort-field></th>
+                    <th><sort-field value = "depth" name="search.specimen.depth_m"></sort-field></th>
+                    <th>
+                    <sort-field value = "stratigraphy__stratigraphy,stratigraphy__stratigraphy_en"
+                    name="search.specimen.stratigraphy"/>
+                    |
+                    <em>
+                    <sort-field value="lithostratigraphy__stratigraphy,lithostratigraphy__stratigraphy_en" name="search.specimen.lithostratigraphy"/>
+                    </em>
+                    </th>
+                    <th><sort-field value = "agent_collected__agent" name="search.specimen.collector"></sort-field></th>
+                    <th><sort-field value = "original_status__value,original_status__value_en" name="search.specimen.status"></sort-field></th>
+                    <th>{{ $t('search.specimen.images') }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -36,7 +34,7 @@
                     <td><button class="btn btn-link text-nowrap" @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/specimen',object:item.id, width:500,height:500})">
                         {{ item.coll__number | formatSpecimenName}} {{ item.specimen_id }}</button>
                     </td>
-                    <td>{{item.specimen_nr}}</td>
+                    <td class="text-nowrap">{{item.specimen_nr}}</td>
                     <td>
                         <div>
                             <a :href="'/'+item.specimenidentification__taxon_id">{{item.specimenidentification__taxon__taxon}}</a>
@@ -120,9 +118,10 @@
         fetchSpecimenCollection
     } from '../../api'
     import Spinner from "../Spinner.vue";
+    import SortField from "../SortField.vue";
     export default {
         name: "TabSpecimens",
-        components: {Spinner},
+        components: {SortField, Spinner},
         data() {
             return {
                 loading: true,
@@ -161,7 +160,6 @@
                 }
             },
             composeUrl(uuid_filename,startSubstring,endSubstring) {
-                console.log(uuid_filename)
                 if (uuid_filename && uuid_filename != null) {
                     return this.$parent.fileUrl + '/small/' + uuid_filename.substring(0,2)+'/'+ uuid_filename.substring(2,4)+'/'+ uuid_filename;
                 }

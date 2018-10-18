@@ -133,7 +133,21 @@
     "stratigraphy":"Stratigraphy",
     "button":"Submit query",
     "results":"Search results",
-    "results_species":"species"
+    "results_species":"species",
+
+    "specimen": {
+      "id": "ID",
+      "number": "Specimen number",
+      "depth_m": "Depth (m)",
+      "stratigraphy": "Stratigraphy",
+      "collector": "Collector",
+      "locality": "Locality",
+      "name_part_element": "Name Part/element",
+      "status": "Status",
+      "images": "Images",
+      "old_specimen_number": "Old nr.",
+      "lithostratigraphy": "Lithostratigraphy"
+    }
   },
   "messages": {
     "overlay": "Please wait",

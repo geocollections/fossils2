@@ -140,7 +140,21 @@
     "stratigraphy":"Stratigraafia",
     "button":"Otsi liike",
     "results":"Otsingu tulemused",
-    "results_species":"liiki"
+    "results_species":"liiki",
+
+    "specimen": {
+      "id": "ID",
+      "number": "Eksemplari nr",
+      "depth_m": "Sügavus (m)",
+      "stratigraphy": "Stratigraafia",
+      "collector": "Koguja",
+      "locality": "Leiukoht",
+      "name_part_element": "Nimi osis/element",
+      "status": "Staatus",
+      "images": "Pildid",
+      "old_specimen_number": "Vana nr.",
+      "lithostratigraphy": "Litostratigraafia"
+    }
   },
 
   "messages": {

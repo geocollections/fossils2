@@ -15,6 +15,9 @@ export default {
     SET_PROCESS: (state, { process }) => {
         Vue.set(state, 'process', process || false) /* false means page not found */
     },
+    SET_SPECIMEN_SEARCH_PARAMS: (state, { searchParams }) => {
+        Vue.set(state.searchParameters, 'specimens', searchParams || false) /* false means page not found */
+    },
 
   SET_PAGE: (state, { id, page }) => {
     Vue.set(state.page, id, page.results || false) /* false means page not found */

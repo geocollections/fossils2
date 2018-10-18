@@ -133,10 +133,11 @@ export function cntSpecimenCollection(taxon) {
 }
 
 export function fetchSpecimenCollection(taxon,searchParameters) {
+    let orderBy = searchParameters.specimens.order === 'ASCENDING' ? '&order_by='+searchParameters.specimens.sortBy : '&order_by=-' +searchParameters.specimens.sortBy;
     let returningFields='&fields=id,specimenidentification__name,coll__number,specimen_id,specimen_nr,locality__locality,' +
         'locality__locality_en,locality_free,depth_interval,depth,stratigraphy_id,stratigraphy__stratigraphy,stratigraphy__stratigraphy_en,' +
         'lithostratigraphy__stratigraphy_en,lithostratigraphy_id,lithostratigraphy__stratigraphy,specimenidentification__taxon_id,specimenidentification__taxon__taxon,specimenidentificationgeologies__rock__id,' +
         'specimenidentificationgeologies__name,specimenidentificationgeologies__name_en,specimenidentificationgeologies__rock__name,specimenidentificationgeologies__rock__name_en,' +
         'agent_collected__agent,agent_collected__forename,agent_collected__surename,original_status__value,original_status__value_en,attachment__filename'
-    return fetch(`specimen/?specimenidentification__taxon__taxon__hierarchy=${taxon}&order_by=-id${returningFields}&page=${searchParameters.specimens.page}&paginate_by=${searchParameters.specimens.paginateBy}`)
+    return fetch(`specimen/?specimenidentification__taxon__taxon__hierarchy=${taxon}&order_by=-id${returningFields}&page=${searchParameters.specimens.page}&paginate_by=${searchParameters.specimens.paginateBy}${orderBy}`)
 }
