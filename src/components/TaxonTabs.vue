@@ -16,7 +16,7 @@
             <!--<li class="nav-item">-->
                 <!--<a href="#tab-literature"  v-on:click="setActiveTab('literature')" class="nav-link"  :class="{ active: activeTab === 'literature' }">{{ $t('tabs.literature') }}</a>-->
             <!--</li>-->
-            <li class="nav-item">
+            <li class="nav-item" v-if="!$parent.isHigherTaxon($parent.taxon.rank__rank_en)">
                 <a href="#tab-specimens"  v-on:click="setActiveTab('specimens')" class="nav-link"  :class="{ active: activeTab === 'specimens' }">{{ $t('tabs.specimens') }}
                     <span v-if="!!$parent.specimenCollectionCnt" class="badge badge-secondary badge-pill">{{$parent.specimenCollectionCnt}}</span>
                 </a>

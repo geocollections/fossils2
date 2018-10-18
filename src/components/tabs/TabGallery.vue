@@ -1,66 +1,94 @@
 <template>
     <div id="#tab-gallery" class="tab-pane" :class="{active: $store.state.activeTab === 'gallery'}" role="tabpanel">
-        <div class="p-3">
-            <div class="card" v-if="images && images.length > 0">
-                <div class="card-header" v-if="isSpecimen">{{ $t('header.f_higher_taxon_images_title_gallery') }}</div>
-                <div class="card-header" v-if="!isSpecimen">{{ $t( 'header.f_higher_taxon_images_title_visualtool') }}</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-8" if="$store.state.process === 'client'">
-                            <lingallery ref="lingallery" :items="images" @currentIndex="setCurrentIndex"/>
-                        </div>
-                        <div class="card col-lg-4" v-if="currentImage != undefined">
-                            <div class="card-body">
-                                <div class="row" v-if="isSpecimen">{{currentImage.caption}}</div>
-                                <div class="row" v-if="!isSpecimen">Name: {{currentImage.link__taxon}}</div>
-                                <div class="row" v-if="currentImage.attachment__author__agent != null">Author: {{currentImage.attachment__author__agent}}</div>
-                                <div class="row" v-if="currentImage.attachment__date_created != null">Created: {{currentImage.attachment__date_created}}</div>
-                                <div class="row p-3">
-                                    <button v-if="!isSpecimen" type="button" class="btn btn-info" @click="navigate(currentImage.link)">{{$t('main.button_read_more')}}</button>
-                                    <div v-if="isSpecimen">
-                                        <button type="button" class="btn btn-info"  @click="$parent.openUrl({parent_url:'http://geokogud.info/specimen',object:currentImage.specimen_id, width:500,height:500})">INFO</button>
-                                        <button type="button" class="btn btn-secondary"  @click="$parent.openUrl({parent_url:'http://geokogud.info/specimen_image',object:currentImage.specimen_image_id, width:500,height:500})">IMAGE</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <b-row v-if="loading">
+            <spinner :show="loading"></spinner><span class="p-2">{{$t('messages.pageLoading')}}</span>
+        </b-row>
+        <b-row class="m-1" v-if="!loading">
+            <div class="photogallery">
+                <h3>{{$t(imagesTitle)}} ({{$parent.taxon.taxon}})</h3>
+                <div v-for="image in images" style="float: left; position: relative;" class="image_highlight">
+                    <a data-fancybox="gallery2" :href="image.src" :data-caption="image.caption">
+                        <img :alt="image.caption" style="height: 200px;" :src="image.thumbnail"/>
+                    </a>
                 </div>
             </div>
-            <div v-else><i>There is no images</i></div>
-        </div>
+        </b-row>
     </div>
 
 </template>
 
 <script>
-
-    import Lingallery from "../Lingallery.vue";
+    import {
+        fetchImages,
+        fetchAttachment,
+        fetchSelectedImages
+    } from '../../api'
+    import Spinner from "../Spinner.vue";
     export default {
         name: "TabGallery",
-        components: { Lingallery },
-        data () {
-            return { currentIndex: 0 }
+        components: {Spinner},
+        data() {
+            return {
+                images : [],
+                loading : true,
+                imagesTitle: ''
+            }
         },
-        computed: {
-            taxon () {return this.$parent.taxon},
-            isSpecimen () {return this.$parent.isSpecimen},
-            currentImage () { return this.images[this.currentIndex]},
-            images () { return this.$parent.images }
+        mounted () {
+            this.getImages();
         },
         methods: {
-            navigate (link)  {
-                this.$router.push({ path: '/'+link})
+            getImages() {
+                this.loading = true;
+                if(this.$parent.isHigherTaxon(this.$parent.taxon.rank__rank_en)) {
+                    fetchSelectedImages(this.$parent.taxon.id).then((response) => {
+                        if(response.results.length === 0) {
+                            fetchImages(this.$parent.taxon.hierarchy_string).then((response) => {
+                                this.images = this.$parent.composeImageRequest(response.results)
+                                this.loading = false
+                                this.imagesTitle = 'header.f_higher_taxon_images_title_visualtool'
+                            });
+                        } else {
+                            this.images = this.$parent.composeImageRequest(response.results)
+                            this.loading = false
+                            this.imagesTitle = 'header.f_higher_taxon_images_title_gallery'
+                        }
+                    });
+                } else {
+                    fetchAttachment(this.$parent.taxon.hierarchy_string).then((response) => {
+                        this.isSpecimen = true;
+                        this.images = this.$parent.composeImageRequest(response.results);
+                        this.loading = false
+                    });
+                }
             },
-
-            setCurrentIndex (event) {
-                this.currentIndex = event
-            }
         }
-
     }
 </script>
 
 <style scoped>
+    /* galeriid ümbritsev stiil */
+    .photogallery {
+        /*display:inline-block;*/
+        background-color: #000; /* eeldusel et enamik pilte on mustal taustal */
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+        border-radius: 6px;
+        padding: 5px;
+        margin: 0;
+        /*max-height: 400px;*/
+        overflow: auto;
+    }
+
+    .photogallery h3 {
+        color: #fff;
+        padding-bottom: 8px;
+        text-shadow: none;
+        font-size: 0.9em;
+    }
+
+    .photogallery img {
+    }
+
 
 </style>

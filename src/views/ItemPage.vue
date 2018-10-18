@@ -43,8 +43,9 @@
                    </b-dropdown>
                </div>
            </b-row>
-           <taxon-tabs v-if="isHigherTaxon(taxon.rank__rank_en)"></taxon-tabs>
-           <tab-specimens v-if="$store.state.activeTab === 'specimens' && isHigherTaxon(taxon.rank__rank_en)"></tab-specimens>
+           <taxon-tabs></taxon-tabs>
+           <tab-gallery v-if="$store.state.activeTab === 'gallery'"></tab-gallery>
+           <tab-specimens v-if="$store.state.activeTab === 'specimens' && !isHigherTaxon(taxon.rank__rank_en)"></tab-specimens>
            <div v-if="$store.state.activeTab === 'overview'">
            <b-row>
                <div class="col-lg-8">
@@ -342,11 +343,13 @@
     import ClassificationTable from "../components/ClassificationTable.vue";
     import SeeAlso from "../components/SeeAlso.vue";
     import TabSpecimens from "../components/tabs/TabSpecimens.vue";
+    import TabGallery from "../components/tabs/TabGallery.vue";
 
 
     export default {
         name: 'item-page',
         components: {
+            TabGallery,
             TabSpecimens,
             SeeAlso,
             ClassificationTable,
@@ -566,7 +569,7 @@
                     this.isTaxonImagesLoaded = true
                 });
                 //
-                if (this.isHigherTaxon(this.taxon.rank__rank_en)){
+                if (!this.isHigherTaxon(this.taxon.rank__rank_en)){
                     cntSpecimenCollection(this.taxon.taxon).then((response) => {
                         this.specimenCollectionCnt = response.count;
 
@@ -575,15 +578,12 @@
 
             },
 
-            isHigherTaxon(value) {
-                return !['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(value)
-            },
             //todo: utils
             isDefinedAndNotEmpty(value) { return !!value && value.length > 0 },
 
             //todo: utils
             isDefinedAndNotNull(value) { return !!value && value !== null },
-            isHigherTaxon(rank) { return !!['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(rank) },
+            isHigherTaxon(rank) { return !['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(rank) },
             calculateSpeciesIdx: function (idx) {
                 return (idx + 1) + this.$store.state.searchParameters.species.paginateBy * this.$store.state.searchParameters.species.page - this.$store.state.searchParameters.species.paginateBy
             },
@@ -609,12 +609,24 @@
                 this.$router.push({ path: '/'+link})
             },
             setFancyBoxCaption: function(el, this_, isSpecimen) {
-                let text="";
-                text += "<div><span>"+el.number + ' ' + el.name+"</span> " ;
+                let text="", imageName = el.name, infoId = el.id, imageId = el.specimen_image_id, navigateId = el.taxon_id;
+                console.log(isSpecimen)
+                if(isSpecimen === undefined) {
+                    imageName = el.number + ' ' + el.name;
+                    infoId = el.id;
+                    imageId = el.specimen_image_id
+                    navigateId = el.link
+                } else if(isSpecimen) {
+                    imageName = el.link__taxon;
+                    infoId = el.specimen_id;
+                    imageId = el.id
+                    navigateId = el.link
+                }
+                // text += "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('"+this.fossilsUrl+"/"+navigateId+"')\">Read more</button>" ;
+                text += "<div><span>"+imageName+"</span>" ;
                 text +=
-                    // "<a class='btn btn-sm btn-info' href='/" + el.link + "'> Read more </a></div>" +
-                    "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('http://geocollections.info/specimen/"+el.id+"')\">INFO</button>" +
-                    " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('http://geocollections.info/file/"+el.specimen_image_id+"')\">IMAGE</button>"
+                    "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('http://geocollections.info/specimen/"+infoId+"')\">INFO</button>" +
+                    " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('http://geocollections.info/file/"+imageId+"')\">IMAGE</button>"
 
                 text += "</div>";
                 return text
@@ -636,25 +648,23 @@
                 if (taxonImages.length > 0) {
                     let this_ = this
                     taxonImages.forEach(function(el) {
-                        // if (el.uuid_filename && el.uuid_filename != null) {
-                        //     el.thumbnail = fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
-                        //     el.src = fileUrl + '/large/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
-                        //     el.caption = this_.setFancyBoxCaption(el, this_, false)
-                        // }
-                        // else if(el.attachment__uuid_filename && el.attachment__uuid_filename != null) {
-                        //     el.thumbnail = fileUrl + '/small/' + el.attachment__uuid_filename.substring(0,2)+'/'
-                        //         + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
-                        //     el.src = fileUrl + '/large/' + el.attachment__uuid_filename.substring(0,2)+'/'
-                        //         + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
-                        //
-                        //
-                        //     el.caption = this_.setFancyBoxCaption(el, this_, true)
-                        // }
-                        // else if(el.preview !== null) {
+                        if (el.uuid_filename && el.uuid_filename != null) {
+                            el.thumbnail = this_.fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
+                            el.src = this_.fileUrl + '/large/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
+                            el.caption = this_.setFancyBoxCaption(el, this_, false)
+                        }
+                        else if(el.attachment__uuid_filename && el.attachment__uuid_filename != null) {
+                            el.thumbnail = this_.fileUrl + '/small/' + el.attachment__uuid_filename.substring(0,2)+'/'
+                                + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
+                            el.src = this_.fileUrl + '/large/' + el.attachment__uuid_filename.substring(0,2)+'/'
+                                + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
+                            el.caption = this_.setFancyBoxCaption(el, this_, true)
+                        }
+                        else if(el.preview !== null) {
                             el.thumbnail = this_.fileUrl + el.preview;
                             el.src = this_.fileUrl + el.img_to_url;
-                            el.caption = this_.setFancyBoxCaption(el, this_, true)
-                        // }
+                            el.caption = this_.setFancyBoxCaption(el, this_)
+                        }
                     });
                     return taxonImages
                 }
@@ -720,7 +730,7 @@
     }
 </script>
 <style>
-   
+
     #table-search .btn.btn-link {
         font-size: medium;
         font-weight: 700;

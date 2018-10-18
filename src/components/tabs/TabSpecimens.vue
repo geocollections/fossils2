@@ -99,7 +99,9 @@
                               v-translate="{et:item.original_status__value,en:item.original_status__value_en}"></span>
                     </td>
                     <td>
+                        <a data-fancybox="gallery3" :href="composeUrl(item.attachment__filename,true)" :data-caption="item.caption">
                         <img class="img-thumbnail previewImage" :src="composeUrl(item.attachment__filename)"/>
+                        </a>
                     </td>
                 </tr>
                 </tbody>
@@ -139,9 +141,7 @@
             }
         },
         mounted () {
-            if (this.$parent.isHigherTaxon(this.$parent.taxon.rank__rank_en)){
-                this.getSpecimens();
-            }
+            this.getSpecimens();
         },
         methods: {
             getSpecimens() {
@@ -159,9 +159,10 @@
                     results: []
                 }
             },
-            composeUrl(uuid_filename,startSubstring,endSubstring) {
+            composeUrl(uuid_filename,isFull) {
                 if (uuid_filename && uuid_filename != null) {
-                    return this.$parent.fileUrl + '/small/' + uuid_filename.substring(0,2)+'/'+ uuid_filename.substring(2,4)+'/'+ uuid_filename;
+                    return isFull ? this.$parent.fileUrl + '/large/' + uuid_filename.substring(0,2)+'/'+ uuid_filename.substring(2,4)+'/'+ uuid_filename
+                        : this.$parent.fileUrl + '/small/' + uuid_filename.substring(0,2)+'/'+ uuid_filename.substring(2,4)+'/'+ uuid_filename;
                 }
             }
         },

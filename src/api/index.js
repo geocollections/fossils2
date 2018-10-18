@@ -57,7 +57,9 @@ export function fetchChildren (id, mode) {
         ?  fetch(`taxon/?parent=${id}&in_baltoscandia=1&fields=${returningFields}`)
         :  fetch(`taxon/?parent=${id}&fields=${returningFields}`)
 }
-
+export function fetchSelectedImages (id) {
+    return fetch(`taxon/?sql=get_taxon_selected_images&keyword=${id}`)
+}
 export function fetchImages (hierarchy_string) {
     // return fetch(`taxon_image/?taxon=${taxon}&order_by=sort`)
     // return fetch(`taxon_image/?taxon__hierarchy_string__istartswith=${hierarchy_string}&order_by=sort`)
