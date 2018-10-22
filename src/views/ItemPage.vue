@@ -498,7 +498,7 @@
             initialData: function () {
                 return {
                     geocollectionUrl: "http://geocollections.info",
-                    fossilsUrl: "http://fossils.info",
+                    fossilsUrl: "https://fossiilid.geokogud.info",
                     kividUrl: "http://www.kivid.info",
                     fileUrl:'http://files.geocollections.info',
                     scroll: false,
@@ -609,8 +609,7 @@
                 this.$router.push({ path: '/'+link})
             },
             setFancyBoxCaption: function(el, this_, isSpecimen) {
-                let text="", imageName = el.name, infoId = el.id, imageId = el.specimen_image_id, navigateId = el.taxon_id;
-                console.log(isSpecimen)
+                let text="", imageName = el.taxon, infoId = el.specimen_id, imageId = el.attachment_id, navigateId = el.taxon_id;
                 if(isSpecimen === undefined) {
                     imageName = el.number + ' ' + el.name;
                     infoId = el.id;
@@ -622,26 +621,16 @@
                     imageId = el.id
                     navigateId = el.link
                 }
-                // text += "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('"+this.fossilsUrl+"/"+navigateId+"')\">Read more</button>" ;
-                text += "<div><span>"+imageName+"</span>" ;
+                console.log(this.fossilsUrl+"/"+navigateId)
+                text += "<div><button type=\"button\" class=\"btn btn-xs  btn-primary\" onclick=\"window.open('"+this.fossilsUrl+"/"+navigateId+"?mode=in_baltoscandia&lang=en')\">Read more</button></div>" ;
+                text += "<div class='mt-3'><span>"+imageName+"</span>&ensp;&ensp;" ;
                 text +=
-                    "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('http://geocollections.info/specimen/"+infoId+"')\">INFO</button>" +
-                    " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('http://geocollections.info/file/"+imageId+"')\">IMAGE</button>"
+                    "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('"+this.geocollectionUrl+"/specimen/"+infoId+"')\">INFO</button>" +
+                    " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('"+this.geocollectionUrl+"/file/"+imageId+"')\">IMAGE</button>"
 
                 text += "</div>";
                 return text
             },
-            // setFancyBoxCaption: function(el, this_, isSpecimen) {
-            //    let text="";
-            //     text += isSpecimen ? "<div><span>"+el.link__taxon+"</span> " : "<div><span><strong>" + el.name + "</strong></span> ";
-            //     // "<div><span><strong>" + el.database__acronym +" "+ el.specimen__specimen_id + " " + this_.taxon.taxon+ " " + this_.taxon.author_year + "</strong></span> ";
-            //     text += isSpecimen ? "<a class='btn btn-sm btn-info' href='/" + el.link + "'> Read more </a></div>"
-            //         : "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('http://geokogud.info/specimen/"+el.specimen_id+"')\">INFO</button>" +
-            //         " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('http://geokogud.info/specimen_image/"+el.specimen_image_id+"')\">IMAGE</button>"
-            //
-            //     text += "</div>";
-            //     return text
-            // },
             //todo: utils
             composeImageRequest : function(taxonImages) {
                 if(taxonImages === undefined || taxonImages === {} || taxonImages.length === 0) return ;
@@ -659,6 +648,11 @@
                             el.src = this_.fileUrl + '/large/' + el.attachment__uuid_filename.substring(0,2)+'/'
                                 + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
                             el.caption = this_.setFancyBoxCaption(el, this_, true)
+                        }
+                        else if(this_.isDefinedAndNotNull(el.filename)) {
+                            el.thumbnail = this_.fileUrl + '/small/' + el.filename.substring(0,2)+'/'+ el.filename.substring(2,4)+'/'+ el.filename;
+                            el.src = this_.fileUrl + '/large/' + el.filename.substring(0,2)+'/'+ el.filename.substring(2,4)+'/'+ el.filename;
+                            el.caption = this_.setFancyBoxCaption(el, this_, false)
                         }
                         else if(el.preview !== null) {
                             el.thumbnail = this_.fileUrl + el.preview;
