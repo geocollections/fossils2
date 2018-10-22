@@ -135,27 +135,28 @@
                                </div>
                            </div>
                    </b-row>
-                   <b-row class="m-1"  v-if = "isDefinedAndNotEmpty(cntSpecimenIdentification) || isDefinedAndNotEmpty(specimenIdentification)">
-                       <div class="card  rounded-0" style="width: 100%" >
-                           <div class="card-header">{{$t('header.f_species_specimens')}}</div>
-                           <div class="card-body">
-                               <ul>
-                                   <li v-if = "isDefinedAndNotEmpty(cntSpecimenIdentification)">{{$t('header.f_species_linked_specimens')}}: <strong>
-                                       <button class="btn btn-link" @click="openUrl({parent_url:geocollectionUrl,object:'specimen?taxon_1=11&taxon='+taxon.taxon+'&currentTable=specimen&currentTable=specimen&paginateBy=25&sort=id&sortdir=DESC', width:500,height:500})">
-                                           {{cntSpecimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
-                                       </button>
-                                   </strong>
-                                   </li>
-                                   <li v-if = "isDefinedAndNotEmpty(specimenIdentification)">
-                                       <em>{{taxon.taxon}} {{taxon.author_year}}</em> :
-                                       <button class="btn btn-link" @click="openUrl({parent_url:geocollectionUrl,object:'specimen?taxon_1=1&taxon='+taxon.taxon+' '+taxon.author_year +'&currentTable=specimen&paginateBy=25&sort=id&sortdir=DESC',width:500,height:500})">
-                                           {{specimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
-                                       </button>
-                                   </li>
-                               </ul>
-                           </div>
-                       </div>
-                   </b-row>
+                   <!--TODO: REMOVE IF NO NEED IT -->
+                   <!--<b-row class="m-1"  v-if = "isDefinedAndNotEmpty(cntSpecimenIdentification) || isDefinedAndNotEmpty(specimenIdentification)">-->
+                       <!--<div class="card  rounded-0" style="width: 100%" >-->
+                           <!--<div class="card-header">{{$t('header.f_species_specimens')}}</div>-->
+                           <!--<div class="card-body">-->
+                               <!--<ul>-->
+                                   <!--<li v-if = "isDefinedAndNotEmpty(cntSpecimenIdentification)">{{$t('header.f_species_linked_specimens')}}: <strong>-->
+                                       <!--<button class="btn btn-link" @click="openUrl({parent_url:geocollectionUrl,object:'specimen?taxon_1=11&taxon='+taxon.taxon+'&currentTable=specimen&currentTable=specimen&paginateBy=25&sort=id&sortdir=DESC', width:500,height:500})">-->
+                                           <!--{{cntSpecimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}-->
+                                       <!--</button>-->
+                                   <!--</strong>-->
+                                   <!--</li>-->
+                                   <!--<li v-if = "isDefinedAndNotEmpty(specimenIdentification)">-->
+                                       <!--<em>{{taxon.taxon}} {{taxon.author_year}}</em> :-->
+                                       <!--<button class="btn btn-link" @click="openUrl({parent_url:geocollectionUrl,object:'specimen?taxon_1=1&taxon='+taxon.taxon+' '+taxon.author_year +'&currentTable=specimen&paginateBy=25&sort=id&sortdir=DESC',width:500,height:500})">-->
+                                           <!--{{specimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}-->
+                                       <!--</button>-->
+                                   <!--</li>-->
+                               <!--</ul>-->
+                           <!--</div>-->
+                       <!--</div>-->
+                   <!--</b-row>-->
 
                    <b-row class="m-1" v-if = "['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && (taxonOccurrence)">
                            <div class="card rounded-0" style="width:100%;">
