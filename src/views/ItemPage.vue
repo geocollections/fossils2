@@ -76,12 +76,12 @@
                                    <div v-if="taxon.stratigraphy_base__stratigraphy || taxon.stratigraphy_top__stratigraphy"> {{$t('header.f_stratigraphical_distribution')}}:
                                        <strong>
                                            <button class="btn btn-link" v-if="taxon.stratigraphy_base__stratigraphy"
-                                                   @click="openUrl({parent_url:'http://geokogud.info/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
+                                                   @click="openUrl({parent_url: geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
                                                {{taxon.stratigraphy_base__stratigraphy}}</button>
                                            <span v-if="taxon.stratigraphy_top__stratigraphy != null && taxon.stratigraphy_base__stratigraphy != null">&ndash;</span>
                                            <button class="btn btn-link" v-if="taxon.stratigraphy_top__stratigraphy
                                             && taxon.stratigraphy_base__stratigraphy != taxon.stratigraphy_top__stratigraphy"
-                                                   @click="openUrl({parent_url:'http://geokogud.info/stratigraphy',object:taxon.stratigraphy_top_id, width:500,height:500})">
+                                                   @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_top_id, width:500,height:500})">
                                                {{taxon.stratigraphy_top__stratigraphy}}
                                            </button>
                                            <span v-if="taxon.stratigraphy_base__age_base != null">| ~ {{convertToTwoDecimal(taxon.stratigraphy_base__age_base)}}</span>
@@ -126,7 +126,7 @@
                                <div class="card-body">
                                    <ul>
                                        <li v-for="item in taxonTypeSpecimen"> {{item.type_type__value}}:
-                                           <button class="btn btn-link" @click="openUrl({parent_url:'http://geokogud.info/specimen',object:item.specimen, width:500,height:500})">
+                                           <button class="btn btn-link" @click="openUrl({parent_url:geocollectionUrl + '/specimen',object:item.specimen, width:500,height:500})">
                                                <strong>{{item.specimen_number}}</strong>
                                            </button>,
                                            <span v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></span>, {{item.specimen__depth}} m
@@ -141,14 +141,14 @@
                            <div class="card-body">
                                <ul>
                                    <li v-if = "isDefinedAndNotEmpty(cntSpecimenIdentification)">{{$t('header.f_species_linked_specimens')}}: <strong>
-                                       <button class="btn btn-link" @click="openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+taxon.taxon+'&currentTable=specimen', width:500,height:500})">
+                                       <button class="btn btn-link" @click="openUrl({parent_url:geocollectionUrl,object:'specimen?taxon_1=11&taxon='+taxon.taxon+'&currentTable=specimen&currentTable=specimen&paginateBy=25&sort=id&sortdir=DESC', width:500,height:500})">
                                            {{cntSpecimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
                                        </button>
                                    </strong>
                                    </li>
                                    <li v-if = "isDefinedAndNotEmpty(specimenIdentification)">
                                        <em>{{taxon.taxon}} {{taxon.author_year}}</em> :
-                                       <button class="btn btn-link" @click="openUrl({parent_url:'http://geokogud.info',object:'search.php?taxon_1=1&taxon='+taxon.taxon+' '+taxon.author_year +'&currentTable=specimen',width:500,height:500})">
+                                       <button class="btn btn-link" @click="openUrl({parent_url:geocollectionUrl,object:'specimen?taxon_1=1&taxon='+taxon.taxon+' '+taxon.author_year +'&currentTable=specimen&paginateBy=25&sort=id&sortdir=DESC',width:500,height:500})">
                                            {{specimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}
                                        </button>
                                    </li>
@@ -237,7 +237,7 @@
                                <div class="my-2" v-for="sample in distributionSamples">
                                    <a :href="'http://geocollections.info/locality/'+sample.locality_id" target='_blank'><i v-translate="{et:sample.locality_et,en:sample.locality_en}"></i></a>
                                    <span>({{sample.depth_min}}  ... {{sample.depth_max}}):</span>
-                                   <a target='_blank' :href="'http://geokogud.info/search.php?taxon_1=1&taxon='+taxon.taxon+'&taxon_2=1&locality_1=1&locality='+sample.locality_en+'&locality_2=1&currentTable=sample'">
+                                   <a target='_blank' :href="geocollectionUrl + '/specimen?taxon_1=1&taxon='+taxon.taxon+'&taxon_2=1&locality_1=1&locality='+sample.locality_en+'&locality_2=1&currentTable=sample&paginateBy=25&sort=id&sortdir=DESC'">
                                        {{sample.num}} {{$t('header.f_species_link_samples')}}
                                    </a>
                                </div>
@@ -489,9 +489,6 @@
             this.$store.dispatch('FETCH_RANKS');
             Object.assign(this.$data, this.initialData());
             this.loadFullTaxonInfo()
-                //   this.mapDataLoaded = !!((this.isDefinedAndNotNull(this.taxonOccurrence) && this.taxonOccurrence.length > 0)
-                // || (this.isDefinedAndNotNull(this.specimenIdentification) && this.specimenIdentification.length > 0)
-                // || (this.isDefinedAndNotNull(this.taxonTypeSpecimen) && this.taxonTypeSpecimen.length > 0))
         },
 
         methods: {
