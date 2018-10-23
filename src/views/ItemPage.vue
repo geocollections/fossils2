@@ -6,9 +6,9 @@
                    <button  onclick="location.href='#top'" type="button" class="btn btn-primary fixed-bottom m-md-2" variant="primary" ><span style="color:white !important;font-weight: bolder!important;font-size: 2em !important;">&uarr;</span></button>
                </span>
            </b-row>
-           <b-row class="mt-1">
-               <div class="mx-auto row">
-                   <div class="col-lg-2">
+           <b-row class="ml-0">
+                   <b-row class="col-lg-10 ml-0">
+                       <div>
                        <a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
                            <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon"
                                 :title="taxon.fossil_group__taxon" style="height: 80px; margin-top: 0px; padding-right: 0px;" />
@@ -19,8 +19,8 @@
                                 :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" />
                            <br />{{taxon.fossil_group__taxon}}
                        </a>
-                   </div>
-                   <div class="col-lg-10">
+                       </div>
+                       <div>
                        <h3><strong>{{taxonTitle}}</strong></h3>
                        <div v-if="taxon.fossil_group__id && (taxon.rank__rank_en === 'Species' || taxon.rank__rank_en === 'Genus')">
                            <strong>{{$t('header.f_fossil_group')}}:</strong>
@@ -32,16 +32,16 @@
                                         <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span>
                                     </span>
                        <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length === 0"></span>
+                       </div>
+                   </b-row>
+                   <div class="col-lg-2 ml-auto">
+                       <b-dropdown size="md" id="ddown1" :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" class="m-md-2" variant="primary" style="">
+                           <b-dropdown-item disabled>Mode</b-dropdown-item>
+                           <b-dropdown-divider></b-dropdown-divider>
+                           <b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode === 'in_global'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
+                           <b-dropdown-item @click="changeMode('in_global')" v-if="mode === 'in_baltoscandia'">{{$t('header.global_mode')}}</b-dropdown-item>
+                       </b-dropdown>
                    </div>
-               </div>
-               <div class="ml-auto">
-                   <b-dropdown size="md" id="ddown1" :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" class="m-md-2" variant="primary" style="">
-                       <b-dropdown-item disabled>Mode</b-dropdown-item>
-                       <b-dropdown-divider></b-dropdown-divider>
-                       <b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode === 'in_global'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
-                       <b-dropdown-item @click="changeMode('in_global')" v-if="mode === 'in_baltoscandia'">{{$t('header.global_mode')}}</b-dropdown-item>
-                   </b-dropdown>
-               </div>
            </b-row>
            <taxon-tabs></taxon-tabs>
            <tab-gallery v-if="$store.state.activeTab === 'gallery'"></tab-gallery>
