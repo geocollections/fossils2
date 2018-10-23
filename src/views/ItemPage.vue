@@ -35,11 +35,12 @@
                        </div>
                    </b-row>
                    <div class="col-lg-2 ml-auto">
-                       <b-dropdown size="md" id="ddown1" :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" class="m-md-2" variant="primary" style="">
+                       <b-dropdown size="md" id="ddown1" :text="$t(getModeText())" class="m-md-2" variant="primary">
                            <b-dropdown-item disabled>Mode</b-dropdown-item>
                            <b-dropdown-divider></b-dropdown-divider>
-                           <b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode === 'in_global'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
-                           <b-dropdown-item @click="changeMode('in_global')" v-if="mode === 'in_baltoscandia'">{{$t('header.global_mode')}}</b-dropdown-item>
+                           <b-dropdown-item @click="changeMode('in_estonia')" v-if="mode !== 'in_estonia'">{{$t('header.in_estonia_mode')}}</b-dropdown-item>
+                           <b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode !== 'in_baltoscandia'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
+                           <b-dropdown-item @click="changeMode('in_global')" v-if="mode !== 'in_global'">{{$t('header.global_mode')}}</b-dropdown-item>
                        </b-dropdown>
                    </div>
            </b-row>
@@ -91,6 +92,7 @@
                                    </div>
                                    <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'Species'">
                                        <span v-if="$store.state.mode === 'in_baltoscandia'">{{$t('header.f_baltic_species')}}</span>
+                                       <span v-else-if="$store.state.mode === 'in_estonia'">{{$t('header.f_estonian_species')}}</span>
                                        <span v-else>{{$t('header.f_global_species')}}</span>
                                        <strong><a href="#species">{{numberOfSpecimen}}</a></strong>
                                    </div>
@@ -553,7 +555,11 @@
                     });
                 }
             },
-
+            getModeText() {
+                if(this.mode === 'in_baltoscandia') return 'header.in_baltoscandia_mode';
+                else if(this.mode === 'in_estonia') return 'header.in_estonia_mode';
+                else return 'header.global_mode';
+            },
             isDifferentName(obj) {
                 let localizedName = this.$store.state.lang === 'et' ? obj['et'] : obj['en'];
                 return localizedName[0] !== localizedName[1]

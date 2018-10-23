@@ -15,6 +15,7 @@
 
     "button_read_more":"Read more",
     "mode": "Mode",
+    "in_estonia_mode": "Estonia",
     "in_baltoscandia_mode": "Baltoscandia",
     "global_mode": "Global",
 
@@ -44,6 +45,7 @@
     "f_baltic_genera":"Baltoscandian genera (in database)",
     "f_baltic_species":"Baltoscandian species (in database): ",
     "f_global_species":"Worldwide species (in database): ",
+    "f_estonian_species":"Estonian species (in database): ",
     "f_recent":"Recent",
     "f_species_list":"List of Baltoscandian species",
     "f_taxon_intro":"Taxon overview",

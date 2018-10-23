@@ -13,6 +13,7 @@
     "button_hide":"Sulge",
 
     "mode": "Režiim",
+    "in_estonia_mode": "Eesti",
     "in_baltoscandia_mode": "Baltoscandia",
     "global_mode": "Globaalne",
 
@@ -41,6 +42,7 @@
     "f_baltic_genera":"Eestist leitud perekonnad (andmebaasis)",
     "f_baltic_species":"Baltoskandiast leitud liigid (andmebaasis): ",
     "f_global_species":"Maailmas leitud liigid (andmebaasis): ",
+    "f_estonian_species":"Eestis leitud liigid (andmebaasis): ",
     "f_recent":"Tänapäev",
     "f_species_list":"Eestist leitud liigid",
     "f_taxon_intro":"Taksoni iseloomustus",

@@ -20,6 +20,12 @@ function fetch (child) {
         });
     });
 }
+function applyMode(mode) {
+    let returnVal = "";
+    if(mode === 'in_baltoscandia') returnVal = "&in_baltoscandia=1";
+    else if (mode === 'in_estonia') returnVal = "&in_estonia=1";
+    return returnVal
+}
 
 export function fetchStaticPage (id) {
   return fetch(`webpages/${id}`)
@@ -35,16 +41,14 @@ export function fetchTaxon (id) {
 }
 
 export function fetchSisterTaxa (id, mode) {
-    let returningFields = "id,taxon,parent__taxon,parent_id,rank__rank_en,rank__rank"
-    return mode === 'in_baltoscandia'
-        ?  fetch(`taxon/?parent_id=${id}&in_baltoscandia=1&fields=${returningFields}`)
-        :  fetch(`taxon/?parent_id=${id}&fields=${returningFields}`)
+    let returningFields = "id,taxon,parent__taxon,parent_id,rank__rank_en,rank__rank";
+    let mode_ = applyMode(mode);
+    return fetch(`taxon/?parent_id=${id}${mode_}&fields=${returningFields}`)
 }
 
 export function fetchSpecies (hierarchy_string,mode,searchParameters) {
-    return mode === 'in_baltoscandia'
-        ?  fetch(`taxon/?hierarchy_string__istartswith=${hierarchy_string}&rank__rank_en=species&in_baltoscandia=1&fields=taxon,id,stratigraphy_base__stratigraphy_en,stratigraphy_base__stratigraphy,stratigraphy_top__stratigraphy_en,stratigraphy_top__stratigraphy&page=${searchParameters.species.page}&paginate_by=${searchParameters.species.paginateBy}`)
-        :  fetch(`taxon/?hierarchy_string__istartswith=${hierarchy_string}&rank__rank_en=species&fields=taxon,id,stratigraphy_base__stratigraphy_en,stratigraphy_base__stratigraphy,stratigraphy_top__stratigraphy_en,stratigraphy_top__stratigraphy&page=${searchParameters.species.page}&paginate_by=${searchParameters.species.paginateBy}`)
+    let mode_ = applyMode(mode);
+    return fetch(`taxon/?hierarchy_string__istartswith=${hierarchy_string}&rank__rank_en=species${mode_}&fields=taxon,id,stratigraphy_base__stratigraphy_en,stratigraphy_base__stratigraphy,stratigraphy_top__stratigraphy_en,stratigraphy_top__stratigraphy&page=${searchParameters.species.page}&paginate_by=${searchParameters.species.paginateBy}`)
 }
 
 export function fetchHierarchy (hierarchy_string) {
@@ -52,10 +56,9 @@ export function fetchHierarchy (hierarchy_string) {
 }
 
 export function fetchChildren (id, mode) {
-    let returningFields = "id,taxon,parent__taxon,parent_id,rank__rank_en,rank__rank"
-    return mode === 'in_baltoscandia'
-        ?  fetch(`taxon/?parent=${id}&in_baltoscandia=1&fields=${returningFields}`)
-        :  fetch(`taxon/?parent=${id}&fields=${returningFields}`)
+    let returningFields = "id,taxon,parent__taxon,parent_id,rank__rank_en,rank__rank";
+    let mode_ = applyMode(mode);
+    return fetch(`taxon/?parent=${id}${mode_}&fields=${returningFields}`)
 }
 export function fetchSelectedImages (id) {
     return fetch(`taxon/?sql=get_taxon_selected_images&keyword=${id}`)

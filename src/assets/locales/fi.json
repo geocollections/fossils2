@@ -14,6 +14,7 @@
     "button_hide":"Hide",
 
     "mode": "Mode",
+    "in_estonia_mode": "Estonia",
     "in_baltoscandia_mode": "Baltoscandia",
     "global_mode": "Global",
 
@@ -42,6 +43,7 @@
     "f_baltic_genera":"Baltian ja Fennoskandian suvut (tietokannassa olevat)",
     "f_baltic_species":"Baltian ja Fennoskandian lajit (tietokannassa olevat)",
     "f_global_species":"Maailmassa ja Fennoskandian lajit (tietokannassa olevat)",
+    "f_estonian_species":"Estonian species (in database): ",
     "f_recent":"Nykyinen",
     "f_species_list":"Baltian ja Fennoskandian lajit",
     "f_taxon_intro":"Yleistä taksoneista",
@@ -106,8 +108,7 @@
     "detail_search":"Tarkennettu haku",
     "search":"Pikahaku",
     "more":"More...",
-    "language":"Language",
-    "geocollections":"Geocollections portal"
+    "language":"Language"
   },
   "footer": {
     "licence":"Except where otherwise noted, content on this site is licensed under CC BY-NC Licence.",
