@@ -135,30 +135,7 @@
                                </div>
                            </div>
                    </b-row>
-                   <!--TODO: REMOVE IF NO NEED IT -->
-                   <!--<b-row class="m-1"  v-if = "isDefinedAndNotEmpty(cntSpecimenIdentification) || isDefinedAndNotEmpty(specimenIdentification)">-->
-                       <!--<div class="card  rounded-0" style="width: 100%" >-->
-                           <!--<div class="card-header">{{$t('header.f_species_specimens')}}</div>-->
-                           <!--<div class="card-body">-->
-                               <!--<ul>-->
-                                   <!--<li v-if = "isDefinedAndNotEmpty(cntSpecimenIdentification)">{{$t('header.f_species_linked_specimens')}}: <strong>-->
-                                       <!--<button class="btn btn-link" @click="openUrl({parent_url:geocollectionUrl,object:'specimen?taxon_1=11&taxon='+taxon.taxon+'&currentTable=specimen&currentTable=specimen&paginateBy=25&sort=id&sortdir=DESC', width:500,height:500})">-->
-                                           <!--{{cntSpecimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}-->
-                                       <!--</button>-->
-                                   <!--</strong>-->
-                                   <!--</li>-->
-                                   <!--<li v-if = "isDefinedAndNotEmpty(specimenIdentification)">-->
-                                       <!--<em>{{taxon.taxon}} {{taxon.author_year}}</em> :-->
-                                       <!--<button class="btn btn-link" @click="openUrl({parent_url:geocollectionUrl,object:'specimen?taxon_1=1&taxon='+taxon.taxon+' '+taxon.author_year +'&currentTable=specimen&paginateBy=25&sort=id&sortdir=DESC',width:500,height:500})">-->
-                                           <!--{{specimenIdentification.length}} {{$t('header.f_genus_identifications_link')}}-->
-                                       <!--</button>-->
-                                   <!--</li>-->
-                               <!--</ul>-->
-                           <!--</div>-->
-                       <!--</div>-->
-                   <!--</b-row>-->
-
-                   <b-row class="m-1" v-if = "['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && (taxonOccurrence)">
+                   <b-row class="m-1" v-if = "!isHigherTaxon(taxon.rank__rank_en) && (taxonOccurrence)">
                            <div class="card rounded-0" style="width:100%;">
                                <div class="card-header">{{$t('header.f_species_distribution_references')}}</div>
                                <div class="card-body">
@@ -192,9 +169,13 @@
                        </div>
 
                    </b-row>
+
                    <b-row class="m-1" v-if="references">
                        <div class="card rounded-0" style="width: 100%">
-                           <div class="card-header">{{$t('header.f_taxon_references')}}</div>
+                           <div class="card-header">
+                               <!--<button v-if="isReferencesCollapsed" class="btn btn-link" style="font-size: large" data-toggle="collapse" data-target="#references">+</button>-->
+                               <!--<button v-if="!isReferencesCollapsed" class="btn btn-link" style="font-size: large" data-toggle="collapse" data-target="#references">-</button>-->
+                               {{$t('header.f_taxon_references')}}</div>
                            <div class="card-body">
                                    <div :class="idx === references.length -1 ? '' : 'border-bottom my-3'" v-for=" reference,idx in references">
                                        <button class="btn btn-link" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
@@ -267,8 +248,6 @@
                    <b-row class="mt-1" v-if="isTaxonomicTreeIsLoaded">
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-header">{{$t('header.fossils_classification')}}</div>
-
-                           <!--<div class="card-header">{{$t('header.fossils_browse_tree')}}</div>-->
                            <div class="card-body">
                                <taxonomical-tree :taxon_="taxon"
                                                  :parent_="parent"
@@ -280,18 +259,6 @@
                            </div>
                        </div>
                    </b-row>
-                   <!--<b-row class="mt-3" >-->
-                       <!--<div class="card rounded-0"  style="width: 100%">-->
-                           <!--<div class="card-header">{{$t('header.fossils_classification')}}</div>-->
-                           <!--<div class="card-body">-->
-                               <!--<classification-table :hierarchy ="hierarchy"-->
-                                                     <!--:parent = "parent"-->
-                                                     <!--:taxon = "taxon"-->
-                               <!--&gt;</classification-table>-->
-                           <!--</div>-->
-                       <!--</div>-->
-                    <!--</b-row>-->
-
                    <b-row class="mt-1" v-if="isMapLoaded && $store.state.process === 'client'">
                        <div class="card rounded-0">
                            <div class="card-header">{{$t('header.f_distribution_map')}}</div>
@@ -323,7 +290,6 @@
     import Vue from 'vue'
     import Spinner from '../components/Spinner.vue';
     import TaxonTabs from "../components/TaxonTabs.vue";
-    import TaxonTitle from "../components/TaxonTitle.vue";
     import TaxonomicalTree from "../components/TaxonomicalTree.vue";
     import filter from 'lodash/filter';
     import orderBy from 'lodash/orderBy';
@@ -341,7 +307,6 @@
     import MapComponent from "../components/MapComponent.vue";
     import ProtoHeader from "../components/AppHeader.vue";
     import Lingallery from "../components/Lingallery.vue";
-    import ClassificationTable from "../components/ClassificationTable.vue";
     import SeeAlso from "../components/SeeAlso.vue";
     import TabSpecimens from "../components/tabs/TabSpecimens.vue";
     import TabGallery from "../components/tabs/TabGallery.vue";
@@ -353,12 +318,10 @@
             TabGallery,
             TabSpecimens,
             SeeAlso,
-            ClassificationTable,
             Lingallery,
             ProtoHeader,
             MapComponent,
             TaxonomicalTree,
-            TaxonTitle,
             TaxonTabs,
             Spinner
         },
@@ -498,7 +461,8 @@
                     geocollectionUrl: "http://geocollections.info",
                     fossilsUrl: "https://fossiilid.geokogud.info",
                     kividUrl: "http://www.kivid.info",
-                    fileUrl:'http://files.geocollections.info',
+                    fileUrl:'https://files.geocollections.info',
+                    isReferencesCollapsed: true,
                     scroll: false,
                     parent: {},
                     images: [],
@@ -619,7 +583,6 @@
                     imageId = el.id
                     navigateId = el.link
                 }
-                console.log(this.fossilsUrl+"/"+navigateId)
                 text += "<div><button type=\"button\" class=\"btn btn-xs  btn-primary\" onclick=\"window.open('"+this.fossilsUrl+"/"+navigateId+"?mode=in_baltoscandia&lang=en')\">Read more</button></div>" ;
                 text += "<div class='mt-3'><span>"+imageName+"</span>&ensp;&ensp;" ;
                 text +=

@@ -28,7 +28,6 @@
                 //DO not have any effect ???
                 // this.$store.commit('SET_SPECIMEN_SEARCH_PARAMS', {searchParameters})
                 this.$store.state.searchParameters.specimens = searchParameters;
-                // this.$parent.getSpecimens();
             },
             localizePredicate(predicate) {
                 let tokens = predicate.split(",");

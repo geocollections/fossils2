@@ -156,7 +156,7 @@ function render (req, res) {
     <script src="/assets/vendor.bundle.js"></script>
     <script src="/assets/client.bundle.js"></script>
     <!--<script type="text/javascript" src="/static/js/jquery.js"></script>-->
-    <!--<script type="text/javascript"  src="/static/bootstrap/dist/js/bootstrap.min.js"></script>-->
+    <script type="text/javascript"  src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
     <!--<script type="text/javascript" src="/static/js/jquery.easing.min.js"></script>-->
     <!--&lt;!&ndash;<script type="text/javascript" src="/static/js/scrollreveal.min.js"></script>&ndash;&gt;-->
     <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.js"></script>
