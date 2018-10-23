@@ -302,6 +302,7 @@
         fetchHierarchy,
         fetchImages,
         fetchAttachment,
+        fetchSelectedImages,
         fetchSpecimenCollection, cntSpecimenCollection
     } from '../api'
     import MapComponent from "../components/MapComponent.vue";
@@ -479,10 +480,7 @@
                     requestingData: false,
                     isSisterTaxaLoaded: false,
                     isHierarchyLoaded: false,
-                    taxonomicTree: {nodes: []},
-                    mouseOverImage: null,
-                    isTaxonImagesLoaded: false,
-                    imagesLength: 100,
+                    imagesTitle: '',
                     allSpecies:[],
                     response: {
                         count: 0,
@@ -511,24 +509,9 @@
                     this.hierarchy = response.results;
                     this.isHierarchyLoaded = true;
                 });
-                // if(['None','Phylum', 'Kingdom', 'None', 'Class', 'Order'].includes(this.taxon.rank__rank_en) ) {
 
-
-
-                // if(['Species', 'Genus', 'Subgenus', 'SubSpecies'].includes(this.taxon.rank__rank_en) && this.isDefinedAndNotNull(this.taxon.taxon)) {
-                //     fetchAttachment(this.taxon.hierarchy_string).then((response) => {
-                //         this.isSpecimen = true;
-                //         this.images = this.composeImageRequest(response.results);
-                //     });
-                // } else {
-                //     fetchImages(this.taxon.id).then((response) => {
-                //         this.images = this.composeImageRequest(response.results)
-                //         this.isTaxonImagesLoaded = true
-                //     });
-                // }
                 fetchImages(this.taxon.hierarchy_string).then((response) => {
                     this.images = this.composeImageRequest(response.results)
-                    this.isTaxonImagesLoaded = true
                 });
                 //
                 if (!this.isHigherTaxon(this.taxon.rank__rank_en)){
@@ -539,7 +522,30 @@
                 }
 
             },
-
+            getImages() {
+                this.imagesLoading = true;
+                if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
+                    fetchSelectedImages(this.taxon.id).then((response) => {
+                        if(response.results.length === 0) {
+                            fetchImages(this.taxon.hierarchy_string).then((response) => {
+                                this.images = this.$parent.composeImageRequest(response.results)
+                                this.imagesLoading = false;
+                                this.imagesTitle = 'header.f_higher_taxon_images_title_visualtool'
+                            });
+                        } else {
+                            this.images = this.$parent.composeImageRequest(response.results)
+                            this.imagesLoading = false
+                            this.imagesTitle = 'header.f_higher_taxon_images_title_gallery'
+                        }
+                    });
+                } else {
+                    fetchAttachment(this.taxon.hierarchy_string).then((response) => {
+                        this.isSpecimen = true;
+                        this.images = this.composeImageRequest(response.results);
+                        this.imagesLoading = false;
+                    });
+                }
+            },
             //todo: utils
             isDefinedAndNotEmpty(value) { return !!value && value.length > 0 },
 
@@ -583,7 +589,10 @@
                     imageId = el.id
                     navigateId = el.link
                 }
-                text += "<div><button type=\"button\" class=\"btn btn-xs  btn-primary\" onclick=\"window.open('"+this.fossilsUrl+"/"+navigateId+"?mode=in_baltoscandia&lang=en')\">Read more</button></div>" ;
+                if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
+                    text += "<div><button type=\"button\" class=\"btn btn-xs  btn-primary\" onclick=\"window.open('"+this.fossilsUrl+"/"+navigateId+"?mode=in_baltoscandia&lang=en')\">Read more</button></div>" ;
+                }
+
                 text += "<div class='mt-3'><span>"+imageName+"</span>&ensp;&ensp;" ;
                 text +=
                     "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('"+this.geocollectionUrl+"/specimen/"+infoId+"')\">INFO</button>" +

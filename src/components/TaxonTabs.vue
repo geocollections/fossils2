@@ -4,12 +4,12 @@
             <li class="nav-item">
                 <a href="#tab-overview" v-on:click="setActiveTab('overview')" class="nav-link"  :class="{ active: activeTab === 'overview' }">{{ $t('tabs.overview') }}</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="$parent.images && $parent.images.length > 0">
                 <a href="#tab-gallery"  v-on:click="setActiveTab('gallery')" class="nav-link"  :class="{ active: activeTab === 'gallery' }">{{ $t('tabs.gallery') }}</a>
             </li>
-            <li class="nav-item" v-if="!$parent.isHigherTaxon($parent.taxon.rank__rank_en)">
+            <li class="nav-item" v-if="!$parent.isHigherTaxon($parent.taxon.rank__rank_en) && !!$parent.specimenCollectionCnt && $parent.specimenCollectionCnt > 0">
                 <a href="#tab-specimens"  v-on:click="setActiveTab('specimens')" class="nav-link"  :class="{ active: activeTab === 'specimens' }">{{ $t('tabs.specimens') }}
-                    <span v-if="!!$parent.specimenCollectionCnt" class="badge badge-secondary badge-pill">{{$parent.specimenCollectionCnt}}</span>
+                    <span class="badge badge-secondary badge-pill">{{$parent.specimenCollectionCnt}}</span>
                 </a>
             </li>
         </ul>
