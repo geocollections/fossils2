@@ -38,9 +38,9 @@
                        <b-dropdown size="md" id="ddown1" :text="$t(getModeText())" class="m-md-2" variant="primary">
                            <b-dropdown-item disabled>Mode</b-dropdown-item>
                            <b-dropdown-divider></b-dropdown-divider>
-                           <b-dropdown-item @click="changeMode('in_estonia')" v-if="mode !== 'in_estonia'">{{$t('header.in_estonia_mode')}}</b-dropdown-item>
-                           <b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode !== 'in_baltoscandia'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
-                           <b-dropdown-item @click="changeMode('in_global')" v-if="mode !== 'in_global'">{{$t('header.global_mode')}}</b-dropdown-item>
+                           <b-dropdown-item @click="changeMode('in_estonia')" :class="mode === 'in_estonia'? 'font-weight-bold' : ''">{{$t('header.in_estonia_mode')}}</b-dropdown-item>
+                           <b-dropdown-item @click="changeMode('in_baltoscandia')" :class="mode === 'in_baltoscandia'? 'font-weight-bold' : ''">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
+                           <b-dropdown-item @click="changeMode('in_global')" :class="mode === 'in_global'? 'font-weight-bold' : ''">{{$t('header.global_mode')}}</b-dropdown-item>
                        </b-dropdown>
                    </div>
            </b-row>

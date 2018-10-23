@@ -13,7 +13,7 @@
     "button_show":"Show tree",
     "button_hide":"Hide",
 
-    "mode": "Mode",
+    "mode": "Limit data:",
     "in_estonia_mode": "Estonia",
     "in_baltoscandia_mode": "Baltoscandia",
     "global_mode": "Global",
