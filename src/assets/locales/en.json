@@ -111,7 +111,10 @@
     "time":"Time scale",
     "collections":"Collections",
     "detail_search":"Advanced search",
-    "search":"Simple search"
+    "search":"Simple search",
+    "more":"More...",
+    "language":"Language",
+    "geocollections":"Geocollections portal"
   },
   "footer": {
     "licence":"Except where otherwise noted, content on this site is licensed under CC BY-NC Licence.",

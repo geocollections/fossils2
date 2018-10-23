@@ -17,23 +17,20 @@
                           :results-display="displayResults"
                           :placeholder="$t('search.fossils_search')"
                           @selected="onSelect"></autocomplete></form>
-            <b-nav-item href="/page/28">{{ $t('menu.fossils') }}</b-nav-item>
-            <b-nav-item href="/page/29">{{ $t('menu.collecting') }}</b-nav-item>
-            <b-nav-item href="/page/30">{{ $t('menu.identifying') }}</b-nav-item>
-            <!--<b-nav-item-dropdown :text="mode == 'in_baltoscandia' ? $t('header.in_baltoscandia_mode') : $t('header.global_mode')" right v-if="$router.currentRoute.name==='ItemPage'">-->
-              <!--<b-dropdown-item @click="changeMode('in_baltoscandia')" v-if="mode === 'in_global'">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>-->
-              <!--<b-dropdown-item @click="changeMode('in_global')" v-if="mode === 'in_baltoscandia'">{{$t('header.global_mode')}}</b-dropdown-item>-->
-            <!--</b-nav-item-dropdown>-->
-
+            <b-nav-item href="http://geocollections.info">{{ $t('menu.geocollections') }}</b-nav-item>
             <b-nav-item-dropdown>
-              <template slot="button-content">
-                <em>Lang</em>
-              </template>
+              <template slot="button-content">{{ $t('menu.language') }}</template>
 
               <b-dropdown-item  @click="changeLang('ee')" class="p-2">EST &nbsp;<span class="flag-icon flag-icon-ee flag-icon-squared circle-flag"></span></b-dropdown-item>
-              <b-dropdown-item  @click="changeLang('en')" class="p-2" >ENG &nbsp;<span class="flag-icon flag-icon-gb flag-icon-squared circle-flag"></span></b-dropdown-item>
+              <b-dropdown-item  @click="changeLang('en')" class="p-2">ENG &nbsp;<span class="flag-icon flag-icon-gb flag-icon-squared circle-flag"></span></b-dropdown-item>
               <b-dropdown-item  @click="changeLang('fi')" class="p-2">FIN &nbsp;<span class="flag-icon flag-icon-fi flag-icon-squared circle-flag"></span></b-dropdown-item>
-              <b-dropdown-item  @click="changeLang('se')" class="p-2" >SWE &nbsp;<span class="flag-icon flag-icon-se flag-icon-squared circle-flag"></span></b-dropdown-item>
+              <b-dropdown-item  @click="changeLang('se')" class="p-2">SWE &nbsp;<span class="flag-icon flag-icon-se flag-icon-squared circle-flag"></span></b-dropdown-item>
+            </b-nav-item-dropdown>
+            <b-nav-item-dropdown>
+              <template slot="button-content">{{ $t('menu.more') }}</template>
+              <b-dropdown-item  href="/page/28" class="p-2">{{ $t('menu.fossils') }}</b-dropdown-item>
+              <b-dropdown-item  href="/page/29" class="p-2">{{ $t('menu.collecting') }}</b-dropdown-item>
+              <b-dropdown-item  href="/page/30" class="p-2">{{ $t('menu.identifying') }}</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>

@@ -108,7 +108,10 @@
     "time":"Time scale",
     "collections":"Collections",
     "detail_search":"Advanced search",
-    "search":"Simple search"
+    "search":"Simple search",
+    "more":"More...",
+    "language":"Language",
+    "geocollections":"Geocollections portal"
   },
 
   "footer": {

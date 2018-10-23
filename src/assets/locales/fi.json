@@ -104,7 +104,10 @@
     "time":"Ajanjakso",
     "collections":"Kokoelmat",
     "detail_search":"Tarkennettu haku",
-    "search":"Pikahaku"
+    "search":"Pikahaku",
+    "more":"More...",
+    "language":"Language",
+    "geocollections":"Geocollections portal"
   },
   "footer": {
     "licence":"Except where otherwise noted, content on this site is licensed under CC BY-NC Licence.",

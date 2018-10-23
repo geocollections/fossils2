@@ -113,7 +113,10 @@
     "time":"Ajaskaala",
     "collections":"Kollektsioonid",
     "detail_search":"Detailotsing",
-    "search":"Lihtotsing"
+    "search":"Lihtotsing",
+    "more":"Veel...",
+    "language":"Keel",
+    "geocollections":"Geokogude portaal"
   },
 
   "footer": {
