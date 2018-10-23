@@ -60,7 +60,7 @@
                     <td>
                         <div v-if="item.locality__locality != null && item.locality__locality_en != null">
                             <a href="#"
-                                    @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/locality',object:item.locality_id, width:500,height:500})">
+                                    @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/locality',object:item.locality__id, width:500,height:500})">
                                 <span v-translate="{et:item.locality__locality,en:item.locality__locality_en}"></span></a>
 
                             <span v-if="$parent.isDefinedAndNotNull(item.locality_free)"> {{item.locality_free}}</span>
