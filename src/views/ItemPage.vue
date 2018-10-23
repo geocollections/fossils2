@@ -75,15 +75,15 @@
                                    </div>
                                    <div v-if="taxon.stratigraphy_base__stratigraphy || taxon.stratigraphy_top__stratigraphy"> {{$t('header.f_stratigraphical_distribution')}}:
                                        <strong>
-                                           <button class="btn btn-link" v-if="taxon.stratigraphy_base__stratigraphy"
+                                           <a href="#" v-if="taxon.stratigraphy_base__stratigraphy"
                                                    @click="openUrl({parent_url: geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
-                                               {{taxon.stratigraphy_base__stratigraphy}}</button>
+                                               {{taxon.stratigraphy_base__stratigraphy}}</a>
                                            <span v-if="taxon.stratigraphy_top__stratigraphy != null && taxon.stratigraphy_base__stratigraphy != null">&ndash;</span>
-                                           <button class="btn btn-link" v-if="taxon.stratigraphy_top__stratigraphy
+                                           <a href="#" v-if="taxon.stratigraphy_top__stratigraphy
                                             && taxon.stratigraphy_base__stratigraphy != taxon.stratigraphy_top__stratigraphy"
                                                    @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_top_id, width:500,height:500})">
                                                {{taxon.stratigraphy_top__stratigraphy}}
-                                           </button>
+                                           </a>
                                            <span v-if="taxon.stratigraphy_base__age_base != null">| ~ {{convertToTwoDecimal(taxon.stratigraphy_base__age_base)}}</span>
                                            <span v-if="taxon.stratigraphy_top__age_top != null"> &ndash; {{convertToTwoDecimal(taxon.stratigraphy_top__age_top)}} Ma</span>
                                        </strong>
@@ -113,9 +113,9 @@
                    <b-row class="m-1" v-if = "description && description.description">
                        <div class="col-lg-12">
                            <div>
-                               <h3>{{$t('header.f_taxon_description_diagnosis')}} (<button class="btn btn-link"
-                                                                                           @click="openUrl({parent_url:'http://geocollections.info/reference',object:description.reference, width:500,height:500})">
-                                   <strong>{{description.reference__reference}}</strong>)</button></h3>
+                               <h3>{{$t('header.f_taxon_description_diagnosis')}}
+                                   (<a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:description.reference, width:500,height:500})">
+                                   <strong>{{description.reference__reference}}</strong>)</a></h3>
                                <div v-html="description.description"></div>
                            </div>
                        </div>
@@ -155,9 +155,9 @@
                                <div class="card-body">
                                    <ul>
                                        <li v-for=" reference in taxonOccurrence">
-                                           <button class="btn btn-link" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
+                                           <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
                                                <strong>{{reference.reference__reference}}</strong>
-                                           </button>
+                                           </a>
                                            <span v-translate="{et:reference.locality__locality,en:reference.locality__locality_en}"></span>
                                            <span v-if="reference.depth || reference.depth_interval">{{reference.depth}} - {{reference.depth_interval}}</span>
                                            <span v-translate="{et:reference.stratigraphy_base__stratigraphy,en:reference.stratigraphy_base__stratigraphy_en}"></span>
@@ -187,14 +187,12 @@
                    <b-row class="m-1" v-if="references">
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-header">
-                               <!--<button v-if="isReferencesCollapsed" class="btn btn-link" style="font-size: large" data-toggle="collapse" data-target="#references">+</button>-->
-                               <!--<button v-if="!isReferencesCollapsed" class="btn btn-link" style="font-size: large" data-toggle="collapse" data-target="#references">-</button>-->
                                {{$t('header.f_taxon_references')}}</div>
                            <div class="card-body">
                                    <div :class="idx === references.length -1 ? '' : 'border-bottom my-3'" v-for=" reference,idx in references">
-                                       <button class="btn btn-link" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
+                                       <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
                                            <strong>{{reference.reference__reference}}.</strong>
-                                       </button>
+                                       </a>
                                        <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
                                        <span>{{reference.reference__title}}. {{reference.reference__journal__journal_name}}:</span>
                                        <span v-if="reference.reference__book != null">{{reference.reference__book}}</span>
