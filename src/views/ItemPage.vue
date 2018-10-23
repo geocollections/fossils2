@@ -124,28 +124,26 @@
                            <div class="card rounded-0" style="width: 100%" >
                                <div class="card-header">{{$t('header.f_species_type_data')}}</div>
                                <div class="card-body">
-                                   <ul>
-                                       <li v-for="item in taxonTypeSpecimen">
-                                           <span v-translate="{et:item.type_type__value, en: item.type_type__value_en}"></span>: {{item.repository}} {{item.specimen_number}}
-                                           <a @click="openUrl({parent_url:geocollectionUrl + '/locality',object:item.locality, width:500,height:500})" href="#"
-                                              v-if="isDefinedAndNotNull(item.locality)" v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></a>
-                                           <span v-if="isDifferentName({et:[item.locality__locality,item.locality_free],en:[item.locality__locality_en,item.locality_free_en]})">
-                                               (<span v-translate="{et:item.locality_free, en: item.locality_free_en}"></span>)
-                                           </span>
-                                           <span v-if="isDefinedAndNotNull(item.level)">{{item.level}}</span>,
-                                           <a @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:item.stratigraphy, width:500,height:500})" href="#"
-                                              v-if="isDefinedAndNotNull(item.stratigraphy)" v-translate="{et:item.stratigraphy__stratigraphy, en: item.stratigraphy__stratigraphy_en}"></a>
-                                           <span v-if="isDifferentName({et:[item.stratigraphy__stratigraphy,item.stratigraphy_free],en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en]})">
-                                               (<span v-translate="{et:item.stratigraphy_free, en: item.stratigraphy_free_en}"></span>)
-                                           </span>
-                                           <span v-if="isDefinedAndNotNull(item.remarks)">{{item.remarks}}</span>
-                                           <span class="pl-3" v-if="isDefinedAndNotNull(item.attachment__filename)">
-                                               <a @click="openUrl({parent_url:geocollectionUrl + '/file',object:item.attachment, width:500,height:500})" href="#">
-                                                   <img class="img-thumbnail previewImage" :src="composeImgUrl(item.attachment__filename,false)"/>
-                                               </a>
-                                           </span>
-                                       </li>
-                                   </ul>
+                                   <div :class="idx === taxonTypeSpecimen.length -1 ? '' : 'border-bottom my-3'" v-for="item,idx in taxonTypeSpecimen">
+                                       <span v-translate="{et:item.type_type__value, en: item.type_type__value_en}"></span>: {{item.repository}} {{item.specimen_number}}
+                                       <a @click="openUrl({parent_url:geocollectionUrl + '/locality',object:item.locality, width:500,height:500})" href="#"
+                                          v-if="isDefinedAndNotNull(item.locality)" v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></a>
+                                       <span v-if="isDifferentName({et:[item.locality__locality,item.locality_free],en:[item.locality__locality_en,item.locality_free_en]})">
+                                           (<span v-translate="{et:item.locality_free, en: item.locality_free_en}"></span>)
+                                       </span>
+                                       <span v-if="isDefinedAndNotNull(item.level)">{{item.level}}</span>,
+                                       <a @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:item.stratigraphy, width:500,height:500})" href="#"
+                                          v-if="isDefinedAndNotNull(item.stratigraphy)" v-translate="{et:item.stratigraphy__stratigraphy, en: item.stratigraphy__stratigraphy_en}"></a>
+                                       <span v-if="isDifferentName({et:[item.stratigraphy__stratigraphy,item.stratigraphy_free],en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en]})">
+                                           (<span v-translate="{et:item.stratigraphy_free, en: item.stratigraphy_free_en}"></span>)
+                                       </span>
+                                       <span v-if="isDefinedAndNotNull(item.remarks)">{{item.remarks}}</span>
+                                       <span class="pl-3" v-if="isDefinedAndNotNull(item.attachment__filename)">
+                                           <a @click="openUrl({parent_url:geocollectionUrl + '/file',object:item.attachment, width:500,height:500})" href="#">
+                                               <img class="img-thumbnail previewImage" :src="composeImgUrl(item.attachment__filename,false)"/>
+                                           </a>
+                                       </span>
+                                   </div>
                                </div>
                            </div>
                    </b-row>
@@ -154,13 +152,11 @@
                        <div class="card rounded-0" style="width:100%;">
                            <div class="card-header">{{$t('header.f_species_synonymy')}}</div>
                            <div class="card-body">
-                               <ul>
-                                   <li v-for="synonym in synonyms">
-                                       <em>{{synonym.taxon_synonym}}</em>:
-                                       {{synonym.author}}, {{synonym.year}}, lk. {{synonym.pages}},
-                                       joon. {{synonym.figures}}
-                                   </li>
-                               </ul>
+                               <div :class="idx === synonyms.length -1 ? '' : 'border-bottom my-3'" v-for="synonym,idx in synonyms">
+                                   <em>{{synonym.taxon_synonym}}</em>:
+                                   {{synonym.author}}, {{synonym.year}}, lk. {{synonym.pages}},
+                                   joon. {{synonym.figures}}
+                               </div>
                            </div>
                        </div>
 
@@ -223,13 +219,10 @@
                    <b-row>
                        <div v-if="isDefinedAndNotEmpty(distributionConop)">
                            <h3>{{$t('header.f_species_distribution_samples')}} (CONOP):</h3>
-                           <ul>
-                               <li v-for="conop in distributionConop">
-                                   <a :href="'http://geocollection.info/locality/'+conop.locality_id"
-                                      target='_blank'>{{conop.locality_et}}</a>
-                                   : {{conop.num}} {{$t('f_species_link_samples')}}
-                               </li>
-                           </ul>
+                           <div :class="idx === distributionConop.length -1 ? '' : 'border-bottom my-3'" v-for="conop,idx in distributionConop">
+                               <a :href="'http://geocollection.info/locality/'+conop.locality_id"
+                                  target='_blank'>{{conop.locality_et}}</a>: {{conop.num}} {{$t('f_species_link_samples')}}
+                           </div>
                        </div>
                    </b-row>
 
