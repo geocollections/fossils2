@@ -253,7 +253,7 @@ var openLoc = function(pixel,olMap) {
   if (feature)
   {
           	//window.location = '/locality/' + feature.fid;
-          	window.open('http://geokogud.info/locality/' + feature.fid, '', 'width=750,height=750,scrollbars, resizable');
+          	window.open('http://geocollections.info/locality/' + feature.fid, '', 'width=750,height=750,scrollbars, resizable');
    }
    //else
    //{
