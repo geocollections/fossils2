@@ -149,24 +149,6 @@
                                </div>
                            </div>
                    </b-row>
-                   <b-row class="m-1" v-if = "!isHigherTaxon(taxon.rank__rank_en) && (taxonOccurrence)">
-                           <div class="card rounded-0" style="width:100%;">
-                               <div class="card-header">{{$t('header.f_species_distribution_references')}}</div>
-                               <div class="card-body">
-                                   <ul>
-                                       <li v-for=" reference in taxonOccurrence">
-                                           <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
-                                               <strong>{{reference.reference__reference}}</strong>
-                                           </a>
-                                           <span v-translate="{et:reference.locality__locality,en:reference.locality__locality_en}"></span>
-                                           <span v-if="reference.depth || reference.depth_interval">{{reference.depth}} - {{reference.depth_interval}}</span>
-                                           <span v-translate="{et:reference.stratigraphy_base__stratigraphy,en:reference.stratigraphy_base__stratigraphy_en}"></span>
-                                       </li>
-                                   </ul>
-                               </div>
-
-                           </div>
-                   </b-row>
 
                    <b-row class="m-1" v-if="synonyms && synonyms.length > 0">
                        <div class="card rounded-0" style="width:100%;">
@@ -253,11 +235,11 @@
 
                </div>
                <div class="col-lg-4">
-                   <b-row class="mt-1">
+                   <b-row class="m-1">
                        <lingallery  style="width: 100%" v-if="images && images.length > 0" ref="lingallery" :width="400" :height="350" :items="images "/>
                    </b-row>
 
-                   <b-row class="mt-1" v-if="isTaxonomicTreeIsLoaded">
+                   <b-row class="m-1" v-if="isTaxonomicTreeIsLoaded">
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-header">{{$t('header.fossils_classification')}}</div>
                            <div class="card-body">
@@ -271,8 +253,8 @@
                            </div>
                        </div>
                    </b-row>
-                   <b-row class="mt-1" v-if="isMapLoaded && $store.state.process === 'client'">
-                       <div class="card rounded-0">
+                   <b-row class="m-1" v-if="isMapLoaded && $store.state.process === 'client'">
+                       <div class="card rounded-0"  style="width: 100%">
                            <div class="card-header">{{$t('header.f_distribution_map')}}</div>
                            <div class="card-body">
                                <div>
@@ -281,8 +263,28 @@
                            </div>
                        </div>
                    </b-row>
-                   <b-row class="mt-1" v-if="((taxonPage && taxonPage.link_wikipedia != null) || taxon.taxon_id_tol != null|| taxon.taxon_id_eol != null|| taxon.taxon_id_nrm!= null || taxon.taxon_id_plutof!= null || taxon.taxon_id_pbdb != null)">
-                       <div class="card rounded-0" style="width: 100%" >
+                   <b-row class="m-1" v-if = "!isHigherTaxon(taxon.rank__rank_en) && (taxonOccurrence)">
+                       <div class="card rounded-0"  style="width: 100%">
+                           <div class="card-header">{{$t('header.f_species_distribution_references')}}</div>
+                           <div class="card-body" style='font-size: 0.8em;'>
+                               <ul>
+                                   <li v-for=" reference in taxonOccurrence">
+                                       <em>
+                                       <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
+                                           <strong>{{reference.reference__reference}}</strong>
+                                       </a>
+                                       <span v-translate="{et:reference.locality__locality,en:reference.locality__locality_en}"></span>
+                                       <span v-if="reference.depth || reference.depth_interval">{{reference.depth}} - {{reference.depth_interval}}</span>
+                                       <span v-translate="{et:reference.stratigraphy_base__stratigraphy,en:reference.stratigraphy_base__stratigraphy_en}"></span>
+                                       </em>
+                                   </li>
+                               </ul>
+                           </div>
+
+                       </div>
+                   </b-row>
+                   <b-row class="m-1" v-if="((taxonPage && taxonPage.link_wikipedia != null) || taxon.taxon_id_tol != null|| taxon.taxon_id_eol != null|| taxon.taxon_id_nrm!= null || taxon.taxon_id_plutof!= null || taxon.taxon_id_pbdb != null)">
+                       <div class="card rounded-0"  style="width: 100%">
                            <div class="card-header">{{$t('header.f_weblinks')}}</div>
                            <div class="card-body">
                                <see-also></see-also>
@@ -718,13 +720,5 @@
     }
 </script>
 <style>
-
-    #table-search .btn.btn-link {
-        font-size: medium;
-        font-weight: 700;
-        text-transform: none;
-        white-space:normal;
-        text-align: left;
-    }
 
 </style>

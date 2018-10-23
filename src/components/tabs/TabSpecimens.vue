@@ -31,8 +31,8 @@
                 </thead>
                 <tbody>
                 <tr v-for="item in response.results">
-                    <td><button class="btn btn-link text-nowrap" @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/specimen',object:item.id, width:500,height:500})">
-                        {{ item.coll__number | formatSpecimenName}} {{ item.specimen_id }}</button>
+                    <td><a class="text-nowrap" href="#" @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/specimen',object:item.id, width:500,height:500})">
+                        {{ item.coll__number | formatSpecimenName}} {{ item.specimen_id }}</a>
                     </td>
                     <td class="text-nowrap">{{item.specimen_nr}}</td>
                     <td>
@@ -47,8 +47,8 @@
                         </div>
                         <!-- Currently both are links because rock__name is mostly null. -->
                         <div>
-                            <button class="btn btn-link" @click="$parent.openUrl({parent_url:$parent.kividUrl,object:item.specimenidentificationgeologies__rock__id, width:500,height:500})">
-                                <span v-translate="{et:item.specimenidentificationgeologies__rock__name,en:item.specimenidentificationgeologies__rock__name_en}"></span></button>
+                            <a href="#" @click="$parent.openUrl({parent_url:$parent.kividUrl,object:item.specimenidentificationgeologies__rock__id, width:500,height:500})">
+                                <span v-translate="{et:item.specimenidentificationgeologies__rock__name,en:item.specimenidentificationgeologies__rock__name_en}"></span></a>
                             <span v-if="$parent.isDefinedAndNotNull(item.specimenidentificationgeologies__rock__name) &&
                             $parent.isDefinedAndNotNull(item.specimenidentificationgeologies__name)"> | </span>
                             <span v-if="($parent.isDefinedAndNotNull(item.specimenidentificationgeologies__name) || $parent.isDefinedAndNotNull(item.specimenidentificationgeologies__name_en))
@@ -59,9 +59,9 @@
                     </td>
                     <td>
                         <div v-if="item.locality__locality != null && item.locality__locality_en != null">
-                            <button class="btn btn-link"
+                            <a href="#"
                                     @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/locality',object:item.locality_id, width:500,height:500})">
-                                <span v-translate="{et:item.locality__locality,en:item.locality__locality_en}"></span></button>
+                                <span v-translate="{et:item.locality__locality,en:item.locality__locality_en}"></span></a>
 
                             <span v-if="$parent.isDefinedAndNotNull(item.locality_free)"> {{item.locality_free}}</span>
                         </div>
@@ -69,9 +69,9 @@
                     <td>{{item.depth}}<span v-if="item.depth_interval != null && item.depth_interval">({{ item.depth_interval }})</span>
                     </td>
                     <td>
-                        <button class="btn btn-link"
+                        <a href="#"
                                 @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/stratigraphy',object:item.stratigraphy_id, width:500,height:500})">
-                            <span v-translate="{et:item.stratigraphy__stratigraphy,en:item.stratigraphy__stratigraphy_en}"></span></button>
+                            <span v-translate="{et:item.stratigraphy__stratigraphy,en:item.stratigraphy__stratigraphy_en}"></span></a>
 
                         <span v-if="(item.stratigraphy__stratigraphy_en == null && item.stratigraphy__stratigraphy == null)
                                             || (item.lithostratigraphy__stratigraphy_en == null && item.lithostratigraphy__stratigraphy == null)">{{ item.stratigraphy_free }}</span>
@@ -79,9 +79,9 @@
                         <span v-if="item.stratigraphy__stratigraphy != null && item.lithostratigraphy__stratigraphy != null">|</span>
 
                         <em>
-                            <button class="btn btn-link"
+                            <a href="#"
                                     @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/stratigraphy',object:item.lithostratigraphy_id, width:500,height:500})">
-                                <span v-translate="{et:item.lithostratigraphy__stratigraphy,en:item.lithostratigraphy__stratigraphy_en}"></span></button>
+                                <span v-translate="{et:item.lithostratigraphy__stratigraphy,en:item.lithostratigraphy__stratigraphy_en}"></span></a>
                         </em>
                     </td>
                     <td>
