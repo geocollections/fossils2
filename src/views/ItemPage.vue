@@ -36,7 +36,7 @@
                    </b-row>
                    <div class="col-lg-2 ml-auto">
                        <b-dropdown size="md" id="ddown1" :text="$t(getModeText())" class="m-md-2" variant="primary">
-                           <b-dropdown-item disabled>Mode</b-dropdown-item>
+                           <b-dropdown-item disabled>{{$t('header.mode')}}</b-dropdown-item>
                            <b-dropdown-divider></b-dropdown-divider>
                            <b-dropdown-item @click="changeMode('in_estonia')" :class="mode === 'in_estonia'? 'font-weight-bold' : ''">{{$t('header.in_estonia_mode')}}</b-dropdown-item>
                            <b-dropdown-item @click="changeMode('in_baltoscandia')" :class="mode === 'in_baltoscandia'? 'font-weight-bold' : ''">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
