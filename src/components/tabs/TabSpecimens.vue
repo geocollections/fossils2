@@ -99,8 +99,8 @@
                               v-translate="{et:item.original_status__value,en:item.original_status__value_en}"></span>
                     </td>
                     <td>
-                        <a data-fancybox="gallery3" :href="composeUrl(item.attachment__filename,true)" :data-caption="item.caption">
-                        <img class="img-thumbnail previewImage" :src="composeUrl(item.attachment__filename)"/>
+                        <a data-fancybox="gallery3" :href="$parent.composeImgUrl(item.attachment__filename,true)" :data-caption="item.caption">
+                        <img class="img-thumbnail previewImage" :src="$parent.composeImgUrl(item.attachment__filename)"/>
                         </a>
                     </td>
                 </tr>
@@ -157,12 +157,6 @@
                 return {
                     count: 0,
                     results: []
-                }
-            },
-            composeUrl(uuid_filename,isFull) {
-                if (uuid_filename && uuid_filename != null) {
-                    return isFull ? this.$parent.fileUrl + '/large/' + uuid_filename.substring(0,2)+'/'+ uuid_filename.substring(2,4)+'/'+ uuid_filename
-                        : this.$parent.fileUrl + '/small/' + uuid_filename.substring(0,2)+'/'+ uuid_filename.substring(2,4)+'/'+ uuid_filename;
                 }
             }
         },

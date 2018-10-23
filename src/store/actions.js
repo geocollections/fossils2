@@ -52,7 +52,7 @@ export default {
     },
 
     FETCH_TYPE_SPECIMEN: ({ commit, state }, { id }) => {
-        return fetchTypeSpecimen(state.activeItem.taxon.taxon).then(typeSpecimen => commit('SET_TAXON_TYPE_SPECIMEN', { typeSpecimen }))
+        return fetchTypeSpecimen(state.activeItem.taxon.id).then(typeSpecimen => commit('SET_TAXON_TYPE_SPECIMEN', { typeSpecimen }))
     },
 
     FETCH_DISTRIBUTION_SAMPLES: ({ commit, state }, { id }) => {

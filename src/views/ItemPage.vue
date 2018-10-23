@@ -125,11 +125,25 @@
                                <div class="card-header">{{$t('header.f_species_type_data')}}</div>
                                <div class="card-body">
                                    <ul>
-                                       <li v-for="item in taxonTypeSpecimen"> {{item.type_type__value}}:
-                                           <button class="btn btn-link" @click="openUrl({parent_url:geocollectionUrl + '/specimen',object:item.specimen, width:500,height:500})">
-                                               <strong>{{item.specimen_number}}</strong>
-                                           </button>,
-                                           <span v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></span>, {{item.specimen__depth}} m
+                                       <li v-for="item in taxonTypeSpecimen">
+                                           <span v-translate="{et:item.type_type__value, en: item.type_type__value_en}"></span>: {{item.repository}} {{item.specimen_number}}
+                                           <a @click="openUrl({parent_url:geocollectionUrl + '/locality',object:item.locality, width:500,height:500})" href="#"
+                                              v-if="isDefinedAndNotNull(item.locality)" v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></a>
+                                           <span v-if="isDifferentName({et:[item.locality__locality,item.locality_free],en:[item.locality__locality_en,item.locality_free_en]})">
+                                               (<span v-translate="{et:item.locality_free, en: item.locality_free_en}"></span>)
+                                           </span>
+                                           <span v-if="isDefinedAndNotNull(item.level)">{{item.level}}</span>,
+                                           <a @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:item.stratigraphy, width:500,height:500})" href="#"
+                                              v-if="isDefinedAndNotNull(item.stratigraphy)" v-translate="{et:item.stratigraphy__stratigraphy, en: item.stratigraphy__stratigraphy_en}"></a>
+                                           <span v-if="isDifferentName({et:[item.stratigraphy__stratigraphy,item.stratigraphy_free],en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en]})">
+                                               (<span v-translate="{et:item.stratigraphy_free, en: item.stratigraphy_free_en}"></span>)
+                                           </span>
+                                           <span v-if="isDefinedAndNotNull(item.remarks)">{{item.remarks}}</span>
+                                           <span class="pl-3" v-if="isDefinedAndNotNull(item.attachment__filename)">
+                                               <a @click="openUrl({parent_url:geocollectionUrl + '/file',object:item.attachment, width:500,height:500})" href="#">
+                                                   <img class="img-thumbnail previewImage" :src="composeImgUrl(item.attachment__filename,false)"/>
+                                               </a>
+                                           </span>
                                        </li>
                                    </ul>
                                </div>
@@ -544,6 +558,18 @@
                         this.images = this.composeImageRequest(response.results);
                         this.imagesLoading = false;
                     });
+                }
+            },
+
+            isDifferentName(obj) {
+                let localizedName = this.$store.state.lang === 'et' ? obj['et'] : obj['en'];
+                return localizedName[0] !== localizedName[1]
+            },
+            //todo: utils
+            composeImgUrl(uuid_filename,isFull) {
+                if (uuid_filename && uuid_filename != null) {
+                    return isFull ? this.fileUrl + '/large/' + uuid_filename.substring(0,2)+'/'+ uuid_filename.substring(2,4)+'/'+ uuid_filename
+                        : this.fileUrl + '/small/' + uuid_filename.substring(0,2)+'/'+ uuid_filename.substring(2,4)+'/'+ uuid_filename;
                 }
             },
             //todo: utils

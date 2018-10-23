@@ -96,8 +96,9 @@ export function fetchSynonims (id) {
     return fetch(`taxon_synonym/?taxon=${id}&format=json`)
 }
 
-export function fetchTypeSpecimen (name) {
-    return fetch(`taxon_type_specimen/?taxon__taxon__icontains=${name}`)
+export function fetchTypeSpecimen (id) {
+    // return fetch(`taxon_type_specimen/?taxon__taxon__icontains=${name}`)
+    return fetch(`taxon_type_specimen/?taxon=${id}`)
 }
 
 export function fetchDistributionSamples (name) {
