@@ -31,7 +31,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="item in response.results">
-                    <td><a class="text-nowrap" href="#" @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/specimen',object:item.id, width:500,height:500})">
+                    <td class="text-nowrap" ><a href="#" @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/specimen',object:item.id, width:500,height:500})">
                         {{ item.coll__number | formatSpecimenName}} {{ item.specimen_id }}</a>
                     </td>
                     <td class="text-nowrap">{{item.specimen_nr}}</td>
@@ -54,7 +54,7 @@
                             <span v-if="($parent.isDefinedAndNotNull(item.specimenidentificationgeologies__name) || $parent.isDefinedAndNotNull(item.specimenidentificationgeologies__name_en))
                             && ((item.rock__name != item.specimenidentificationgeologies__name) || (item.rock__name_en != item.specimenidentificationgeologies__name_en))">
                             <i><span v-translate="{et:item.specimenidentificationgeologies__name,en:item.specimenidentificationgeologies__name_en}"></span></i>
-                        </span>
+                            </span>
                         </div>
                     </td>
                     <td>

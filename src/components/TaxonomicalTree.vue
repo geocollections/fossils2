@@ -11,7 +11,7 @@
           <span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>
           <ul v-for="sibling in item.siblings">
             <span v-for="j in convertToNumber(item.i)-2">&ensp;</span>
-            <a :href="'/'+sibling.id">&ensp;&ensp;{{sibling.label}}</a>
+            <a :href="'/'+sibling.id">{{sibling.label}}</a>
           </ul>
         </td>
       </tr>
@@ -101,8 +101,8 @@
 
         formatName: function(taxon,parent) {
           if(parent.label)
-            return _.includes(taxon.taxon, taxon.parent__taxon) ? taxon.taxon.replace(taxon.parent__taxon, "") : taxon.taxon;
-          return _.includes(taxon.taxon, parent.taxon) ? taxon.taxon.replace(parent.taxon, "") : taxon.taxon;
+            return _.includes(taxon.taxon, taxon.parent__taxon) && taxon.taxon.split(' ').length > 1 ? taxon.taxon.replace(taxon.parent__taxon, "") : taxon.taxon;
+          return _.includes(taxon.taxon, parent.taxon) && taxon.taxon.split(' ').length > 1 ? taxon.taxon.replace(parent.taxon, "") : taxon.taxon;
 
 
         },
@@ -123,9 +123,7 @@
             let rank_ = _.find(this.$store.state.lists.ranks, function(o) { return currentTaxonRank === o.rank_en; });
             return _.map(_.filter(this.$store.state.lists.ranks, function(o) { return rank_.sort > o.sort; }),"rank_en");
         },
-        isHigherRank(rank) {
-            return this.ranks.includes(rank)
-        }
+        isHigherRank(rank) {return this.ranks.includes(rank)}
       }
     }
 </script>
