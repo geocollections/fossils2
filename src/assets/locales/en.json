@@ -1,7 +1,8 @@
 {
   "main": {
     "pagination": "Show {num} results per page",
-    "button_read_more":"Read more"
+    "btnViewMore":"View more",
+    "btnViewLess":"Collapse"
   },
   "header": {
     "zero" : "",

@@ -357,7 +357,7 @@ fieldset[disabled] .btn-primary.active {
 
 .btn {
     font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
-    border: none;
+    /*border: none;*/
 
     font-weight: 700;
     text-transform: uppercase;

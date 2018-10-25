@@ -1,8 +1,8 @@
 {
   "main": {
     "pagination": "Kuva {num} kaupa",
-
-    "button_read_more":"Read more"
+    "btnViewMore":"View more",
+    "btnViewLess":"Collapse"
   },
   "header": {
     "zero" : "",

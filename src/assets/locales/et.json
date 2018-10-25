@@ -1,7 +1,8 @@
 {
   "main": {
     "pagination": "Kuva {num} kaupa",
-    "button_read_more":"Loe rohkem"
+    "btnViewMore":"Loe rohkem",
+    "btnViewLess":"Peida"
   },
   "header": {
     "zero" : "",

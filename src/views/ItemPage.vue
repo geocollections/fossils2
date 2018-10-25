@@ -52,13 +52,13 @@
                <div class="col-lg-8">
                    <b-row class="m-1">
                        <div class="card rounded-0" style="width: 100%">
-                           <!--<div class="card-header"></div>-->
                            <div class="card-body">
                                <div>
                                    Taxon ID: <strong>{{taxon.id}}</strong>
                                    <span v-if="taxon.date_added"> | {{taxon.date_added | moment('YYYY-MM-DD')}}</span>
                                    <span v-if="taxon.date_changed">/ {{taxon.date_changed | moment('YYYY-MM-DD')}}</span>
                                </div>
+
                                <div v-if="taxon.id != 29">
                                    {{$t('header.f_belongs_to')}}:
                                    <a :class="!isHigherTaxon(parent.rank__rank_en) ? '' : 'font-italic'" :href="'/'+parent.id">{{parent.taxon}}</a>
@@ -104,7 +104,9 @@
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-header">{{$t('header.f_taxon_intro')}}</div>
                            <div class="card-body">
-                               <div id="taxon-details" v-html="taxonPage.content"></div>
+                               <foldable>
+                                   <div id="taxon-details" v-html="taxonPage.content"></div>
+                               </foldable>
                            </div>
                            <div class="card-footer">
                                <i style='font-size: 0.8em;'> {{taxonPage.author_txt}} {{taxonPage.date_txt}}</i>
@@ -114,12 +116,12 @@
                    <!-- Row contains description-->
                    <b-row class="m-1" v-if = "description && description.description">
                        <div class="col-lg-12">
-                           <div>
+                           <foldable>
                                <h3>{{$t('header.f_taxon_description_diagnosis')}}
                                    (<a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:description.reference, width:500,height:500})">
                                    <strong>{{description.reference__reference}}</strong>)</a></h3>
                                <div v-html="description.description"></div>
-                           </div>
+                           </foldable>
                        </div>
                    </b-row>
                    <b-row class="m-1" v-if = "taxonTypeSpecimen">
@@ -169,19 +171,21 @@
                            <div class="card-header">
                                {{$t('header.f_taxon_references')}}</div>
                            <div class="card-body">
-                                   <div :class="idx === references.length -1 ? '' : 'border-bottom my-3'" v-for=" reference,idx in references">
-                                       <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
-                                           <strong>{{reference.reference__reference}}.</strong>
-                                       </a>
-                                       <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
-                                       <span>{{reference.reference__title}}. {{reference.reference__journal__journal_name}}:</span>
-                                       <span v-if="reference.reference__book != null">{{reference.reference__book}}</span>
-                                       <span v-else>{{reference.reference__number}}</span>
-                                       <span v-if="reference.reference__pages != null">, {{reference.reference__pages}}</span>
-                                       <span v-if="reference.reference__doi !== null" >. DOI: <a :href="'http://dx.doi.org/'+reference.reference__doi" target="_blank">{{reference.reference__doi}}</a>
-                                       </span>
-                                   </div>
+                               <foldable>
+                               <div :class="idx === references.length -1 ? '' : 'border-bottom my-3'" v-for=" reference,idx in references">
+                                   <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
+                                       <strong>{{reference.reference__reference}}.</strong>
+                                   </a>
+                                   <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
+                                   <span>{{reference.reference__title}}. {{reference.reference__journal__journal_name}}:</span>
+                                   <span v-if="reference.reference__book != null">{{reference.reference__book}}</span>
+                                   <span v-else>{{reference.reference__number}}</span>
+                                   <span v-if="reference.reference__pages != null">, {{reference.reference__pages}}</span>
+                                   <span v-if="reference.reference__doi !== null" >. DOI: <a :href="'http://dx.doi.org/'+reference.reference__doi" target="_blank">{{reference.reference__doi}}</a>
+                                   </span>
                                </div>
+                               </foldable>
+                           </div>
                        </div>
                    </b-row>
                    <b-row class="m-1" v-if="allSpecies && allSpecies.length > 0" id="species">
@@ -320,8 +324,9 @@
     import SeeAlso from "../components/SeeAlso.vue";
     import TabSpecimens from "../components/tabs/TabSpecimens.vue";
     import TabGallery from "../components/tabs/TabGallery.vue";
+    import VueFoldable from "../components/VueFoldable.vue";
 
-
+    Vue.component('foldable', VueFoldable)
     export default {
         name: 'item-page',
         components: {
@@ -481,6 +486,7 @@
                     loaders : {
                         isSpecimenCollectionLoaded : false
                     },
+                    toggle: '',
                     mapDataLoaded: false,
                     isSpecimen: false,
                     sister_taxa: {},
