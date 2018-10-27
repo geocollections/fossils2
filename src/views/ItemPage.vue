@@ -1,5 +1,5 @@
 <template>
-   <div v-if="taxon">
+   <section v-if="taxon">
        <div class="m-md-3">
            <b-row class="mt-3" v-show="scroll">
                <span class="ml-auto" >
@@ -295,7 +295,7 @@
 
            </div>
        </div>
-   </div>
+   </section>
 
 </template>
 
@@ -678,7 +678,8 @@
                 this.$store.commit('SET_MODE', {mode})
                 this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode} })
             },
-            handleScroll () {
+            handleScroll (e) {
+                console.log('test')
                 this.scroll = document.body.scrollTop > 150;
             }
         },

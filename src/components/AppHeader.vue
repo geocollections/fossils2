@@ -1,40 +1,44 @@
 <template>
     <header class="border-bottom">
       <span id="top"></span>
-      <b-navbar toggleable="md" type="light"id="mainNav" class="navbar-default  navbar-fixed-top">
-                <!--style="background-image: url('../../static/imgs/img_header.jpg') !important;"  variant="warning" -->
+      <div class="container-fluid">
+        <b-navbar toggleable="md" type="light"id="mainNav" class="border-bottom fixed-top"
+                  :style="{'height':scroll ? '50px' : ''}">
+          <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+          <b-navbar-brand
+                  :style="{'color':scroll ? 'red' : '','letter-spacing': scroll ? '0px':'3px','font-size':scroll ? 'smaller !important' : ''}"
+                  href="/"><h2 class="text-uppercase" >{{ $t('header.title') }}</h2></b-navbar-brand>
+          <b-collapse is-nav id="nav_collapse">
+            <!-- Right aligned nav items -->
+            <b-navbar-nav class="ml-auto">
+              <form class="form-inline my-2 my-lg-0" style="color:red !important; ">
+                <autocomplete v-if="isMounted"
+                              ref="autocomplete"
+                              :source="simpleTaxonSearchApiCall"
+                              results-property="results"
+                              :results-display="displayResults"
+                              :placeholder="$t('search.fossils_search')"
+                              @selected="onSelect"></autocomplete></form>
+              <b-nav-item href="http://geocollections.info">{{ $t('menu.geocollections') }}</b-nav-item>
+              <b-nav-item-dropdown>
+                <template slot="button-content">{{ $t('menu.language') }}</template>
 
-        <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-        <b-navbar-brand style=" letter-spacing: 3px;" href="/"><h2 class="text-uppercase" >{{ $t('header.title') }}</h2></b-navbar-brand>
-        <b-collapse is-nav id="nav_collapse">
-          <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto">
-            <form class="form-inline my-2 my-lg-0" style="color:red !important; ">
-            <autocomplete v-if="isMounted"
-                          ref="autocomplete"
-                          :source="simpleTaxonSearchApiCall"
-                          results-property="results"
-                          :results-display="displayResults"
-                          :placeholder="$t('search.fossils_search')"
-                          @selected="onSelect"></autocomplete></form>
-            <b-nav-item href="http://geocollections.info">{{ $t('menu.geocollections') }}</b-nav-item>
-            <b-nav-item-dropdown>
-              <template slot="button-content">{{ $t('menu.language') }}</template>
+                <b-dropdown-item  @click="changeLang('ee')" class="p-2">EST &nbsp;<span class="flag-icon flag-icon-ee flag-icon-squared circle-flag"></span></b-dropdown-item>
+                <b-dropdown-item  @click="changeLang('en')" class="p-2">ENG &nbsp;<span class="flag-icon flag-icon-gb flag-icon-squared circle-flag"></span></b-dropdown-item>
+                <b-dropdown-item  @click="changeLang('fi')" class="p-2">FIN &nbsp;<span class="flag-icon flag-icon-fi flag-icon-squared circle-flag"></span></b-dropdown-item>
+                <b-dropdown-item  @click="changeLang('se')" class="p-2">SWE &nbsp;<span class="flag-icon flag-icon-se flag-icon-squared circle-flag"></span></b-dropdown-item>
+              </b-nav-item-dropdown>
+              <b-nav-item-dropdown>
+                <template slot="button-content">{{ $t('menu.more') }}</template>
+                <b-dropdown-item  href="/page/28" class="p-2">{{ $t('menu.fossils') }}</b-dropdown-item>
+                <b-dropdown-item  href="/page/29" class="p-2">{{ $t('menu.collecting') }}</b-dropdown-item>
+                <b-dropdown-item  href="/page/30" class="p-2">{{ $t('menu.identifying') }}</b-dropdown-item>
+              </b-nav-item-dropdown>
+            </b-navbar-nav>
+          </b-collapse>
+        </b-navbar>
+      </div>
 
-              <b-dropdown-item  @click="changeLang('ee')" class="p-2">EST &nbsp;<span class="flag-icon flag-icon-ee flag-icon-squared circle-flag"></span></b-dropdown-item>
-              <b-dropdown-item  @click="changeLang('en')" class="p-2">ENG &nbsp;<span class="flag-icon flag-icon-gb flag-icon-squared circle-flag"></span></b-dropdown-item>
-              <b-dropdown-item  @click="changeLang('fi')" class="p-2">FIN &nbsp;<span class="flag-icon flag-icon-fi flag-icon-squared circle-flag"></span></b-dropdown-item>
-              <b-dropdown-item  @click="changeLang('se')" class="p-2">SWE &nbsp;<span class="flag-icon flag-icon-se flag-icon-squared circle-flag"></span></b-dropdown-item>
-            </b-nav-item-dropdown>
-            <b-nav-item-dropdown>
-              <template slot="button-content">{{ $t('menu.more') }}</template>
-              <b-dropdown-item  href="/page/28" class="p-2">{{ $t('menu.fossils') }}</b-dropdown-item>
-              <b-dropdown-item  href="/page/29" class="p-2">{{ $t('menu.collecting') }}</b-dropdown-item>
-              <b-dropdown-item  href="/page/30" class="p-2">{{ $t('menu.identifying') }}</b-dropdown-item>
-            </b-nav-item-dropdown>
-          </b-navbar-nav>
-        </b-collapse>
-      </b-navbar>
     </header>
 </template>
 <script>
@@ -49,20 +53,22 @@
     },
 
     data ()  {
-        return {isMounted : false}
+        return {isMounted : false, scroll:false}
     },
     computed: {
         mode () {
             return this.$store.state.mode
-        },
-        filteredSearchResult () {
-            return _.groupBy(this.$refs.autocomplete.results,'id')
         }
     },
     mounted: function(){
         this.isMounted = true;
     },
-
+    beforeMount() {
+        document.body.addEventListener('wheel', this.handleScroll);
+    },
+    beforeDestroy () {
+        document.body.addEventListener('wheel', this.handleScroll);
+    },
     methods: {
       changeLang(lang) {
           this.$i18n.locale = lang;
@@ -91,6 +97,9 @@
           location.replace('/'+value.selectedObject.id)
 
       },
+      handleScroll (e) {
+          this.scroll = document.body.scrollTop > 0;
+      }
 
     }
   }

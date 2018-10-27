@@ -1,5 +1,5 @@
 <template>
-    <section style="margin-top: -50px">
+    <section>
         <div class="container-fluid" style="max-width: 1280px !important;">
             <div class='fossilgroup_box container-fluid'  v-for = "item in content">
                 <a :href="'/'+item.taxon" :title="item.taxon__taxon" >
@@ -8,26 +8,6 @@
                 </a>
             </div>
         </div>
-        <!--<div class="row" v-if="content">-->
-            <!--<div class="col-lg-1"></div>-->
-            <!--<div class="col-lg-10">-->
-                <!--<div class="card border-0 rounded-0">-->
-                    <!--<div class="row m-3" v-for = "col in groupedImgs">-->
-                        <!--<div class="col-lg-2" v-for="item in col">-->
-                            <!--<router-link v-bind:to="'/'+item.taxon" :title="item.taxon__taxon" >-->
-                                <!--<div class="card bg-light text-white  rounded-0">-->
-                                    <!--<img class="card-img" :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'">-->
-                                    <!--<div class="card-img-overlay d-flex flex-column justify-content-end">-->
-                                        <!--<div class="bg-dark card-title" style="background-color:rgba(0, 0, 0, 0.4) !important;">{{item.frontpage}}</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</router-link>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="col-lg-1"></div>-->
-        <!--</div>-->
     </section>
 </template>
 

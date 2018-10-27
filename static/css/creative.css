@@ -9,13 +9,16 @@ body {
     width: 100%;
     margin: 0px;
     padding: 0px;
-    overflow-x: hidden;
+
 }
 
 body {
     font-family: 'Merriweather', 'Helvetica Neue', Arial, sans-serif;
+ 
+    /*height: 100%;*/
+    overflow-x:hidden;
+    /*overflow:initial;*/
 }
-
 hr {
     border-color: #F05F40;
     border-width: 3px;
@@ -152,7 +155,10 @@ aside {
         /*margin-right: auto;*/
     /*}*/
 /*}*/
-
+#mainNav {
+    /*position: fixed;top:0px;width: 100%;z-index:1000;background-color : white*/
+    background-color : white;
+}
 .section-heading {
     margin-top: 0;
 }

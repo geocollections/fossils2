@@ -1,9 +1,9 @@
 <template>
-  <div class="container-fluid p-5">
+  <section class="container-fluid mt-2">
     <div class="card" v-if="content">
       <span class="card-body" v-html="currentContent"></span>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
