@@ -14,9 +14,9 @@ body {
 
 body {
     font-family: 'Merriweather', 'Helvetica Neue', Arial, sans-serif;
- 
-    /*height: 100%;*/
     overflow-x:hidden;
+    height: 100%;
+
     /*overflow:initial;*/
 }
 hr {

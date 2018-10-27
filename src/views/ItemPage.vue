@@ -457,9 +457,11 @@
         },
         beforeMount() {
             document.body.addEventListener('scroll', this.handleScroll);
+            document.addEventListener('scroll', this.handleScroll);
         },
         beforeDestroy () {
             document.body.addEventListener('scroll', this.handleScroll);
+            document.addEventListener('scroll', this.handleScroll);
         },
 
         mounted () {
@@ -679,8 +681,7 @@
                 this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode} })
             },
             handleScroll (e) {
-                console.log('test')
-                this.scroll = document.body.scrollTop > 150;
+                this.scroll =  document.documentElement.scrollTop > 150;
             }
         },
 

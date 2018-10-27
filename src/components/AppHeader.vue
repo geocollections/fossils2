@@ -64,10 +64,10 @@
         this.isMounted = true;
     },
     beforeMount() {
-        document.body.addEventListener('wheel', this.handleScroll);
+        document.addEventListener('scroll', this.handleScroll);
     },
     beforeDestroy () {
-        document.body.addEventListener('wheel', this.handleScroll);
+        document.addEventListener('scroll', this.handleScroll);
     },
     methods: {
       changeLang(lang) {
@@ -98,7 +98,7 @@
 
       },
       handleScroll (e) {
-          this.scroll = document.body.scrollTop > 0;
+          this.scroll =  document.documentElement.scrollTop > 0;
       }
 
     }
