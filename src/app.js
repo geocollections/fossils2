@@ -78,7 +78,8 @@ export function createApp () {
     })
 
     Vue.directive('translate', function (el, binding) {
-        el.innerHTML = store.state.lang === 'et' ? binding.value.et : binding.value.en
+        let value = store.state.lang === 'et' ? binding.value.et : binding.value.en
+        el.innerHTML = value === null ? '' : value
     });
 
     Vue.directive('show-image',{
