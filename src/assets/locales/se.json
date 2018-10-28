@@ -127,7 +127,9 @@
     "emu": "Estonian University of Life Sciences",
     "ut":"Natural History Museum, University of Tartu",
     "fmnh":"Finnish Museum of Natural History",
-    "nrm":"Swedish Museum of Natural History"
+    "nrm":"Swedish Museum of Natural History",
+    "elm":"Estonian Museum of Natural History",
+    "founders":"Founding institutions"
   },
   "search": {
     "fossils_search":"Sök taxon",
