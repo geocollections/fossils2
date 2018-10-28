@@ -129,11 +129,13 @@
     "sweden":"Rootsis",
     "finland":"Soomes",
     "related":"Vaata ka",
-    "gi":"TTÜ Geoloogia Instituut",
+    "gi":"TalTech Geoloogia Instituut",
     "emu": "Estonian University of Life Sciences",
     "ut":"TÜ Loodusmuuseum",
     "fmnh":"Soome Loodusmuuseum",
-    "nrm":"Rootsi Loodusmuuseum"
+    "nrm":"Rootsi Loodusmuuseum",
+    "elm":"Eesti Loodusmuuseum",
+    "founders":"Asutused Eestis"
   },
 
   "search": {
