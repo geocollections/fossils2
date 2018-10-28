@@ -65,11 +65,10 @@
           </div>
         </td>
         <td valign="top" style="width: 33%;">
-          <a href="http://www.gi.ee">{{ $t(' footer.gi ') }}</a><br/>
+          <strong>{{ $t(' footer.founders ') }}:</strong><br/>
+          <a href="https://taltech.ee/geoloogia-instituut">{{ $t(' footer.gi ') }}</a><br/>
           <a href="http://natmuseum.ut.ee">{{ $t(' footer.ut ') }}</a><br/>
-          <a href="http://emu.ee">{{ $t(' footer.emu ') }}</a><br/>
-          <a href="http://www.luomus.fi">{{ $t(' footer.fmnh ') }}</a><br/>
-          <a href="http://nrm.se">{{ $t(' footer.nrm ') }}</a><br/>
+          <a href="http://loodusmuuseum.ee">{{ $t(' footer.elm ') }}</a><br/>
           <br/>
         </td>
       </tr>
