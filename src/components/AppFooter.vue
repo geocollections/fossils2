@@ -43,17 +43,9 @@
       <tbody>
       <tr>
         <td valign="top" style="width: 33%;">
-          <strong>{{ $t(' footer.collections ') }}:</strong>
-          <br/>
-          <div>
-            <a href='http://geokogud.info'>{{ $t(' footer.estonia ') }}</a> |
-            <a href='http://www.nrm.se/en/menu/researchandcollections/departments/palaeozoology/collections.870_en.html'>{{ $t(' footer.sweden ') }}</a> |
-            <a href='http://www.luomus.fi/english/geology/'>{{ $t(' footer.finland ') }}</a>
-          </div>
-          <br/>
           <strong>{{ $t(' footer.related ') }}:</strong><br/>
+          <a href='http://elurikkus.ee'>eElurikkus</a><br/>
           <a href='http://naturforskaren.se'>Naturforskaren</a><br/>
-          <a href='http://elurikkus.ut.ee'>eElurikkus</a><br/>
           <a href='http://www.geocase.eu'>GeoCASe</a><br/>
           <a href='http://www.open-up.eu'>OpenUp!</a><br/>
         </td>
@@ -85,11 +77,11 @@
     </table>
     <div style="margin: 10px 0 10px 0;">
       <a href="http://geokogud.info">
-        <img border="0" style="height: 50px;" src="//geokogud.info/images/sarv_logo_valge1.png" alt="SARV"
+        <img border="0" style="height: 50px;" src="https://files.geocollections.info/img/sarv_logo.svg" alt="SARV"
              title="SARV: geokogude infosüsteem">
       </a>
       <a href="http://natarc.ut.ee">
-        <img border="0" style="height: 50px; margin-left: 25px;" src="//geokogud.info/images/NATARC_transparent.png"
+        <img border="0" style="height: 50px; margin-left: 25px;" src="https://elurikkus.ee/assets/images/natarc_logo_black.svg"
              alt="Natural History Archives and Information Network (NATARC)"
              title="SARV is part of national infrastructure Natural History Archives and Information Network (NATARC)">
       </a>
@@ -97,9 +89,6 @@
         <img border="0" style="height: 50px; margin-left: 25px;" src="//geokogud.info/images/EL_mv.png" alt="EU" title="Euroopa Liit">
       </a>
 
-      <a href="http://centralbaltic.eu">
-        <img src="/static/imgs/programme-logo.png" alt="centralbaltic.eu logo" border="0" style="max-width: 316px; width:100%; margin-left: 25px;"/>
-      </a>
     </div>
   </footer>
   <!-- end footer -->
