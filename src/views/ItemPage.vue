@@ -1,10 +1,11 @@
 <template>
    <section>
-       <div style="letter-spacing: 3px;" class="m-md-3 text-center"  v-if="taxon && !taxon.hasOwnProperty('id')">
-           <p><img class="rounded-circle border" style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/></p>
+       <!--<div v-if=""></div>-->
+       <div style="letter-spacing: 3px;" class="m-md-3 text-center"  v-if="!isTaxonExisted">
+           <img class="rounded-circle border" style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/><br/>
            <p>{{$t('main.taxon_do_not_exist')}}</p>
        </div>
-       <div class="m-md-3" v-if="taxon && taxon.hasOwnProperty('id')">
+       <div class="m-md-3" v-if="isTaxonExisted">
            <b-row class="mt-3" v-show="scroll">
                <span class="ml-auto" >
                    <button  onclick="location.href='#top'" type="button" class="btn btn-primary fixed-bottom m-md-2" variant="primary" ><span style="color:white !important;font-weight: bolder!important;font-size: 2em !important;">&uarr;</span></button>
@@ -340,6 +341,7 @@
         },
         computed: {
             taxon () { return this.$store.state.activeItem['taxon'] },
+            isTaxonExisted () {return this.taxon && this.taxon.hasOwnProperty('id')},
             taxonTitle: function() {
                 let lang = this.$store.state.lang;
                 if (this.taxonPage && this.taxonPage.title)
