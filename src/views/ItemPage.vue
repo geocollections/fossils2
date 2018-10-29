@@ -11,7 +11,7 @@
                </span>
            </b-row>
            <b-row class="ml-0">
-                   <b-row class="col-lg-10 ml-0">
+
                        <div>
                        <a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
                            <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon"
@@ -37,16 +37,7 @@
                                     </span>
                        <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length === 0"></span>
                        </div>
-                   </b-row>
-                   <div class="col-lg-2 ml-auto">
-                       <b-dropdown size="md" id="ddown1" :text="$t(getModeText())" class="m-md-2" variant="primary">
-                           <b-dropdown-item disabled>{{$t('header.mode')}}</b-dropdown-item>
-                           <b-dropdown-divider></b-dropdown-divider>
-                           <b-dropdown-item @click="changeMode('in_estonia')" :class="mode === 'in_estonia'? 'font-weight-bold' : ''">{{$t('header.in_estonia_mode')}}</b-dropdown-item>
-                           <b-dropdown-item @click="changeMode('in_baltoscandia')" :class="mode === 'in_baltoscandia'? 'font-weight-bold' : ''">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
-                           <b-dropdown-item @click="changeMode('in_global')" :class="mode === 'in_global'? 'font-weight-bold' : ''">{{$t('header.global_mode')}}</b-dropdown-item>
-                       </b-dropdown>
-                   </div>
+
            </b-row>
            <taxon-tabs></taxon-tabs>
            <tab-gallery v-if="$store.state.activeTab === 'gallery'"></tab-gallery>
@@ -569,11 +560,7 @@
                     });
                 }
             },
-            getModeText() {
-                if(this.mode === 'in_baltoscandia') return 'header.in_baltoscandia_mode';
-                else if(this.mode === 'in_estonia') return 'header.in_estonia_mode';
-                else return 'header.global_mode';
-            },
+
             isDifferentName(obj) {
                 let localizedName = this.$store.state.lang === 'et' ? obj['et'] : obj['en'];
                 return localizedName[0] !== localizedName[1]
@@ -682,10 +669,7 @@
                     this.response.results = response.results
                 });
             },
-            changeMode: function(mode) {
-                this.$store.commit('SET_MODE', {mode})
-                this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode} })
-            },
+
             handleScroll (e) {
                 this.scroll =  document.documentElement.scrollTop > 150;
             }

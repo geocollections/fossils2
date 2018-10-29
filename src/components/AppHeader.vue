@@ -11,7 +11,7 @@
           <b-collapse is-nav id="nav_collapse">
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
-              <form class="form-inline my-2 my-lg-0" style="color:red !important; ">
+              <form class="form-inline my-2 my-lg-0 mr-5" style="color:red !important; ">
                 <autocomplete v-if="isMounted"
                               ref="autocomplete"
                               :source="simpleTaxonSearchApiCall"
@@ -19,20 +19,26 @@
                               :results-display="displayResults"
                               :placeholder="$t('search.fossils_search')"
                               @selected="onSelect"></autocomplete></form>
-              <b-nav-item href="http://geocollections.info">{{ $t('menu.geocollections') }}</b-nav-item>
               <b-nav-item-dropdown>
-                <template slot="button-content">{{ $t('menu.language') }}</template>
+                <template slot="button-content" >{{$t(mode)}}</template>
+                <b-dropdown-item @click="changeMode('in_estonia')" :class="$store.state.mode === 'in_estonia'? 'font-weight-bold' : ''">{{$t('header.in_estonia_mode')}}</b-dropdown-item>
+                <b-dropdown-item @click="changeMode('in_baltoscandia')" :class="$store.state.mode === 'in_baltoscandia'? 'font-weight-bold' : ''">{{$t('header.in_baltoscandia_mode')}}</b-dropdown-item>
+                <b-dropdown-item @click="changeMode('in_global')" :class="$store.state.mode === 'in_global'? 'font-weight-bold' : ''">{{$t('header.global_mode')}}</b-dropdown-item>
+              </b-nav-item-dropdown>
+              <b-nav-item-dropdown>
+                <template slot="button-content" >{{langCode}}</template>
 
-                <b-dropdown-item  @click="changeLang('ee')" class="p-2">EST &nbsp;<span class="flag-icon flag-icon-ee flag-icon-squared circle-flag"></span></b-dropdown-item>
-                <b-dropdown-item  @click="changeLang('en')" class="p-2">ENG &nbsp;<span class="flag-icon flag-icon-gb flag-icon-squared circle-flag"></span></b-dropdown-item>
-                <b-dropdown-item  @click="changeLang('fi')" class="p-2">FIN &nbsp;<span class="flag-icon flag-icon-fi flag-icon-squared circle-flag"></span></b-dropdown-item>
-                <b-dropdown-item  @click="changeLang('se')" class="p-2">SWE &nbsp;<span class="flag-icon flag-icon-se flag-icon-squared circle-flag"></span></b-dropdown-item>
+                <b-dropdown-item  @click="changeLang('ee')" :class="$store.state.lang === 'et'? 'font-weight-bold' : ''" class="p-2">EST &nbsp;<span class="flag-icon flag-icon-ee flag-icon-squared circle-flag"></span></b-dropdown-item>
+                <b-dropdown-item  @click="changeLang('en')" :class="$store.state.lang === 'en'? 'font-weight-bold' : ''" class="p-2">ENG &nbsp;<span class="flag-icon flag-icon-gb flag-icon-squared circle-flag"></span></b-dropdown-item>
+                <b-dropdown-item  @click="changeLang('fi')" :class="$store.state.lang === 'fi'? 'font-weight-bold' : ''" class="p-2">FIN &nbsp;<span class="flag-icon flag-icon-fi flag-icon-squared circle-flag"></span></b-dropdown-item>
+                <b-dropdown-item  @click="changeLang('se')" :class="$store.state.lang === 'se'? 'font-weight-bold' : ''" class="p-2">SWE &nbsp;<span class="flag-icon flag-icon-se flag-icon-squared circle-flag"></span></b-dropdown-item>
               </b-nav-item-dropdown>
               <b-nav-item-dropdown>
                 <template slot="button-content">{{ $t('menu.more') }}</template>
                 <b-dropdown-item  href="/page/28" class="p-2">{{ $t('menu.fossils') }}</b-dropdown-item>
                 <b-dropdown-item  href="/page/29" class="p-2">{{ $t('menu.collecting') }}</b-dropdown-item>
                 <b-dropdown-item  href="/page/30" class="p-2">{{ $t('menu.identifying') }}</b-dropdown-item>
+                <b-dropdown-item  href="http://geocollections.info" class="p-2">{{ $t('menu.geocollections') }}</b-dropdown-item>
               </b-nav-item-dropdown>
             </b-navbar-nav>
           </b-collapse>
@@ -56,9 +62,22 @@
         return {isMounted : false, scroll:false}
     },
     computed: {
-        mode () {
-            return this.$store.state.mode
+        langCode () {
+            let code = 'ENG';
+            switch (this.$store.state.lang) {
+                case 'et': code = 'EST'; break;
+                case 'se': code = 'SWE'; break;
+                case 'fi': code = 'FIN'; break;
+                default: break;
+            }
+            return code;
+        },
+        mode(){
+            if(this.$store.state.mode === 'in_baltoscandia') return 'header.in_baltoscandia_mode';
+            else if(this.$store.state.mode === 'in_estonia') return 'header.in_estonia_mode';
+            else return 'header.global_mode';
         }
+
     },
     mounted: function(){
         this.isMounted = true;
@@ -71,6 +90,7 @@
     },
     methods: {
       changeLang(lang) {
+          if (this.$store.state.lang === lang) return;
           this.$i18n.locale = lang;
           if (lang === 'ee') lang = 'et';
           this.$store.commit('SET_LANG', {lang});
@@ -86,16 +106,17 @@
           // console.log(this.$refs.autocomplete)
         //return result.rank__rank_short + ' ' + result.taxon + (result.common_name__name === null ? '' :' (' + result.common_name__name + ')')
       },
-      changeMode: function(mode) {
-          this.$store.commit('SET_MODE', {mode})
-          this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode} })
-      },
+
       onSelect(value) {
         this.$refs.autocomplete.clearValues()
           //Hard refresh is not working
         // this.$router.push({ path: '/'+value.selectedObject.id})
           location.replace('/'+value.selectedObject.id)
 
+      },
+      changeMode: function(mode) {
+          this.$store.commit('SET_MODE', {mode})
+          this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode} })
       },
       handleScroll (e) {
           this.scroll =  document.documentElement.scrollTop > 0;
