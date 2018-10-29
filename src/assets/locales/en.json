@@ -2,7 +2,8 @@
   "main": {
     "pagination": "Show {num} results per page",
     "btnViewMore":"View more",
-    "btnViewLess":"Collapse"
+    "btnViewLess":"Collapse",
+    "taxon_do_not_exist": "This taxon is not existing or not available"
   },
   "header": {
     "zero" : "",

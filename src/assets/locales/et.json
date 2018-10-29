@@ -2,7 +2,8 @@
   "main": {
     "pagination": "Kuva {num} kaupa",
     "btnViewMore":"Loe rohkem",
-    "btnViewLess":"Peida"
+    "btnViewLess":"Peida",
+    "taxon_do_not_exist": "Selline takson puudub või ei ole kättesaadav"
   },
   "header": {
     "zero" : "",

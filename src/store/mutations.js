@@ -32,7 +32,7 @@ export default {
   },
 
   SET_TAXON: (state, { taxon }) => {
-      Vue.set(state.activeItem, 'taxon', taxon.results[0] || false)
+      Vue.set(state.activeItem, 'taxon', taxon.results && taxon.results[0] || false)
   },
 
   SET_COMMON_NAMES: (state, { names }) => {

@@ -1,6 +1,10 @@
 <template>
-   <section v-if="taxon">
-       <div class="m-md-3">
+   <section>
+       <div style="letter-spacing: 3px;" class="m-md-3 text-center"  v-if="taxon && !taxon.hasOwnProperty('id')">
+           <p><img style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/></p>
+           <p>{{$t('main.taxon_do_not_exist')}}</p>
+       </div>
+       <div class="m-md-3" v-if="taxon && taxon.hasOwnProperty('id')">
            <b-row class="mt-3" v-show="scroll">
                <span class="ml-auto" >
                    <button  onclick="location.href='#top'" type="button" class="btn btn-primary fixed-bottom m-md-2" variant="primary" ><span style="color:white !important;font-weight: bolder!important;font-size: 2em !important;">&uarr;</span></button>
@@ -465,11 +469,13 @@
         },
 
         mounted () {
-            let process = 'client'
-            this.$store.commit('SET_PROCESS',{process})
-            this.$store.dispatch('FETCH_RANKS');
-            Object.assign(this.$data, this.initialData());
-            this.loadFullTaxonInfo()
+            if (this.taxon && this.taxon.hasOwnProperty('id')) {
+                let process = 'client'
+                this.$store.commit('SET_PROCESS', {process})
+                this.$store.dispatch('FETCH_RANKS');
+                Object.assign(this.$data, this.initialData());
+                this.loadFullTaxonInfo()
+            }
         },
 
         methods: {
