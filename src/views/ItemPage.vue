@@ -198,7 +198,7 @@
                                        | <span v-translate="{et:item.stratigraphy_base__stratigraphy,  en: item.stratigraphy_base__stratigraphy_en}"></span>
                                        <span v-if="item.stratigraphy_top__stratigraphy !=null"> → </span><span v-translate="{et:item.stratigraphy_top__stratigraphy,  en: item.stratigraphy_top__stratigraphy_en}"></span>
                                    </div>
-                                   <div class="col-xs-12 col-xs-6 pagination-center">
+                                   <div class="col-xs-12 col-xs-6 pagination-center" v-if="numberOfSpecimen > $store.state.searchParameters.species.paginateBy">
                                        <b-pagination
                                                size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="response.count" v-model="$store.state.searchParameters.species.page" :per-page="$store.state.searchParameters.species.paginateBy">
                                        </b-pagination>

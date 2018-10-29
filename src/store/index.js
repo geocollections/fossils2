@@ -25,7 +25,7 @@ export function createStore () {
         ranks: []
       },
       searchParameters: {
-          species: { page: 1, paginateBy: 10 },
+          species: { page: 1, paginateBy: 20 },
           specimens: { page: 1, paginateBy: 10, sortBy: 'id',  sortByAsc: true, order: "ASCENDING"},
       },
     },
