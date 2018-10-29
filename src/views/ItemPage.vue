@@ -1,7 +1,7 @@
 <template>
    <section>
        <div style="letter-spacing: 3px;" class="m-md-3 text-center"  v-if="taxon && !taxon.hasOwnProperty('id')">
-           <p><img style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/></p>
+           <p><img class="rounded-circle border" style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/></p>
            <p>{{$t('main.taxon_do_not_exist')}}</p>
        </div>
        <div class="m-md-3" v-if="taxon && taxon.hasOwnProperty('id')">
