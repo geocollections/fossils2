@@ -141,6 +141,8 @@ function render (req, res) {
     <link rel="stylesheet" href="/static/css/mainpage.css">
     <link rel="stylesheet" href="/static/css/picture.galery.css">
     <link rel="stylesheet" href="/static/ol3/ol.css" type="text/css"/>
+    <link rel="stylesheet" href="/static/leaflet-1.3.4/leaflet.css" />
+    <link rel="stylesheet" href="/static/leaflet-fullscreen/leaflet.fullscreen.css" />
     <link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.css" />
     
@@ -160,7 +162,9 @@ function render (req, res) {
     <!--<script type="text/javascript" src="/static/js/jquery.easing.min.js"></script>-->
     <!--&lt;!&ndash;<script type="text/javascript" src="/static/js/scrollreveal.min.js"></script>&ndash;&gt;-->
     <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.js"></script>
-    <script type="text/javascript" src="/static/ol3/ol.js"></script>
+    <!--<script type="text/javascript" src="/static/ol3/ol.js"></script>-->
+    <script type="text/javascript" src="/static/leaflet-1.3.4/leaflet.js"></script>
+    <script type="text/javascript" src="/static/leaflet-fullscreen/leaflet.fullscreen.min.js"></script>
     <script type="text/javascript" src="/static/js/fossils.js"></script>
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>

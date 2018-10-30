@@ -92,7 +92,7 @@
       // this.$nextTick(function () {
       //     this.handleMount()
       // })
-        console.log(this.$refs.container)
+
       if (this.async) {
         onElementHeightChange({
           el: this.$refs.container,
