@@ -12,61 +12,36 @@
               layers: [
                   {
                       id: 0,
-                      name: 'Restaurants',
                       active: true,
                       features: [],
                   },
-              ],
-            locations : [],
+              ]
           }
         },
-
         computed : {
             mapData() {return this.$store.state.activeItem['map']}
         },
         mounted (){
             this.getLocationsObject(this.mapData)
-            if (this.locations && this.locations.length > 0) {
-                this.layers[0].features = this.locations
+            if (this.layers[0].features && this.layers[0].features.length > 0) {
                 this.loadMap()
                 this.initLayers()
-                this.layerChanged(0, true)
-            }
-        },
-        'mapData': {
-            handler: function (newval, oldval) {
-                console.log(newval)
             }
         },
         methods: {
-            layerChanged(layerId, active) {
-                /* Show or hide the features in the layer */
-                const layer = this.layers.find(layer => layer.id === layerId);
-                layer.features.forEach((feature) => {
-                    /* Show or hide the feature depending on the active argument */
-                    if (active) {
-                        feature.leafletObject.addTo(this.map);
-                    } else {
-                        feature.leafletObject.removeFrom(this.map);
-                    }
-                });
-
-
-            },
           initLayers : function() {
               this.layers.forEach((layer) => {
-                  const markerFeatures = layer.features.filter(feature => feature.type === 'marker');
+                  const markerFeatures = layer.features.filter(feature => feature.type === 'circle');
                   markerFeatures.forEach((feature) => {
-                      feature.leafletObject = L.circleMarker(feature.coords,{radius: 2},{ fillColor: 'rgba(236, 102, 37,0.7)', opacity: 0.9 })
-                          .bindPopup('<a target="_blank" href="http://geocollections.info/locality/'+feature.locid+'">'+feature.name+'</a>');
+                      feature.leafletObject = L.circle(feature.coords,{color:'rgba(236, 102, 37,0.7)', opacity: 0.7,weight:6})
+                          .bindPopup('<a target="_blank" href="http://geocollections.info/locality/'+feature.locid+'">'+feature.name+'</a>',
+                              {className: "custom-popup-text"})
+                          .addTo(this.map)
                   });
               });
-
-
           },
-          loadMap : function(arr) {
-
-            document.getElementById('map').style.cursor = 'default'
+          loadMap : function() {
+            document.getElementById('map').style.cursor = 'default';
             this.map = L.map('map',{
                 fullscreenControl: true,
             }).setView([58.5,20.5], 4);
@@ -83,39 +58,33 @@
 
             getLocationsObject : function(object, isImportantLocality = false) {
                 if (object === undefined || object === {} || object === false || object.length === 0) return;
-                let lang = this.lang;
-                let this_ = this
+                let lang = this.$store.state.lang;
+                let this_ = this;
                 object.forEach(function(element,index) {
                     if (element.locality != null || element.locid != null) {
-                        this_.locations.push({
+                        this_.layers[0].features.push({
                             id:index,
                             coords : [element.latitude,element.longitude],
-                            type: 'marker',
-                            name: (lang === 'ee' ? element.locality
-                                : element.locality_en),
+                            type: 'circle',
+                            name: (lang === 'ee' ? element.locality : element.locality_en),
                             locid: element.locid,
                             isImportantLocality: isImportantLocality
                         });
                     }
                 });
             },
-            // getLocationsObject : function(object, isImportantLocality = false) {
-            //     if (object === undefined || object === {} || object === false || object.length === 0) return;
-            //     let lang = this.lang;
-            //     let this_ = this
-            //     object.forEach(function(element) {
-            //         if (element.locality != null || element.locid != null) {
-            //             this_.locations.push({
-            //                 lat : element.latitude,
-            //                 long: element.longitude,
-            //                 locality: (lang === 'ee' ? element.locality
-            //                     : element.locality_en),
-            //                 locid: element.locality ? element.locality : element.locality_id,
-            //                 isImportantLocality: isImportantLocality
-            //             });
-            //         }
-            //     });
-            // },
         }
     }
 </script>
+<style>
+    .leaflet-popup-content a {
+
+    }
+    .custom-popup-text a{
+        color:#F05F40;
+        font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+        font-size: 10pt;
+        text-align: left;
+        font-weight: bold;
+    }
+</style>
