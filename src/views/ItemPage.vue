@@ -249,12 +249,12 @@
                        </div>
                    </b-row>
                    <b-row class="m-1" v-if="isMapLoaded && $store.state.process === 'client'">
-                       <div class="card rounded-0"  style="width: 100%">
+                       <div class="card  rounded-0"  style="width: 100%">
                            <div class="card-header">{{$t('header.f_distribution_map')}}</div>
-                           <div class="card-body">
-                               <div>
+                           <div class="card-body no-padding">
+
                                    <map-component></map-component>
-                               </div>
+
                            </div>
                        </div>
                    </b-row>
