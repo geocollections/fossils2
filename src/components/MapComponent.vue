@@ -34,7 +34,7 @@
                   const markerFeatures = layer.features.filter(feature => feature.type === 'circle');
                   markerFeatures.forEach((feature) => {
                       feature.leafletObject = L.circle(feature.coords,{color:'rgba(236, 102, 37,0.7)', opacity: 0.7,weight:6})
-                          .bindPopup('<a target="_blank" href="http://geocollections.info/locality/'+feature.locid+'">'+feature.name+'</a>',
+                          .bindPopup(feature.locid === null ? feature.name : '<a target="_blank" href="http://geocollections.info/locality/'+feature.locid+'">'+feature.name+'</a>',
                               {className: "custom-popup-text"})
                           .addTo(this.map)
                   });
@@ -85,6 +85,6 @@
         font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
         font-size: 10pt;
         text-align: left;
-        font-weight: bold;
+        font-weight: 700;
     }
 </style>
