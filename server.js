@@ -144,8 +144,8 @@ function render (req, res) {
     <link rel="stylesheet" href="/static/leaflet-1.3.4/leaflet.css" />
     <link rel="stylesheet" href="/static/leaflet-fullscreen/leaflet.fullscreen.css" />
     <link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.css" />
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.css" />    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
     ${style.text()}
     ${script.text()}
     ${noscript.text()}

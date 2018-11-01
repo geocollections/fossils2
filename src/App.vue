@@ -45,5 +45,7 @@
 <style src="../static/css/picture.galery.css"></style>
 <style src="../static/leaflet-1.3.4/leaflet.css"></style>
 <link rel="stylesheet" href="/static/leaflet-fullscreen/leaflet.fullscreen.css" />
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous"/>
 <!--<style src="../static/css/sarv.css"></style>-->
 <!--<style src="../static/css/sarv-fonts.css"></style>-->

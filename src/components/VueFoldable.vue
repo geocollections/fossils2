@@ -1,39 +1,44 @@
 <template>
-  <div class="vue-foldable">
-    <div class="vue-foldable-container" :style="{ maxHeight: currentMaxHeight + 'px' }" ref="container">
-      <slot name="view-more" :toggle="toggle" :collapsed="collapsed" v-if="!collapsed">
-        <div class="vue-foldable-view-more" :class="{ 'collapsed': collapsed }" @click="toggle" v-if="reachThreshold">
-          <button class="btn btn-small btn-outline-info vue-foldable-text">{{ collapsed ? $t('main.btnViewMore') : $t('main.btnViewLess') }}</button>
+  <div>
+    <slot v-if="$props.elLength < 4"/>
+    <div class="vue-foldable" v-else>
+      <div class="vue-foldable-container" :style="{ maxHeight: (currentMaxHeight+100) + 'px'  }" ref="container">
+        <slot name="view-more" :toggle="toggle" :collapsed="collapsed" v-if="!collapsed">
+          <div class="vue-foldable-view-more" :class="{ 'collapsed': collapsed }" @click="toggle" v-if="reachThreshold">
+            <button class="btn btn-small btn-outline-info vue-foldable-text">{{ collapsed ? $t('main.btnViewMore') : $t('main.btnViewLess') }}</button>
+          </div>
+        </slot>
+        <slot/>
+      </div>
+
+      <div :class="{ 'collapsed': collapsed }" class="vue-foldable-mask" v-if="!noMask"></div>
+
+      <slot name="view-more" :toggle="toggle" :collapsed="collapsed">
+        <div class="vue-foldable-view-more  mt-3" style="text-align: center;" :class="{ 'collapsed': collapsed }" @click="toggle" v-if="reachThreshold">
+        <span class="vue-foldable-text">
+             <btn class="btn btn-small btn-outline-info vue-foldable-text">{{ collapsed ? $t('main.btnViewMore') : $t('main.btnViewLess') }}</btn>
+        </span>
         </div>
       </slot>
-      <slot/>
     </div>
-
-    <div :class="{ 'collapsed': collapsed }" class="vue-foldable-mask" v-if="!noMask"></div>
-
-    <slot name="view-more" :toggle="toggle" :collapsed="collapsed">
-      <div class="vue-foldable-view-more" style="text-align: center" :class="{ 'collapsed': collapsed }" @click="toggle" v-if="reachThreshold">
-        <span class="vue-foldable-text">
-             <button class="btn btn-small btn-outline-info vue-foldable-text">{{ collapsed ? $t('main.btnViewMore') : $t('main.btnViewLess') }}</button>
-        </span>
-      </div>
-    </slot>
   </div>
 </template>
 
 <script>
-    import VueIcon from '../components/VueIcon.vue'
-  const DEFAULT_VISUAL_HEIGHT = 100;
+
+  const DEFAULT_VISUAL_HEIGHT = 200;
 
   export default {
     name: 'vue-foldable',
-    components: { VueIcon },
     props: {
+      elLength: {
+         type: Number,
+         default: 1,
+      },
       minHeight: {
         type: Number,
         default: DEFAULT_VISUAL_HEIGHT,
       },
-        components: { VueIcon },
       height: {
         type: [Number, String],
         default: DEFAULT_VISUAL_HEIGHT,
@@ -84,6 +89,7 @@
     },
 
     mounted () {
+      if (this.$props.elLength < 4) return
       this.handleMount()
 
       // Temporary hack since this.$nextTick still cannot ensure all the sub components rendered.
@@ -179,7 +185,7 @@
     .vue-foldable-mask
       position absolute
       bottom 30px /* view-more's height */
-      height 80px
+      height:50px
       width 100%
       background transparent
       pointer-events none
