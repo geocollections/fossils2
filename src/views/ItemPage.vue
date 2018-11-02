@@ -170,8 +170,7 @@
                                <i class="fas fa-angle-up" v-if="accordion.showAccordionReferences"></i>
                            </b-btn>
                        </div>
-                       <b-collapse id="accordionReferences" accordion="my-accordion"
-                                   v-bind="references.length < 4 ? accordion.showAccordionReferences = true : ''" v-model="accordion.showAccordionReferences" >
+                       <b-collapse id="accordionReferences" accordion="my-accordion" v-model="accordion.showAccordionReferences" >
                            <div class="card-body">
                                    <div :class="idx === references.length -1 ? '' : 'border-bottom my-3'" v-for=" reference,idx in references">
                                        <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">

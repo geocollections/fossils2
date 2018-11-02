@@ -11,6 +11,11 @@ export default context => {
   return new Promise((resolve, reject) => {
     const s = isDev && Date.now()
     const { app, router, store } = createApp()
+    if(context.cookies.fossils_lang && context.cookies.fossils_lang != null)
+        store.state.lang = context.cookies.fossils_lang
+    if(context.cookies.fossils_mode && context.cookies.fossils_mode != null)
+          store.state.mode = context.cookies.fossils_mode
+    // store.state.route.query = { mode: store.state.mode, lang : store.state.lang}
     const meta = app.$meta()
     context.meta = meta
     const { url } = context
@@ -32,15 +37,6 @@ export default context => {
         return reject({ code: 404 })
       }
 
-      let lang = router.currentRoute.query.lang
-      if (router.currentRoute.query.lang) {
-        store.commit('SET_LANG', {lang})
-          // store.state.lang = router.currentRoute.query.lang
-      }
-      let mode = router.currentRoute.query.mode
-      if (router.currentRoute.query.mode) {
-          store.commit('SET_MODE', {mode})
-      }
       let process = 'server';
       store.commit('SET_PROCESS', {process})
 

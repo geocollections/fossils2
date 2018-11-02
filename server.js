@@ -15,7 +15,7 @@ const serverInfo =
   `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
 
 const app = express()
-
+var cookieParser = require('cookie-parser')
 function createRenderer (bundle, options) {
   // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
   return createBundleRenderer(bundle, Object.assign(options, {
@@ -69,7 +69,7 @@ app.use('/dist', serve('./dist', true))
 app.use('/static', serve('./static', true))
 app.use('/manifest.json', serve('./manifest.json', true))
 app.use('/service-worker.js', serve('./dist/service-worker.js'))
-
+app.use(cookieParser())
 // since this app has no user-specific content, every page is micro-cacheable.
 // if your app involves user-specific content, you need to implement custom
 // logic to determine whether a request is cacheable based on its url and
@@ -100,18 +100,9 @@ function render (req, res) {
     const context = {
         title: 'Fossils 2.0', // default title
         meta: 'name=keywords content=',
-        url: req.url
+        url: req.url,
+        cookies: req.cookies
     }
-    //
-    // renderer.renderToString(context, (err, html) => {
-    //   if (err) {
-    //     return handleError(err)
-    //   }
-    //   res.send(html)
-    //   if (!isProd) {
-    //     console.log(`whole request: ${Date.now() - s}ms`)
-    //   }
-    // })
 
     renderer.renderToString(context, (error, html) => {
         if (error) return handleError(error)

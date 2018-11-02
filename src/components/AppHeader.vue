@@ -97,7 +97,8 @@
           this.$i18n.locale = lang;
           if (lang === 'ee') lang = 'et';
           this.$store.commit('SET_LANG', {lang});
-          this.$router.push({ path: this.$router.currentRoute.path, query: {lang:lang} });
+          this.$cookies.set('fossils_lang',lang)
+          this.$router.push({ path: this.$router.currentRoute.path, query:  {mode:this.$store.state.mode, lang: lang}  });
       },
       simpleTaxonSearchApiCall(value) {
           return 'https://api.geocollections.info/taxon/?sql=simple_taxon_search&keyword='+ value;
@@ -119,7 +120,8 @@
       },
       changeMode: function(mode) {
           this.$store.commit('SET_MODE', {mode})
-          this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode} })
+          this.$cookies.set('fossils_mode',mode)
+          this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode, lang: this.$store.state.lang} })
       },
       handleScroll (e) {
           this.scroll =  document.documentElement.scrollTop > 0;

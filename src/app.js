@@ -13,7 +13,9 @@ import titleMixin from './util/title'
 import metaMixin from './util/meta'
 import * as filters from './util/filters'
 import * as directives from './util/customeDirectives'
+import VueCookies from 'vue-cookies'
 
+Vue.use(VueCookies)
 // mixin for handling title
 Vue.mixin(titleMixin)
 Vue.mixin(metaMixin)
@@ -42,15 +44,7 @@ export function createApp () {
   // this registers `store.state.route`
   sync(store, router);
 
-    router.beforeEach((to, from, next) => {
-        if (!to.query.lang || !to.query.mode) {
-            to.query.mode = store.state.mode;
-            to.query.lang = store.state.lang;
-            next({ path: to.path, query: to.query });
-        } else {
-            next();
-        }
-    });
+
     /******************************
      *** TRANSLATION CODE START ***
      ******************************/
@@ -65,13 +59,22 @@ export function createApp () {
 
 // Translation settings
     const i18n = new VueI18n({
-        locale: store.state.lang,
+        locale: store.state.lang === 'et' ? 'ee' : store.state.lang,
         fallbackLocale: 'en',
         messages
     })
     /******************************
      ***  TRANSLATION CODE END  ***
      ******************************/
+
+    // add query to route
+    // router.beforeEach((to, from, next) => {
+    //     //if query is empty set from cookie
+    //
+    //     let query = {mode: store.state.mode , lang : store.state.lang}
+    //     next({query: store.state.route.query, replace: true });
+    //
+    // });
     // register global directives filters.
     Object.keys(directives).forEach(key => {
         Vue.directive(key, directives[key])

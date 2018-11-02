@@ -3,10 +3,14 @@ import Vuex from 'vuex'
 import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
-
+import VueCookies from 'vue-cookies'
 Vue.use(Vuex)
-
+Vue.use(VueCookies)
 export function createStore () {
+    // Vue.nextTick(() => {
+    //     console.log(Vue.cookies)
+    // })
+
   return new Vuex.Store({
     state: {
       process: 'server',
