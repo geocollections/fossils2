@@ -7,16 +7,24 @@ import ProgressBar from './components/ProgressBar.vue'
 const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()
 document.body.appendChild(bar.$el)
 
-// a global mixin that calls `asyncData` when a route component's params change
+// a global mixin that calls `asyncData` when a route component's params change. do not watch hash changes in route
 Vue.mixin({
   beforeRouteUpdate (to, from, next) {
+    if(to.hash.length > 0) {
+        return next()
+    }
+    bar.start()
     const { asyncData } = this.$options
     if (asyncData) {
       asyncData({
         store: this.$store,
         route: to
-      }).then(next).catch(next)
+      }).then(()=>{
+        bar.finish()
+        next()
+      }).catch(next)
     } else {
+      bar.finish()
       next()
     }
   }
@@ -34,6 +42,7 @@ if (window.__INITIAL_STATE__) {
 // and async components...
 router.onReady(() => {
 
+
   // Add router hook for handling asyncData.
   // Doing it after initial route is resolved so that we don't double-fetch
   // the data that we already have. Using router.beforeResolve() so that all
@@ -42,6 +51,7 @@ router.onReady(() => {
     const matched = router.getMatchedComponents(to)
     const prevMatched = router.getMatchedComponents(from)
     let diffed = false
+
     const activated = matched.filter((c, i) => {
       return diffed || (diffed = (prevMatched[i] !== c))
     })
