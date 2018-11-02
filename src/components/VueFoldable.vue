@@ -16,7 +16,7 @@
       <slot name="view-more" :toggle="toggle" :collapsed="collapsed">
         <div class="vue-foldable-view-more  mt-3" style="text-align: center;" :class="{ 'collapsed': collapsed }" @click="toggle" v-if="reachThreshold">
         <span class="vue-foldable-text">
-             <btn class="btn btn-small btn-outline-info vue-foldable-text">{{ collapsed ? $t('main.btnViewMore') : $t('main.btnViewLess') }}</btn>
+             <button class="btn btn-small btn-outline-info vue-foldable-text">{{ collapsed ? $t('main.btnViewMore') : $t('main.btnViewLess') }}</button>
         </span>
         </div>
       </slot>

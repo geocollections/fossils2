@@ -393,7 +393,9 @@
                     || this.$store.state.activeItem['references'] === undefined
                     || this.$store.state.activeItem['references2'] === undefined) return {}
                 let refs = this.$store.state.activeItem['references'].concat(this.$store.state.activeItem['references2']);
-                return orderBy(uniqBy(refs,'reference'),'reference__year',['desc'])
+                let uniqueRefs = uniqBy(refs,'reference')
+                if (uniqueRefs.length < 4) this.accordion.showAccordionReferences = true
+                return orderBy(uniqueRefs,'reference__year',['desc'])
             },
             siblings () {
                 return this.$store.state.activeItem['children'] },
