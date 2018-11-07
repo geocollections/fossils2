@@ -23,44 +23,47 @@
         },
         name: 'App',
         created() {
-            this.$nextTick(() => {
-                if(this.$store.state.process === 'client') {
-                    let lang = this.$store.state.lang, mode = this.$store.state.mode;
-                    //check if manually set lang or mode value is correct otherwise set default
-
-                    if(this.$router.currentRoute.query.hasOwnProperty('mode')
-                    && this.checkIfModeIsCorrect(this.$router.currentRoute.query.mode)){
-                        this.$cookies.set('fossils_mode', this.$router.currentRoute.query.mode)
-                    }
-
-                    if(this.$router.currentRoute.query.hasOwnProperty('lang')
-                        && this.checkIfLangIsCorrect(this.$router.currentRoute.query.lang)){
-                        this.$cookies.set('fossils_lang', this.$router.currentRoute.query.lang)
-                    }
-
-                    if(!this.$router.currentRoute.query.hasOwnProperty('mode') || !this.$router.currentRoute.query.hasOwnProperty('lang')) {
-                        //set values from cookies otherwise from default settings
-                        if(this.$cookies.get('fossils_mode') && this.checkIfModeIsCorrect(this.$cookies.get('fossils_mode'))){
-                            mode = this.$cookies.get('fossils_mode')
-                            this.$store.commit('SET_MODE', {mode});
-                        } else {
-                            //set default
-                            this.$cookies.set('fossils_mode', this.$store.state.mode)
-                        }
-
-                        if(this.$cookies.get('fossils_lang') && this.checkIfModeIsCorrect(this.$cookies.get('fossils_lang'))) {
-                            lang = this.$cookies.get('fossils_lang')
-                            this.$store.commit('SET_LANG', {lang});
-                        } else {
-                            //set default
-                            this.$cookies.set('fossils_lang', this.$store.state.lang)
-                        }
-                    }
-                    this.$router.push({ path: this.$router.currentRoute.path, query:  {mode:mode, lang: lang}});
-                }
-            })
+            this.setLangAndMode();
         },
         methods: {
+            setLangAndMode: function() {
+                this.$nextTick(() => {
+                    if(this.$store.state.process === 'client') {
+                        let lang = this.$store.state.lang, mode = this.$store.state.mode;
+                        //check if manually set lang or mode value is correct otherwise set default
+
+                        if(this.$router.currentRoute.query.hasOwnProperty('mode')
+                            && this.checkIfModeIsCorrect(this.$router.currentRoute.query.mode)){
+                            this.$cookies.set('fossils_mode', this.$router.currentRoute.query.mode)
+                        }
+
+                        if(this.$router.currentRoute.query.hasOwnProperty('lang')
+                            && this.checkIfLangIsCorrect(this.$router.currentRoute.query.lang)){
+                            this.$cookies.set('fossils_lang', this.$router.currentRoute.query.lang)
+                        }
+
+                        if(!this.$router.currentRoute.query.hasOwnProperty('mode') || !this.$router.currentRoute.query.hasOwnProperty('lang')) {
+                            //set values from cookies otherwise from default settings
+                            if(this.$cookies.get('fossils_mode') && this.checkIfModeIsCorrect(this.$cookies.get('fossils_mode'))){
+                                mode = this.$cookies.get('fossils_mode')
+                                this.$store.commit('SET_MODE', {mode});
+                            } else {
+                                //set default
+                                this.$cookies.set('fossils_mode', this.$store.state.mode)
+                            }
+
+                            if(this.$cookies.get('fossils_lang') && this.checkIfModeIsCorrect(this.$cookies.get('fossils_lang'))) {
+                                lang = this.$cookies.get('fossils_lang')
+                                this.$store.commit('SET_LANG', {lang});
+                            } else {
+                                //set default
+                                this.$cookies.set('fossils_lang', this.$store.state.lang)
+                            }
+                        }
+                        this.$router.push({ path: this.$router.currentRoute.path, query:  {mode:mode, lang: lang}});
+                    }
+                })
+            },
             checkIfModeIsCorrect: function (mode) {
                 let isCorrect = false;
                 switch (mode){

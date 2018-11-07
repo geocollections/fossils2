@@ -163,35 +163,7 @@
                    </b-row>
                    <b-row class="m-1" v-if="references && references.length > 0">
                        <div class="card rounded-0" style="width: 100%">
-                       <div class="card-header">
-                           ACCORDION TYPE 1 : {{$t('header.f_taxon_references')}}
-                           <b-btn v-if="references.length > 4" class="float-right" @click="accordion.showAccordionReferences = !accordion.showAccordionReferences" variant="link">
-                               <i class="fas fa-angle-down" v-if="!accordion.showAccordionReferences"></i>
-                               <i class="fas fa-angle-up" v-if="accordion.showAccordionReferences"></i>
-                           </b-btn>
-                       </div>
-                       <b-collapse id="accordionReferences" accordion="my-accordion" v-model="accordion.showAccordionReferences" >
-                           <div class="card-body">
-                                   <div :class="idx === references.length -1 ? '' : 'border-bottom my-3'" v-for=" reference,idx in references">
-                                       <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
-                                           <strong>{{reference.reference__reference}}.</strong>
-                                       </a>
-                                       <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
-                                       <span>{{reference.reference__title}}. {{reference.reference__journal__journal_name}}:</span>
-                                       <span v-if="reference.reference__book != null">{{reference.reference__book}}</span>
-                                       <span v-else>{{reference.reference__number}}</span>
-                                       <span v-if="reference.reference__pages != null">, {{reference.reference__pages}}</span>
-                                       <span v-if="reference.reference__doi !== null" >. DOI: <a :href="'http://dx.doi.org/'+reference.reference__doi" target="_blank">{{reference.reference__doi}}</a>
-                                   </span>
-                                   </div>
-                           </div>
-                       </b-collapse>
-                       </div>
-                   </b-row>
-                   <b-row class="m-1" v-if="references && references.length > 0">
-                       <div class="card rounded-0" style="width: 100%">
-                           <div class="card-header">
-                               ACCORDION TYPE 2 : {{$t('header.f_taxon_references')}}</div>
+                           <div class="card-header">{{$t('header.f_taxon_references')}}</div>
                            <div class="card-body">
                                <foldable :elLength = "references.length">
                                <div :class="idx === references.length -1 ? '' : 'border-bottom my-3'" v-for=" reference,idx in references">

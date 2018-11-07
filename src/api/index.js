@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import VueResource from 'vue-resource'
+import Vue from 'vue';
+import VueResource from 'vue-resource';
 
 Vue.use(VueResource);
 const logRequests = !!process.env.DEBUG_API;
@@ -146,4 +146,5 @@ export function fetchSpecimenCollection(taxon,searchParameters) {
         'specimenidentificationgeologies__name,specimenidentificationgeologies__name_en,specimenidentificationgeologies__rock__name,specimenidentificationgeologies__rock__name_en,' +
         'agent_collected__agent,agent_collected__forename,agent_collected__surename,original_status__value,original_status__value_en,attachment__filename&distinct=true'
     return fetch(`specimen/?specimenidentification__taxon__taxon__hierarchy=${taxon}&order_by=-id${returningFields}&page=${searchParameters.specimens.page}&paginate_by=${searchParameters.specimens.paginateBy}${orderBy}`)
+
 }
