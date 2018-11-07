@@ -92,6 +92,7 @@
                                        <span v-else>{{$t('header.f_global_species')}}</span>
                                        <strong><a href="#species">{{numberOfSpecimen}}</a></strong>
                                    </div>
+                                   <see-also v-if="((taxonPage && taxonPage.link_wikipedia != null) || taxon.taxon_id_tol != null|| taxon.taxon_id_eol != null|| taxon.taxon_id_nrm!= null || taxon.taxon_id_plutof!= null || taxon.taxon_id_pbdb != null)"></see-also>
                                </div>
                            </div>
                        </div>
@@ -202,20 +203,6 @@
                            </div>
                        </div>
                    </b-row>
-                   <b-row class="m-1" v-if="isDefinedAndNotEmpty(distributionSamples)">
-                       <div class="card rounded-0"   style="width: 100%">
-                           <div class="card-header">{{$t('header.f_species_distribution_samples')}}</div>
-                           <div class="card-body">
-                               <div class="my-2" v-for="sample in distributionSamples">
-                                   <a :href="'http://geocollections.info/locality/'+sample.locality_id" target='_blank'><i v-translate="{et:sample.locality_et,en:sample.locality_en}"></i></a>
-                                   <span>({{sample.depth_min}}  ... {{sample.depth_max}}):</span>
-                                   <a target='_blank' :href="geocollectionUrl + '/specimen?taxon_1=1&taxon='+taxon.taxon+'&taxon_2=1&locality_1=1&locality='+sample.locality_en+'&locality_2=1&currentTable=sample&paginateBy=25&sort=id&sortdir=DESC'">
-                                       {{sample.num}} {{$t('header.f_species_link_samples')}}
-                                   </a>
-                               </div>
-                           </div>
-                       </div>
-                   </b-row>
                    <b-row>
                        <div v-if="isDefinedAndNotEmpty(distributionConop)">
                            <h3>{{$t('header.f_species_distribution_samples')}} (CONOP):</h3>
@@ -235,7 +222,7 @@
                    <b-row class="m-1" v-if="isTaxonomicTreeIsLoaded">
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-header">{{$t('header.fossils_classification')}}</div>
-                           <div class="card-body">
+                           <div class="card-body" style='font-size: 0.8em;'>
                                <taxonomical-tree :taxon_="taxon"
                                                  :parent_="parent"
                                                  :hierarchy_="hierarchy"
@@ -275,11 +262,17 @@
                            </div>
                        </div>
                    </b-row>
-                   <b-row class="m-1" v-if="((taxonPage && taxonPage.link_wikipedia != null) || taxon.taxon_id_tol != null|| taxon.taxon_id_eol != null|| taxon.taxon_id_nrm!= null || taxon.taxon_id_plutof!= null || taxon.taxon_id_pbdb != null)">
-                       <div class="card rounded-0"  style="width: 100%">
-                           <div class="card-header">{{$t('header.f_weblinks')}}</div>
-                           <div class="card-body">
-                               <see-also></see-also>
+                   <b-row class="m-1" v-if="isDefinedAndNotEmpty(distributionSamples)">
+                       <div class="card rounded-0"   style="width: 100%">
+                           <div class="card-header">{{$t('header.f_species_distribution_samples')}}</div>
+                           <div class="card-body" style='font-size: 0.8em;'>
+                               <div class="my-2" v-for="sample in distributionSamples">
+                                   <a :href="'http://geocollections.info/locality/'+sample.locality_id" target='_blank'><i v-translate="{et:sample.locality_et,en:sample.locality_en}"></i></a>
+                                   <span>({{sample.depth_min}}  ... {{sample.depth_max}}):</span>
+                                   <a target='_blank' :href="geocollectionUrl + '/specimen?taxon_1=1&taxon='+taxon.taxon+'&taxon_2=1&locality_1=1&locality='+sample.locality_en+'&locality_2=1&currentTable=sample&paginateBy=25&sort=id&sortdir=DESC'">
+                                       {{sample.num}} {{$t('header.f_species_link_samples')}}
+                                   </a>
+                               </div>
                            </div>
                        </div>
                    </b-row>
@@ -352,7 +345,6 @@
             },
             description () { return this.$store.state.activeItem['description'] },
             commonNames () { return this.$store.state.activeItem['commonNames'] },
-            taxonPages () { return this.$store.state.activeItem['taxonPage'] },
             taxonTypeSpecimen () { return this.$store.state.activeItem['typeSpecimen'] },
             distributionSamples () { return this.$store.state.activeItem['distributionSamples'] },
             distributionConop () { return this.$store.state.activeItem['distributionConop'] },
@@ -375,12 +367,9 @@
             //is not actually used
             taxonList () { return this.$store.state.activeItem['taxonList'] },
             taxonPage: function() {
-                if (this.taxonPages === undefined || this.taxonPages.length === 0) return {}
-                let lang = this.$store.state.lang;
-                if (lang ==='et') return this.taxonPages[0];
-                else if (lang ==='en') return this.taxonPages[1];
-                else if (lang ==='fi') return this.taxonPages[2];
-                else if (lang ==='se') return this.taxonPages[3];
+                let taxonPages = this.$store.state.activeItem['taxonPage'];
+                if (taxonPages === undefined || taxonPages.length === 0) return {}
+                return taxonPages[0];
             },
             filteredCommonNames: function() {
                 let lang = this.$store.state.lang;
