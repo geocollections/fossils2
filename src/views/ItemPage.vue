@@ -122,31 +122,38 @@
                        </div>
                    </b-row>
                    <b-row class="m-1" v-if = "taxonTypeSpecimen">
-                           <div class="card rounded-0" style="width: 100%" >
-                               <div class="card-header">{{$t('header.f_species_type_data')}}</div>
-                               <div class="card-body">
-                                   <div :class="idx === taxonTypeSpecimen.length -1 ? '' : 'border-bottom my-3'" v-for="item,idx in taxonTypeSpecimen">
-                                       <span v-translate="{et:item.type_type__value, en: item.type_type__value_en}"></span>: {{item.repository}} {{item.specimen_number}}
-                                       <a @click="openUrl({parent_url:geocollectionUrl + '/locality',object:item.locality, width:500,height:500})" href="#"
-                                          v-if="isDefinedAndNotNull(item.locality)" v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></a>
-                                       <span v-if="isDifferentName({et:[item.locality__locality,item.locality_free],en:[item.locality__locality_en,item.locality_free_en]})">
-                                           (<span v-translate="{et:item.locality_free, en: item.locality_free_en}"></span>)
-                                       </span>
-                                       <span v-if="isDefinedAndNotNull(item.level)">{{item.level}}</span>,
-                                       <a @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:item.stratigraphy, width:500,height:500})" href="#"
-                                          v-if="isDefinedAndNotNull(item.stratigraphy)" v-translate="{et:item.stratigraphy__stratigraphy, en: item.stratigraphy__stratigraphy_en}"></a>
-                                       <span v-if="isDifferentName({et:[item.stratigraphy__stratigraphy,item.stratigraphy_free],en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en]})">
-                                           (<span v-translate="{et:item.stratigraphy_free, en: item.stratigraphy_free_en}"></span>)
-                                       </span>
-                                       <span v-if="isDefinedAndNotNull(item.remarks)">{{item.remarks}}</span>
-                                       <span class="pl-3" v-if="isDefinedAndNotNull(item.attachment__filename)">
-                                           <a @click="openUrl({parent_url:geocollectionUrl + '/file',object:item.attachment, width:500,height:500})" href="#">
-                                               <img class="img-thumbnail previewImage" :src="composeImgUrl(item.attachment__filename,false)"/>
-                                           </a>
-                                       </span>
-                                   </div>
-                               </div>
+                   <div class="card rounded-0" style="width: 100%" >
+                       <div class="card-header">{{$t('header.f_species_type_data')}}</div>
+                       <div class="card-body">
+                           <div :class="idx === taxonTypeSpecimen.length -1 ? '' : 'border-bottom my-3'" v-for="item,idx in taxonTypeSpecimen">
+                               <span v-if="item.type_type__value !== null || item.type_type__value_en !== null">
+                                   <span v-translate="{et:item.type_type__value, en: item.type_type__value_en}"></span>:
+                               </span>
+                               <span v-if="item.specimen === null">{{item.repository}} {{item.specimen_number}}</span>
+                               <span v-if="item.specimen !== null"><a href="#" @click="openUrl({parent_url:'http://geocollections.info/specimen',object:item.specimen, width:500,height:500})">{{item.repository}} {{item.specimen_number}}</a></span><!--
+                            --><span v-if="isAtLeastOneDefinedAndNotEmpty({common: [item.level,item.attachment__filename,item.remarks],
+                               et:[item.stratigraphy__stratigraphy,item.stratigraphy_free,item.locality__locality],
+                               en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en,item.locality__locality_en]})">,</span>
+                               <a @click="openUrl({parent_url:geocollectionUrl + '/locality',object:item.locality, width:500,height:500})" href="#"
+                                  v-if="isDefinedAndNotNull(item.locality)" v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></a>
+                               <span v-if="isDifferentName({et:[item.locality__locality,item.locality_free],en:[item.locality__locality_en,item.locality_free_en]})">
+                                   (<span v-translate="{et:item.locality_free, en: item.locality_free_en}"></span>)
+                               </span>
+                               <span v-if="isDefinedAndNotNull(item.level)">{{item.level}},</span>
+                               <a @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:item.stratigraphy, width:500,height:500})" href="#"
+                                  v-if="isDefinedAndNotNull(item.stratigraphy)" v-translate="{et:item.stratigraphy__stratigraphy, en: item.stratigraphy__stratigraphy_en}"></a>
+                               <span v-if="isDifferentName({et:[item.stratigraphy__stratigraphy,item.stratigraphy_free],en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en]})">
+                                   (<span v-translate="{et:item.stratigraphy_free, en: item.stratigraphy_free_en}"></span>)
+                               </span>
+                               <span v-if="isDefinedAndNotNull(item.remarks)">{{item.remarks}}</span>
+                               <span class="pl-3" v-if="isDefinedAndNotNull(item.attachment__filename)">
+                                   <a @click="openUrl({parent_url:geocollectionUrl + '/file',object:item.attachment, width:500,height:500})" href="#">
+                                       <img class="img-thumbnail previewImage" :src="composeImgUrl(item.attachment__filename,false)"/>
+                                   </a>
+                               </span>
                            </div>
+                       </div>
+                   </div>
                    </b-row>
 
                    <b-row class="m-1" v-if="synonyms && synonyms.length > 0">
@@ -557,7 +564,7 @@
 
             isDifferentName(obj) {
                 let localizedName = this.$store.state.lang === 'et' ? obj['et'] : obj['en'];
-                return localizedName[0] !== localizedName[1]
+                return localizedName[0] !== localizedName[1] && localizedName[1] !== ""
             },
             //todo: utils
             composeImgUrl(uuid_filename,isFull) {
@@ -571,6 +578,21 @@
 
             //todo: utils
             isDefinedAndNotNull(value) { return !!value && value !== null },
+            arrayHasNonNullElement(arr) {
+                let this_ = this, found = false;
+                arr.forEach(function(el) {
+                    found = this_.isDefinedAndNotNull(el)
+                });
+                return found;
+            },
+            isAtLeastOneDefinedAndNotEmpty(arr) {
+                let found = this.arrayHasNonNullElement(arr['common']);
+                if (found) return found;
+
+                let localizedArr = this.$store.state.lang === 'et' ? arr['et'] : arr ['en']
+                found = this.arrayHasNonNullElement(localizedArr);
+                return found;
+            },
             isHigherTaxon(rank) { return !['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(rank) },
             calculateSpeciesIdx: function (idx) {
                 return (idx + 1) + this.$store.state.searchParameters.species.paginateBy * this.$store.state.searchParameters.species.page - this.$store.state.searchParameters.species.paginateBy
