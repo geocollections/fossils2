@@ -12,33 +12,25 @@
                </span>
            </b-row>
            <b-row class="ml-0">
-
-                       <div>
-                       <a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
-                           <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon"
-                                :title="taxon.fossil_group__taxon" style="height: 80px; margin-top: 0px; padding-right: 0px;" />
-                           <br />{{ taxon.fossil_group__taxon }}
-                       </a>
-                       <a :href="'/'+taxon.id" v-else-if="taxon.is_fossil_group == 1">
-                           <img border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon"
-                                :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" />
-                           <br />{{taxon.fossil_group__taxon}}
-                       </a>
-                       </div>
-                       <div>
-                       <h3><strong>{{taxonTitle}}</strong></h3>
-                       <div v-if="taxon.fossil_group__id && (taxon.rank__rank_en === 'Species' || taxon.rank__rank_en === 'Genus')">
-                           <strong>{{$t('header.f_fossil_group')}}:</strong>
-                           <a :href="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</a></div>
-                       <span style="font-size: 0.9em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
-                       <span style="font-size: 28pt"><strong>{{taxon.taxon}}</strong></span>
-                       <span style="font-size: 0.9em;"> {{taxon.author_year}}</span>
-                       <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length > 0">
-                                        <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span>
-                                    </span>
-                       <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length === 0"></span>
-                       </div>
-
+               <div>
+               <a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
+                   <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon" :title="taxon.fossil_group__taxon" style="height: 80px; margin-top: 0px; padding-right: 0px;" /></a>
+               <a :href="'/'+taxon.id" v-else-if="taxon.is_fossil_group === 1">
+                   <img border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon" :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" /></a>
+               </div>
+               <div>
+               <h3><strong>{{taxonTitle}}</strong></h3>
+               <div v-if="taxon.fossil_group__id && (taxon.rank__rank_en === 'Species' || taxon.rank__rank_en === 'Genus')">
+                   <strong>{{$t('header.f_fossil_group')}}:</strong>
+                   <a :href="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</a></div>
+               <span style="font-size: 0.9em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
+               <span style="font-size: 28pt"><strong>{{taxon.taxon}}</strong></span>
+               <span style="font-size: 0.9em;"> {{taxon.author_year}}</span>
+               <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length > 0">
+                                <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span>
+                            </span>
+               <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length === 0"></span>
+               </div>
            </b-row>
            <taxon-tabs></taxon-tabs>
            <tab-gallery v-if="$store.state.activeTab === 'gallery'"></tab-gallery>
@@ -121,6 +113,7 @@
                            </foldable>
                        </div>
                    </b-row>
+                   <!-- TYPE SPECIMEN DATA begins-->
                    <b-row class="m-1" v-if = "taxonTypeSpecimen">
                    <div class="card rounded-0" style="width: 100%" >
                        <div class="card-header">{{$t('header.f_species_type_data')}}</div>
@@ -155,7 +148,7 @@
                        </div>
                    </div>
                    </b-row>
-
+                   <!-- TYPE SPECIMEN DATA ends-->
                    <b-row class="m-1" v-if="synonyms && synonyms.length > 0">
                        <div class="card rounded-0" style="width:100%;">
                            <div class="card-header">{{$t('header.f_species_synonymy')}}</div>
