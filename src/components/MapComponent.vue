@@ -67,7 +67,7 @@
                     'Sample + conop_distribution':this.layers[2].leaflatObjects
                 };
 
-                L.control.layers(null, overlays,{'autoZIndex':true,'collapsed':false,'sortLayers':true}).addTo(this.map);
+                L.control.layers(null, overlays,{'autoZIndex':true,'collapsed':true,'sortLayers':true}).addTo(this.map);
             },
 
             loadMap : function() {
