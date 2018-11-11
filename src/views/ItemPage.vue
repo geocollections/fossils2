@@ -523,7 +523,7 @@
                 });
                 //
                 if (!this.isHigherTaxon(this.taxon.rank__rank_en)){
-                    cntSpecimenCollection(this.taxon.taxon).then((response) => {
+                    cntSpecimenCollection(this.taxon.hierarchy_string).then((response) => {
                         this.specimenCollectionCnt = response.count;
 
                     });

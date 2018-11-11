@@ -51,4 +51,6 @@ $duration = 1.4s
   100%
     stroke-dashoffset $offset
     transform rotate(450deg)
+
+
 </style>
