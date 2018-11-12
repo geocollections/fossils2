@@ -34,7 +34,7 @@
            </b-row>
            <taxon-tabs></taxon-tabs>
            <tab-gallery v-if="$store.state.activeTab === 'gallery'"></tab-gallery>
-           <tab-specimens v-if="$store.state.activeTab === 'specimens' && !isHigherTaxon(taxon.rank__rank_en)"></tab-specimens>
+           <tab-specimens v-if="$store.state.activeTab === 'specimens'"></tab-specimens>
            <div v-if="$store.state.activeTab === 'overview'">
            <b-row>
                <div class="col-lg-8">
@@ -521,13 +521,12 @@
                 fetchImages(this.taxon.hierarchy_string).then((response) => {
                     this.images = this.composeImageRequest(response.results)
                 });
-                //
-                if (!this.isHigherTaxon(this.taxon.rank__rank_en)){
-                    cntSpecimenCollection(this.taxon.hierarchy_string).then((response) => {
-                        this.specimenCollectionCnt = response.count;
 
-                    });
-                }
+                cntSpecimenCollection(this.taxon.hierarchy_string).then((response) => {
+                    this.specimenCollectionCnt = response.count;
+
+                });
+
 
             },
             getImages() {

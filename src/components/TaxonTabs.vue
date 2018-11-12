@@ -7,7 +7,7 @@
             <li class="nav-item" v-if="$parent.images && $parent.images.length > 0">
                 <a href="#"  v-on:click="setActiveTab('gallery')" class="nav-link"  :class="{ active: activeTab === 'gallery' }">{{ $t('tabs.gallery') }}</a>
             </li>
-            <li class="nav-item" v-if="!$parent.isHigherTaxon($parent.taxon.rank__rank_en) && !!$parent.specimenCollectionCnt && $parent.specimenCollectionCnt > 0">
+            <li class="nav-item" v-if="!!$parent.specimenCollectionCnt && $parent.specimenCollectionCnt > 0">
                 <a href="#"  v-on:click="setActiveTab('specimens')" class="nav-link"  :class="{ active: activeTab === 'specimens' }">{{ $t('tabs.specimens') }}
                     <span class="badge badge-secondary badge-pill">{{$parent.specimenCollectionCnt}}</span>
                 </a>
