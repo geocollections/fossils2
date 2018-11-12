@@ -101,7 +101,7 @@
           this.$router.push({ path: this.$router.currentRoute.path, query:  {mode:this.$store.state.mode, lang: lang}  });
       },
       simpleTaxonSearchApiCall(value) {
-          return 'https://api.geocollections.info/solr/fossils_search/?q=name:*'+ value +'*';
+          return 'https://api.geocollections.info/solr/fossils_search/?q=name:*'+ value +'*&f1=id,name';
       },
       displayResults: function (result) {
           return result.name[0]

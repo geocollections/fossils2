@@ -14,8 +14,8 @@
         <div class="lingallery_thumbnails" v-if="showThumbnails">
             <div class="lingallery_thumbnails_content">
                 <div v-for="(item, index) in items" class="lingallery_thumbnails_content_elem" :key="index">
-                    <a data-fancybox="gallery" :href="item.src" :data-caption="item.caption">
-                        <img :alt="item.caption" style="height: 200px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="100" :style="thumbnailStyle(index)">
+                   <a data-fancybox="gallery" :href="item.src" :data-caption="item.caption">
+                        <img v-if="index < 10" :alt="item.caption" style="height: 200px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="100" :style="thumbnailStyle(index)">
                     </a>
                 </div>
             </div>
@@ -82,9 +82,6 @@ export default {
   computed: {
     lingalleryStyle () {
       return this.windowWidth > this.width && !this.responsive ? 'width:' + this.width + 'px' : 'width:100%'
-    },
-    captionStyle () {
-      return 'color:' + this.textColor
     }
   },
   asyncComputed: {

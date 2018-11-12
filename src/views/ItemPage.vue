@@ -216,7 +216,7 @@
                </div>
                <div class="col-lg-4">
                    <b-row class="m-1">
-                       <lingallery  style="width: 100%" v-if="images && images.length > 0" ref="lingallery" :width="400" :height="350" :items="images "/>
+                       <lingallery  style="width: 100%" v-if="images && images.length > 0" ref="lingallery" :width="400" :height="350" :items="images"/>
                    </b-row>
 
                    <b-row class="m-1" v-if="isTaxonomicTreeIsLoaded">
@@ -535,12 +535,12 @@
                     fetchSelectedImages(this.taxon.id).then((response) => {
                         if(response.results.length === 0) {
                             fetchImages(this.taxon.hierarchy_string).then((response) => {
-                                this.images = this.$parent.composeImageRequest(response.results)
+                                this.images = this.composeImageRequest(response.results)
                                 this.imagesLoading = false;
                                 this.imagesTitle = 'header.f_higher_taxon_images_title_visualtool'
                             });
                         } else {
-                            this.images = this.$parent.composeImageRequest(response.results)
+                            this.images = this.composeImageRequest(response.results)
                             this.imagesLoading = false
                             this.imagesTitle = 'header.f_higher_taxon_images_title_gallery'
                         }
