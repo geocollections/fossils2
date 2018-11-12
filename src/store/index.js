@@ -7,9 +7,6 @@ import VueCookies from 'vue-cookies'
 Vue.use(Vuex)
 Vue.use(VueCookies)
 export function createStore () {
-    // Vue.nextTick(() => {
-    //     console.log(Vue.cookies)
-    // })
 
   return new Vuex.Store({
     state: {
