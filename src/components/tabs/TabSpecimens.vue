@@ -47,16 +47,16 @@
                             </span>
                         </div>
                         <!-- Currently both are links because rock__name is mostly null. -->
-                        <!--<div>-->
-                            <!--<a href="#" @click="$parent.openUrl({parent_url:$parent.kividUrl,object:item.specimenidentificationgeologies__rock__id, width:500,height:500})">-->
-                                <!--<span v-translate="{et:item.specimenidentificationgeologies__rock__name,en:item.specimenidentificationgeologies__rock__name_en}"></span></a>-->
-                            <!--<span v-if="$parent.isDefinedAndNotNull(item.specimenidentificationgeologies__rock__name) &&-->
-                            <!--$parent.isDefinedAndNotNull(item.specimenidentificationgeologies__name)"> | </span>-->
-                            <!--<span v-if="($parent.isDefinedAndNotNull(item.specimenidentificationgeologies__name) || $parent.isDefinedAndNotNull(item.specimenidentificationgeologies__name_en))-->
-                            <!--&& ((item.rock != item.specimenidentificationgeologies__name) || (item.rock_en != item.specimenidentificationgeologies__name_en))">-->
-                            <!--<i><span v-translate="{et:item.specimenidentificationgeologies__name,en:item.specimenidentificationgeologies__name_en}"></span></i>-->
-                            <!--</span>-->
-                        <!--</div>-->
+                        <div>
+                            <a href="#" @click="$parent.openUrl({parent_url:$parent.kividUrl,object:item.rock_id, width:500,height:500})">
+                                <span v-translate="{et:item.rock,en:item.rock_en}"></span></a>
+                            <span v-if="$parent.isDefinedAndNotNull(item.rock) &&
+                            $parent.isDefinedAndNotNull(item.rock_txt)"> | </span>
+                            <span v-if="($parent.isDefinedAndNotNull(item.rock_txt) || $parent.isDefinedAndNotNull(item.rock_txt_en))
+                            && ((item.rock !== item.rock_txt) || (item.rock_en !== item.rock_txt_en))">
+                            <i><span v-translate="{et:item.rock_txt,en:item.rock_txt_en}"></span></i>
+                            </span>
+                        </div>
                     </td>
                     <td>
                         <div v-if="item.locality != null && item.locality_en != null">
