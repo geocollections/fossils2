@@ -442,12 +442,10 @@
 
         },
         beforeMount() {
-            document.body.addEventListener('scroll', this.handleScroll);
-            document.addEventListener('scroll', this.handleScroll);
+            window.addEventListener('scroll', this.handleScroll);
         },
         beforeDestroy () {
-            document.body.addEventListener('scroll', this.handleScroll);
-            document.addEventListener('scroll', this.handleScroll);
+            window.addEventListener('scroll', this.handleScroll);
         },
 
         mounted () {
