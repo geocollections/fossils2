@@ -670,7 +670,7 @@
             },
 
             handleScroll (e) {
-                this.scroll =  document.documentElement.scrollTop > 150;
+                this.scroll =  window.scrollY > 150;
             }
         },
 
