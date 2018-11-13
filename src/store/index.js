@@ -26,6 +26,8 @@ export function createStore () {
         ranks: []
       },
       searchParameters: {
+          selectedImages: { page: 1, paginateBy: 100 },
+          images: { page: 1, paginateBy: 20 },
           species: { page: 1, paginateBy: 20 },
           specimens: { page: 1, paginateBy: 10, sortBy: 'specimen_number',  sortByAsc: true, order: "ASCENDING"},
       },

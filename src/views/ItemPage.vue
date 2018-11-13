@@ -518,23 +518,19 @@
                     this.isHierarchyLoaded = true;
                 });
 
-                fetchImages(this.taxon.hierarchy_string).then((response) => {
-                    this.images = this.composeImageRequest(response.results)
-                });
+                this.getImages();
 
                 cntSpecimenCollection(this.taxon.hierarchy_string).then((response) => {
                     this.specimenCollectionCnt = response.count;
 
                 });
-
-
             },
             getImages() {
                 this.imagesLoading = true;
                 if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
-                    fetchSelectedImages(this.taxon.id).then((response) => {
+                    fetchSelectedImages(this.taxon.id,this.$store.state.searchParameters).then((response) => {
                         if(response.results.length === 0) {
-                            fetchImages(this.taxon.hierarchy_string).then((response) => {
+                            fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
                                 this.images = this.composeImageRequest(response.results)
                                 this.imagesLoading = false;
                                 this.imagesTitle = 'header.f_higher_taxon_images_title_visualtool'
@@ -606,9 +602,6 @@
             //todo: utils
             formatHierarchyString: function(value) {
                 return value.replace(/-/g, ',');
-            },
-            navigate (link)  {
-                this.$router.push({ path: '/'+link})
             },
             setFancyBoxCaption: function(el, this_, isSpecimen) {
                 let text="", imageName = el.taxon, infoId = el.specimen_id, imageId = el.attachment_id, navigateId = el.taxon_id;

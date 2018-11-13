@@ -60,13 +60,11 @@ export function fetchChildren (id, mode) {
     let mode_ = applyMode(mode);
     return fetch(`taxon/?parent=${id}${mode_}&fields=${returningFields}`)
 }
-export function fetchSelectedImages (id) {
-    return fetch(`taxon/?sql=get_taxon_selected_images&keyword=${id}`)
+export function fetchSelectedImages (id,searchParameters) {
+    return fetch(`taxon/?sql=get_taxon_selected_images&keyword=${id}&page=${searchParameters.selectedImages.page}&paginate_by=${searchParameters.selectedImages.paginateBy}`)
 }
-export function fetchImages (hierarchy_string) {
-    // return fetch(`taxon_image/?taxon=${taxon}&order_by=sort`)
-    // return fetch(`taxon_image/?taxon__hierarchy_string__istartswith=${hierarchy_string}&order_by=sort`)
-    return fetch(`taxon/?sql=get_taxon_images&keyword=${hierarchy_string}`)
+export function fetchImages (hierarchy_string,searchParameters) {
+    return fetch(`taxon/?sql=get_taxon_images&keyword=${hierarchy_string}&page=${searchParameters.images.page}&paginate_by=${searchParameters.images.paginateBy}`)
 }
 
 export function fetchTaxonPages (id,lang) {
@@ -124,8 +122,8 @@ export function fetchNumberOfSpecimenIdentifications (id) {
     return fetch(`specimen_identification/?taxon_id=${id}&fields=id`)
 }
 
-export function fetchAttachment (hierarchy_string) {
-    return fetch(`attachment/?specimen__specimenidentification__taxon__hierarchy_string__istartswith=${hierarchy_string}&fields=id,specimen_id,specimen__specimen_id,specimen_image_id,database__acronym,uuid_filename&format=json&distinct=true&order_by=stars`)
+export function fetchAttachment (hierarchy_string,searchParameters) {
+    return fetch(`attachment/?specimen__specimenidentification__taxon__hierarchy_string__istartswith=${hierarchy_string}&fields=id,specimen_id,specimen__specimen_id,specimen_image_id,database__acronym,uuid_filename&format=json&distinct=true&order_by=stars&page=${searchParameters.images.page}&paginate_by=${searchParameters.images.paginateBy}`)
 }
 
 export function fetchRanks () {
