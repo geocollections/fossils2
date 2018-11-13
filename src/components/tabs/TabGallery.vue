@@ -10,6 +10,7 @@
                         </a>
                     </div>
                 </div>
+                <div id="bottomOfGallery"></div>
                 <div v-if="imagesLoading">
                     <spinner :show="imagesLoading"></spinner><span class="p-2">{{$t('messages.pageLoading')}}</span>
                 </div>
@@ -46,8 +47,10 @@
                 const visible = document.documentElement.clientHeight
                 const pageHeight = document.documentElement.scrollHeight
                 const footerHeight = 700;
-                const bottomOfPage = visible + scrollY >= pageHeight - footerHeight
-                return bottomOfPage || pageHeight < visible
+                const bottomOfPage = visible + scrollY >= pageHeight-1
+                //remove above code if it is ok?
+                // return bottomOfPage || pageHeight < visible
+                return document.getElementById('bottomOfGallery').getBoundingClientRect().y < 500
             },
             loadMoreImages() {
                 if(!this.$store.state.searchParameters.images.allowPaging || this.noMoreResults) {
