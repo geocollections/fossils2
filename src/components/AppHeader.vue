@@ -3,14 +3,14 @@
       <span id="top"></span>
       <div class="container-fluid">
         <b-navbar toggleable="md" type="light"id="mainNav" class="border-bottom fixed-top">
-          <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
           <b-navbar-brand
                   :style="{
                   'color':scroll ? '#eb3812' : '',
                   // 'letter-spacing': scroll ? '0px':'2px',
-                  'font-size':scroll ? '14px' : 'larger',
+                  'font-size':scroll ? '18px' : 'larger',
                   'text-transform': 'uppercase','font-weight':'700 !important'}"
                   href="/">{{ $t('header.title') }}</b-navbar-brand>
+          <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
           <b-collapse is-nav id="nav_collapse">
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
