@@ -6,7 +6,7 @@
                     <h3>{{$t($parent.imagesTitle)}} ({{$parent.taxon.taxon}})</h3>
                     <div v-for="image in $parent.images" style="float: left; position: relative;" class="image_highlight" v-if="image.src" >
                         <a data-fancybox="gallery2" :href="image.src" :data-caption="image.caption">
-                            <img :alt="image.caption" style="height: 200px;" :src="image.thumbnail"/>
+                            <img :alt="image.caption" style="height: 200px;" :src="image.thumbnail" onerror="this.style.display='none'"/>
                         </a>
                     </div>
                 </div>
@@ -28,18 +28,20 @@
     export default {
         name: "TabGallery",
         components: {Spinner},
-        data() {return {bottom: false, imagesLoading: true, noMoreResults: false}},
+        data() {return {bottom: false, imagesLoading: false, noMoreResults: false}},
         created() {
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()
-            })
+            });
+            this.triggerFirstScroll()
         },
+
         watch: {
             bottom(bottom) {
                 if (bottom) {
                     this.loadMoreImages();
                 }
-            }
+            },
         },
         methods: {
             bottomVisible() {
@@ -50,7 +52,6 @@
                 const bottomOfPage = visible + scrollY >= pageHeight-1
                 //remove above code if it is ok?
                 // return bottomOfPage || pageHeight < visible
-                console.log(document.getElementById('bottomOfGallery').getBoundingClientRect().y)
                 return document.getElementById('bottomOfGallery').getBoundingClientRect().y < 700
             },
             loadMoreImages() {
@@ -72,8 +73,9 @@
                     }
                     this.imagesLoading = false;
                 });
-
-
+            },
+            triggerFirstScroll() {
+                window.scrollTo(0, 1);
             }
 
         }

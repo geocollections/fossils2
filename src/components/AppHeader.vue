@@ -123,7 +123,7 @@
           this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode, lang: this.$store.state.lang} })
       },
       handleScroll (e) {
-          this.scroll =  document.documentElement.scrollTop > 0;
+          this.scroll =  document.documentElement.scrollTop > 1;
       }
 
     }
