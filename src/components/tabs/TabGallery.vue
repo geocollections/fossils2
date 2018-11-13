@@ -4,7 +4,7 @@
             <b-row class="m-1" v-if="!$parent.imagesLoading">
                 <div class="photogallery">
                     <h3>{{$t($parent.imagesTitle)}} ({{$parent.taxon.taxon}})</h3>
-                    <div v-for="image in $parent.images" style="float: left; position: relative;" class="image_highlight">
+                    <div v-for="image in $parent.images" style="float: left; position: relative;" class="image_highlight" v-if="image.src" >
                         <a data-fancybox="gallery2" :href="image.src" :data-caption="image.caption">
                             <img :alt="image.caption" style="height: 200px;" :src="image.thumbnail"/>
                         </a>
@@ -60,9 +60,11 @@
                     fetchAttachment(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters);
 
                 query.then((response) => {
-                    this.$parent.images = this.$parent.images.concat(this.$parent.composeImageRequest(response.results));
+                    if(response.results.length > 0) {
+                        this.$parent.images = this.$parent.images.concat(this.$parent.composeImageRequest(response.results));
+                        this.$store.state.searchParameters.images.page =this.$store.state.searchParameters.images.page + 1
+                    }
                     this.imagesLoading = false;
-                    this.$store.state.searchParameters.images.page =this.$store.state.searchParameters.images.page + 1
                 });
 
 
