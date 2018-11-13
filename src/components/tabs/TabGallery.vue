@@ -50,6 +50,10 @@
                 return bottomOfPage || pageHeight < visible
             },
             loadMoreImages() {
+                if(!this.$store.state.searchParameters.images.allowPaging) {
+                    this.imagesLoading = false;
+                    return;
+                }
                 this.imagesLoading = true;
                 let query = this.$parent.isHigherTaxon(this.$parent.taxon.rank__rank_en) ?
                     fetchImages(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters) :

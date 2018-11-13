@@ -123,7 +123,8 @@ export function fetchNumberOfSpecimenIdentifications (id) {
 }
 
 export function fetchAttachment (hierarchy_string,searchParameters) {
-    return fetch(`attachment/?specimen__specimenidentification__taxon__hierarchy_string__istartswith=${hierarchy_string}&fields=id,specimen_id,specimen__specimen_id,specimen_image_id,database__acronym,uuid_filename&format=json&distinct=true&order_by=stars&page=${searchParameters.images.page}&paginate_by=${searchParameters.images.paginateBy}`)
+    let applyPaging = searchParameters.images.allowPaging ? '&page='+searchParameters.images.page+'&paginate_by='+searchParameters.images.paginateBy : ''
+    return fetch(`attachment/?specimen__specimenidentification__taxon__hierarchy_string__istartswith=${hierarchy_string}&fields=id,specimen_id,specimen__specimen_id,specimen_image_id,database__acronym,uuid_filename&format=json&distinct=true&order_by=stars${applyPaging}`)
 }
 
 export function fetchRanks () {

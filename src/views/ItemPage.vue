@@ -481,7 +481,6 @@
                     },
                     toggle: '',
                     mapDataLoaded: false,
-                    isSpecimen: false,
                     sister_taxa: {},
                     hierarchy: {},
                     numberOfSpecimen: {},
@@ -527,6 +526,7 @@
             },
             getImages() {
                 this.imagesLoading = true;
+
                 if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
                     fetchSelectedImages(this.taxon.id,this.$store.state.searchParameters).then((response) => {
                         if(response.results.length === 0) {
@@ -542,8 +542,8 @@
                         }
                     });
                 } else {
-                    fetchAttachment(this.taxon.hierarchy_string).then((response) => {
-                        this.isSpecimen = true;
+                    fetchAttachment(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
+                        this.$store.state.searchParameters.images.allowPaging = response.page === undefined ? false : true
                         this.images = this.composeImageRequest(response.results);
                         this.imagesLoading = false;
                     });
