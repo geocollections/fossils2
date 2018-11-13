@@ -27,7 +27,7 @@
     export default {
         name: "TabGallery",
         components: {Spinner},
-        data() {return {bottom: false, imagesLoading: true}},
+        data() {return {bottom: false, imagesLoading: true, noMoreResults: false}},
         created() {
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()
@@ -50,7 +50,7 @@
                 return bottomOfPage || pageHeight < visible
             },
             loadMoreImages() {
-                if(!this.$store.state.searchParameters.images.allowPaging) {
+                if(!this.$store.state.searchParameters.images.allowPaging || this.noMoreResults) {
                     this.imagesLoading = false;
                     return;
                 }
@@ -63,6 +63,8 @@
                     if(response.results.length > 0) {
                         this.$parent.images = this.$parent.images.concat(this.$parent.composeImageRequest(response.results));
                         this.$store.state.searchParameters.images.page =this.$store.state.searchParameters.images.page + 1
+                    } else {
+                        this.noMoreResults = true;
                     }
                     this.imagesLoading = false;
                 });
