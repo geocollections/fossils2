@@ -1,6 +1,6 @@
 <template>
   <ul style="padding-left: 0 !important;">
-    <table v-if="isDefinedAndNotEmpty(ranks)">
+    <table v-if="ranks">
       <tbody class="hierarchy_tree">
       <tr  v-for="item in taxonomicTree.nodes">
         <td v-if="isHigherRank(item.rank_en) || item.id === taxon.id" align="right" valign="top" style="color: #999;" v-translate="{et:item.rank, en: item.rank_en}"></td>
