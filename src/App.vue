@@ -109,6 +109,7 @@
 </script>
 
 <style src="../node_modules/bootstrap/dist/css/bootstrap.css"></style>
+<style src="../node_modules/vue-multiselect/dist/vue-multiselect.min.css"></style>
 <!--<style src="../node_modules/bootstrap-vue/dist/bootstrap-vue.css"></style>-->
 <style src="../static/css/fonts.css"></style>
 <style src="../static/css/creative.css"></style>
