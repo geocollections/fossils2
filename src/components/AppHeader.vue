@@ -117,7 +117,7 @@
             location.replace('/'+value.id)
         },
         displayResults: function (item) {
-            return `${item.name[0]}`
+            return `${item.name}`
         },
         changeLang(lang) {
             if (this.$store.state.lang === lang) return;

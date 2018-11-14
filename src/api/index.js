@@ -152,7 +152,8 @@ export function fetchSpecimenCollection(hierarchy_string,searchParameters) {
 }
 
 export function fetchSimpleTaxonSearch (value) {
-    return fetch(`solr/fossils_search/?q=name:*${value}*`)
-    //     //return 'https://api.geocollections.info/taxon/?paginate_by=10&fields=id,taxon,common_name__name,rank__rank_short&multi_search=value:' + value + ';fields:taxon,common_name__name;lookuptype:icontains'
+    // return fetch(`solr/fossils_search/?q=name:*${value}*`)
+    return fetch(`taxon/?sql=simple_taxon_search&keyword=${value}`)
+    // return 'https://api.geocollections.info/taxon/?paginate_by=10&fields=id,taxon,common_name__name,rank__rank_short&multi_search=value:' + value + ';fields:taxon,common_name__name;lookuptype:icontains'
     //   // return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=id,taxon,rank__rank_en&multi_search=value:' + value + ';fields:taxon;lookuptype:icontains'
 }

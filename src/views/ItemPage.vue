@@ -1,6 +1,5 @@
 <template>
    <section>
-       <!--<div v-if=""></div>-->
        <div style="letter-spacing: 3px;" class="m-md-3 text-center"  v-if="!isTaxonExisted">
            <img class="rounded-circle border" style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/><br/>
            <p>{{$t('main.taxon_do_not_exist')}}</p>
