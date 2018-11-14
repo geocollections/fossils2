@@ -18,7 +18,7 @@ export function createRouter () {
       { path: '/:id(\\d+)',name: 'ItemPage', component: ItemPage , meta: { isSpecies: false} },
       { path: '/page/:id', component: StaticPage },
       { path: '/', component: FrontPage },
-      { path: '*', redirect: '/' }
+      { path: '*', redirect: '/' },
     ]
   })
 }

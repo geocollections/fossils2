@@ -59,7 +59,7 @@
 <script>
   import VueMultiselect from 'vue-multiselect'
   import LangButtons from '../components/LangButtons.vue'
-  import Autocomplete from 'vuejs-auto-complete'
+
   import {
       fetchSimpleTaxonSearch
   } from '../api'
@@ -67,8 +67,7 @@
     name: "app-header",
     components:  {
       VueMultiselect,
-      LangButtons,
-      Autocomplete
+      LangButtons
     },
 
     data ()  {

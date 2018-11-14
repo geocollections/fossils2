@@ -27,7 +27,8 @@ Vue.mixin({
       bar.finish()
       next()
     }
-  }
+  },
+
 })
 
 const { app, router, store } = createApp()

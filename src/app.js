@@ -67,14 +67,16 @@ export function createApp () {
      ***  TRANSLATION CODE END  ***
      ******************************/
 
-    // add query to route
-    // router.beforeEach((to, from, next) => {
-    //     //if query is empty set from cookie
-    //
-    //     let query = {mode: store.state.mode , lang : store.state.lang}
-    //     next({query: store.state.route.query, replace: true });
-    //
-    // });
+    // redirect to default path if taxon_id = 29 requested
+    router.beforeEach((to, from, next) => {
+        if(to.path === '/29') {
+            next({path:'/'})
+        } else {
+            next()
+        }
+        // let query = {mode: store.state.mode , lang : store.state.lang}
+        // next({query: store.state.route.query, replace: true });
+    });
     // register global directives filters.
     Object.keys(directives).forEach(key => {
         Vue.directive(key, directives[key])
