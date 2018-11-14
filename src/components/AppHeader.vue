@@ -14,14 +14,21 @@
           <b-collapse is-nav id="nav_collapse">
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
-              <form class="form-inline my-2 my-lg-0 mr-5" style="color:red !important; ">
-                <autocomplete v-if="isMounted"
-                              ref="autocomplete"
-                              :source="simpleTaxonSearchApiCall"
-                              results-property="results"
-                              :results-display="displayResults"
-                              :placeholder="$t('search.fossils_search')"
-                              @selected="onSelect"></autocomplete></form>
+              <form class="form-inline my-lg-0 mr-5">
+                  <vue-multiselect class="align-middle" style=" width: 20em !important; text-align: center !important;"
+                                   id="search"
+                                   :custom-label="displayResults" track-by="code"
+                                   :placeholder="$t('search.fossils_search')"
+                                   :options="searchResults"
+                                   :searchable="true"
+                                   :loading="isLoading"
+                                   :max-height="600"
+                                   :show-no-results="false"
+                                   :show-labels="false"
+                                   @select="onSelect" @search-change="simpleTaxonSearchApiCall">
+                    <template slot="noResult"><b>NoRes</b></template>
+                  </vue-multiselect>
+              </form>
               <b-nav-item-dropdown  right>
                 <template slot="button-content" >{{$t(mode)}}</template>
                 <b-dropdown-item @click="changeMode('in_estonia')" :class="$store.state.mode === 'in_estonia'? 'font-weight-bold' : ''">{{$t('header.in_estonia_mode')}}</b-dropdown-item>
@@ -50,18 +57,22 @@
     </header>
 </template>
 <script>
+  import VueMultiselect from 'vue-multiselect'
   import LangButtons from '../components/LangButtons.vue'
   import Autocomplete from 'vuejs-auto-complete'
-
+  import {
+      fetchSimpleTaxonSearch
+  } from '../api'
   export default {
     name: "app-header",
     components:  {
+      VueMultiselect,
       LangButtons,
       Autocomplete
     },
 
     data ()  {
-        return {isMounted : false, scroll:false}
+        return {isMounted : false, scroll:false, searchResults: [], isLoading: false, selectedTaxon: null}
     },
     computed: {
         langCode () {
@@ -78,7 +89,8 @@
             if(this.$store.state.mode === 'in_baltoscandia') return 'header.in_baltoscandia_mode';
             else if(this.$store.state.mode === 'in_estonia') return 'header.in_estonia_mode';
             else return 'header.global_mode';
-        }
+        },
+
 
     },
     mounted: function(){
@@ -91,48 +103,43 @@
         document.addEventListener('scroll', this.handleScroll);
     },
     methods: {
-      changeLang(lang) {
-          if (this.$store.state.lang === lang) return;
-          this.$i18n.locale = lang;
-          if (lang === 'ee') lang = 'et';
-          this.$store.commit('SET_LANG', {lang});
-          this.$cookies.set('fossils_lang',lang)
-          this.$router.push({ path: this.$router.currentRoute.path, query:  {mode:this.$store.state.mode, lang: lang}  });
-      },
-      simpleTaxonSearchApiCall(value) {
-          return 'https://api.geocollections.info/solr/fossils_search/?q=name:*'+ value +'*';
-          //return 'https://api.geocollections.info/taxon/?paginate_by=10&fields=id,taxon,common_name__name,rank__rank_short&multi_search=value:' + value + ';fields:taxon,common_name__name;lookuptype:icontains'
-        // return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=id,taxon,rank__rank_en&multi_search=value:' + value + ';fields:taxon;lookuptype:icontains'
-      },
-      displayResults: function (result) {
-          return result.name[0]
-          // console.log(this.$refs.autocomplete)
-        //return result.rank__rank_short + ' ' + result.taxon + (result.common_name__name === null ? '' :' (' + result.common_name__name + ')')
-      },
-
-      onSelect(value) {
-        this.$refs.autocomplete.clearValues()
-          //Hard refresh is not working
-        // this.$router.push({ path: '/'+value.selectedObject.id})
-          location.replace('/'+value.selectedObject.id)
-
-      },
-      changeMode: function(mode) {
-          this.$store.commit('SET_MODE', {mode})
-          this.$cookies.set('fossils_mode',mode)
-          this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode, lang: this.$store.state.lang} })
-      },
-      handleScroll (e) {
-          this.scroll =  document.documentElement.scrollTop > 1;
-      }
-
+        simpleTaxonSearchApiCall(value) {
+            if(value.length < 3)  this.searchResults = [];
+            if(value.length > 2) {
+                this.isLoading = true;
+                fetchSimpleTaxonSearch(value).then((response) => {
+                    this.isLoading = false;
+                    this.searchResults = response.results
+                });
+            }
+        },
+        onSelect (value) {
+            this.selectedTaxon = null
+            location.replace('/'+value.id)
+        },
+        displayResults: function (item) {
+            return `${item.name[0]}`
+        },
+        changeLang(lang) {
+            if (this.$store.state.lang === lang) return;
+            this.$i18n.locale = lang;
+            if (lang === 'ee') lang = 'et';
+            this.$store.commit('SET_LANG', {lang});
+            this.$cookies.set('fossils_lang',lang)
+            this.$router.push({ path: this.$router.currentRoute.path, query:  {mode:this.$store.state.mode, lang: lang}  });
+        },
+        changeMode: function(mode) {
+            this.$store.commit('SET_MODE', {mode})
+            this.$cookies.set('fossils_mode',mode)
+            this.$router.push({ path: this.$router.currentRoute.path, query: {mode:mode, lang: this.$store.state.lang} })
+        },
+        handleScroll (e) {
+            this.scroll =  document.documentElement.scrollTop > 1;
+        }
     }
   }
 </script>
+<style src="../../node_modules/vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
-  .autocomplete__box {
-    border:2px solid #eb3812 !important;
-    border-radius: 2px !important;
-    padding: 1px 5px !important;
-  }
+
 </style>
