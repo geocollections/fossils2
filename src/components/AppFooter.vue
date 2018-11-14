@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer class="navbar fixed-bottom">
     <!--<div class="container">-->
       <!--<div class="row">-->
         <!--<div class="col-lg-12">-->
