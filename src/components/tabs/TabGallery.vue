@@ -32,7 +32,7 @@
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()
             });
-            this.triggerFirstScroll()
+            this.loadMoreImages()
         },
 
         watch: {
