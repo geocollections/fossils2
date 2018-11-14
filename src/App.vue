@@ -1,8 +1,8 @@
 <template>
-  <div id="app" class="container-fluid">
+  <div id="app">
     <app-header></app-header>
-    <app-content/>
-    <app-footer/>
+    <app-content class="container-fluid"/>
+    <app-footer style="position: relative !important;; bottom: 0 !important;left: 0; !important;"/>
   </div>
 </template>
 <script>
