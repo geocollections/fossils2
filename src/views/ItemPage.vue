@@ -485,7 +485,6 @@
                     requestingData: false,
                     isSisterTaxaLoaded: false,
                     isHierarchyLoaded: false,
-                    imagesTitle: '',
                     allSpecies:[],
                     response: {
                         count: 0,
@@ -529,19 +528,19 @@
                     fetchSelectedImages(this.taxon.id,this.$store.state.searchParameters).then((response) => {
                         if(response.results.length === 0) {
                             fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
+                                this.$store.state.searchParameters.images.page =this.$store.state.searchParameters.images.page + 1
                                 this.images = this.composeImageRequest(response.results)
                                 this.imagesLoading = false;
-                                this.imagesTitle = 'header.f_higher_taxon_images_title_visualtool'
                             });
                         } else {
                             this.images = this.composeImageRequest(response.results)
-                            this.imagesLoading = false
-                            this.imagesTitle = 'header.f_higher_taxon_images_title_gallery'
+                            this.imagesLoading = false;
                         }
                     });
                 } else {
                     fetchAttachment(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
                         this.$store.state.searchParameters.images.allowPaging = response.page === undefined ? false : true
+                        this.$store.state.searchParameters.images.page =this.$store.state.searchParameters.images.page + 1
                         this.images = this.composeImageRequest(response.results);
                         this.imagesLoading = false;
                     });

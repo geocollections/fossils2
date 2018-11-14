@@ -3,7 +3,6 @@
         <transition name="fade">
             <b-row class="m-1" v-if="!$parent.imagesLoading">
                 <div class="photogallery">
-                    <h3>{{$t($parent.imagesTitle)}} ({{$parent.taxon.taxon}})</h3>
                     <div v-for="image in $parent.images" style="float: left; position: relative;" class="image_highlight" v-if="image.src" >
                         <a data-fancybox="gallery2" :href="image.src" :data-caption="image.caption">
                             <img :alt="image.caption" style="height: 200px;" :src="image.thumbnail" onerror="this.style.display='none'"/>
