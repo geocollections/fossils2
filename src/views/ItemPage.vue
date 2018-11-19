@@ -527,7 +527,10 @@
                     fetchSelectedImages(this.taxon.id,this.$store.state.searchParameters).then((response) => {
                         if(response.results.length === 0) {
                             fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
-                                this.$store.state.searchParameters.images.page =this.$store.state.searchParameters.images.page + 1
+                                this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
+                                    this.$store.state.searchParameters.images.page,response,
+                                    this.$store.state.searchParameters.images.paginateBy)
+                                // this.$store.state.searchParameters.images.page = this.$store.state.searchParameters.images.page + 1
                                 this.images = this.composeImageRequest(response.results)
                                 this.imagesLoading = false;
                             });
@@ -538,8 +541,10 @@
                     });
                 } else {
                     fetchAttachment(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
-                        this.$store.state.searchParameters.images.allowPaging = response.page === undefined ? false : true
-                        this.$store.state.searchParameters.images.page =this.$store.state.searchParameters.images.page + 1
+                        // this.$store.state.searchParameters.images.page = this.$store.state.searchParameters.images.page + 1
+                        this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
+                            this.$store.state.searchParameters.images.page,response,
+                            this.$store.state.searchParameters.images.paginateBy)
                         this.images = this.composeImageRequest(response.results);
                         this.imagesLoading = false;
                     });
@@ -549,6 +554,11 @@
             isDifferentName(obj) {
                 let localizedName = this.$store.state.lang === 'et' ? obj['et'] : obj['en'];
                 return localizedName[0] !== localizedName[1] && localizedName[1] !== ""
+            },
+            isAllowedMorePaging(page, response, paginateBy) {
+                let isAllowed = !(response.page === undefined || (parseInt(response.count) / page < paginateBy))
+                if(isAllowed) page += 1;
+                return isAllowed
             },
             //todo: utils
             composeImgUrl(uuid_filename,isFull) {

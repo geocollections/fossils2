@@ -70,6 +70,9 @@
                     } else {
                         this.noMoreResults = true;
                     }
+                    this.$store.state.searchParameters.images.allowPaging = this.$parent.isAllowedMorePaging(
+                        this.$store.state.searchParameters.images.page,response,
+                        this.$store.state.searchParameters.images.paginateBy)
                     this.imagesLoading = false;
                 });
             },

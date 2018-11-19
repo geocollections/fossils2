@@ -146,7 +146,7 @@ export function fetchSpecimenCollection(hierarchy_string,searchParameters) {
     //     'specimenidentificationgeologies__name,specimenidentificationgeologies__name_en,specimenidentificationgeologies__rock__name,specimenidentificationgeologies__rock__name_en,' +
     //     'agent_collected__agent,agent_collected__forename,agent_collected__surename,original_status__value,original_status__value_en,attachment__filename&distinct=true'
     // return fetch(`specimen/?specimenidentification__taxon__taxon__hierarchy=${taxon}&order_by=-id${returningFields}&page=${searchParameters.specimens.page}&paginate_by=${searchParameters.specimens.paginateBy}${orderBy}`)
-    let start = searchParameters.specimens.paginateBy*searchParameters.specimens.page-searchParameters.specimens.paginateBy+1;
+    let start = searchParameters.specimens.paginateBy*(searchParameters.specimens.page-1);
     let orderBy = searchParameters.specimens.order === 'ASCENDING' ? searchParameters.specimens.sortBy + ' asc': searchParameters.specimens.sortBy + ' desc';
     return fetch(`solr/specimen/?q=hierarchy_string:(${hierarchy_string}*)&rows=${searchParameters.specimens.paginateBy}&start=${start}&sort=${orderBy}`)
 }
