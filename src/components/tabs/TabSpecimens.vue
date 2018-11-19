@@ -147,7 +147,6 @@
                 this.loading = true;
                 this.setDefaultResponse();
                 fetchSpecimenCollection(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
-                    console.log(response)
                     this.response = response;
                     this.loading = false;
                 });

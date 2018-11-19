@@ -30,7 +30,6 @@
 
             checkAllLayers() {
                 this.layers.sort((a, b) => a.id - b.id);
-                console.log(this.layers.sort((a, b) => a.id - b.id).reverse())
                 for(let i = 0; i < this.layers.length; i++){
                     if(this.layers[i].active)
                         this.map.addLayer(this.layers[i].leaflatObjects)
@@ -83,12 +82,6 @@
                     }
                 );
                 this.tileLayer.addTo(this.map);
-
-                this.map.on('click', function() {
-                    $(".layers input[type='checkbox']:checked").each(function() {
-                        console.info(this.id, 'is checked');
-                    });
-                });
 
             },
 

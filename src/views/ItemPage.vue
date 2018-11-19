@@ -556,7 +556,6 @@
             isAllowedMorePaging(page, response, paginateBy) {
                 let isAllowed = !(response.page === undefined || (parseInt(response.count) / page < paginateBy))
                 if(isAllowed) page += 1;
-                console.log(response)
                 return isAllowed
             },
             //todo: utils
@@ -615,7 +614,7 @@
                         additionalInfo = {imageName: el.link_taxon, infoId:el.specimen_id, imageId: el.attachment_id, navigateId: el.link_id};
                         break;
                     case 'species_image':
-                        additionalInfo = {imageName: el.link__taxon, infoId:el.specimen_id, imageId: el.id, navigateId: el.link};
+                        additionalInfo = {imageName: el.database__acronym +' ' +el.id, infoId:el.specimen_id, imageId: el.specimen_image_id, navigateId: el.link};
                         break;
                     case 'non_species_image':
                         additionalInfo = {imageName: el.taxon, infoId:el.specimen_id, imageId: el.attachment_id, navigateId: el.taxon_id};
