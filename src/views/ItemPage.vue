@@ -530,7 +530,6 @@
                                 this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
                                     this.$store.state.searchParameters.images.page,response,
                                     this.$store.state.searchParameters.images.paginateBy)
-                                // this.$store.state.searchParameters.images.page = this.$store.state.searchParameters.images.page + 1
                                 this.images = this.composeImageRequest(response.results)
                                 this.imagesLoading = false;
                             });
@@ -541,7 +540,6 @@
                     });
                 } else {
                     fetchAttachment(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
-                        // this.$store.state.searchParameters.images.page = this.$store.state.searchParameters.images.page + 1
                         this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
                             this.$store.state.searchParameters.images.page,response,
                             this.$store.state.searchParameters.images.paginateBy)
@@ -558,6 +556,7 @@
             isAllowedMorePaging(page, response, paginateBy) {
                 let isAllowed = !(response.page === undefined || (parseInt(response.count) / page < paginateBy))
                 if(isAllowed) page += 1;
+                console.log(response)
                 return isAllowed
             },
             //todo: utils
