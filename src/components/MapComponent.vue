@@ -8,6 +8,7 @@
         data() {
           return {
               map: null,
+              groupedLayers: null,
               tileLayer: null,
               layers: [
                   {id: 0, name: 'Specimen', active: true, features: []},
@@ -15,6 +16,14 @@
                   {id: 2, name: 'sample + conop_distribution', active: true, features: []},
               ]
           }
+        },
+        watch: {
+            '$store.state.lang'(lang) {
+                if (lang) {
+                    this.map.removeControl(this.groupedLayers)
+                    this.initLayers();
+                }
+            },
         },
         computed : {
             mapData() {return this.$store.state.activeItem['map']}
@@ -59,14 +68,15 @@
                   });
                   layer.leaflatObjects = L.layerGroup(leaflatObjects)
               });
+              let groupedLayers = {};
+              groupedLayers[this.$t('map.overlay_title')] = {};
+              groupedLayers[this.$t('map.overlay_title')][this.$t('map.overlay_specimens')] = this.layers[0].leaflatObjects,
+              groupedLayers[this.$t('map.overlay_title')][this.$t('map.overlay_literature_based')] = this.layers[1].leaflatObjects,
+              groupedLayers[this.$t('map.overlay_title')][this.$t('map.overlay_in_samples')] = this.layers[2].leaflatObjects
 
-                let overlays = {
-                    'Specimen':this.layers[0].leaflatObjects,
-                    'Taxon_occurrence':this.layers[1].leaflatObjects,
-                    'Sample + conop_distribution':this.layers[2].leaflatObjects
-                };
+              this.groupedLayers = L.control.groupedLayers(null,groupedLayers).addTo(this.map)
+                // L.control.layers(null, groupedLayers,{'autoZIndex':true,'collapsed':true,'sortLayers':true}).addTo(this.map);
 
-                L.control.layers(null, overlays,{'autoZIndex':true,'collapsed':true,'sortLayers':true}).addTo(this.map);
             },
 
             loadMap : function() {

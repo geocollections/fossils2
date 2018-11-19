@@ -171,6 +171,12 @@
     "langChange": "Vahetasite keelt!",
     "pageLoading": "Please wait. The page is loading."
   },
+  "map":{
+    "overlay_title": "Taksoni esinemised:",
+    "overlay_specimens": "Eksemplarid",
+    "overlay_literature_based": "Kirjanduspõhised",
+    "overlay_in_samples": "Proovides"
+  },
   "tabs": {
     "overview" : "Üldinfo",
     "gallery" : "Pildid",

@@ -134,6 +134,7 @@ function render (req, res) {
     <link rel="stylesheet" href="/static/ol3/ol.css" type="text/css"/>
     <link rel="stylesheet" href="/static/leaflet-1.3.4/leaflet.css" />
     <link rel="stylesheet" href="/static/leaflet-fullscreen/leaflet.fullscreen.css" />
+    <link rel="stylesheet" href="/static/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.css" />
     <link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.css" />    
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
@@ -156,6 +157,7 @@ function render (req, res) {
     <!--<script type="text/javascript" src="/static/ol3/ol.js"></script>-->
     <script src="/static/leaflet-1.3.4/leaflet.js"></script>
     <script src="/static/leaflet-fullscreen/Leaflet.fullscreen.js"></script>
+    <script src="/static/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.js"></script>
     <!--<script type="text/javascript" src="/static/js/fossils.js"></script>-->
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>

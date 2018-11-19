@@ -45,7 +45,13 @@
         }
       },
       props: ['hierarchy_','parent_','taxon_','sortedSisters_','sortedSiblings_','sortedSistersWithoutCurrentTaxon_'],
-
+      watch: {
+          '$store.state.mode'(mode) {
+              if (mode) {
+                // re-render component
+              }
+          },
+      },
       created() {
 
         this.hierarchy = this.$props.hierarchy_;

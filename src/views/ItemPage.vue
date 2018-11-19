@@ -501,7 +501,6 @@
                         this.sister_taxa = response.results;
                         this.isSisterTaxaLoaded = true;
                     });
-
                 }
 
                 if (this.taxon.rank__rank_en !== 'Species') {
