@@ -608,59 +608,61 @@
             formatHierarchyString: function(value) {
                 return value.replace(/-/g, ',');
             },
-            setFancyBoxCaption: function(el, this_, isSpecimen) {
-                let text="", imageName = el.taxon, infoId = el.specimen_id, imageId = el.attachment_id, navigateId = el.taxon_id;
-                if(isSpecimen === undefined) {
-                    imageName = el.number + ' ' + el.name;
-                    infoId = el.id;
-                    imageId = el.specimen_image_id
-                    navigateId = el.link
-                } else if(isSpecimen) {
-                    imageName = el.link__taxon;
-                    infoId = el.specimen_id;
-                    imageId = el.id
-                    navigateId = el.link
+            setFancyBoxCaption: function(el) {
+                let text="",infoBtn = "", imgBtn = "", additionalInfo = {};
+                switch (el.type) {
+                    case 'selected_image':
+                        additionalInfo = {imageName: el.link_taxon, infoId:el.specimen_id, imageId: el.attachment_id, navigateId: el.link_id};
+                        break;
+                    case 'species_image':
+                        additionalInfo = {imageName: el.link__taxon, infoId:el.specimen_id, imageId: el.id, navigateId: el.link};
+                        break;
+                    case 'non_species_image':
+                        additionalInfo = {imageName: el.taxon, infoId:el.specimen_id, imageId: el.attachment_id, navigateId: el.taxon_id};
+                    default: break;
                 }
+
                 if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
-                    text += "<div><button type=\"button\" class=\"btn btn-xs  btn-primary\" onclick=\"window.open('"+this.fossilsUrl+"/"+navigateId+"?mode=in_baltoscandia&lang=en')\">Read more</button></div>" ;
+                    text += "<div><button type=\"button\" class=\"btn btn-xs  btn-primary\" onclick=\"window.open('"+this.fossilsUrl+"/"+additionalInfo.navigateId+"?mode=in_baltoscandia&lang=en')\">Read more</button></div>" ;
                 }
-
-                text += "<div class='mt-3'><span>"+imageName+"</span>&ensp;&ensp;" ;
-                text +=
-                    "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('"+this.geocollectionUrl+"/specimen/"+infoId+"')\">INFO</button>" +
-                    " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('"+this.geocollectionUrl+"/file/"+imageId+"')\">IMAGE</button>"
-
-                text += "</div>";
+                if (additionalInfo.infoId) infoBtn = "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('"+this.geocollectionUrl+"/specimen/"+additionalInfo.infoId+"')\">INFO</button>"
+                if(additionalInfo.imageId) imgBtn = " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('"+this.geocollectionUrl+"/file/"+additionalInfo.imageId+"')\">IMAGE</button>"
+                text += "<div class='mt-3'><span>"+additionalInfo.imageName+"</span>&ensp;&ensp;" + infoBtn + imgBtn + "</div>";
                 return text
             },
+
             //todo: utils
             composeImageRequest : function(taxonImages) {
                 if(taxonImages === undefined || taxonImages === {} || taxonImages.length === 0) return ;
                 if (taxonImages.length > 0) {
                     let this_ = this
                     taxonImages.forEach(function(el) {
-                        if (el.uuid_filename && el.uuid_filename != null) {
-                            el.thumbnail = this_.fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
-                            el.src = this_.fileUrl + '/large/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
-                            el.caption = this_.setFancyBoxCaption(el, this_, false)
+                        function setImageType(el) {
+                            if(el.specimen_image_id) {
+                                return 'species_image'
+                            } else if (el.link_id){
+                                return 'selected_image'
+                            }
+                            return 'non_species_image'
                         }
-                        else if(el.attachment__uuid_filename && el.attachment__uuid_filename != null) {
-                            el.thumbnail = this_.fileUrl + '/small/' + el.attachment__uuid_filename.substring(0,2)+'/'
-                                + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
-                            el.src = this_.fileUrl + '/large/' + el.attachment__uuid_filename.substring(0,2)+'/'
-                                + el.attachment__uuid_filename.substring(2,4)+'/'+ el.attachment__uuid_filename;
-                            el.caption = this_.setFancyBoxCaption(el, this_, true)
+
+                        function setImageSrc(el) {
+                            if(el.type === 'non_species_image') {
+                                el.thumbnail = this_.fileUrl + '/small/' + el.filename.substring(0, 2) + '/' + el.filename.substring(2, 4) + '/' + el.filename;
+                                el.src = this_.fileUrl + '/large/' + el.filename.substring(0, 2) + '/' + el.filename.substring(2, 4) + '/' + el.filename;
+                            } else if (el.type === 'species_image'){
+                                el.thumbnail = this_.fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
+                                el.src = this_.fileUrl + '/large/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
+
+                            } else if (el.type === 'selected_image'){
+                                el.thumbnail = el.preview_url
+                                el.src = el.image_url
+                            }
+                            return el
                         }
-                        else if(this_.isDefinedAndNotNull(el.filename)) {
-                            el.thumbnail = this_.fileUrl + '/small/' + el.filename.substring(0,2)+'/'+ el.filename.substring(2,4)+'/'+ el.filename;
-                            el.src = this_.fileUrl + '/large/' + el.filename.substring(0,2)+'/'+ el.filename.substring(2,4)+'/'+ el.filename;
-                            el.caption = this_.setFancyBoxCaption(el, this_, false)
-                        }
-                        else if(el.preview !== null) {
-                            el.thumbnail = this_.fileUrl + el.preview;
-                            el.src = this_.fileUrl + el.img_to_url;
-                            el.caption = this_.setFancyBoxCaption(el, this_)
-                        }
+                        el.type = setImageType(el);
+                        el = setImageSrc(el);
+                        el.caption = this_.setFancyBoxCaption(el)
                     });
                     return taxonImages
                 }

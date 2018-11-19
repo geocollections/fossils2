@@ -51,7 +51,8 @@
                 const bottomOfPage = visible + scrollY >= pageHeight-1
                 //remove above code if it is ok?
                 // return bottomOfPage || pageHeight < visible
-                return document.getElementById('bottomOfGallery') === null ? false : document.getElementById('bottomOfGallery').getBoundingClientRect().y < 700
+                return document.getElementById('bottomOfGallery') === null ?
+                    false : document.getElementById('bottomOfGallery').getBoundingClientRect().y < 700
             },
             loadMoreImages() {
                 if(!this.$store.state.searchParameters.images.allowPaging || this.noMoreResults) {
@@ -64,9 +65,9 @@
                     fetchAttachment(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters);
 
                 query.then((response) => {
+                    // Todo: if selected images more than the number of pagenatedBy
                     if(response.results.length > 0) {
                         this.$parent.images = this.$parent.images.concat(this.$parent.composeImageRequest(response.results));
-                        this.$store.state.searchParameters.images.page =this.$store.state.searchParameters.images.page + 1
                     } else {
                         this.noMoreResults = true;
                     }
@@ -75,6 +76,8 @@
                         this.$store.state.searchParameters.images.allowPaging = this.$parent.isAllowedMorePaging(
                             this.$store.state.searchParameters.images.page,response,
                             this.$store.state.searchParameters.images.paginateBy)
+                    } else {
+                        this.$store.state.searchParameters.images.page =this.$store.state.searchParameters.images.page + 1
                     }
 
                     this.imagesLoading = false;
