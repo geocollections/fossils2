@@ -15,7 +15,7 @@
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
               <form class="form-inline my-lg-0 mr-5">
-                  <vue-multiselect class="align-middle" style=" width: 20em !important; text-align: center !important;"
+                  <vue-multiselect class="align-middle" style=" width: 20em !important;"
                                    id="search"
                                    :custom-label="displayResults" track-by="code"
                                    :placeholder="$t('search.fossils_search')"
