@@ -19,11 +19,9 @@
 </template>
 
 <script>
-    import {
-        fetchImages,
-        fetchAttachment
-    } from '../../api'
+    import {fetchAttachment, fetchImages} from '../../api'
     import Spinner from "../Spinner.vue";
+
     export default {
         name: "TabGallery",
         components: {Spinner},

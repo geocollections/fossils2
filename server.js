@@ -128,9 +128,9 @@ function render (req, res) {
   
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="/static/css/fonts.css">
-    <link rel="stylesheet" href="/static/css/creative.css">
+    <!--<link rel="stylesheet" href="/static/css/creative.css">-->
     <link rel="stylesheet" href="/static/css/mainpage.css">
-    <link rel="stylesheet" href="/static/css/picture.galery.css">
+
     <link rel="stylesheet" href="/static/ol3/ol.css" type="text/css"/>
     <link rel="stylesheet" href="/static/leaflet-1.3.4/leaflet.css" />
     <link rel="stylesheet" href="/static/leaflet-fullscreen/leaflet.fullscreen.css" />

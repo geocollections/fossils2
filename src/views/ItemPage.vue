@@ -152,9 +152,11 @@
                        <div class="card rounded-0" style="width:100%;">
                            <div class="card-header">{{$t('header.f_species_synonymy')}}</div>
                            <div class="card-body">
-                               <div :class="idx === synonyms.length -1 ? '' : 'border-bottom my-3'" v-for="synonym,idx in synonyms">
-                                   {{synonym.taxon_synonym}}<a v-if="isDefinedAndNotNull(synonym.reference)" @click="openUrl({parent_url:geocollectionUrl + '/reference',object:synonym.reference, width:500,height:500})" href="#">{{synonym.year}}</a>: {{synonym.author}}<span v-if="isDefinedAndNotNull(synonym.pages)">, {{$t('abbreviation.pp')}}. {{synonym.pages}}</span>
-                                   <span v-if="isDefinedAndNotNull(synonym.figures)">, {{$t('abbreviation.fig')}}. {{synonym.figures}}</span>
+                               <div :class="idx === synonyms.length -1 ? '' : 'border-bottom my-1'" v-for="synonym,idx in synonyms">
+                                   <em>{{synonym.taxon_synonym}}</em>: {{synonym.author}}<!--
+                                   --><span v-if="isDefinedAndNotNull(synonym.year)">, {{synonym.year}}</span><!--
+                                   --><span v-if="isDefinedAndNotNull(synonym.pages)">, {{$t('abbreviation.pp')}}. {{synonym.pages}}</span><!--
+                                   --><span v-if="isDefinedAndNotNull(synonym.figures)">, {{$t('abbreviation.fig')}}. {{synonym.figures}}</span>
                                </div>
                            </div>
                        </div>
@@ -721,6 +723,3 @@
         },
     }
 </script>
-<style>
-
-</style>
