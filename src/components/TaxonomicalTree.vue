@@ -5,7 +5,7 @@
       <tr  v-for="item in taxonomicTree.nodes">
         <td v-if="isHigherRank(item.rank_en) || item.id === taxon.id" align="right" valign="top" style="color: #999;" v-translate="{et:item.rank, en: item.rank_en}"></td>
         <td v-else></td>
-        <td>
+        <td :class="$parent.isHigherTaxon(item.rank_en) ? '' : 'font-italic'">
           <span v-for="i in convertToNumber(item.i)" >&ensp;</span>
           <a :href="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</a>
           <span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>

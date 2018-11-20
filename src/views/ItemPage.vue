@@ -1,12 +1,12 @@
 <template>
-   <section>
+   <div class="pt-lg-5">
        <div style="letter-spacing: 3px;" class="m-md-3 text-center"  v-if="!isTaxonExisted">
            <img class="rounded-circle border" style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/><br/>
            <p>{{$t('main.taxon_do_not_exist')}}</p>
        </div>
        <div class="m-md-3" v-if="isTaxonExisted">
            <b-row class="mt-3" v-show="scroll">
-               <span class="ml-auto" >
+               <span class="ml-auto">
                    <button  onclick="location.href='#top'" type="button" class="btn btn-primary fixed-bottom m-md-2" variant="primary" ><span style="color:white !important;font-weight: bolder!important;font-size: 2em !important;">&uarr;</span></button>
                </span>
            </b-row>
@@ -23,7 +23,7 @@
                    <strong>{{$t('header.f_fossil_group')}}:</strong>
                    <a :href="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</a></div>
                <span style="font-size: 0.9em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
-               <span style="font-size: 28pt"><strong>{{taxon.taxon}}</strong></span>
+               <h1 style="display: inline-block;font-weight:bolder" :class="isHigherTaxon(taxon.rank__rank_en) ? '' : 'font-italic'">{{taxon.taxon}}</h1>
                <span style="font-size: 0.9em;"> {{taxon.author_year}}</span>
                <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length > 0">
                                 <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span>
@@ -48,10 +48,10 @@
 
                                <div v-if="taxon.id != 29">
                                    {{$t('header.f_belongs_to')}}:
-                                   <a :class="!isHigherTaxon(parent.rank__rank_en) ? '' : 'font-italic'" :href="'/'+parent.id">{{parent.taxon}}</a>
+                                   <a :class="isHigherTaxon(parent.rank__rank_en) ? '' : 'font-italic'" :href="'/'+parent.id">{{parent.taxon}}</a>
                                    <div v-if="isDefinedAndNotEmpty(sortedSistersWithoutCurrentTaxon)">{{$t('header.f_sister_taxa')}}:
                                        <span v-for="(item,idx) in sortedSistersWithoutCurrentTaxon">
-                                    <a :class="!isHigherTaxon(item.rank__rank_en) ? '' : 'font-italic'" :href="'/'+item.id">{{item.taxon}}</a>
+                                    <a :class="isHigherTaxon(item.rank__rank_en) ? '' : 'font-italic'" :href="'/'+item.id">{{item.taxon}}</a>
                                     <span v-if = 'idx != sortedSistersWithoutCurrentTaxon.length -1'> | </span>
                                 </span>
                                    </div>
@@ -153,9 +153,8 @@
                            <div class="card-header">{{$t('header.f_species_synonymy')}}</div>
                            <div class="card-body">
                                <div :class="idx === synonyms.length -1 ? '' : 'border-bottom my-3'" v-for="synonym,idx in synonyms">
-                                   <em>{{synonym.taxon_synonym}}</em>:
-                                   {{synonym.author}}, {{synonym.year}}, lk. {{synonym.pages}},
-                                   joon. {{synonym.figures}}
+                                   {{synonym.taxon_synonym}}<a v-if="isDefinedAndNotNull(synonym.reference)" @click="openUrl({parent_url:geocollectionUrl + '/reference',object:synonym.reference, width:500,height:500})" href="#">{{synonym.year}}</a>: {{synonym.author}}<span v-if="isDefinedAndNotNull(synonym.pages)">, {{$t('abbreviation.pp')}}. {{synonym.pages}}</span>
+                                   <span v-if="isDefinedAndNotNull(synonym.figures)">, {{$t('abbreviation.fig')}}. {{synonym.figures}}</span>
                                </div>
                            </div>
                        </div>
@@ -280,7 +279,7 @@
 
            </div>
        </div>
-   </section>
+   </div>
 
 </template>
 

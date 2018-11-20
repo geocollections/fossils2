@@ -166,5 +166,9 @@
     "classification" : "Classification",
     "literature" : "Literature",
     "specimens" : "Specimens"
+  },
+  "abbreviation": {
+    "pp": "pp",
+    "fig": "fig"
   }
 }

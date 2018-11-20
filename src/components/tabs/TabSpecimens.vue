@@ -132,13 +132,6 @@
         computed: {
             taxon () {return this.$parent.taxon}
         },
-        // filters: {
-        //     formatSpecimenName: function (value) {
-        //         if (!value) return ''
-        //         value = value.toString()
-        //         return value.split(' ')[0]
-        //     }
-        // },
         mounted () {
             this.getSpecimens();
         },
