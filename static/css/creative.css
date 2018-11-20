@@ -72,7 +72,7 @@ p {
 }
 
 section {
-    padding: 100px 0;
+    padding: 70px 0;
 }
 
 aside {
@@ -468,3 +468,4 @@ img {
 
 .btn.btn-link { color: #eb3812; text-decoration: none;}
 .btn.btn-link:hover { color: #930; cursor : pointer; text-decoration: underline;}
+

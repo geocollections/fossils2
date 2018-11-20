@@ -1,5 +1,5 @@
 <template>
-   <div class="pt-lg-5">
+   <section>
        <div style="letter-spacing: 3px;" class="m-md-3 text-center"  v-if="!isTaxonExisted">
            <img class="rounded-circle border" style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/><br/>
            <p>{{$t('main.taxon_do_not_exist')}}</p>
@@ -11,25 +11,29 @@
                </span>
            </b-row>
            <b-row class="ml-0">
-               <div>
-               <a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
-                   <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon" :title="taxon.fossil_group__taxon" style="height: 120px; margin: 0 20px 0 0; padding-right: 0px;" /></a>
-               <a :href="'/'+taxon.id" v-else-if="taxon.is_fossil_group === 1">
-                   <img border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon" :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" /></a>
-               </div>
-               <div>
-               <h3><strong>{{taxonTitle}}</strong></h3>
-               <div v-if="taxon.fossil_group__id && (taxon.rank__rank_en === 'Species' || taxon.rank__rank_en === 'Genus')">
-                   <strong>{{$t('header.f_fossil_group')}}:</strong>
-                   <a :href="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</a></div>
-               <span style="font-size: 0.9em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
-               <h1 style="display: inline-block;font-weight:bolder" :class="isHigherTaxon(taxon.rank__rank_en) ? '' : 'font-italic'">{{taxon.taxon}}</h1>
-               <span style="font-size: 0.9em;"> {{taxon.author_year}}</span>
-               <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length > 0">
-                                <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span>
-                            </span>
-               <span class="row p-3" v-if="filteredCommonNames && filteredCommonNames.length === 0"></span>
-               </div>
+           <table>
+               <tbody>
+               <tr><td><a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
+                   <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon" :title="taxon.fossil_group__taxon" /></a>
+                   <a :href="'/'+taxon.id" v-else-if="taxon.is_fossil_group === 1">
+                       <img border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon" :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" /></a></td><td>
+                   <table><tbody>
+                   <tr><td><h3 v-if="taxon.fossil_group__id && isHigherTaxon(taxon.rank__rank_en)" style="font-weight: bold">{{taxonTitle}}</h3></td></tr>
+                   <tr><td><div v-if="taxon.fossil_group__id && !isHigherTaxon(taxon.rank__rank_en)">
+                       <strong>{{$t('header.f_fossil_group')}}:</strong>
+                       <a :href="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</a></div></td></tr>
+                   <tr>
+                       <td>
+                           <span style="font-size: 0.9em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
+                           <h1 style="display: inline;font-weight:bold" :class="isHigherTaxon(taxon.rank__rank_en) ? '' : 'font-italic'">{{taxon.taxon}}</h1>
+                           <span style="font-size: 0.9em;"> {{taxon.author_year}}</span></td>
+                   </tr></tbody>
+                   </table>
+               </td></tr>
+               <tr><td></td><td><span class="row pl-3" v-if="filteredCommonNames && filteredCommonNames.length > 0">
+                                <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span></span></td></tr>
+               </tbody>
+           </table>
            </b-row>
            <taxon-tabs></taxon-tabs>
            <tab-gallery v-if="$store.state.activeTab === 'gallery'"></tab-gallery>
@@ -281,7 +285,7 @@
 
            </div>
        </div>
-   </div>
+   </section>
 
 </template>
 
