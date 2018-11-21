@@ -2,7 +2,7 @@
     margin-top: 0px;
 }
 .previewImage {
-    max-height: 130px;
+    max-height: 130px !important;
 }
 .img-responsive {
     text-align: center;

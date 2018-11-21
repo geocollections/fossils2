@@ -99,7 +99,7 @@
                     </td>
                     <td v-if="$parent.isDefinedAndNotNull(item.image_preview_url)">
                         <a data-fancybox="gallery3" :href="item.image_url" :data-caption="item.caption">
-                        <img class="img-thumbnail previewImage" :src="item.image_preview_url" />
+                        <img class="img-thumbnail previewImage" :src="item.image_preview_url" style="max-height: 10rem;max-width:5rem "/>
                         </a>
                     </td>
                     <td v-else></td>
@@ -126,7 +126,7 @@
         components: {SortField, Spinner},
         data() {
             return {
-                loading: true, clientWidth : 0, response: this.setDefaultResponse()
+                loading: true, clientWidth : 800, response: this.setDefaultResponse()
             }
         },
         computed: {

@@ -282,6 +282,7 @@ footer {
 table tr > td:first-child {
     font-weight: 700;
 }
+
 #table-search {
     empty-cells: show;
 }
