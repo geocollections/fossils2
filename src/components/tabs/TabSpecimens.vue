@@ -13,19 +13,18 @@
                 <thead class="thead-default">
                 <tr>
                     <th><sort-field value = "specimen_number" name="search.specimen.number"></sort-field></th>
-                    <th><sort-field value = "specimen_number_old" name="search.specimen.old_specimen_number"></sort-field></th>
+                    <!--<th><sort-field value = "specimen_number_old" name="search.specimen.old_specimen_number"></sort-field></th>-->
                     <th><sort-field value = "taxon" name="search.specimen.name_part_element"></sort-field></th>
                     <th><sort-field value = "locality,locality_en" name="search.specimen.locality"></sort-field></th>
                     <th><sort-field value = "depth" name="search.specimen.depth_m"></sort-field></th>
                     <th>
-                    <sort-field value = "stratigraphy,stratigraphy_en"
-                    name="search.specimen.stratigraphy"/>
-                    |
-                    <em>
-                    <sort-field value="lithostratigraphy,lithostratigraphy_en" name="search.specimen.lithostratigraphy"/>
-                    </em>
+                    <sort-field value = "stratigraphy,stratigraphy_en" name="search.specimen.stratigraphy"/>
+                    <!--|-->
+                    <!--<em>-->
+                    <!--<sort-field value="lithostratigraphy,lithostratigraphy_en" name="search.specimen.lithostratigraphy"/>-->
+                    <!--</em>-->
                     </th>
-                    <th><sort-field value = "collector_full_name" name="search.specimen.collector"></sort-field></th>
+                    <!--<th><sort-field value = "collector_full_name" name="search.specimen.collector"></sort-field></th>-->
                     <th><sort-field value = "original_status,original_status_en" name="search.specimen.status"></sort-field></th>
                     <th>{{ $t('search.specimen.images') }}</th>
                 </tr>
@@ -35,7 +34,7 @@
                     <td class="text-nowrap" ><a href="#" @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/specimen',object:item.id, width:500,height:500})">
                         {{ item.acronym}} {{ item.specimen_number }}</a>
                     </td>
-                    <td class="text-nowrap">{{item.specimen_number_old}}</td>
+                    <!--<td class="text-nowrap">{{item.specimen_number_old}}</td>-->
                     <td>
                         <div>
                             <a :href="'/'+item.taxon_id">{{item.taxon}}</a>
@@ -58,18 +57,20 @@
                             </span>
                         </div>
                     </td>
-                    <td>
-                        <div v-if="item.locality != null && item.locality_en != null">
+                    <td v-if="!isSmallScreenDevice || (isSmallScreenDevice && ($parent.isDefinedAndNotNull(item.locality) || $parent.isDefinedAndNotNull(item.locality_en) || $parent.isDefinedAndNotNull(item.locality_free)))">
+                        <div v-if="$parent.isDefinedAndNotNull(item.locality) || $parent.isDefinedAndNotNull(item.locality_en)">
                             <a href="#"
                                     @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/locality',object:item.locality_id, width:500,height:500})">
                                 <span v-translate="{et:item.locality,en:item.locality_en}"></span></a>
-
-                            <span v-if="$parent.isDefinedAndNotNull(item.locality_free)"> {{item.locality_free}}</span>
                         </div>
+                        <span v-if="$parent.isDefinedAndNotNull(item.locality_free)"> {{item.locality_free}}</span>
                     </td>
-                    <td>{{item.depth}}<span v-if="item.depth_interval != null && item.depth_interval">({{ item.depth_interval }})</span>
+                    <td  v-if="!isSmallScreenDevice || (isSmallScreenDevice && ($parent.isDefinedAndNotNull(item.depth) || $parent.isDefinedAndNotNull(item.depth_interval)))">
+                        {{item.depth}}<span v-if="item.depth_interval != null && item.depth_interval"> - {{ item.depth_interval }}</span>
                     </td>
-                    <td>
+                    <td v-if="!isSmallScreenDevice || (isSmallScreenDevice && ($parent.isDefinedAndNotNull(item.stratigraphy)
+                    ||$parent.isDefinedAndNotNull(item.stratigraphy_en))
+                    ||$parent.isDefinedAndNotNull(item.stratigraphy_txt))">
                         <a v-if="$parent.isDefinedAndNotNull(item.stratigraphy)||$parent.isDefinedAndNotNull(item.stratigraphy_en)" href="#"
                                 @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/stratigraphy',object:item.stratigraphy_id, width:500,height:500})">
                             <span v-translate="{et:item.stratigraphy,en:item.stratigraphy_en}"></span></a>
@@ -78,27 +79,27 @@
                                             || (item.lithostratigraphy_en == null && item.lithostratigraphy == null)"
                               v-for="(txt,idx) in item.stratigraphy_txt">{{ txt }}<span v-if="idx !== item.stratigraphy_txt.length -1">,</span></span>
 
-                        <span v-if="item.stratigraphy != null && item.lithostratigraphy != null">|</span>
+                        <!--<span v-if="item.stratigraphy != null && item.lithostratigraphy != null">|</span>-->
 
-                        <em v-if="$parent.isDefinedAndNotNull(item.lithostratigraphy) || $parent.isDefinedAndNotNull(item.lithostratigraphy_en)">
-                            <a href="#"
-                                    @click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/stratigraphy',object:item.lithostratigraphy_id, width:500,height:500})">
-                                <span v-translate="{et:item.lithostratigraphy,en:item.lithostratigraphy_en}"></span></a>
-                        </em>
+                        <!--<em v-if="$parent.isDefinedAndNotNull(item.lithostratigraphy) || $parent.isDefinedAndNotNull(item.lithostratigraphy_en)">-->
+                            <!--<a href="#"-->
+                                    <!--@click="$parent.openUrl({parent_url:$parent.geocollectionUrl+'/stratigraphy',object:item.lithostratigraphy_id, width:500,height:500})">-->
+                                <!--<span v-translate="{et:item.lithostratigraphy,en:item.lithostratigraphy_en}"></span></a>-->
+                        <!--</em>-->
                     </td>
-                    <td>
-                        <div v-if="$parent.isDefinedAndNotNull(item.collector_full_name)">
-                            {{ item.collector_full_name }}
-                        </div>
-                    </td>
+                    <!--<td>-->
+                        <!--<div v-if="$parent.isDefinedAndNotNull(item.collector_full_name)">-->
+                            <!--{{ item.collector_full_name }}-->
+                        <!--</div>-->
+                    <!--</td>-->
 
-                    <td>
-                        <span v-if="item.original_status != null && item.original_status_en != null"
+                    <td v-if="!isSmallScreenDevice || (isSmallScreenDevice && ($parent.isDefinedAndNotNull(item.original_status)||$parent.isDefinedAndNotNull(item.original_status_en)))">
+                        <span v-if="$parent.isDefinedAndNotNull(item.original_status)||$parent.isDefinedAndNotNull(item.original_status_en)"
                               v-translate="{et:item.original_status,en:item.original_status_en}"></span>
                     </td>
                     <td v-if="$parent.isDefinedAndNotNull(item.image_preview_url)">
                         <a data-fancybox="gallery3" :href="item.image_url" :data-caption="item.caption">
-                        <img class="img-thumbnail previewImage" :src="item.image_preview_url"/>
+                        <img class="img-thumbnail previewImage" :src="item.image_preview_url" />
                         </a>
                     </td>
                     <td v-else></td>
@@ -125,14 +126,19 @@
         components: {SortField, Spinner},
         data() {
             return {
-                loading: true,
-                response: this.setDefaultResponse()
+                loading: true, clientWidth : 0, response: this.setDefaultResponse()
             }
         },
         computed: {
-            taxon () {return this.$parent.taxon}
+            taxon () {return this.$parent.taxon},
+            isSmallScreenDevice () {
+                return this.clientWidth < 439
+            }
         },
         mounted () {
+            window.addEventListener('resize', () => {
+                this.clientWidth = document.documentElement.clientWidth;
+            });
             this.getSpecimens();
         },
         methods: {
@@ -158,6 +164,12 @@
                 },
                 deep: true
             },
+            'document.documentElement.clientWidth'(clientWidth) {
+                if (clientWidth) {
+                    console.log(clientWidth)
+                }
+            },
+
         },
     }
 </script>
