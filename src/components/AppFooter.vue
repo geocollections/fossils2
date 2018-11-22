@@ -106,9 +106,5 @@
 
 <!--</style>-->
 <style lang="stylus" scoped>
-  footer
-    background-color: #f8f9fa
-    padding: 8px 16px
-    font-size: 0.75rem
-    text-align: center
+
 </style>

@@ -7,7 +7,7 @@ html,
 body {
     height: 100%;
     width: 100%;
-    margin: 0px;
+    margin-right: 0px;
     padding: 0px;
 
 }
@@ -69,10 +69,6 @@ p {
 
 .text-faded {
     color: rgba(255, 255, 255, 0.7);
-}
-
-section {
-    padding: 70px 0;
 }
 
 aside {

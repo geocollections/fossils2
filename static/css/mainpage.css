@@ -1,8 +1,39 @@
 footer {
+    background-color: #f8f9fa;
+    padding: 8px 16px;
+    font-size: 0.75rem;
     text-align: center;
-    padding-bottom: 30px;
+    margin-right: -1rem;
+    /*position: relative !important; bottom: 0 !important;left: 0 !important;*/
 }
 
+section {
+    padding: 70px 0;
+}
+
+.figcaption {
+    font-size:0.8em;
+    color:#000;
+    margin: 5px;
+    padding: 5px;
+    background-color: #fff;
+    border: solid 1px #ccc;
+    box-shadow: 1px 1px 4px #ccc;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.figcaption img {
+    margin-bottom: 5px;
+    background-color: #fff;
+    border-bottom: solid 1px #ccc;
+}
+
+.figcaption p {
+    font-size: 1em;
+    color:#000;
+}
 #footer-logos {
     padding-bottom: 20px;
 }
@@ -287,13 +318,7 @@ table tr > td:first-child {
     empty-cells: show;
 }
 @media screen and (min-width : 439px) and (max-width : 800px) {
-    /*section {*/
-        /*padding-top: 5rem;*/
-    /*}*/
 
-    /*.card-body {*/
-        /*padding: 0.1rem*/
-    /*}*/
 
     #table-search tr > th > .btn{
         color:#464a4c;
@@ -308,9 +333,24 @@ table tr > td:first-child {
     /*}*/
 /*}*/
 @media only screen and (max-width: 439px) {
+    section {
+        /*overflow-x:hidden !important;*/
+    }
+
+    .page-container {
+        margin:-10px -10px !important;
+        padding: 0 !important;
+    }
+    .card-body {
+        padding: 0.4rem
+    }
     .table-responsive {
         border: 0px;
     }
+    ul { font-size:0; }
+    li { float: left;font-size:1rem; }
+    /*.row*/
+    /*{margin-right: -15px !important;}*/
     /* Force table to not be like tables anymore */
     #table-search table,
     #table-search thead,

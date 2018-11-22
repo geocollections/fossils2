@@ -192,7 +192,10 @@
       &.collapsed
         opacity 1
         left 0
-        background linear-gradient(to bottom, rgba(55, 55, 55, 0), white)
+        background -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(55, 55, 55, 0)), color-stop(100%, #FFFFFF));
+        background -moz-linear-gradient(rgba(55, 55, 55, 0), #FFFFFF)
+        background -webkit-linear-gradient(to bottom, rgba(55, 55, 55, 0), #FFFFFF)
+        background linear-gradient(to bottom, rgba(55, 55, 55, 0), #FFFFFF)
       &:not(.collapsed)
         opacity 0
 
