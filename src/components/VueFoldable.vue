@@ -14,7 +14,7 @@
       <div :class="{ 'collapsed': collapsed }" class="vue-foldable-mask" v-if="!noMask"></div>
 
       <slot name="view-more" :toggle="toggle" :collapsed="collapsed">
-        <div class="vue-foldable-view-more  mt-3" style="text-align: center;" :class="{ 'collapsed': collapsed }" @click="toggle" v-if="reachThreshold">
+        <div class="vue-foldable-view-more  mt-3 mb-3" style="text-align: center;" :class="{ 'collapsed': collapsed }" @click="toggle" v-if="reachThreshold">
         <span class="vue-foldable-text">
              <button class="btn btn-small btn-outline-info vue-foldable-text">{{ collapsed ? $t('main.btnViewMore') : $t('main.btnViewLess') }}</button>
         </span>
@@ -192,10 +192,10 @@
       &.collapsed
         opacity 1
         left 0
-        background -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(100%, #FFFFFF));
-        background -moz-linear-gradient(rgba(255, 255, 255, 0), #FFFFFF)
-        background -webkit-linear-gradient(to bottom, rgba(255, 255, 255, 0), #FFFFFF)
-        background linear-gradient(to bottom, rgba(255, 255, 255, 0), #FFFFFF)
+        background -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(225, 225, 225, 0)), color-stop(100%, #FFFFFF));
+        background -moz-linear-gradient(rgba(225, 225, 225, 0), #FFFFFF)
+        background -webkit-linear-gradient(to bottom, rgba(225, 225, 225, 0), #FFFFFF)
+        background linear-gradient(to bottom, rgba(225, 225, 225, 0), #FFFFFF)
 
       &:not(.collapsed)
         opacity 0
