@@ -99,7 +99,7 @@
                     </td>
                     <td v-if="$parent.isDefinedAndNotNull(item.image_preview_url)">
                         <a data-fancybox="gallery3" :href="item.image_url" :data-caption="item.caption">
-                        <img class="img-thumbnail previewImage" :src="item.image_preview_url" style="max-height: 10rem;max-width:5rem "/>
+                        <img class="img-thumbnail previewImage" :src="item.image_preview_url" style="max-height: 6rem;max-width:3rem "/>
                         </a>
                     </td>
                     <td v-else></td>

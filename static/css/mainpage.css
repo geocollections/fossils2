@@ -287,8 +287,12 @@ table tr > td:first-child {
     empty-cells: show;
 }
 @media screen and (min-width : 439px) and (max-width : 800px) {
-    /*#table-search td {*/
-        /*font-size: 11px;*/
+    /*section {*/
+        /*padding-top: 5rem;*/
+    /*}*/
+
+    /*.card-body {*/
+        /*padding: 0.1rem*/
     /*}*/
 
     #table-search tr > th > .btn{
