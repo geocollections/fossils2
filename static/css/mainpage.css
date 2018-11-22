@@ -333,10 +333,14 @@ table tr > td:first-child {
     /*}*/
 /*}*/
 @media only screen and (max-width: 439px) {
-    section {
-        /*overflow-x:hidden !important;*/
-    }
+    #fossilgroups_box {
 
+    }
+    .fossilgroup_box {
+        height: auto;
+        max-width: 5rem;
+        font-size: 0.65rem;
+    }
     .page-container {
         margin:-10px -10px !important;
         padding: 0 !important;

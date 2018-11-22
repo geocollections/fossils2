@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-header></app-header>
-    <app-content  class="container-fluid"/>
+    <app-content/>
     <app-footer/>
   </div>
 </template>

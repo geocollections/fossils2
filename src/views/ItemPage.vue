@@ -1,5 +1,5 @@
 <template>
-   <section>
+   <section class=" mt-3 container-fluid">
        <div style="letter-spacing: 3px;" class="m-md-3 text-center"  v-if="!isTaxonExisted">
            <img class="rounded-circle border" style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/><br/>
            <p>{{$t('main.taxon_do_not_exist')}}</p>
@@ -13,7 +13,7 @@
            <b-row class="ml-0">
            <table>
                <tbody>
-               <tr><td><a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
+               <tr><td style="vertical-align:top"><a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
                    <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon" :title="taxon.fossil_group__taxon" /></a>
                    <a :href="'/'+taxon.id" v-else-if="taxon.is_fossil_group === 1">
                        <img border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon" :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" /></a></td><td>

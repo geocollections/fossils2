@@ -395,20 +395,6 @@ body {
     webkit-tap-highlight-color: #222222;
 }
 
-#fossilgroups_box {
-    margin-left:auto;
-    margin-right:auto;
-    text-align: center;
-    border: solid 1px #ccc;
-    padding: 10px 0;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    border-radius: 6px;
-    box-shadow: 0 0 8px #ccc;
-    background-color: #fff;
-}
-
-
 .fossilgroup_box {
     display:inline-block;
     padding: 0px;
