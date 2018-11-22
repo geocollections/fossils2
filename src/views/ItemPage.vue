@@ -4,42 +4,42 @@
            <img class="rounded-circle border" style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/><br/>
            <p>{{$t('main.taxon_do_not_exist')}}</p>
        </div>
-       <div class="page-container" v-if="isTaxonExisted">
+       <b-container class="page-container" v-if="isTaxonExisted">
            <b-row class="mt-3" v-show="scroll">
                <span class="ml-auto">
                    <button  onclick="location.href='#top'" type="button" class="btn btn-primary fixed-bottom m-md-2" variant="primary" ><span style="color:white !important;font-weight: bolder!important;font-size: 2em !important;">&uarr;</span></button>
                </span>
            </b-row>
            <b-row class="ml-0">
-           <table>
-               <tbody>
-               <tr><td style="vertical-align:top"><a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
-                   <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon" :title="taxon.fossil_group__taxon" /></a>
-                   <a :href="'/'+taxon.id" v-else-if="taxon.is_fossil_group === 1">
-                       <img border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon" :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" /></a></td><td>
-                   <table><tbody>
-                   <tr><td><h3 v-if="taxon.fossil_group__id && isHigherTaxon(taxon.rank__rank_en)" style="font-weight: bold">{{taxonTitle}}</h3></td></tr>
-                   <tr><td><div v-if="taxon.fossil_group__id && !isHigherTaxon(taxon.rank__rank_en)">
-                       <strong>{{$t('header.f_fossil_group')}}:</strong>
-                       <a :href="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</a></div></td></tr>
-                   <tr>
-                       <td>
-                           <span style="font-size: 0.9em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
-                           <h1 style="display: inline;font-weight:bold" :class="isHigherTaxon(taxon.rank__rank_en) ? '' : 'font-italic'">{{taxon.taxon}}</h1>
-                           <span style="font-size: 0.9em;"> {{taxon.author_year}}</span></td>
-                   </tr></tbody>
-                   </table>
-               </td></tr>
-               <tr><td></td><td><span class="row pl-3" v-if="filteredCommonNames && filteredCommonNames.length > 0">
-                                <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span></span></td></tr>
-               </tbody>
-           </table>
+               <table>
+                   <tbody>
+                   <tr><td style="vertical-align:top"><a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
+                       <img border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon" :title="taxon.fossil_group__taxon" /></a>
+                       <a :href="'/'+taxon.id" v-else-if="taxon.is_fossil_group === 1">
+                           <img border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon" :title="taxon.taxon" style="height: 95px; margin-top: 0; padding-right: 0px;" /></a></td><td>
+                       <table><tbody>
+                       <tr><td><h3 v-if="taxon.fossil_group__id && isHigherTaxon(taxon.rank__rank_en)" style="font-weight: bold">{{taxonTitle}}</h3></td></tr>
+                       <tr><td><div v-if="taxon.fossil_group__id && !isHigherTaxon(taxon.rank__rank_en)">
+                           <strong>{{$t('header.f_fossil_group')}}:</strong>
+                           <a :href="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</a></div></td></tr>
+                       <tr>
+                           <td>
+                               <span style="font-size: 0.9em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></span>
+                               <h1 style="display: inline;font-weight:bold" :class="isHigherTaxon(taxon.rank__rank_en) ? '' : 'font-italic'">{{taxon.taxon}}</h1>
+                               <span style="font-size: 0.9em;"> {{taxon.author_year}}</span></td>
+                       </tr></tbody>
+                       </table>
+                   </td></tr>
+                   <tr><td></td><td><span class="row pl-3" v-if="filteredCommonNames && filteredCommonNames.length > 0">
+                                    <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span></span></td></tr>
+                   </tbody>
+               </table>
            </b-row>
            <taxon-tabs></taxon-tabs>
            <tab-gallery v-if="$store.state.activeTab === 'gallery'"></tab-gallery>
            <tab-specimens v-if="$store.state.activeTab === 'specimens'"></tab-specimens>
-           <div v-if="$store.state.activeTab === 'overview'">
-           <b-row>
+
+           <b-row v-if="$store.state.activeTab === 'overview'">
                <div class="col-lg-8">
                    <b-row class="m-1">
                        <div class="card rounded-0" style="width: 100%">
@@ -55,25 +55,25 @@
                                    <a :class="isHigherTaxon(parent.rank__rank_en) ? '' : 'font-italic'" :href="'/'+parent.id">{{parent.taxon}}</a>
                                    <div v-if="isDefinedAndNotEmpty(sortedSistersWithoutCurrentTaxon)">{{$t('header.f_sister_taxa')}}:
                                        <span v-for="(item,idx) in sortedSistersWithoutCurrentTaxon">
-                                    <a :class="isHigherTaxon(item.rank__rank_en) ? '' : 'font-italic'" :href="'/'+item.id">{{item.taxon}}</a>
-                                    <span v-if = 'idx != sortedSistersWithoutCurrentTaxon.length -1'> | </span>
-                                </span>
+                                <a :class="isHigherTaxon(item.rank__rank_en) ? '' : 'font-italic'" :href="'/'+item.id">{{item.taxon}}</a>
+                                <span v-if = 'idx != sortedSistersWithoutCurrentTaxon.length -1'> | </span>
+                            </span>
                                    </div>
                                    <div v-if="isDefinedAndNotEmpty(sortedSiblings)">{{$t('header.f_contains')}}:
                                        <span v-if="sortedSiblings" v-for="(sibling, idx) in sortedSiblings">
-                                    <a :href="'/'+sibling.id">{{sibling.taxon}}</a>
-                                    <span v-if = 'idx != sortedSiblings.length -1'> | </span>
-                                </span>
+                                <a :href="'/'+sibling.id">{{sibling.taxon}}</a>
+                                <span v-if = 'idx != sortedSiblings.length -1'> | </span>
+                            </span>
                                    </div>
                                    <div v-if="taxon.stratigraphy_base__stratigraphy || taxon.stratigraphy_top__stratigraphy"> {{$t('header.f_stratigraphical_distribution')}}:
                                        <strong>
                                            <a href="#" v-if="taxon.stratigraphy_base__stratigraphy"
-                                                   @click="openUrl({parent_url: geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
+                                              @click="openUrl({parent_url: geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
                                                {{taxon.stratigraphy_base__stratigraphy}}</a>
                                            <span v-if="taxon.stratigraphy_top__stratigraphy != null && taxon.stratigraphy_base__stratigraphy != null">&ndash;</span>
                                            <a href="#" v-if="taxon.stratigraphy_top__stratigraphy
-                                            && taxon.stratigraphy_base__stratigraphy != taxon.stratigraphy_top__stratigraphy"
-                                                   @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_top_id, width:500,height:500})">
+                                        && taxon.stratigraphy_base__stratigraphy != taxon.stratigraphy_top__stratigraphy"
+                                              @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_top_id, width:500,height:500})">
                                                {{taxon.stratigraphy_top__stratigraphy}}
                                            </a>
                                            <span v-if="taxon.stratigraphy_base__age_base != null">| ~ {{convertToTwoDecimal(taxon.stratigraphy_base__age_base)}}</span>
@@ -111,45 +111,45 @@
                            <foldable>
                                <h3>{{$t('header.f_taxon_description_diagnosis')}}
                                    (<a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:description.reference, width:500,height:500})">
-                                   <strong>{{description.reference__reference}}</strong>)</a></h3>
+                                       <strong>{{description.reference__reference}}</strong>)</a></h3>
                                <div v-html="description.description"></div>
                            </foldable>
                        </div>
                    </b-row>
                    <!-- TYPE SPECIMEN DATA begins-->
                    <b-row class="m-1" v-if = "taxonTypeSpecimen">
-                   <div class="card rounded-0" style="width: 100%" >
-                       <div class="card-header">{{$t('header.f_species_type_data')}}</div>
-                       <div class="card-body">
-                           <div :class="idx === taxonTypeSpecimen.length -1 ? '' : 'border-bottom my-3'" v-for="item,idx in taxonTypeSpecimen">
-                               <span v-if="item.type_type__value !== null || item.type_type__value_en !== null">
-                                   <span v-translate="{et:item.type_type__value, en: item.type_type__value_en}"></span>:
-                               </span>
-                               <span v-if="item.specimen === null">{{item.repository}} {{item.specimen_number}}</span>
-                               <span v-if="item.specimen !== null"><a href="#" @click="openUrl({parent_url:'http://geocollections.info/specimen',object:item.specimen, width:500,height:500})">{{item.repository}} {{item.specimen_number}}</a></span><!--
-                            --><span v-if="isAtLeastOneDefinedAndNotEmpty({common: [item.level,item.attachment__filename,item.remarks],
-                               et:[item.stratigraphy__stratigraphy,item.stratigraphy_free,item.locality__locality],
-                               en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en,item.locality__locality_en]})">,</span>
-                               <a @click="openUrl({parent_url:geocollectionUrl + '/locality',object:item.locality, width:500,height:500})" href="#"
-                                  v-if="isDefinedAndNotNull(item.locality)" v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></a>
-                               <span v-if="isDifferentName({et:[item.locality__locality,item.locality_free],en:[item.locality__locality_en,item.locality_free_en]})">
-                                   (<span v-translate="{et:item.locality_free, en: item.locality_free_en}"></span>)
-                               </span>
-                               <span v-if="isDefinedAndNotNull(item.level)">{{item.level}},</span>
-                               <a @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:item.stratigraphy, width:500,height:500})" href="#"
-                                  v-if="isDefinedAndNotNull(item.stratigraphy)" v-translate="{et:item.stratigraphy__stratigraphy, en: item.stratigraphy__stratigraphy_en}"></a>
-                               <span v-if="isDifferentName({et:[item.stratigraphy__stratigraphy,item.stratigraphy_free],en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en]})">
-                                   (<span v-translate="{et:item.stratigraphy_free, en: item.stratigraphy_free_en}"></span>)
-                               </span>
-                               <span v-if="isDefinedAndNotNull(item.remarks)">{{item.remarks}}</span>
-                               <span class="pl-3" v-if="isDefinedAndNotNull(item.attachment__filename)">
-                                   <a @click="openUrl({parent_url:geocollectionUrl + '/file',object:item.attachment, width:500,height:500})" href="#">
-                                       <img class="img-thumbnail previewImage" :src="composeImgUrl(item.attachment__filename,false)"/>
-                                   </a>
-                               </span>
+                       <div class="card rounded-0" style="width: 100%" >
+                           <div class="card-header">{{$t('header.f_species_type_data')}}</div>
+                           <div class="card-body">
+                               <div :class="idx === taxonTypeSpecimen.length -1 ? '' : 'border-bottom my-3'" v-for="item,idx in taxonTypeSpecimen">
+                           <span v-if="item.type_type__value !== null || item.type_type__value_en !== null">
+                               <span v-translate="{et:item.type_type__value, en: item.type_type__value_en}"></span>:
+                           </span>
+                                   <span v-if="item.specimen === null">{{item.repository}} {{item.specimen_number}}</span>
+                                   <span v-if="item.specimen !== null"><a href="#" @click="openUrl({parent_url:'http://geocollections.info/specimen',object:item.specimen, width:500,height:500})">{{item.repository}} {{item.specimen_number}}</a></span><!--
+                        --><span v-if="isAtLeastOneDefinedAndNotEmpty({common: [item.level,item.attachment__filename,item.remarks],
+                           et:[item.stratigraphy__stratigraphy,item.stratigraphy_free,item.locality__locality],
+                           en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en,item.locality__locality_en]})">,</span>
+                                   <a @click="openUrl({parent_url:geocollectionUrl + '/locality',object:item.locality, width:500,height:500})" href="#"
+                                      v-if="isDefinedAndNotNull(item.locality)" v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></a>
+                                   <span v-if="isDifferentName({et:[item.locality__locality,item.locality_free],en:[item.locality__locality_en,item.locality_free_en]})">
+                               (<span v-translate="{et:item.locality_free, en: item.locality_free_en}"></span>)
+                           </span>
+                                   <span v-if="isDefinedAndNotNull(item.level)">{{item.level}},</span>
+                                   <a @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:item.stratigraphy, width:500,height:500})" href="#"
+                                      v-if="isDefinedAndNotNull(item.stratigraphy)" v-translate="{et:item.stratigraphy__stratigraphy, en: item.stratigraphy__stratigraphy_en}"></a>
+                                   <span v-if="isDifferentName({et:[item.stratigraphy__stratigraphy,item.stratigraphy_free],en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en]})">
+                               (<span v-translate="{et:item.stratigraphy_free, en: item.stratigraphy_free_en}"></span>)
+                           </span>
+                                   <span v-if="isDefinedAndNotNull(item.remarks)">{{item.remarks}}</span>
+                                   <span class="pl-3" v-if="isDefinedAndNotNull(item.attachment__filename)">
+                               <a @click="openUrl({parent_url:geocollectionUrl + '/file',object:item.attachment, width:500,height:500})" href="#">
+                                   <img class="img-thumbnail previewImage" :src="composeImgUrl(item.attachment__filename,false)"/>
+                               </a>
+                           </span>
+                               </div>
                            </div>
                        </div>
-                   </div>
                    </b-row>
                    <!-- TYPE SPECIMEN DATA ends-->
                    <b-row class="m-1" v-if="synonyms && synonyms.length > 0">
@@ -158,9 +158,9 @@
                            <div class="card-body">
                                <div :class="idx === synonyms.length -1 ? '' : 'border-bottom my-1'" v-for="synonym,idx in synonyms">
                                    <em>{{synonym.taxon_synonym}}</em>: {{synonym.author}}<!--
-                                   --><span v-if="isDefinedAndNotNull(synonym.year)">, {{synonym.year}}</span><!--
-                                   --><span v-if="isDefinedAndNotNull(synonym.pages)">, {{$t('abbreviation.pp')}}. {{synonym.pages}}</span><!--
-                                   --><span v-if="isDefinedAndNotNull(synonym.figures)">, {{$t('abbreviation.fig')}}. {{synonym.figures}}</span>
+                               --><span v-if="isDefinedAndNotNull(synonym.year)">, {{synonym.year}}</span><!--
+                               --><span v-if="isDefinedAndNotNull(synonym.pages)">, {{$t('abbreviation.pp')}}. {{synonym.pages}}</span><!--
+                               --><span v-if="isDefinedAndNotNull(synonym.figures)">, {{$t('abbreviation.fig')}}. {{synonym.figures}}</span>
                                </div>
                            </div>
                        </div>
@@ -171,18 +171,18 @@
                            <div class="card-header">{{$t('header.f_taxon_references')}}</div>
                            <div class="card-body">
                                <foldable :elLength = "references.length">
-                               <div :class="idx === references.length -1 ? '' : 'border-bottom my-3'" v-for=" reference,idx in references">
-                                   <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
-                                       <strong>{{reference.reference__reference}}.</strong>
-                                   </a>
-                                   <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
-                                   <span>{{reference.reference__title}}. {{reference.reference__journal__journal_name}}:</span>
-                                   <span v-if="reference.reference__book != null">{{reference.reference__book}}</span>
-                                   <span v-else>{{reference.reference__number}}</span>
-                                   <span v-if="reference.reference__pages != null">, {{reference.reference__pages}}</span>
-                                   <span v-if="reference.reference__doi !== null" >. DOI: <a :href="'http://dx.doi.org/'+reference.reference__doi" target="_blank">{{reference.reference__doi}}</a>
-                                   </span>
-                               </div>
+                                   <div :class="idx === references.length -1 ? '' : 'border-bottom my-3'" v-for=" reference,idx in references">
+                                       <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
+                                           <strong>{{reference.reference__reference}}.</strong>
+                                       </a>
+                                       <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
+                                       <span>{{reference.reference__title}}. {{reference.reference__journal__journal_name}}:</span>
+                                       <span v-if="reference.reference__book != null">{{reference.reference__book}}</span>
+                                       <span v-else>{{reference.reference__number}}</span>
+                                       <span v-if="reference.reference__pages != null">, {{reference.reference__pages}}</span>
+                                       <span v-if="reference.reference__doi !== null" >. DOI: <a :href="'http://dx.doi.org/'+reference.reference__doi" target="_blank">{{reference.reference__doi}}</a>
+                               </span>
+                                   </div>
                                </foldable>
                            </div>
                        </div>
@@ -242,7 +242,7 @@
                            <div class="card-header">{{$t('header.f_distribution_map')}}</div>
                            <div class="card-body no-padding">
 
-                                   <map-component></map-component>
+                               <map-component></map-component>
 
                            </div>
                        </div>
@@ -254,12 +254,12 @@
                                <ul>
                                    <li v-for=" reference in taxonOccurrence">
                                        <em>
-                                       <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
-                                           <strong>{{reference.reference__reference}}</strong>
-                                       </a>
-                                       <span v-translate="{et:reference.locality__locality,en:reference.locality__locality_en}"></span>
-                                       <span v-if="reference.depth || reference.depth_interval">{{reference.depth}} - {{reference.depth_interval}}</span>
-                                       <span v-translate="{et:reference.stratigraphy_base__stratigraphy,en:reference.stratigraphy_base__stratigraphy_en}"></span>
+                                           <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
+                                               <strong>{{reference.reference__reference}}</strong>
+                                           </a>
+                                           <span v-translate="{et:reference.locality__locality,en:reference.locality__locality_en}"></span>
+                                           <span v-if="reference.depth || reference.depth_interval">{{reference.depth}} - {{reference.depth_interval}}</span>
+                                           <span v-translate="{et:reference.stratigraphy_base__stratigraphy,en:reference.stratigraphy_base__stratigraphy_en}"></span>
                                        </em>
                                    </li>
                                </ul>
@@ -283,8 +283,7 @@
                </div>
            </b-row>
 
-           </div>
-       </div>
+       </b-container>
    </section>
 
 </template>
