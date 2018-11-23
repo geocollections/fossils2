@@ -330,18 +330,16 @@ table tr > td:first-child {
     #app {
         overflow-x: hidden !important;
     }
-    /*.row {*/
-        /*margin-right: auto !important;*/
-        /*margin-left: auto !important;*/
-    /*}*/
-    /*.col-lg-8,*/
-    /*.col-lg-4{*/
-        /*padding-right: 0 !important;*/
-        /*padding-left: 0 !important;*/
-    /*}*/
-    .multiselect .align-middle {
-        color: red !important;
+    .row {
+        margin-right: auto !important;
+        margin-left: auto !important;
     }
+    .col-lg-8,
+    .col-lg-4{
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+    }
+
     .fixed-bottom {
         max-width: 48px;
     }
