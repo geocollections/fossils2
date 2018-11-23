@@ -365,6 +365,11 @@ table tr > td:first-child {
     .table-responsive {
         border: 0px;
     }
+    h3 {font-size: x-large; font-weight: bold !important;}
+    h1 { font-size: 1.8rem; font-weight: bolder !important;}
+    .taxon-img {
+        height: auto !important;max-width: 4rem;
+    }
     #taxon-details h3 {
         font-size: 1.5rem;
     }
