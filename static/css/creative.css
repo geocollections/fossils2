@@ -152,7 +152,7 @@ aside {
     /*}*/
 /*}*/
 .border-bottom {
-    border-bottom: 1px solid #9c9d9e !important;;
+    /* border-bottom: 1px solid #9c9d9e !important;; */
 }
 #mainNav {
     /*position: fixed;top:0px;width: 100%;z-index:1000;background-color : white*/

@@ -88,10 +88,10 @@ export function fetchTaxonOccurrence (name) {
     return fetch(`taxon_occurrence/?taxon__taxon__icontains=${name}&fields=reference,reference__reference,locality__locality,locality__locality_en,depth_interval,depth,stratigraphy_base__stratigraphy,stratigraphy_base__stratigraphy_en`)
 }
 export function fetchReferences (hierarchy_string) {
-    return fetch(`taxon_occurrence/?taxon__hierarchy_string__istartswith=${hierarchy_string}&reference!=null&order_by=-reference__year&fields=reference,reference__reference,reference__title,reference__journal__journal_name,reference__book,reference__number,reference__doi,reference__year&distinct=true`)
+    return fetch(`taxon_occurrence/?taxon__hierarchy_string__istartswith=${hierarchy_string}&reference!=null&order_by=-reference__year&fields=reference,reference__reference,reference__author,reference__year,reference__title,reference__journal__journal_name,reference__book,reference__volume,reference__number,reference__pages,reference__doi,reference__year&distinct=true`)
 }
 export function fetchReferences2 (hierarchy_string) {
-    return fetch(`specimen_union/?taxon__hierarchy_string__istartswith=${hierarchy_string}&reference!=null&order_by=-reference__year&fields=reference,reference__reference,reference__title,reference__journal__journal_name,reference__book,reference__number,reference__doi,reference__year&distinct=true`)
+    return fetch(`specimen_union/?taxon__hierarchy_string__istartswith=${hierarchy_string}&reference!=null&order_by=-reference__year&fields=reference,reference__reference,reference__author,reference__year,reference__title,reference__journal__journal_name,reference__book,reference__volume,reference__number,reference__pages,reference__doi,reference__year&distinct=true`)
 }
 export function fetchSynonims (id) {
     return fetch(`taxon_synonym/?taxon=${id}&format=json`)

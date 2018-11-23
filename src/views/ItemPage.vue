@@ -157,8 +157,9 @@
                            <div class="card-header">{{$t('header.f_species_synonymy')}}</div>
                            <div class="card-body">
                                <div :class="idx === synonyms.length -1 ? '' : 'border-bottom my-1'" v-for="synonym,idx in synonyms">
-                                   <em>{{synonym.taxon_synonym}}</em>: {{synonym.author}}<!--
-                               --><span v-if="isDefinedAndNotNull(synonym.year)">, {{synonym.year}}</span><!--
+                                   <span v-if="isDefinedAndNotNull(synonym.year)">{{synonym.year}}</span> &nbsp;&nbsp;&nbsp; 
+                                   <em>{{synonym.taxon_synonym}}</em> &mdash; {{synonym.author}}<!--
+                                   <span v-if="isDefinedAndNotNull(synonym.year)">, {{synonym.year}}</span>
                                --><span v-if="isDefinedAndNotNull(synonym.pages)">, {{$t('abbreviation.pp')}}. {{synonym.pages}}</span><!--
                                --><span v-if="isDefinedAndNotNull(synonym.figures)">, {{$t('abbreviation.fig')}}. {{synonym.figures}}</span>
                                </div>
@@ -171,17 +172,23 @@
                            <div class="card-header">{{$t('header.f_taxon_references')}}</div>
                            <div class="card-body">
                                <foldable :elLength = "references.length">
-                                   <div :class="idx === references.length -1 ? '' : 'border-bottom my-3'" v-for=" reference,idx in references">
+                                   <div :class="idx === references.length -1 ? '' : 'my-3'" v-for=" reference,idx in references" style="padding-left: 3em; text-indent: -3em;">
                                        <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:reference.reference, width:500,height:500})">
-                                           <strong>{{reference.reference__reference}}.</strong>
+                                           {{reference.reference__author}} {{reference.reference__year}}.
                                        </a>
                                        <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
-                                       <span>{{reference.reference__title}}. {{reference.reference__journal__journal_name}}:</span>
-                                       <span v-if="reference.reference__book != null">{{reference.reference__book}}</span>
-                                       <span v-else>{{reference.reference__number}}</span>
-                                       <span v-if="reference.reference__pages != null">, {{reference.reference__pages}}</span>
-                                       <span v-if="reference.reference__doi !== null" >. DOI: <a :href="'http://dx.doi.org/'+reference.reference__doi" target="_blank">{{reference.reference__doi}}</a>
-                               </span>
+                                       <span>{{reference.reference__title}}.</span>
+                                       
+                                       <span v-if="reference.reference__journal__journal_name != null"><!-- if journal article -->
+                                           <em>{{reference.reference__journal__journal_name}}</em> <strong>{{reference.reference__volume}}</strong>, 
+                                           <span v-if="reference.reference__number != null">{{reference.reference__number}},</span> 
+                                           <span v-if="isDefinedAndNotNull(reference.reference__pages)">{{reference.reference__pages}}. </span>
+                                       </span>
+                                       <span v-if="isDefinedAndNotNull(reference.reference__book)"><!-- if book article -->
+                                       {{reference.reference__book}}, pp. {{reference.reference__pages}}.
+                                       </span>
+                                       
+                                       <span v-if="reference.reference__doi !== null" ><a :href="'https://doi.org/'+reference.reference__doi" target="_blank">DOI:{{reference.reference__doi}}</a></span>
                                    </div>
                                </foldable>
                            </div>
