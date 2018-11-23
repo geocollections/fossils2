@@ -96,10 +96,10 @@
         this.isMounted = true;
     },
     beforeMount() {
-        document.addEventListener('scroll', this.handleScroll);
+        window.addEventListener('scroll', this.handleScroll);
     },
     beforeDestroy () {
-        document.addEventListener('scroll', this.handleScroll);
+        window.addEventListener('scroll', this.handleScroll);
     },
     methods: {
         simpleTaxonSearchApiCall(value) {
