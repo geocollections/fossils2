@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-header></app-header>
-    <app-content/>
+    <app-content  class="mt-5 mb-5"/>
     <app-footer/>
   </div>
 </template>
