@@ -1,5 +1,5 @@
 <template>
-   <section class=" mt-3 container-fluid">
+   <section class="mt-5 mb-5 container-fluid">
        <div style="letter-spacing: 3px;" class="m-md-3 text-center"  v-if="!isTaxonExisted">
            <img class="rounded-circle border" style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/><br/>
            <p>{{$t('main.taxon_do_not_exist')}}</p>
@@ -444,14 +444,17 @@
             return Promise.all(queries)
 
         },
+
         beforeMount() {
-            window.addEventListener('scroll', this.handleScroll);
+            document.body.addEventListener('scroll', this.handleScroll);
         },
         beforeDestroy () {
-            window.addEventListener('scroll', this.handleScroll);
+            document.body.addEventListener('scroll', this.handleScroll);
         },
 
         mounted () {
+
+                window.addEventListener('scroll', this.handleScroll);
             if (this.taxon && this.taxon.hasOwnProperty('id')) {
                 let process = 'client'
                 this.$store.commit('SET_PROCESS', {process})
