@@ -155,7 +155,6 @@ aside {
     /* border-bottom: 1px solid #9c9d9e !important;; */
 }
 #mainNav {
-    /*position: fixed;top:0px;width: 100%;z-index:1000;background-color : white*/
     background-color : white;
     box-shadow: 0 0 50px #9c9d9e;
     background-image: -webkit-linear-gradient(left, #f7f7f7 0%, #d6d6d6 100%), -webkit-linear-gradient(left, #f7f7f7  0%, #d6d6d6 100%);
