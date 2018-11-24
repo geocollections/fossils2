@@ -49,7 +49,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+    /*font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;*/
 }
 
 p {
@@ -152,7 +152,7 @@ aside {
     /*}*/
 /*}*/
 .border-bottom {
-    border-bottom: 1px solid #9c9d9e !important;;
+    /* border-bottom: 1px solid #9c9d9e !important;; */
 }
 #mainNav {
     /*position: fixed;top:0px;width: 100%;z-index:1000;background-color : white*/

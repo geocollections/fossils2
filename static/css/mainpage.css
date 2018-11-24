@@ -289,7 +289,7 @@ section {
     font-weight:700;
 }
 #table-search tr > th > span,
-#table-search tr > th > em{
+#table-search tr > th > em {
     font-size: small !important;
 }
 #table-search tr > th > em > .btn{
@@ -553,4 +553,10 @@ table tr > td:first-child {
     padding: 10px;
     margin-left: 15px;
     margin-right: 15px;
+}
+
+.card-header {
+color: #999;
+font-size: smaller;
+font-weight: bold;
 }
