@@ -554,3 +554,9 @@ table tr > td:first-child {
     margin-left: 15px;
     margin-right: 15px;
 }
+
+.card-header {
+color: #999;
+font-size: smaller;
+font-weight: bold;
+}

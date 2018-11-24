@@ -14,7 +14,8 @@
                <table>
                    <tbody>
                    <tr><td style="vertical-align:top"><a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
-                       <img class="taxon-img" border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon" :title="taxon.fossil_group__taxon" /></a>
+                       <img class="taxon-img" style="max-width: 120px;" border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon" :title="taxon.fossil_group__taxon" /></a>
+                       <!-- 
                        <a :href="'/'+taxon.id" v-else-if="taxon.is_fossil_group === 1">
                            <img class="taxon-img" border="0" :src="'/static/fossilgroups/'+ taxon.id+'.png'" :alt="taxon.taxon" :title="taxon.taxon" /></a></td><td>
                        <table><tbody>
@@ -28,10 +29,17 @@
                                <h1 style="display: inline;font-weight:bold" :class="isHigherTaxon(taxon.rank__rank_en) ? '' : 'font-italic'">{{taxon.taxon}}</h1>
                                <span style="font-size: 0.9em;"> {{taxon.author_year}}</span></td>
                        </tr></tbody>
-                       </table>
-                   </td></tr>
+                       </table> -->
+                   </td>
+                   <td style="padding-left: 10px;">
+                       <div style="font-size: 0.9em;" v-translate="{ et: taxon.rank__rank, en: taxon.rank__rank_en }"></div>
+                               <h1 style="display: inline;font-weight:bold" :class="isHigherTaxon(taxon.rank__rank_en) ? '' : 'font-italic'">{{taxon.taxon}} <span style="font-size: 0.5em;"> {{taxon.author_year}}</span></h1>
+                               <h3 v-if="taxon.fossil_group__id && isHigherTaxon(taxon.rank__rank_en)" style="padding-top: 8px;">{{taxonTitle}}</h3>
+                   </td>
+                   </tr>
+                   <!--
                    <tr><td></td><td><span class="row pl-3" v-if="filteredCommonNames && filteredCommonNames.length > 0">
-                                    <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span></span></td></tr>
+                                    <span  v-for="item in filteredCommonNames"><strong>{{item.language}}</strong>: {{item.name}}; &ensp;</span></span></td></tr>-->
                    </tbody>
                </table>
            </b-row>
@@ -44,28 +52,37 @@
                    <b-row class="m-1">
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-body">
-                               <div>
+                               <div style="font-size: small; color: #666; padding:0 0 6px 0;">
                                    Taxon ID: <strong>{{taxon.id}}</strong>
                                    <span v-if="taxon.date_added"> | {{taxon.date_added | moment('YYYY-MM-DD')}}</span>
                                    <span v-if="taxon.date_changed">/ {{taxon.date_changed | moment('YYYY-MM-DD')}}</span>
                                </div>
 
+                               <div v-if="taxon.fossil_group__id>0 && taxon.fossil_group__id!==taxon.id">
+                                   {{$t('header.f_fossil_group')}}:
+                                   <a :href="'/'+taxon.fossil_group__id">{{taxon.fossil_group__taxon}}</a>
+                               </div>
                                <div v-if="taxon.id != 29">
                                    {{$t('header.f_belongs_to')}}:
                                    <a :class="isHigherTaxon(parent.rank__rank_en) ? '' : 'font-italic'" :href="'/'+parent.id">{{parent.taxon}}</a>
-                                   <div v-if="isDefinedAndNotEmpty(sortedSistersWithoutCurrentTaxon)">{{$t('header.f_sister_taxa')}}:
-                                       <span v-for="(item,idx) in sortedSistersWithoutCurrentTaxon">
-                                <a :class="isHigherTaxon(item.rank__rank_en) ? '' : 'font-italic'" :href="'/'+item.id">{{item.taxon}}</a>
-                                <span v-if = 'idx != sortedSistersWithoutCurrentTaxon.length -1'> | </span>
-                            </span>
-                                   </div>
-                                   <div v-if="isDefinedAndNotEmpty(sortedSiblings)">{{$t('header.f_contains')}}:
-                                       <span v-if="sortedSiblings" v-for="(sibling, idx) in sortedSiblings">
-                                <a :href="'/'+sibling.id">{{sibling.taxon}}</a>
-                                <span v-if = 'idx != sortedSiblings.length -1'> | </span>
-                            </span>
-                                   </div>
-                                   <div v-if="taxon.stratigraphy_base__stratigraphy || taxon.stratigraphy_top__stratigraphy"> {{$t('header.f_stratigraphical_distribution')}}:
+                               </div>
+                               <div v-if="filteredCommonNames && filteredCommonNames.length > 0">
+                                   <!-- {{$t('to be translated')}} -->
+                                   <span  v-for="item in filteredCommonNames">{{item.language}}: <strong>{{item.name}}</strong>;&ensp;</span>
+                               </div> 
+                               <!-- 
+                               <div v-if="isDefinedAndNotEmpty(sortedSistersWithoutCurrentTaxon)">{{$t('header.f_sister_taxa')}}:
+                                        <span v-for="(item,idx) in sortedSistersWithoutCurrentTaxon">
+                                    <a :class="isHigherTaxon(item.rank__rank_en) ? '' : 'font-italic'" :href="'/'+item.id">{{item.taxon}}</a>
+                                    <span v-if = 'idx != sortedSistersWithoutCurrentTaxon.length -1'> | </span></span>
+                               </div>
+                               <div v-if="isDefinedAndNotEmpty(sortedSiblings)">{{$t('header.f_contains')}}:
+                                        <span v-if="sortedSiblings" v-for="(sibling, idx) in sortedSiblings">
+                                    <a :href="'/'+sibling.id">{{sibling.taxon}}</a>
+                                    <span v-if = 'idx != sortedSiblings.length -1'> | </span></span>
+                               </div>
+                               -->
+                               <div v-if="taxon.stratigraphy_base__stratigraphy || taxon.stratigraphy_top__stratigraphy"> {{$t('header.f_stratigraphical_distribution')}}:
                                        <strong>
                                            <a href="#" v-if="taxon.stratigraphy_base__stratigraphy"
                                               @click="openUrl({parent_url: geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
@@ -80,17 +97,19 @@
                                            <span v-if="taxon.stratigraphy_top__age_top != null"> &ndash; {{convertToTwoDecimal(taxon.stratigraphy_top__age_top)}} Ma</span>
                                        </strong>
                                        <br />
-                                   </div>
-                                   <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'Species'">
+                                </div>
+                                <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'Species'">
                                        <span v-if="$store.state.mode === 'in_baltoscandia'">{{$t('header.f_baltic_species')}}</span>
                                        <span v-else-if="$store.state.mode === 'in_estonia'">{{$t('header.f_estonian_species')}}</span>
                                        <span v-else>{{$t('header.f_global_species')}}</span>
                                        <strong><a href="#species">{{numberOfSpecimen}}</a></strong>
-                                   </div>
-                                   <see-also v-if="((taxonPage && taxonPage.link_wikipedia != null) || taxon.taxon_id_tol != null|| taxon.taxon_id_eol != null|| taxon.taxon_id_nrm!= null || taxon.taxon_id_plutof!= null || taxon.taxon_id_pbdb != null)"></see-also>
-                               </div>
+                                </div>
+                                <see-also v-if="((taxonPage && taxonPage.link_wikipedia != null) || taxon.taxon_id_tol != null|| taxon.taxon_id_eol != null|| taxon.taxon_id_nrm!= null || taxon.taxon_id_plutof!= null || taxon.taxon_id_pbdb != null)"></see-also>
                            </div>
                        </div>
+                   </b-row>
+                   <b-row class="m-1">
+                       <lingallery  style="width: 100%" v-if="images && images.length > 0" ref="lingallery" :width="400" :height="350" :items="images"/>
                    </b-row>
                    <b-row class="m-1" v-if="taxonPage && taxonPage.content" >
                        <div class="card rounded-0" style="width: 100%">
@@ -226,10 +245,19 @@
 
                </div>
                <div class="col-lg-4">
-                   <b-row class="m-1">
+                   <!-- <b-row class="m-1">
                        <lingallery  style="width: 100%" v-if="images && images.length > 0" ref="lingallery" :width="400" :height="350" :items="images"/>
-                   </b-row>
+                   </b-row> -->
+                   <b-row class="m-1" v-if="isMapLoaded && $store.state.process === 'client' && $store.state.activeItem['map'].length > 0">
+                       <div class="card  rounded-0"  style="width: 100%">
+                           <div class="card-header">{{$t('header.f_distribution_map')}}</div>
+                           <div class="card-body no-padding">
 
+                               <map-component></map-component>
+
+                           </div>
+                       </div>
+                   </b-row>
                    <b-row class="m-1" v-if="isTaxonomicTreeIsLoaded">
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-header">{{$t('header.fossils_classification')}}</div>
@@ -244,16 +272,7 @@
                            </div>
                        </div>
                    </b-row>
-                   <b-row class="m-1" v-if="isMapLoaded && $store.state.process === 'client' && $store.state.activeItem['map'].length > 0">
-                       <div class="card  rounded-0"  style="width: 100%">
-                           <div class="card-header">{{$t('header.f_distribution_map')}}</div>
-                           <div class="card-body no-padding">
 
-                               <map-component></map-component>
-
-                           </div>
-                       </div>
-                   </b-row>
                    <b-row class="m-1" v-if = "!isHigherTaxon(taxon.rank__rank_en) && (taxonOccurrence)">
                        <div class="card rounded-0"  style="width: 100%">
                            <div class="card-header">{{$t('header.f_species_distribution_references')}}</div>
