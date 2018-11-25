@@ -567,7 +567,15 @@ table tr > td:first-child {
 }
 
 .card-header {
-color: #999;
-font-size: smaller;
-font-weight: bold;
+    color: #999;
+    font-size: smaller;
+    font-weight: bold;
 }
+
+.card-footer {
+    background-color: transparent;
+}
+.card {
+    margin-bottom: 5px;
+}
+

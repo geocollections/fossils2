@@ -83,19 +83,19 @@
                                </div>
                                -->
                                <div v-if="taxon.stratigraphy_base__stratigraphy || taxon.stratigraphy_top__stratigraphy"> {{$t('header.f_stratigraphical_distribution')}}:
-                                       <strong>
+                                       <!--<strong>-->
                                            <a href="#" v-if="taxon.stratigraphy_base__stratigraphy"
                                               @click="openUrl({parent_url: geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
                                                {{taxon.stratigraphy_base__stratigraphy}}</a>
-                                           <span v-if="taxon.stratigraphy_top__stratigraphy != null && taxon.stratigraphy_base__stratigraphy != null">&ndash;</span>
+                                           <span v-if="taxon.stratigraphy_top__stratigraphy !== taxon.stratigraphy_base__stratigraphy && taxon.stratigraphy_base__stratigraphy != null">&rarr;</span>
                                            <a href="#" v-if="taxon.stratigraphy_top__stratigraphy
                                         && taxon.stratigraphy_base__stratigraphy != taxon.stratigraphy_top__stratigraphy"
                                               @click="openUrl({parent_url:geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_top_id, width:500,height:500})">
                                                {{taxon.stratigraphy_top__stratigraphy}}
                                            </a>
-                                           <span v-if="taxon.stratigraphy_base__age_base != null">| ~ {{convertToTwoDecimal(taxon.stratigraphy_base__age_base)}}</span>
-                                           <span v-if="taxon.stratigraphy_top__age_top != null"> &ndash; {{convertToTwoDecimal(taxon.stratigraphy_top__age_top)}} Ma</span>
-                                       </strong>
+                                           <span v-if="taxon.stratigraphy_base__age_base != null"> ({{$t('header.f_taxon_age_within')}} {{convertToTwoDecimal(taxon.stratigraphy_base__age_base)}}</span><!--
+                                           --><span v-if="taxon.stratigraphy_top__age_top != null">&ndash;{{convertToTwoDecimal(taxon.stratigraphy_top__age_top)}} {{$t('header.f_taxon_age_within_unit')}})</span>
+                                       <!--</strong>-->
                                        <br />
                                 </div>
                                 <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'Species'">
@@ -150,7 +150,7 @@
                            et:[item.stratigraphy__stratigraphy,item.stratigraphy_free,item.locality__locality],
                            en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en,item.locality__locality_en]})">,</span>
                                    <a @click="openUrl({parent_url:geocollectionUrl + '/locality',object:item.locality, width:500,height:500})" href="#"
-                                      v-if="isDefinedAndNotNull(item.locality)" v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></a>
+                                      v-if="isDefinedAndNotNull(item.locality)" v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></a>, 
                                    <span v-if="isDifferentName({et:[item.locality__locality,item.locality_free],en:[item.locality__locality_en,item.locality_free_en]})">
                                (<span v-translate="{et:item.locality_free, en: item.locality_free_en}"></span>)
                            </span>
@@ -163,7 +163,7 @@
                                    <span v-if="isDefinedAndNotNull(item.remarks)">{{item.remarks}}</span>
                                    <span class="pl-3" v-if="isDefinedAndNotNull(item.attachment__filename)">
                                <a @click="openUrl({parent_url:geocollectionUrl + '/file',object:item.attachment, width:500,height:500})" href="#">
-                                   <img class="img-thumbnail previewImage" :src="composeImgUrl(item.attachment__filename,false)"/>
+                                   <img class="img-thumbnail previewImage" style="max-height: 100px;" :src="composeImgUrl(item.attachment__filename,false)"/>
                                </a>
                            </span>
                                </div>
@@ -176,7 +176,13 @@
                            <div class="card-header">{{$t('header.f_species_synonymy')}}</div>
                            <div class="card-body">
                                <div :class="idx === synonyms.length -1 ? '' : 'border-bottom my-1'" v-for="synonym,idx in synonyms">
-                                   <span v-if="isDefinedAndNotNull(synonym.year)">{{synonym.year}}</span> &nbsp;&nbsp;&nbsp; 
+                                    <span v-if="isDefinedAndNotNull(synonym.reference)">
+                                        <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:synonym.reference, width:600,height:600})">{{synonym.year}}</a>
+                                    </span> 
+                                    <span v-else="isDefinedAndNotNull(synonym.year)">{{synonym.year}}</span> 
+                                        
+                                   &nbsp;&nbsp;&nbsp; 
+                                   
                                    <em>{{synonym.taxon_synonym}}</em> &mdash; {{synonym.author}}<!--
                                    <span v-if="isDefinedAndNotNull(synonym.year)">, {{synonym.year}}</span>
                                --><span v-if="isDefinedAndNotNull(synonym.pages)">, {{$t('abbreviation.pp')}}. {{synonym.pages}}</span><!--
@@ -204,7 +210,7 @@
                                            <span v-if="isDefinedAndNotNull(reference.reference__pages)">{{reference.reference__pages}}. </span>
                                        </span>
                                        <span v-if="isDefinedAndNotNull(reference.reference__book)"><!-- if book article -->
-                                       {{reference.reference__book}}, pp. {{reference.reference__pages}}.
+                                       <em>{{reference.reference__book}}</em>, pp. {{reference.reference__pages}}.
                                        </span>
                                        
                                        <span v-if="reference.reference__doi !== null" ><a :href="'https://doi.org/'+reference.reference__doi" target="_blank">DOI:{{reference.reference__doi}}</a></span>
@@ -219,9 +225,14 @@
                            <div class="card-body">
                                <div v-if="allSpecies && allSpecies.length > 0">
                                    <div style='font-size: 0.8em;' v-for="(item, idx) in allSpecies">
-                                       &ensp;&ensp;&ensp;{{calculateSpeciesIdx(idx)}}. <em><a :href="'/'+item.id">{{item.taxon}}</a></em>
-                                       | <span v-translate="{et:item.stratigraphy_base__stratigraphy,  en: item.stratigraphy_base__stratigraphy_en}"></span>
-                                       <span v-if="item.stratigraphy_top__stratigraphy !=null"> → </span><span v-translate="{et:item.stratigraphy_top__stratigraphy,  en: item.stratigraphy_top__stratigraphy_en}"></span>
+                                       &ensp;&ensp;&ensp;{{calculateSpeciesIdx(idx)}}. <a :href="'/'+item.id"><em>{{item.taxon}}</em> {{item.author_year}}</a>
+                                       <template v-if="item.stratigraphy_top__stratigraphy != item.stratigraphy_base__stratigraphy">
+                                           | <span v-translate="{et:item.stratigraphy_base__stratigraphy,  en: item.stratigraphy_base__stratigraphy_en}"></span>
+                                           <span v-if="item.stratigraphy_top__stratigraphy !=null"> → </span><span v-translate="{et:item.stratigraphy_top__stratigraphy,  en: item.stratigraphy_top__stratigraphy_en}"></span>
+                                       </template>
+                                       <template v-else-if="item.stratigraphy_top__stratigraphy === item.stratigraphy_base__stratigraphy && item.stratigraphy_base__stratigraphy">
+                                           | <span v-translate="{et:item.stratigraphy_base__stratigraphy,  en: item.stratigraphy_base__stratigraphy_en}"></span>
+                                       </template>
                                    </div>
                                    <div class="col-xs-12 col-xs-6 pagination-center" v-if="numberOfSpecimen > $store.state.searchParameters.species.paginateBy">
                                        <b-pagination
