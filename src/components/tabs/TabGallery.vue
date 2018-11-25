@@ -49,8 +49,13 @@
                 const bottomOfPage = visible + scrollY >= pageHeight-1
                 //remove above code if it is ok?
                 // return bottomOfPage || pageHeight < visible
+                console.log(document.getElementById('bottomOfGallery').getBoundingClientRect().y)
+                console.log("---")
+                if(document.getElementById('bottomOfGallery').getBoundingClientRect().y < visible) {
+                    console.log("load more")
+                }
                 return document.getElementById('bottomOfGallery') === null ?
-                    false : document.getElementById('bottomOfGallery').getBoundingClientRect().y < 700
+                    false : document.getElementById('bottomOfGallery').getBoundingClientRect().y < visible
             },
             loadMoreImages() {
                 if(!this.$store.state.searchParameters.images.allowPaging || this.noMoreResults) {

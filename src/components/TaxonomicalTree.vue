@@ -17,17 +17,6 @@
       </tr>
       </tbody>
     </table>
-    <!--<ul v-for="(item,idx) in taxonomicTree.nodes">-->
-    <!--<span v-for="i in convertToNumber(item.i)" >&ensp;</span>-->
-    <!--<span style="color: #999;" v-translate="{et:item.rank, en: item.rank_en}"></span>-->
-    <!--<a :href="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</a>-->
-    <!--<span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>-->
-    <!--<ul v-for="sibling in item.siblings">-->
-      <!--<span v-for="j in convertToNumber(item.i)-2">&ensp;</span>-->
-      <!--<span style="color: #999;" v-translate="{et:sibling.rank, en: sibling.rank_en}"></span>-->
-      <!--<a :href="'/'+sibling.id">&ensp;&ensp;{{sibling.label}}</a>-->
-    <!--</ul>-->
-  <!--</ul>-->
   </ul>
 </template>
 
@@ -36,34 +25,53 @@
       name: "taxonomical-tree",
       data() {
         return {
-          hierarchy : {},
+
           parent : {},
+          sortedSisters: {},
           sortedSistersWithoutCurrentTaxon : {},
           taxon : {},
           taxonomicTree: {nodes: []},
           ranks: []
         }
       },
-      props: ['hierarchy_','parent_','taxon_','sortedSisters_','sortedSiblings_','sortedSistersWithoutCurrentTaxon_'],
-      watch: {
-          '$store.state.mode'(mode) {
-              if (mode) {
-                // re-render component
-              }
-          },
+        watch: {
+
+            '$store.state.mode': {
+                handler: function (mode) {
+                    if (mode) {
+                        console.log(mode)
+                        // re-render component
+                    }
+                },
+                deep: true
+
+
+            },
+        },
+      computed: {
+
+          hierarchy() {return this.$parent.hierarchy;},
+          sortedSiblings() {return this.$parent.sortedSiblings;}
       },
       created() {
+          this.composeData()
+          this.composeTaxonomicTree_()
+      },
 
-        this.hierarchy = this.$props.hierarchy_;
-        this.sortedSisters = this.$props.sortedSisters_;
-        this.sortedSiblings = this.$props.sortedSiblings_;
-        this.parent=this.$props.parent_;
-        this.taxon = this.$props.taxon_;
-        this.ranks = this.getHigherRanks(this.taxon.rank__rank_en);
-        this.sortedSistersWithoutCurrentTaxon = this.$props.sortedSistersWithoutCurrentTaxon_;
-        this.composeTaxonomicTree_()
+      updated() {
+        console.log('updated')
+        console.log(this.$parent.sortedSiblings.length)
       },
       methods: {
+        composeData: function() {
+            this.taxonomicTree = {nodes: []};
+            this.sortedSisters = this.$parent.sortedSisters;
+
+            this.parent=this.$parent.parent;
+            this.taxon = this.$parent.taxon;
+            this.ranks = this.getHigherRanks(this.taxon.rank__rank_en);
+            this.sortedSistersWithoutCurrentTaxon = this.$parent.sortedSistersWithoutCurrentTaxon;
+        } ,
         addHierarchy: function(filteredList,sisterIds) {
           for(let idx in filteredList) {
             let node = {i: idx, rank: filteredList[idx].rank__rank, rank_en: filteredList[idx].rank__rank_en,

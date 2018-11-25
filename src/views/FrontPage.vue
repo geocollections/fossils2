@@ -3,7 +3,7 @@
         <div id="fossilgroups_box" style="max-width: 1280px !important;text-align: center">
             <div class='fossilgroup_box'  v-for = "item in content">
                 <a :href="'/'+item.taxon" :title="item.taxon__taxon" >
-                        <img class="fossilgroup_img" :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'">
+                        <img :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'">
                     {{item.frontpage}}
                 </a>
             </div>
