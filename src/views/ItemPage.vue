@@ -661,10 +661,8 @@
                         additionalInfo = {imageName: el.link_taxon, infoId:el.specimen_id, imageId: el.attachment_id, navigateId: el.link_id};
                         break;
                     case 'non_higher_taxon':
-                        //
-                        if(el.id) el.specimen_image_id = el.id
-                        if(el.specimen__specimenidentification__taxon__id) el.link = el.specimen__specimenidentification__taxon__id
-                        additionalInfo = {imageName: el.database__acronym +' ' +el.id, infoId:el.specimen_id, imageId: el.specimen_image_id, navigateId: el.link};
+                        additionalInfo = {imageName: el.specimen__specimen_id ? el.database__acronym +' ' +el.specimen__specimen_id : el.database__acronym +' ' +el.id,
+                            infoId:el.specimen_id, imageId: el.id ? el.id : el.specimen_image_id, navigateId: el.link ? el.link : el.specimen__specimenidentification__taxon__id};
                         break;
                     case 'higher_taxon':
                         additionalInfo = {imageName: el.taxon, infoId:el.specimen_id, imageId: el.attachment_id, navigateId: el.taxon_id};
