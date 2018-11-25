@@ -262,9 +262,7 @@
                        <div class="card  rounded-0"  style="width: 100%">
                            <div class="card-header">{{$t('header.f_distribution_map')}}</div>
                            <div class="card-body no-padding">
-
                                <map-component></map-component>
-
                            </div>
                        </div>
                    </b-row>
@@ -272,13 +270,7 @@
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-header">{{$t('header.fossils_classification')}}</div>
                            <div class="card-body" style='font-size: 0.8em;'>
-                               <taxonomical-tree :taxon_="taxon"
-                                                 :parent_="parent"
-                                                 :hierarchy_="hierarchy"
-                                                 :sortedSistersWithoutCurrentTaxon_="sortedSistersWithoutCurrentTaxon"
-                                                 :sortedSisters_ = "sortedSisters"
-                                                 :sortedSiblings_ = "sortedSiblings"
-                               ></taxonomical-tree>
+                               <taxonomical-tree></taxonomical-tree>
                            </div>
                        </div>
                    </b-row>
@@ -474,7 +466,7 @@
                     store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
                     store.dispatch('FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION', { id }),
                     //map and images
-                    store.dispatch('FETCH_SPECIES_MAP', { id }),
+                    // store.dispatch('FETCH_SPECIES_MAP', { id }),
                 ],queries)
             }
             return Promise.all(queries)
@@ -556,6 +548,10 @@
                 });
 
                 this.getImages();
+
+                if(!this.isHigherTaxon(this.taxon.rank__rank_en)){
+                    this.$store.dispatch('FETCH_SPECIES_MAP')
+                }
 
                 cntSpecimenCollection(this.taxon.hierarchy_string).then((response) => {
                     this.specimenCollectionCnt = response.count;

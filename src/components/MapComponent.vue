@@ -33,6 +33,7 @@
                 this.loadMap()
                 this.initLayers()
                 this.checkAllLayers()
+                console.log(this.layers)
             }
 
         },
@@ -100,8 +101,18 @@
                 if (object === undefined || object === {} || object === false || object.length === 0) return;
                 let this_ = this;
                 object.forEach(function(element,index) {
+                    function getCoords(string) {
+                        let tokenizedCoords = element.latlong.split(',')
+                        return [tokenizedCoords[0],tokenizedCoords[1]]
+                    }
                     if (element.locality != null || element.locid != null) {
                         this_.layers[element['1']-1].features.push({
+                            // id: index,
+                            // coords: element.latlong !== null ? getCoords(element.latlong) : [0,0],
+                            // type: ""+element.src,
+                            // name: (this_.$store.state.lang === 'ee' ? element.locality : element.locality_en),
+                            // locid: element.locality_id
+                                    // for sql query
                             id: index,
                             coords: [element.latitude, element.longitude],
                             type: element['1'],
