@@ -150,7 +150,7 @@
                            et:[item.stratigraphy__stratigraphy,item.stratigraphy_free,item.locality__locality],
                            en:[item.stratigraphy__stratigraphy_en,item.stratigraphy_free_en,item.locality__locality_en]})">,</span>
                                    <a @click="openUrl({parent_url:geocollectionUrl + '/locality',object:item.locality, width:500,height:500})" href="#"
-                                      v-if="isDefinedAndNotNull(item.locality)" v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></a>
+                                      v-if="isDefinedAndNotNull(item.locality)" v-translate="{et:item.locality__locality, en: item.locality__locality_en}"></a>, 
                                    <span v-if="isDifferentName({et:[item.locality__locality,item.locality_free],en:[item.locality__locality_en,item.locality_free_en]})">
                                (<span v-translate="{et:item.locality_free, en: item.locality_free_en}"></span>)
                            </span>
@@ -163,7 +163,7 @@
                                    <span v-if="isDefinedAndNotNull(item.remarks)">{{item.remarks}}</span>
                                    <span class="pl-3" v-if="isDefinedAndNotNull(item.attachment__filename)">
                                <a @click="openUrl({parent_url:geocollectionUrl + '/file',object:item.attachment, width:500,height:500})" href="#">
-                                   <img class="img-thumbnail previewImage" :src="composeImgUrl(item.attachment__filename,false)"/>
+                                   <img class="img-thumbnail previewImage" style="max-height: 100px;" :src="composeImgUrl(item.attachment__filename,false)"/>
                                </a>
                            </span>
                                </div>
