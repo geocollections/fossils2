@@ -565,30 +565,31 @@
             getImages() {
                 this.imagesLoading = true;
 
-                if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
+
                     fetchSelectedImages(this.taxon.id,this.$store.state.searchParameters).then((response) => {
                         if(response.results.length === 0) {
-                            fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
-                                this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
-                                    this.$store.state.searchParameters.images.page,response,
-                                    this.$store.state.searchParameters.images.paginateBy)
-                                this.images = this.composeImageRequest(response.results)
-                                this.imagesLoading = false;
-                            });
+                            if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
+                                fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
+                                    this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
+                                        this.$store.state.searchParameters.images.page,response,
+                                        this.$store.state.searchParameters.images.paginateBy)
+                                    this.images = this.composeImageRequest(response.results)
+                                    this.imagesLoading = false;
+                                });
+                            } else {
+                                fetchAttachment(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
+                                    this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
+                                        this.$store.state.searchParameters.images.page,response,
+                                        this.$store.state.searchParameters.images.paginateBy)
+                                    this.images = this.composeImageRequest(response.results);
+                                    this.imagesLoading = false;
+                                });
+                            }
                         } else {
                             this.images = this.composeImageRequest(response.results)
                             this.imagesLoading = false;
                         }
                     });
-                } else {
-                    fetchAttachment(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
-                        this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
-                            this.$store.state.searchParameters.images.page,response,
-                            this.$store.state.searchParameters.images.paginateBy)
-                        this.images = this.composeImageRequest(response.results);
-                        this.imagesLoading = false;
-                    });
-                }
             },
 
             isDifferentName(obj) {
@@ -667,9 +668,9 @@
                     default: break;
                 }
 
-                if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
-                    text += "<div><button type=\"button\" class=\"btn btn-xs  btn-primary\" onclick=\"window.open('"+this.fossilsUrl+"/"+additionalInfo.navigateId+"?mode=in_baltoscandia&lang=en')\">Read more</button></div>" ;
-                }
+                // if(this.isHigherTaxon(this.taxon.rank__rank_en)) {}
+                text += "<div><button type=\"button\" class=\"btn btn-xs  btn-primary\" onclick=\"window.open('"+this.fossilsUrl+"/"+additionalInfo.navigateId+"?mode=in_baltoscandia&lang=en')\">Read more</button></div>" ;
+
                 if (additionalInfo.infoId) infoBtn = "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('"+this.geocollectionUrl+"/specimen/"+additionalInfo.infoId+"')\">INFO</button>"
                 if(additionalInfo.imageId) imgBtn = " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('"+this.geocollectionUrl+"/file/"+additionalInfo.imageId+"')\">IMAGE</button>"
                 text += "<div class='mt-3'><span>"+additionalInfo.imageName+"</span>&ensp;&ensp;" + infoBtn + imgBtn + "</div>";

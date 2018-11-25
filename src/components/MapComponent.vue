@@ -99,7 +99,6 @@
             getLocationsObject : function(object) {
                 if (object === undefined || object === {} || object === false || object.length === 0) return;
                 let this_ = this;
-                console.log(object)
                 object.forEach(function(element,index) {
                     if (element.locality != null || element.locid != null) {
                         this_.layers[element['1']-1].features.push({
