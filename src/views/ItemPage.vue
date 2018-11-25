@@ -660,10 +660,13 @@
                     case 'selected_image':
                         additionalInfo = {imageName: el.link_taxon, infoId:el.specimen_id, imageId: el.attachment_id, navigateId: el.link_id};
                         break;
-                    case 'species_image':
+                    case 'non_higher_taxon':
+                        //
+                        if(el.id) el.specimen_image_id = el.id
+                        if(el.specimen__specimenidentification__taxon__id) el.link = el.specimen__specimenidentification__taxon__id
                         additionalInfo = {imageName: el.database__acronym +' ' +el.id, infoId:el.specimen_id, imageId: el.specimen_image_id, navigateId: el.link};
                         break;
-                    case 'non_species_image':
+                    case 'higher_taxon':
                         additionalInfo = {imageName: el.taxon, infoId:el.specimen_id, imageId: el.attachment_id, navigateId: el.taxon_id};
                     default: break;
                 }
@@ -684,19 +687,20 @@
                     let this_ = this
                     taxonImages.forEach(function(el) {
                         function setImageType(el) {
-                            if(el.specimen_image_id) {
-                                return 'species_image'
-                            } else if (el.link_id){
+                            console.log(el.specimen_image_id)
+                            if(el.specimen_image_id || el.specimen_image_id === null) {
+                                return 'non_higher_taxon'
+                            } else if (el.link_id || el.link_id === null){
                                 return 'selected_image'
                             }
-                            return 'non_species_image'
+                            return 'higher_taxon'
                         }
 
                         function setImageSrc(el) {
-                            if(el.type === 'non_species_image') {
+                            if(el.type === 'higher_taxon') {
                                 el.thumbnail = this_.fileUrl + '/small/' + el.filename.substring(0, 2) + '/' + el.filename.substring(2, 4) + '/' + el.filename;
                                 el.src = this_.fileUrl + '/large/' + el.filename.substring(0, 2) + '/' + el.filename.substring(2, 4) + '/' + el.filename;
-                            } else if (el.type === 'species_image'){
+                            } else if (el.type === 'non_higher_taxon'){
                                 el.thumbnail = this_.fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
                                 el.src = this_.fileUrl + '/large/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
 
