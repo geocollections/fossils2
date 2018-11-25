@@ -73,6 +73,8 @@
     "f_species_synonymy":"Sünonüümika",
     "f_species_geographic_distribution":"Geograafiline levik",
     "f_species_stratigraphic_distribution":"Stratigraafiline levik",
+    "f_taxon_age_within":"vahemikus u",
+    "f_taxon_age_within_unit":"mln a",
     "f_species_distribution_references":"Levik kirjandusandmetel",
     "f_species_distribution_samples":"Esinemine proovides",
     "f_species_type_data":"Tüüpeksemplari andmed",

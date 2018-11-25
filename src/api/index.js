@@ -48,7 +48,7 @@ export function fetchSisterTaxa (id, mode) {
 
 export function fetchSpecies (hierarchy_string,mode,searchParameters) {
     let mode_ = applyMode(mode);
-    return fetch(`taxon/?hierarchy_string__istartswith=${hierarchy_string}&rank__rank_en=species${mode_}&fields=taxon,id,stratigraphy_base__stratigraphy_en,stratigraphy_base__stratigraphy,stratigraphy_top__stratigraphy_en,stratigraphy_top__stratigraphy&page=${searchParameters.species.page}&paginate_by=${searchParameters.species.paginateBy}`)
+    return fetch(`taxon/?hierarchy_string__istartswith=${hierarchy_string}&rank__rank_en=species${mode_}&order_by=taxon&fields=taxon,author_year,id,stratigraphy_base__stratigraphy_en,stratigraphy_base__stratigraphy,stratigraphy_top__stratigraphy_en,stratigraphy_top__stratigraphy&page=${searchParameters.species.page}&paginate_by=${searchParameters.species.paginateBy}`)
 }
 
 export function fetchHierarchy (hierarchy_string) {
@@ -94,7 +94,7 @@ export function fetchReferences2 (hierarchy_string) {
     return fetch(`specimen_union/?taxon__hierarchy_string__istartswith=${hierarchy_string}&reference!=null&order_by=-reference__year&fields=reference,reference__reference,reference__author,reference__year,reference__title,reference__journal__journal_name,reference__book,reference__volume,reference__number,reference__pages,reference__doi,reference__year&distinct=true`)
 }
 export function fetchSynonims (id) {
-    return fetch(`taxon_synonym/?taxon=${id}&format=json`)
+    return fetch(`taxon_synonym/?taxon=${id}&order_by=year&format=json`)
 }
 
 export function fetchTypeSpecimen (id) {
