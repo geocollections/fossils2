@@ -7,13 +7,13 @@
        <div class="page-container" v-if="isTaxonExisted">
            <b-row class="mt-3" v-show="scroll">
                <span class="ml-auto">
-                   <button  onclick="location.href='#top'" type="button" class="btn btn-primary fixed-bottom m-md-2" variant="primary" ><span style="color:white !important;font-weight: bolder!important;font-size: 2em !important;">&uarr;</span></button>
+                   <button  @click="topNavigation()" type="button" style="height: 3.5rem;width: 3.5rem;" class="rounded-circle btn btn-primary fixed-bottom p-0  m-md-2" variant="primary" ><span style="color:white !important;font-weight: bolder!important;font-size: 2em !important;">&uarr;</span></button>
                </span>
            </b-row>
            <b-row class="ml-0">
                <table>
                    <tbody>
-                   <tr><td style="vertical-align:top"><a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
+                   <tr><td style="vertical-align: top;cal-align:top"><a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
                        <img class="taxon-img" style="max-width: 120px;" border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon" :title="taxon.fossil_group__taxon" /></a>
                        <!-- 
                        <a :href="'/'+taxon.id" v-else-if="taxon.is_fossil_group === 1">
@@ -69,8 +69,8 @@
                                <div v-if="filteredCommonNames && filteredCommonNames.length > 0">
                                    <!-- {{$t('to be translated')}} -->
                                    <span  v-for="item in filteredCommonNames">{{item.language}}: <strong>{{item.name}}</strong>;&ensp;</span>
-                               </div> 
-                               <!-- 
+                               </div>
+                               <!--
                                <div v-if="isDefinedAndNotEmpty(sortedSistersWithoutCurrentTaxon)">{{$t('header.f_sister_taxa')}}:
                                         <span v-for="(item,idx) in sortedSistersWithoutCurrentTaxon">
                                     <a :class="isHigherTaxon(item.rank__rank_en) ? '' : 'font-italic'" :href="'/'+item.id">{{item.taxon}}</a>
@@ -83,7 +83,7 @@
                                </div>
                                -->
                                <div v-if="taxon.stratigraphy_base__stratigraphy || taxon.stratigraphy_top__stratigraphy"> {{$t('header.f_stratigraphical_distribution')}}:
-                                       <!--<strong>-->
+
                                            <a href="#" v-if="taxon.stratigraphy_base__stratigraphy"
                                               @click="openUrl({parent_url: geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
                                                {{taxon.stratigraphy_base__stratigraphy}}</a>
@@ -95,7 +95,6 @@
                                            </a>
                                            <span v-if="taxon.stratigraphy_base__age_base != null"> ({{$t('header.f_taxon_age_within')}} {{convertToTwoDecimal(taxon.stratigraphy_base__age_base)}}</span><!--
                                            --><span v-if="taxon.stratigraphy_top__age_top != null">&ndash;{{convertToTwoDecimal(taxon.stratigraphy_top__age_top)}} {{$t('header.f_taxon_age_within_unit')}})</span>
-                                       <!--</strong>-->
                                        <br />
                                 </div>
                                 <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'Species'">
@@ -178,11 +177,11 @@
                                <div :class="idx === synonyms.length -1 ? '' : 'border-bottom my-1'" v-for="synonym,idx in synonyms">
                                     <span v-if="isDefinedAndNotNull(synonym.reference)">
                                         <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:synonym.reference, width:600,height:600})">{{synonym.year}}</a>
-                                    </span> 
-                                    <span v-else="isDefinedAndNotNull(synonym.year)">{{synonym.year}}</span> 
-                                        
-                                   &nbsp;&nbsp;&nbsp; 
-                                   
+                                    </span>
+                                    <span v-else="isDefinedAndNotNull(synonym.year)">{{synonym.year}}</span>
+
+                                   &nbsp;&nbsp;&nbsp;
+
                                    <em>{{synonym.taxon_synonym}}</em> &mdash; {{synonym.author}}<!--
                                    <span v-if="isDefinedAndNotNull(synonym.year)">, {{synonym.year}}</span>
                                --><span v-if="isDefinedAndNotNull(synonym.pages)">, {{$t('abbreviation.pp')}}. {{synonym.pages}}</span><!--
@@ -203,16 +202,16 @@
                                        </a>
                                        <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
                                        <span>{{reference.reference__title}}.</span>
-                                       
+
                                        <span v-if="reference.reference__journal__journal_name != null"><!-- if journal article -->
-                                           <em>{{reference.reference__journal__journal_name}}</em> <strong>{{reference.reference__volume}}</strong>, 
-                                           <span v-if="reference.reference__number != null">{{reference.reference__number}},</span> 
+                                           <em>{{reference.reference__journal__journal_name}}</em> <strong>{{reference.reference__volume}}</strong>,
+                                           <span v-if="reference.reference__number != null">{{reference.reference__number}},</span>
                                            <span v-if="isDefinedAndNotNull(reference.reference__pages)">{{reference.reference__pages}}. </span>
                                        </span>
                                        <span v-if="isDefinedAndNotNull(reference.reference__book)"><!-- if book article -->
                                        <em>{{reference.reference__book}}</em>, pp. {{reference.reference__pages}}.
                                        </span>
-                                       
+
                                        <span v-if="reference.reference__doi !== null" ><a :href="'https://doi.org/'+reference.reference__doi" target="_blank">DOI:{{reference.reference__doi}}</a></span>
                                    </div>
                                </foldable>
@@ -649,6 +648,10 @@
             //todo: utils
             formatHierarchyString: function(value) {
                 return value.replace(/-/g, ',');
+            },
+
+            topNavigation: function() {
+                location.href='#top'
             },
             setFancyBoxCaption: function(el) {
                 let text="",infoBtn = "", imgBtn = "", additionalInfo = {};

@@ -38,6 +38,7 @@
             'bottom': {
                 handler: function (bottom) {
                     if (bottom) {
+                        console.log('bottom handler '+bottom)
                        this.loadMoreImages();
                     }
                 },
@@ -51,7 +52,8 @@
                     false : ((document.getElementById('bottomOfGallery').getBoundingClientRect().y - 100) <= visible)
             },
             loadMoreImages() {
-                if(this.imagesLoading) return
+                if(this.imagesLoading) return;
+
                 if(!this.$store.state.searchParameters.images.allowPaging || this.noMoreResults) {
                     this.imagesLoading = false;
                     return;
@@ -63,6 +65,7 @@
 
                 query.then((response) => {
                     // Todo: if selected images more than the number of pagenatedBy
+                    console.log(response.results)
                     if(response.results.length > 0) {
                         this.$parent.images = this.$parent.images.concat(this.$parent.composeImageRequest(response.results));
                     } else {
