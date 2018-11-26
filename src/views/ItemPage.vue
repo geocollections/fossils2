@@ -163,7 +163,7 @@
                                    <span v-if="isDefinedAndNotNull(item.remarks)">{{item.remarks}}</span>
                                    <span class="pl-3" v-if="isDefinedAndNotNull(item.attachment__filename)">
                                <a @click="openUrl({parent_url:geocollectionUrl + '/file',object:item.attachment, width:500,height:500})" href="#">
-                                   <img class="img-thumbnail previewImage" style="max-height: 100px;" :src="composeImgUrl(item.attachment__filename,false)"/>
+                                   <img class="img-thumbnail previewImage" style="max-height: 80px;" :src="composeImgUrl(item.attachment__filename,false)"/>
                                </a>
                            </span>
                                </div>
