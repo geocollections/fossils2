@@ -1,6 +1,6 @@
 <template>
   <ul style="padding-left: 0 !important;">
-    <table v-if="ranks">
+    <table v-if="ranks.length > 0 ">
       <tbody class="hierarchy_tree">
       <tr  v-for="item in taxonomicTree.nodes">
         <td v-if="isHigherRank(item.rank_en) || item.id === taxon.id" align="right" valign="top" style="color: #999;" v-translate="{et:item.rank, en: item.rank_en}"></td>
@@ -25,7 +25,6 @@
       name: "taxonomical-tree",
       data() {
         return {
-
           parent : {},
           sortedSisters: {},
           sortedSistersWithoutCurrentTaxon : {},
@@ -34,41 +33,40 @@
           ranks: []
         }
       },
-        watch: {
 
+        watch: {
             '$store.state.mode': {
                 handler: function (mode) {
                     if (mode) {
-                        console.log(mode)
                         // re-render component
+                        //Temporary hack since this.$nextTick still cannot ensure all the sub components rendered.
+                        setTimeout(this.waitUntilParentComponentDataComputed, 100)
                     }
                 },
                 deep: true
-
-
             },
         },
       computed: {
-
-          hierarchy() {return this.$parent.hierarchy;},
-          sortedSiblings() {return this.$parent.sortedSiblings;}
+          nodes() {
+              return this.taxonomicTree.nodes},
       },
       created() {
           this.composeData()
           this.composeTaxonomicTree_()
       },
 
-      updated() {
-        console.log('updated')
-        console.log(this.$parent.sortedSiblings.length)
-      },
       methods: {
+          waitUntilParentComponentDataComputed: function(){
+              this.composeData()
+              this.composeTaxonomicTree_()
+          },
         composeData: function() {
             this.taxonomicTree = {nodes: []};
             this.sortedSisters = this.$parent.sortedSisters;
-
             this.parent=this.$parent.parent;
             this.taxon = this.$parent.taxon;
+            this.hierarchy = this.$parent.hierarchy;
+            this.sortedSiblings = this.$parent.sortedSiblings;
             this.ranks = this.getHigherRanks(this.taxon.rank__rank_en);
             this.sortedSistersWithoutCurrentTaxon = this.$parent.sortedSistersWithoutCurrentTaxon;
         } ,
@@ -111,6 +109,7 @@
           let sisterIds = Array.from(this.sortedSisters.map(item => item.id));
           this.addHierarchy(hierarchy,sisterIds);
           this.addSisters(level)
+          this.tableUpdated=true
         },
 
         formatName: function(taxon,parent) {

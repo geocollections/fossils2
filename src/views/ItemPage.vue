@@ -7,13 +7,13 @@
        <div class="page-container" v-if="isTaxonExisted">
            <b-row class="mt-3" v-show="scroll">
                <span class="ml-auto">
-                   <button  onclick="location.href='#top'" type="button" class="btn btn-primary fixed-bottom m-md-2" variant="primary" ><span style="color:white !important;font-weight: bolder!important;font-size: 2em !important;">&uarr;</span></button>
+                   <button  @click="topNavigation()" type="button" style="height: 3.5rem;width: 3.5rem;" class="rounded-circle btn btn-primary fixed-bottom p-0  m-md-2" variant="primary" ><span style="color:white !important;font-weight: bolder!important;font-size: 2em !important;">&uarr;</span></button>
                </span>
            </b-row>
            <b-row class="ml-0">
                <table>
                    <tbody>
-                   <tr><td style="vertical-align:top"><a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
+                   <tr><td style="vertical-align: top;cal-align:top"><a :href="'/'+taxon.fossil_group__id" v-if="taxon.fossil_group__id != null">
                        <img class="taxon-img" style="max-width: 120px;" border="0" :src="'/static/fossilgroups/'+taxon.fossil_group__id+'.png'" :alt="taxon.fossil_group__taxon" :title="taxon.fossil_group__taxon" /></a>
                        <!-- 
                        <a :href="'/'+taxon.id" v-else-if="taxon.is_fossil_group === 1">
@@ -69,8 +69,8 @@
                                <div v-if="filteredCommonNames && filteredCommonNames.length > 0">
                                    <!-- {{$t('to be translated')}} -->
                                    <span  v-for="item in filteredCommonNames">{{item.language}}: <strong>{{item.name}}</strong>;&ensp;</span>
-                               </div> 
-                               <!-- 
+                               </div>
+                               <!--
                                <div v-if="isDefinedAndNotEmpty(sortedSistersWithoutCurrentTaxon)">{{$t('header.f_sister_taxa')}}:
                                         <span v-for="(item,idx) in sortedSistersWithoutCurrentTaxon">
                                     <a :class="isHigherTaxon(item.rank__rank_en) ? '' : 'font-italic'" :href="'/'+item.id">{{item.taxon}}</a>
@@ -83,7 +83,7 @@
                                </div>
                                -->
                                <div v-if="taxon.stratigraphy_base__stratigraphy || taxon.stratigraphy_top__stratigraphy"> {{$t('header.f_stratigraphical_distribution')}}:
-                                       <!--<strong>-->
+
                                            <a href="#" v-if="taxon.stratigraphy_base__stratigraphy"
                                               @click="openUrl({parent_url: geocollectionUrl + '/stratigraphy',object:taxon.stratigraphy_base_id, width:500,height:500})">
                                                {{taxon.stratigraphy_base__stratigraphy}}</a>
@@ -95,7 +95,6 @@
                                            </a>
                                            <span v-if="taxon.stratigraphy_base__age_base != null"> ({{$t('header.f_taxon_age_within')}} {{convertToTwoDecimal(taxon.stratigraphy_base__age_base)}}</span><!--
                                            --><span v-if="taxon.stratigraphy_top__age_top != null">&ndash;{{convertToTwoDecimal(taxon.stratigraphy_top__age_top)}} {{$t('header.f_taxon_age_within_unit')}})</span>
-                                       <!--</strong>-->
                                        <br />
                                 </div>
                                 <div v-if="taxon.rank__rank_en != null && taxon.rank__rank_en != 'Species'">
@@ -178,11 +177,11 @@
                                <div :class="idx === synonyms.length -1 ? '' : 'border-bottom my-1'" v-for="synonym,idx in synonyms">
                                     <span v-if="isDefinedAndNotNull(synonym.reference)">
                                         <a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:synonym.reference, width:600,height:600})">{{synonym.year}}</a>
-                                    </span> 
-                                    <span v-else="isDefinedAndNotNull(synonym.year)">{{synonym.year}}</span> 
-                                        
-                                   &nbsp;&nbsp;&nbsp; 
-                                   
+                                    </span>
+                                    <span v-else="isDefinedAndNotNull(synonym.year)">{{synonym.year}}</span>
+
+                                   &nbsp;&nbsp;&nbsp;
+
                                    <em>{{synonym.taxon_synonym}}</em> &mdash; {{synonym.author}}<!--
                                    <span v-if="isDefinedAndNotNull(synonym.year)">, {{synonym.year}}</span>
                                --><span v-if="isDefinedAndNotNull(synonym.pages)">, {{$t('abbreviation.pp')}}. {{synonym.pages}}</span><!--
@@ -203,16 +202,16 @@
                                        </a>
                                        <!--$author, $year. $title. $journal_name: $number or $book, $pages. DOI:$doi.-->
                                        <span>{{reference.reference__title}}.</span>
-                                       
+
                                        <span v-if="reference.reference__journal__journal_name != null"><!-- if journal article -->
-                                           <em>{{reference.reference__journal__journal_name}}</em> <strong>{{reference.reference__volume}}</strong>, 
-                                           <span v-if="reference.reference__number != null">{{reference.reference__number}},</span> 
+                                           <em>{{reference.reference__journal__journal_name}}</em> <strong>{{reference.reference__volume}}</strong>,
+                                           <span v-if="reference.reference__number != null">{{reference.reference__number}},</span>
                                            <span v-if="isDefinedAndNotNull(reference.reference__pages)">{{reference.reference__pages}}. </span>
                                        </span>
                                        <span v-if="isDefinedAndNotNull(reference.reference__book)"><!-- if book article -->
                                        <em>{{reference.reference__book}}</em>, pp. {{reference.reference__pages}}.
                                        </span>
-                                       
+
                                        <span v-if="reference.reference__doi !== null" ><a :href="'https://doi.org/'+reference.reference__doi" target="_blank">DOI:{{reference.reference__doi}}</a></span>
                                    </div>
                                </foldable>
@@ -263,9 +262,7 @@
                        <div class="card  rounded-0"  style="width: 100%">
                            <div class="card-header">{{$t('header.f_distribution_map')}}</div>
                            <div class="card-body no-padding">
-
                                <map-component></map-component>
-
                            </div>
                        </div>
                    </b-row>
@@ -273,13 +270,7 @@
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-header">{{$t('header.fossils_classification')}}</div>
                            <div class="card-body" style='font-size: 0.8em;'>
-                               <taxonomical-tree :taxon_="taxon"
-                                                 :parent_="parent"
-                                                 :hierarchy_="hierarchy"
-                                                 :sortedSistersWithoutCurrentTaxon_="sortedSistersWithoutCurrentTaxon"
-                                                 :sortedSisters_ = "sortedSisters"
-                                                 :sortedSiblings_ = "sortedSiblings"
-                               ></taxonomical-tree>
+                               <taxonomical-tree></taxonomical-tree>
                            </div>
                        </div>
                    </b-row>
@@ -475,7 +466,7 @@
                     store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
                     store.dispatch('FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION', { id }),
                     //map and images
-                    store.dispatch('FETCH_SPECIES_MAP', { id }),
+                    // store.dispatch('FETCH_SPECIES_MAP', { id }),
                 ],queries)
             }
             return Promise.all(queries)
@@ -558,6 +549,10 @@
 
                 this.getImages();
 
+                if(!this.isHigherTaxon(this.taxon.rank__rank_en)){
+                    this.$store.dispatch('FETCH_SPECIES_MAP')
+                }
+
                 cntSpecimenCollection(this.taxon.hierarchy_string).then((response) => {
                     this.specimenCollectionCnt = response.count;
 
@@ -566,30 +561,31 @@
             getImages() {
                 this.imagesLoading = true;
 
-                if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
+
                     fetchSelectedImages(this.taxon.id,this.$store.state.searchParameters).then((response) => {
                         if(response.results.length === 0) {
-                            fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
-                                this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
-                                    this.$store.state.searchParameters.images.page,response,
-                                    this.$store.state.searchParameters.images.paginateBy)
-                                this.images = this.composeImageRequest(response.results)
-                                this.imagesLoading = false;
-                            });
+                            if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
+                                fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
+                                    this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
+                                        this.$store.state.searchParameters.images.page,response,
+                                        this.$store.state.searchParameters.images.paginateBy)
+                                    this.images = this.composeImageRequest(response.results)
+                                    this.imagesLoading = false;
+                                });
+                            } else {
+                                fetchAttachment(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
+                                    this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
+                                        this.$store.state.searchParameters.images.page,response,
+                                        this.$store.state.searchParameters.images.paginateBy)
+                                    this.images = this.composeImageRequest(response.results);
+                                    this.imagesLoading = false;
+                                });
+                            }
                         } else {
                             this.images = this.composeImageRequest(response.results)
                             this.imagesLoading = false;
                         }
                     });
-                } else {
-                    fetchAttachment(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
-                        this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
-                            this.$store.state.searchParameters.images.page,response,
-                            this.$store.state.searchParameters.images.paginateBy)
-                        this.images = this.composeImageRequest(response.results);
-                        this.imagesLoading = false;
-                    });
-                }
             },
 
             isDifferentName(obj) {
@@ -650,23 +646,28 @@
             formatHierarchyString: function(value) {
                 return value.replace(/-/g, ',');
             },
+
+            topNavigation: function() {
+                location.href='#top'
+            },
             setFancyBoxCaption: function(el) {
                 let text="",infoBtn = "", imgBtn = "", additionalInfo = {};
                 switch (el.type) {
                     case 'selected_image':
                         additionalInfo = {imageName: el.link_taxon, infoId:el.specimen_id, imageId: el.attachment_id, navigateId: el.link_id};
                         break;
-                    case 'species_image':
-                        additionalInfo = {imageName: el.database__acronym +' ' +el.id, infoId:el.specimen_id, imageId: el.specimen_image_id, navigateId: el.link};
+                    case 'non_higher_taxon':
+                        additionalInfo = {imageName: el.specimen__specimen_id ? el.database__acronym +' ' +el.specimen__specimen_id : el.database__acronym +' ' +el.id,
+                            infoId:el.specimen_id, imageId: el.id ? el.id : el.specimen_image_id, navigateId: el.link ? el.link : el.specimen__specimenidentification__taxon__id};
                         break;
-                    case 'non_species_image':
+                    case 'higher_taxon':
                         additionalInfo = {imageName: el.taxon, infoId:el.specimen_id, imageId: el.attachment_id, navigateId: el.taxon_id};
                     default: break;
                 }
 
-                if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
-                    text += "<div><button type=\"button\" class=\"btn btn-xs  btn-primary\" onclick=\"window.open('"+this.fossilsUrl+"/"+additionalInfo.navigateId+"?mode=in_baltoscandia&lang=en')\">Read more</button></div>" ;
-                }
+                // if(this.isHigherTaxon(this.taxon.rank__rank_en)) {}
+                text += "<div><button type=\"button\" class=\"btn btn-xs  btn-primary\" onclick=\"window.open('"+this.fossilsUrl+"/"+additionalInfo.navigateId+"?mode=in_baltoscandia&lang=en')\">Read more</button></div>" ;
+
                 if (additionalInfo.infoId) infoBtn = "<button type=\"button\" class=\"btn btn-sm  btn-info\" onclick=\"window.open('"+this.geocollectionUrl+"/specimen/"+additionalInfo.infoId+"')\">INFO</button>"
                 if(additionalInfo.imageId) imgBtn = " <button type=\"button\" class=\"btn btn-sm btn-secondary\" onclick=\"window.open('"+this.geocollectionUrl+"/file/"+additionalInfo.imageId+"')\">IMAGE</button>"
                 text += "<div class='mt-3'><span>"+additionalInfo.imageName+"</span>&ensp;&ensp;" + infoBtn + imgBtn + "</div>";
@@ -680,19 +681,20 @@
                     let this_ = this
                     taxonImages.forEach(function(el) {
                         function setImageType(el) {
-                            if(el.specimen_image_id) {
-                                return 'species_image'
-                            } else if (el.link_id){
+                            console.log(el.specimen_image_id)
+                            if(el.specimen_image_id || el.specimen_image_id === null) {
+                                return 'non_higher_taxon'
+                            } else if (el.link_id || el.link_id === null){
                                 return 'selected_image'
                             }
-                            return 'non_species_image'
+                            return 'higher_taxon'
                         }
 
                         function setImageSrc(el) {
-                            if(el.type === 'non_species_image') {
+                            if(el.type === 'higher_taxon') {
                                 el.thumbnail = this_.fileUrl + '/small/' + el.filename.substring(0, 2) + '/' + el.filename.substring(2, 4) + '/' + el.filename;
                                 el.src = this_.fileUrl + '/large/' + el.filename.substring(0, 2) + '/' + el.filename.substring(2, 4) + '/' + el.filename;
-                            } else if (el.type === 'species_image'){
+                            } else if (el.type === 'non_higher_taxon'){
                                 el.thumbnail = this_.fileUrl + '/small/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
                                 el.src = this_.fileUrl + '/large/' + el.uuid_filename.substring(0,2)+'/'+ el.uuid_filename.substring(2,4)+'/'+ el.uuid_filename;
 

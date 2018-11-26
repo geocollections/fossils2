@@ -28,36 +28,32 @@
         data() {return {bottom: false, imagesLoading: false, noMoreResults: false}},
         created() {
             window.addEventListener('scroll', () => {
+                this.bottom = false
                 this.bottom = this.bottomVisible()
             });
             this.loadMoreImages()
         },
 
         watch: {
-            bottom(bottom) {
-                if (bottom) {
-                    this.loadMoreImages();
-                }
+            'bottom': {
+                handler: function (bottom) {
+                    if (bottom) {
+                        console.log('bottom handler '+bottom)
+                       this.loadMoreImages();
+                    }
+                },
+                deep: true
             },
         },
         methods: {
             bottomVisible() {
-                const scrollY = window.scrollY
                 const visible = document.documentElement.clientHeight
-                const pageHeight = document.documentElement.scrollHeight
-                const footerHeight = 900;
-                const bottomOfPage = visible + scrollY >= pageHeight-1
-                //remove above code if it is ok?
-                // return bottomOfPage || pageHeight < visible
-                console.log(document.getElementById('bottomOfGallery').getBoundingClientRect().y)
-                console.log("---")
-                if(document.getElementById('bottomOfGallery').getBoundingClientRect().y < visible) {
-                    console.log("load more")
-                }
                 return document.getElementById('bottomOfGallery') === null ?
-                    false : document.getElementById('bottomOfGallery').getBoundingClientRect().y < visible
+                    false : ((document.getElementById('bottomOfGallery').getBoundingClientRect().y - 100) <= visible)
             },
             loadMoreImages() {
+                if(this.imagesLoading) return;
+
                 if(!this.$store.state.searchParameters.images.allowPaging || this.noMoreResults) {
                     this.imagesLoading = false;
                     return;
@@ -69,7 +65,7 @@
 
                 query.then((response) => {
                     // Todo: if selected images more than the number of pagenatedBy
-                    if(response.results.length > 0) {
+                    if(this.$parent.isDefinedAndNotEmpty(response)) {
                         this.$parent.images = this.$parent.images.concat(this.$parent.composeImageRequest(response.results));
                     } else {
                         this.noMoreResults = true;
