@@ -109,10 +109,9 @@ export function fetchDistributionConop (name) {
     return fetch(`taxon/?sql=get_species_distribution_conop&keyword=${name}&format=json`)
 }
 
-export function fetchSpeciesMap (name) {
-    // let mode_ = applyMode(mode);
-    // return fetch(`solr/taxon_search/?fl=src,locality_en,locality,locality_id,latlong&fq={!collapse%20field\=locality}&q=taxon_hierarchy:${taxon_hierarchy}*%20AND%20${mode}:1&format=json`)
-    return fetch(`taxon/?sql=get_species_map&keyword=${name}&format=json`)
+export function fetchSpeciesMap (taxon_hierarchy,mode) {
+    return fetch(`solr/taxon_search/?fl=src,locality_en,locality,locality_id,latlong&q=taxon_hierarchy:${taxon_hierarchy}* AND ${mode}:1&format=json`)
+    // return fetch(`taxon/?sql=get_species_map&keyword=${name}&format=json`)
 }
 
 

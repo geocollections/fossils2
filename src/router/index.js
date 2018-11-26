@@ -8,6 +8,7 @@ Vue.use(Meta,{ssrAttribute: 'data-vue-meta-server-rendered'})
 const StaticPage = () => import('../views/StaticPage.vue')
 const FrontPage = () => import('../views/FrontPage.vue')
 const ItemPage = () => import('../views/ItemPage.vue')
+const AdvancesSearch = () => import('../views/AdvancedSearch.vue')
 
 export function createRouter () {
   return new Router({
@@ -17,6 +18,7 @@ export function createRouter () {
     routes: [
       { path: '/:id(\\d+)',name: 'ItemPage', component: ItemPage , meta: { isSpecies: false} },
       { path: '/page/:id', component: StaticPage },
+        { path: '/search', component: AdvancesSearch },
       { path: '/', component: FrontPage },
       { path: '*', redirect: '/' },
     ]

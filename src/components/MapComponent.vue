@@ -33,7 +33,6 @@
                 this.loadMap()
                 this.initLayers()
                 this.checkAllLayers()
-                console.log(this.layers)
             }
 
         },
@@ -54,9 +53,9 @@
                       function setCustomSettings(type) {
                           let setting;
                           switch (type) {
-                              case '1': setting = {color: 'rgba(240, 95, 37,0.7)', opacity: 0.7 ,weight:6, zIndexOffset: 1}; break;
-                              case '2': setting = {color: 'rgba(240, 85, 199,0.7)', opacity: 0.7 ,weight:6, zIndexOffset: 2};break;
-                              case '3': setting = {color: 'rgba(245, 134, 0,0.7)', opacity: 0.5 ,weight:6, zIndexOffset: 3};break;
+                              case 1: setting = {color: 'rgba(240, 95, 37,0.7)', opacity: 0.7 ,weight:6, zIndexOffset: 1}; break;
+                              case 2: setting = {color: 'rgba(240, 85, 199,0.7)', opacity: 0.7 ,weight:6, zIndexOffset: 2};break;
+                              case 3: setting = {color: 'rgba(245, 134, 0,0.7)', opacity: 0.5 ,weight:6, zIndexOffset: 3};break;
                               default: break;
                           }
                           return setting
@@ -102,22 +101,24 @@
                 let this_ = this;
                 object.forEach(function(element,index) {
                     function getCoords(string) {
-                        let tokenizedCoords = element.latlong.split(',')
+                        if(string === undefined) return [0,0]
+                        let tokenizedCoords = string.split(',')
                         return [tokenizedCoords[0],tokenizedCoords[1]]
                     }
-                    if (element.locality != null || element.locid != null) {
-                        this_.layers[element['1']-1].features.push({
-                            // id: index,
-                            // coords: element.latlong !== null ? getCoords(element.latlong) : [0,0],
-                            // type: ""+element.src,
-                            // name: (this_.$store.state.lang === 'ee' ? element.locality : element.locality_en),
-                            // locid: element.locality_id
-                                    // for sql query
+
+                    if (element.locality != null || element.locality_id != null || !element.latlong ) {
+                        this_.layers[element.src-1].features.push({
                             id: index,
-                            coords: [element.latitude, element.longitude],
-                            type: element['1'],
+                            coords: element.latlong !== null ? getCoords(element.latlong) : [0,0],
+                            type: element.src,
                             name: (this_.$store.state.lang === 'ee' ? element.locality : element.locality_en),
-                            locid: element.locid
+                            locid: element.locality_id
+                                    // for sql query
+                            // id: index,
+                            // coords: [element.latitude, element.longitude],
+                            // type: element['1'],
+                            // name: (this_.$store.state.lang === 'ee' ? element.locality : element.locality_en),
+                            // locid: element.locid
                         });
                     }
                 });

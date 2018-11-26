@@ -98,8 +98,8 @@ export default {
     },
 
     FETCH_SPECIES_MAP: ({ commit, state }) => {
-        // return fetchSpeciesMap(state.activeItem.taxon.hierarchy_string, state.mode).then(map => commit('SET_SPECIES_MAP', { map }))
-        return fetchSpeciesMap(state.activeItem.taxon.taxon).then(map => commit('SET_SPECIES_MAP', { map }))
+        return fetchSpeciesMap(state.activeItem.taxon.hierarchy_string, state.mode).then(map => commit('SET_SPECIES_MAP', { map }))
+        // return fetchSpeciesMap(state.activeItem.taxon.taxon).then(map => commit('SET_SPECIES_MAP', { map }))
     },
 
     FETCH_DESCRIPTION: ({ commit, state }, { id}) => {
