@@ -130,15 +130,6 @@
   "search": {
     "fossils_search":"Hae fossiilia",
 
-    "hightaxon":"Ylempi taksoni",
-    "species":"Laji",
-    "locality":"Paikka",
-    "country":"Maa, maakunta",
-    "stratigraphy":"Stratigrafia",
-    "button":"Hae",
-    "results":"Haun tulokset",
-    "results_species":"laji",
-
     "specimen": {
       "id": "ID",
       "number": "Specimen number",
@@ -213,6 +204,16 @@
     "js_map_popup_linkText":"Search for records in this area",
     "js_map_popup_speciescount":"Species count",
     "js_map_popup_occurrencecount":"Ocurrence count",
-    "calculating":"calculating..."
+    "calculating":"calculating...",
+
+    "hightaxon":"Ylempi taksoni",
+    "species":"Laji",
+    "locality":"Paikka",
+    "country":"Maa, maakunta",
+    "stratigraphy":"Stratigrafia",
+    "button":"Hae",
+    "results":"Haun tulokset",
+    "results_species":"laji",
+    "btn_show_fossils_near_me":"Show fossils near me"
   }
 }

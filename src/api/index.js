@@ -110,7 +110,7 @@ export function fetchDistributionConop (name) {
 }
 
 export function fetchSpeciesMap (taxon_hierarchy,mode) {
-    return fetch(`solr/taxon_search/?fl=src,locality_en,locality,locality_id,latlong&q=taxon_hierarchy:${taxon_hierarchy}* AND ${mode}:1&format=json`)
+    return fetch(`solr/taxon_search/?fl=src,locality_en,locality,locality_id,latlong&fq={!collapse%20field\=locality}&q=taxon_hierarchy:${taxon_hierarchy}* AND ${mode}:1&format=json`)
     // return fetch(`taxon/?sql=get_species_map&keyword=${name}&format=json`)
 }
 
@@ -158,3 +158,15 @@ export function fetchSimpleTaxonSearch (value) {
     // return 'https://api.geocollections.info/taxon/?paginate_by=10&fields=id,taxon,common_name__name,rank__rank_short&multi_search=value:' + value + ';fields:taxon,common_name__name;lookuptype:icontains'
     //   // return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=id,taxon,rank__rank_en&multi_search=value:' + value + ';fields:taxon;lookuptype:icontains'
 }
+
+export function fetchHigherTaxonSearch (value) {
+    return fetch(`solr/taxon_search/?q=rank:[14%20TO%2016]&keyword=${value}&format=json`)
+    }
+
+export function fetchSpeciesCountInArea (value) {
+    // return fetch(`solr/taxon_search/?q=rank:[14%20TO%2016]&fq={!geofilt}&fq={!collapse%20field\=taxon}&sfield=latlong&pt=58.998153,23.235662&d=50&sort=geodist()%5asc&fl=locality,taxon,author_year,fossil_group,src,rank&format=json`)
+    return fetch(`solr/taxon_search/?q=rank:[14%20TO%2016]&fq={!geofilt}&fq={!collapse%20field\=taxon}&sfield=latlong&pt=58.998153,23.235662&d=50&sort=geodist()%5asc&fl=locality,taxon,author_year,fossil_group,src,rank&format=json`)
+
+}
+
+

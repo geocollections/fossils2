@@ -768,3 +768,12 @@
         },
     }
 </script>
+
+<style scoped>
+    .col-lg-8 {
+        padding-right:0.1rem !important;
+    }
+    .col-lg-4 {
+        padding-left:0.1rem !important;
+    }
+</style>

@@ -8,14 +8,43 @@
                     </b-col>
                 </b-row>
                 <b-row>
-                    <!--<b-col class="ml-auto">-->
-                        <!--<div class="card rounded-0" style="width: 100%">-->
-                            <!--<div class="card-body">-->
-
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</b-col>-->
-                    <b-col class="mr-auto">
+                    <b-col md="6" class="ml-auto"  style="padding-right:0.1rem !important;">
+                        <div class="card rounded-0" style="width: 100%">
+                            <div class="card-body">
+                                <b-row class="my-1">
+                                    <b-col sm="4"><label for="input-small">{{$t('advancedsearch.hightaxon')}}:</label></b-col>
+                                    <b-col sm="8">
+                                        <b-form-input id="input-small" size="sm" type="text" placeholder=""></b-form-input>
+                                    </b-col>
+                                </b-row>
+                                <b-row class="my-1">
+                                    <b-col sm="4"><label for="input-small">{{$t('advancedsearch.species')}}:</label></b-col>
+                                    <b-col sm="8">
+                                        <b-form-input id="input-small" size="sm" type="text" placeholder=""></b-form-input>
+                                    </b-col>
+                                </b-row>
+                                <b-row class="my-1">
+                                    <b-col sm="4"><label for="input-small">{{$t('advancedsearch.locality')}}:</label></b-col>
+                                    <b-col sm="8">
+                                        <b-form-input id="input-small" size="sm" type="text" placeholder=""></b-form-input>
+                                    </b-col>
+                                </b-row>
+                                <b-row class="my-1">
+                                    <b-col sm="4"><label for="input-small">{{$t('advancedsearch.stratigraphy')}}:</label></b-col>
+                                    <b-col sm="8">
+                                        <b-form-input id="input-small" size="sm" type="text" placeholder=""></b-form-input>
+                                    </b-col>
+                                </b-row>
+                                <b-row class="my-1">
+                                    <b-col sm="4"></b-col>
+                                    <b-col sm="8">
+                                        <button  @click="searchNearMe()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary" >{{$t('advancedsearch.btn_show_fossils_near_me')}}</button>
+                                    </b-col>
+                                </b-row>
+                            </div>
+                        </div>
+                    </b-col>
+                    <b-col md="6" class="mr-auto" style="padding-left:0.1rem !important;">
                         <div class="card rounded-0" style="width: 100%">
                             <div class="card-body  no-padding">
                                 <div id="map" style="height: 300px"></div>
@@ -30,14 +59,18 @@
 </template>
 
 <script>
+import {
+    fetchHigherTaxonSearch
+} from '../api'
 export default {
-
   name: 'advanced-search-page',
     data() {
         return {
             map: null,
             drawnItems: null,
             layer: null,
+            searchResults: [],
+            isLoading: false,
         }
     },
     computed: {
@@ -73,7 +106,7 @@ export default {
 
                 geomParams = this.getParamsForWKT(wkt.write(), query);
             }
-
+            console.log(geomParams)
             var baseCountParams = this.getParamsForObject(this.getExistingParams(query), true);
             var baseLinkParams = this.getParamsForObject(this.getExistingParams(query), false);
             var countParams = '?' + baseCountParams + geomParams;
@@ -178,13 +211,20 @@ export default {
         },
         getBaseLayers: function () {
             // Google map layers
-            var minimalBaseLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoia3V1dG9iaW5lIiwiYSI6ImNpZWlxdXAzcjAwM2Nzd204enJvN2NieXYifQ.tp6-mmPsr95hfIWu3ASz2w',
-                {
-                    minZoom: 4,
-                    maxZoom: 18,
-                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                }
-            );
+            var minimalBaseLayer =
+                L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, imagery &copy; <a href="https://carto.com/attribution">CartoDB</a>',
+                subdomains: 'abcd',
+                mapid: '',
+                token: ''
+            });
+            //     L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoia3V1dG9iaW5lIiwiYSI6ImNpZWlxdXAzcjAwM2Nzd204enJvN2NieXYifQ.tp6-mmPsr95hfIWu3ASz2w',
+            //     {
+            //         minZoom: 4,
+            //         maxZoom: 18,
+            //         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            //     }
+            // );
             //     L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
             //     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, imagery &copy; <a href="https://carto.com/attribution">CartoDB</a>',
             //     subdomains: 'abcd',
@@ -300,10 +340,10 @@ export default {
             });
 
             MAP_VAR.map.on('draw:edited', function(e) {
-                this.layers = e.layers;
+                var layers = e.layers;
 
                 layers.eachLayer(function(layer) {
-                    this.generatePopup(this.layer, this.layer._latlng, this.MAP_VAR.query, this.MAP_VAR.map);
+                    this_.generatePopup(layer, layer._latlng, MAP_VAR.query, MAP_VAR.map);
                 });
             });
 
@@ -363,6 +403,24 @@ export default {
             L.drawLocal.edit.toolbar.actions.clearAll.title = this.$t('advancedsearch.draw_edit_toolbar_actions_clearAll_title');
             L.drawLocal.edit.handlers.remove.tooltip.text = this.$t('advancedsearch.draw_edit_handlers_remove_tooltip_text');
         },
+
+        // Higher Taxon search
+        displayResults: function (item) {
+            return `${item.name}`
+        },
+        autocompliteSearch(value) {
+            if(value.length < 3)  this.searchResults = [];
+            if(value.length > 2) {
+                this.isLoading = true;
+                fetchHigherTaxonSearch(value).then((response) => {
+                    this.isLoading = false;
+                    this.searchResults = response.results
+                });
+            }
+        },
+        searchNearMe() {
+
+        }
     },
     mounted (){
         this.initialiseMap()

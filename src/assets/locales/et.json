@@ -144,15 +144,6 @@
   "search": {
     "fossils_search":"Otsi taksonit",
 
-    "hightaxon":"Kõrgtakson",
-    "species":"Liik",
-    "locality":"Leiukoht",
-    "country":"Riik, maakond, vald",
-    "stratigraphy":"Stratigraafia",
-    "button":"Otsi liike",
-    "results":"Otsingu tulemused",
-    "results_species":"liiki",
-
     "specimen": {
       "id": "ID",
       "number": "Eksemplari nr",
@@ -233,6 +224,16 @@
     "js_map_popup_linkText":"Otsi kirjeid sellelt alalt",
     "js_map_popup_speciescount":"Liikide arv",
     "js_map_popup_occurrencecount":"Esinemiste arv",
-    "calculating":"arvutan..."
+    "calculating":"arvutan...",
+
+    "hightaxon":"Kõrgtakson",
+    "species":"Liik",
+    "locality":"Leiukoht",
+    "country":"Riik, maakond, vald",
+    "stratigraphy":"Stratigraafia",
+    "button":"Otsi liike",
+    "results":"Otsingu tulemused",
+    "results_species":"liiki",
+    "btn_show_fossils_near_me":"Näita fossiilid minu ümbruses"
   }
 }

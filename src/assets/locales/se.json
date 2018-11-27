@@ -134,14 +134,6 @@
   },
   "search": {
     "fossils_search":"Sök taxon",
-    "hightaxon":"Higher taxon",
-    "species":"Species",
-    "locality":"Locality",
-    "country":"Country, county",
-    "stratigraphy":"Stratigraphy",
-    "button":"Submit query",
-    "results":"Search results",
-    "results_species":"species",
 
     "specimen": {
       "id": "ID",
@@ -216,6 +208,16 @@
     "js_map_popup_linkText":"Search for records in this area",
     "js_map_popup_speciescount":"Species count",
     "js_map_popup_occurrencecount":"Ocurrence count",
-    "calculating":"calculating..."
+    "calculating":"calculating...",
+
+    "hightaxon":"Higher taxon",
+    "species":"Species",
+    "locality":"Locality",
+    "country":"Country, county",
+    "stratigraphy":"Stratigraphy",
+    "button":"Submit query",
+    "results":"Search results",
+    "results_species":"species",
+    "btn_show_fossils_near_me":"Show fossils near me"
   }
 }
