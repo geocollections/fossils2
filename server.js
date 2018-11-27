@@ -134,6 +134,8 @@ function render (req, res) {
     <link rel="stylesheet" href="/static/ol3/ol.css" type="text/css"/>
     <link rel="stylesheet" href="/static/leaflet-1.3.4/leaflet.css" />
     <link rel="stylesheet" href="/static/leaflet-fullscreen/leaflet.fullscreen.css" />
+    <link rel="stylesheet" href="/static/leaflet-draw-1.0.4/leaflet.draw.css" />
+     <link rel="stylesheet" href="/static/leaflet-coordinates-0.1.5/leaflet.coordinates.css" />
     <link rel="stylesheet" href="/static/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.css" />
     <link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.css" />    
@@ -147,7 +149,7 @@ function render (req, res) {
     <script type="text/javascript"> var _paq = _paq || []; /* tracker methods like "setCustomDimension" should be called before "trackPageView" */ _paq.push(['trackPageView']); _paq.push(['enableLinkTracking']); (function() { var u="//geocollections.info/statistikat/"; _paq.push(['setTrackerUrl', u+'piwik.php']); _paq.push(['setSiteId', '13']); var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s); })(); </script>
     ${html}
     
-    <script src="/assets/vendor.bundle.js"></script>
+ <script src="/assets/vendor.bundle.js"></script>
     <script src="/assets/client.bundle.js"></script>
     <!--<script type="text/javascript" src="/static/js/jquery.js"></script>-->
     <script type="text/javascript"  src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -157,13 +159,15 @@ function render (req, res) {
     <!--<script type="text/javascript" src="/static/ol3/ol.js"></script>-->
     <script src="/static/leaflet-1.3.4/leaflet.js"></script>
     <script src="/static/leaflet-fullscreen/Leaflet.fullscreen.js"></script>
+    <script src="/static/leaflet-draw-1.0.4/leaflet.draw.js"></script>
+    <script src="/static/leaflet-coordinates-0.1.5/leaflet.coordinates.min.js"></script>
+        <!--<script src="/static/leaflet-wicket/leaflet-wicket.js"></script>-->
+        <script src="/static/leaflet-wicket/wicket.js"></script>
     <script src="/static/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.js"></script>
     <!--<script type="text/javascript" src="/static/js/fossils.js"></script>-->
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>
-
-
-    <!--<script type="text/javascript" src="/static/js/mainpage.js"></script>-->
+ 
     ${script.text(bodyOpt)}
   </body>
 </html>
