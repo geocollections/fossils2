@@ -160,7 +160,7 @@ export function fetchSimpleTaxonSearch (value) {
 }
 
 export function fetchTaxonSearchInSelectedArea (geoparams) {
-    return fetch(`solr/taxon_search/?fq=%7B%21geofilt%7D&${geoparams})&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&sfield=latlong&format=json`)
+    return fetch(`solr/taxon_search/?fq=%7B%21geofilt%7D&${geoparams}&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&sfield=latlong&format=json`)
 }
 export function fetchHigherTaxonSearch (query) {
     return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&format=json`)
