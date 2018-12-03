@@ -159,14 +159,23 @@ export function fetchSimpleTaxonSearch (value) {
     //   // return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=id,taxon,rank__rank_en&multi_search=value:' + value + ';fields:taxon;lookuptype:icontains'
 }
 
-export function fetchHigherTaxonSearch (value) {
-    return fetch(`solr/taxon_search/?q=rank:[14%20TO%2016]&keyword=${value}&format=json`)
-    }
+export function fetchTaxonSearchInSelectedArea (geoparams) {
+    return fetch(`solr/taxon_search/?fq=%7B%21geofilt%7D&${geoparams})&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&sfield=latlong&format=json`)
+}
+export function fetchHigherTaxonSearch (query) {
+    return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&format=json`)
+    // return fetch(`solr/taxon_search/?q=taxon:/.*${value}.*/&fq=rank:[1%20TO%2013]&fq=%7B%21collapse%20field--taxon%7D&fl=taxon,taxon_hierarchy&format=json`)
+}
 
 export function fetchSpeciesCountInArea (value) {
     // return fetch(`solr/taxon_search/?q=rank:[14%20TO%2016]&fq={!geofilt}&fq={!collapse%20field\=taxon}&sfield=latlong&pt=58.998153,23.235662&d=50&sort=geodist()%5asc&fl=locality,taxon,author_year,fossil_group,src,rank&format=json`)
-    return fetch(`solr/taxon_search/?q=rank:[14%20TO%2016]&fq={!geofilt}&fq={!collapse%20field\=taxon}&sfield=latlong&pt=58.998153,23.235662&d=50&sort=geodist()%5asc&fl=locality,taxon,author_year,fossil_group,src,rank&format=json`)
-
+    return fetch(`solr/taxon_search/?q=rank:[14%20TO%2017]&fq=%7B%21geofilt%7D&fq={!collapse%20field\=taxon}&sfield=latlong&pt=58.998153,23.235662&d=50&sort=geodist()%5asc&fl=locality,taxon,author_year,fossil_group,src,rank&format=json`)
 }
 
+export function fetchAdvancedSearchByLocality (value) {
+    return fetch(`solr/taxon_search/?fq=locality:*${value}* OR locality_en:*${value}* OR locality_free:*${value}*&rows=10&sfield=locality,locality_en&format=json`)
+}
 
+export function fetchAdvancedTaxonSearch (query) {
+    return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&format=json`)
+}

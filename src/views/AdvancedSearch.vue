@@ -9,74 +9,133 @@
                 </b-row>
                 <b-row>
                     <b-col md="6" class="ml-auto"  style="padding-right:0.1rem !important;">
-                        <div class="card rounded-0" style="width: 100%">
+                        <div class="card rounded-0" style="width: 100%;height: 100%">
                             <div class="card-body">
                                 <b-row class="my-1">
                                     <b-col sm="4"><label for="input-small">{{$t('advancedsearch.hightaxon')}}:</label></b-col>
                                     <b-col sm="8">
-                                        <b-form-input id="input-small" size="sm" type="text" placeholder=""></b-form-input>
+                                        <vue-multiselect class="align-middle"
+                                                         id="search"
+                                                         v-model="higherTaxa"
+                                                         :custom-label="displayResults" track-by="code"
+                                                         :options="searchResults"
+                                                         :searchable="true"
+                                                         :loading="isLoading"
+                                                         :max-height="600"
+                                                         :show-no-results="false"
+                                                         :show-labels="false"
+                                                         @select="onSelect" @search-change="autocompliteSearch">
+                                            <template slot="noResult"><b>NoRes</b></template>
+                                        </vue-multiselect>
+                                        <!--<b-form-input id="input-small" size="sm" type="text" placeholder=""></b-form-input>-->
                                     </b-col>
                                 </b-row>
                                 <b-row class="my-1">
                                     <b-col sm="4"><label for="input-small">{{$t('advancedsearch.species')}}:</label></b-col>
                                     <b-col sm="8">
-                                        <b-form-input id="input-small" size="sm" type="text" placeholder=""></b-form-input>
+                                        <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="speciesField"></b-form-input>
                                     </b-col>
                                 </b-row>
                                 <b-row class="my-1">
                                     <b-col sm="4"><label for="input-small">{{$t('advancedsearch.locality')}}:</label></b-col>
                                     <b-col sm="8">
-                                        <b-form-input id="input-small" size="sm" type="text" placeholder=""></b-form-input>
+                                        <b-form-input id="input-small" size="sm" type="text" placeholder=""disabled></b-form-input>
                                     </b-col>
                                 </b-row>
                                 <b-row class="my-1">
                                     <b-col sm="4"><label for="input-small">{{$t('advancedsearch.stratigraphy')}}:</label></b-col>
                                     <b-col sm="8">
-                                        <b-form-input id="input-small" size="sm" type="text" placeholder=""></b-form-input>
+                                        <b-form-input id="input-small" size="sm" type="text" placeholder="" disabled></b-form-input>
                                     </b-col>
                                 </b-row>
                                 <b-row class="my-1">
                                     <b-col sm="4"></b-col>
                                     <b-col sm="8">
-                                        <button  @click="searchNearMe()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary" >{{$t('advancedsearch.btn_show_fossils_near_me')}}</button>
+                                        <b-button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary" :disabled="isSearchDisabled">Search</b-button>
+                                        <!--<button  @click="searchNearMe()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary" >{{$t('advancedsearch.btn_show_fossils_near_me')}}</button>-->
                                     </b-col>
                                 </b-row>
                             </div>
                         </div>
                     </b-col>
                     <b-col md="6" class="mr-auto" style="padding-left:0.1rem !important;">
-                        <div class="card rounded-0" style="width: 100%">
+                        <div class="card rounded-0" style="width: 100%;height: 100%">
                             <div class="card-body  no-padding">
                                 <div id="map" style="height: 300px"></div>
                             </div>
                         </div>
                     </b-col>
                 </b-row>
+                <b-row class="pt-3">
+                    <b-col md="12" v-if="initialMessege">
+                        <b-alert show variant="info" v-if="!!initialMessege">Some initial instructions</b-alert>
+                    </b-col>
 
+                    <b-col md="12" v-if="!initialMessege">
+                        <b-row v-if="isLoadingResults">
+                            <spinner  :show="isLoadingResults"></spinner><span class="p-2">{{$t('messages.pageLoading')}}</span>
+                        </b-row>
+                        <div class="card rounded-0" v-if="!isLoadingResults">
+                            <div class="card-body">
+                                <h1 id="results" class="pb-4" v-if="results">{{results.length}} Species found:</h1>
+
+                                <span v-for="group in output">
+                                    <span><img :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 80px;" />
+                                        <h1 style="display: inline;"><a :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a></h1></span>
+                                    <b-row v-for="species in group.node" style="padding-left: 7rem">
+                                        <b-col sm="4"><em><a :href="'/'+species.id">{{species.taxon}}</a></em> {{species.author_year}}</b-col>
+                                        <b-col sm="8"><span v-translate="{ et: species.strat, en: species.strat_en}"></span></b-col>
+                                    </b-row>
+                                </span>
+                            </div>
+                        </div>
+                    </b-col>
+                </b-row>
             </div>
         </section>
     </section>
 </template>
 
 <script>
+    import uniqBy from 'lodash/uniqBy';
+    import VueMultiselect from 'vue-multiselect'
 import {
+    fetchAdvancedSearchByLocality,
+    fetchAdvancedTaxonSearch,
+    fetchTaxonSearchInSelectedArea,
     fetchHigherTaxonSearch
 } from '../api'
+    import Spinner from "../components/Spinner.vue";
 export default {
   name: 'advanced-search-page',
+    components:  {
+        Spinner,
+        VueMultiselect
+    },
     data() {
         return {
+            initialMessege: true,
+            speciesField:null,
+            higherTaxa:null,
+            output: {},
             map: null,
             drawnItems: null,
             layer: null,
             searchResults: [],
+            isLoadingResults:false,
             isLoading: false,
+            results:[],
+
         }
     },
     computed: {
-
+        isSearchDisabled() {
+            if((this.higherTaxa !== null && this.higherTaxa !== '') || (this.speciesField !== null && this.speciesField !== '')) return false
+            return true;
+        }
     },
     methods: {
+
         getSpeciesCountInArea: function (params, speciesID) {
             $.getJSON(BC_CONF.biocacheServiceUrl + '/occurrence/facets.json' + params + '&facets=taxon_name&callback=?',
                 function(data) {
@@ -106,11 +165,6 @@ export default {
 
                 geomParams = this.getParamsForWKT(wkt.write(), query);
             }
-            console.log(geomParams)
-            var baseCountParams = this.getParamsForObject(this.getExistingParams(query), true);
-            var baseLinkParams = this.getParamsForObject(this.getExistingParams(query), false);
-            var countParams = '?' + baseCountParams + geomParams;
-            var linkParams = '?' + baseLinkParams + geomParams;
 
             if(!latlng) {
                 if($.isFunction(layer.getBounds)) {
@@ -119,9 +173,7 @@ export default {
                     latlng = layer.getLatLng();
                 }
             }
-            // CHANGED
-            // var recordsLink = BC_CONF.contextPath + '/occurrences/search' + linkParams + '#map';
-            var recordsLink = "URL"
+
             var coordsStr = latlng.lat + '-' + latlng.lng;
             var speciesID = 'speciesCount-' + coordsStr;
             var occurrenceID = 'occurrenceCount-' + coordsStr;
@@ -135,15 +187,19 @@ export default {
                     this.$t('advancedsearch.js_map_popup_occurrencecount') + ': ' +
                     '<b id="' + occurrenceID + '">' + this.$t('advancedsearch.calculating') + '</b>' +
                     '<br />' +
-                    '<a id="showOnlyTheseRecords" href="' + recordsLink + '">' +
+                    '<a id="showOnlyTheseRecords" href="#results" onclick="return;">' +
                     '<span class="fa fa-search"></span> ' +
                     this.$t('advancedsearch.js_map_popup_linkText') +
                     '</a>'
                 )
                 .openOn(map);
-
-            // this.getSpeciesCountInArea(countParams, speciesID);
-            // getOccurrenceCountInArea(countParams, occurrenceID);
+            var this_ = this
+            $('#showOnlyTheseRecords').on("click", function(event){
+                this_.map.closePopup();
+                this_.applyMapSearch(geomParams)
+                // this.getSpeciesCountInArea(countParams, speciesID);
+                // getOccurrenceCountInArea(countParams, occurrenceID);
+            })
         },
         getParamsForWKT: function(wkt, query) {
             return '&wkt=' + encodeURI(wkt.replace(' ', '+'));
@@ -152,8 +208,8 @@ export default {
         getParamsForCircle: function (circle, query) {
             var latlng = circle.getLatLng();
             var radius = Math.round((circle.getRadius() / 1000) * 10) / 10; // convert to km (from m) and round to 1 decmial place
-
-            return '&radius=' + radius + '&lat=' + latlng.lat + '&lon=' + latlng.lng;
+            return 'd=' + radius +'&pt=' + latlng.lat + ',' + latlng.lng
+            // return '&radius=' + radius + '&lat=' + latlng.lat + '&lon=' + latlng.lng;
         },
         getParamsForObject:function(paramsObj, joinValues) {
             // var params = Object.keys(paramsObj).map(function(key) {
@@ -175,40 +231,24 @@ export default {
             // return params.join('&');
             return
         },
-        getExistingParams:function (query) {
-            var paramsObj
-                // = $.url(query).param();
 
-            // if(!paramsObj.q) {
-            //     paramsObj.q = '*:*';
-            // }
-            //
-            // delete paramsObj.wkt;
-            // delete paramsObj.lat;
-            // delete paramsObj.lon;
-            // delete paramsObj.radius;
-            //
-            // paramsObj.qc = BC_CONF.queryContext;
-
-            return paramsObj;
-        },
-        drawWktObj:function (wktString) {
-            var wkt = new Wkt.Wkt();
-            wkt.read(wktString);
-            var wktObject = wkt.toObject({ color: '#bada55' });
-            this.generatePopup(wktObject, null, MAP_VAR.query, MAP_VAR.map);
-            addClickEventForVector(wktObject, MAP_VAR.query, MAP_VAR.map);
-            MAP_VAR.drawnItems.addLayer(wktObject);
-
-            if(wktObject.getBounds !== undefined && typeof wktObject.getBounds === 'function') {
-                // For objects that have defined bounds or a way to get them
-                MAP_VAR.map.fitBounds(wktObject.getBounds());
-            } else {
-                if(focus && wktObject.getLatLng !== undefined && typeof wktObject.getLatLng === 'function') {
-                    MAP_VAR.map.panTo(wktObject.getLatLng());
-                }
-            }
-        },
+        // drawWktObj:function (wktString) {
+        //     var wkt = new Wkt.Wkt();
+        //     wkt.read(wktString);
+        //     var wktObject = wkt.toObject({ color: '#bada55' });
+        //     this.generatePopup(wktObject, null, MAP_VAR.query, MAP_VAR.map );
+        //     addClickEventForVector(wktObject, MAP_VAR.query, MAP_VAR.map);
+        //     MAP_VAR.drawnItems.addLayer(wktObject);
+        //
+        //     if(wktObject.getBounds !== undefined && typeof wktObject.getBounds === 'function') {
+        //         // For objects that have defined bounds or a way to get them
+        //         MAP_VAR.map.fitBounds(wktObject.getBounds());
+        //     } else {
+        //         if(focus && wktObject.getLatLng !== undefined && typeof wktObject.getLatLng === 'function') {
+        //             MAP_VAR.map.panTo(wktObject.getLatLng());
+        //         }
+        //     }
+        // },
         getBaseLayers: function () {
             // Google map layers
             var minimalBaseLayer =
@@ -322,7 +362,7 @@ export default {
             /*  Common map (Leaflet) functions */
             function addClickEventForVector(layer, query, map) {
                 layer.on('click', function(e) {
-                    this_.generatePopup(layer, e.latlng, query, map);
+                    this_.generatePopup(layer, e.latlng, query, map,this_);
                 });
             }
 
@@ -406,30 +446,99 @@ export default {
 
         // Higher Taxon search
         displayResults: function (item) {
-            return `${item.name}`
+            return `${item.taxon}`
+        },
+        onSelect: function(item){
+           this.higherTaxa = item
         },
         autocompliteSearch(value) {
             if(value.length < 3)  this.searchResults = [];
             if(value.length > 2) {
+                let query = this.getQueryParameters(value,true)
+                if(query.length === 0) return
                 this.isLoading = true;
-                fetchHigherTaxonSearch(value).then((response) => {
+                fetchAdvancedTaxonSearch(query).then((response) => {
                     this.isLoading = false;
                     this.searchResults = response.results
                 });
             }
         },
+        getQueryParameters(speciesField,isHigher = false) {
+            let q = ''
+            if(this.isDefinedAndNotNull(speciesField)) {
+                let lowerFirstCh = speciesField.charAt(0).toLowerCase()
+                let upperFirstCh = speciesField.charAt(0).toUpperCase()
+                let str = speciesField.substring(1)
+                q += isHigher ? `taxon:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/&fq=rank:[1%20TO%2013]` :
+                    `taxon:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/%20OR%20author_year:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/&fq=rank:[14%20TO%2017]`
+
+            }
+
+            return q
+        },
+        applyMapSearch(geoParams) {
+            this.isLoadingResults = true
+            fetchTaxonSearchInSelectedArea(geoParams).then((response) => {
+                this.results = response.results
+                this.resultsHandling_()
+            });
+        },
+        applySearch() {
+            let query;
+            if (this.isDefinedAndNotNull(this.speciesField))
+                query = this.getQueryParameters(this.speciesField)
+            else if (this.isDefinedAndNotNull(this.higherTaxa.taxon))
+                query = this.getQueryParameters(this.higherTaxa.taxon, true)
+
+            if(query.length === 0) return
+            this.isLoadingResults = true
+            fetchAdvancedTaxonSearch(query).then((response) => {
+                this.results = response.results
+                this.resultsHandling_()
+            });
+        },
         searchNearMe() {
 
-        }
+        },
+        resultsHandling_() {
+            this.initialMessege = false;
+            this.isLoadingResults = false;
+            let filteredByUniqueID = this.results
+                // uniqBy(this.results,'taxon_id')
+            let j = 0,output={},oorder=[],forder={}
+            for(j in filteredByUniqueID) {
+                let i = filteredByUniqueID[j]
+                if (output[i['fossil_group_id']] === undefined) {
+                    output[i['fossil_group_id']] = {
+                        fossil_group_id: i['fossil_group_id'], fossil_group: i['fossil_group'], node: []
+                    };
+                    oorder.push(i['fossil_group_id'])
+                }
+                output[i['fossil_group_id']]['node'].push({
+                    taxon: i['taxon'], taxon_id: i['taxon_id'], strat : i['stratigraphy'],strat_en : i['stratigraphy_en']
+                });
+
+
+            }
+
+            let output_=[], i = 0;
+            for (i in oorder) {
+                if(oorder[i] === output[oorder[i]]['fossil_group_id'])
+                    output_.push(output[oorder[i]])
+            }
+            this.output = output_
+        },
+        isDefinedAndNotNull(value) { return !!value && value !== null },
     },
     mounted (){
-        this.initialiseMap()
+      // this.resultsHandling()
+      this.initialiseMap()
 
     },
     watch: {
-    '$store.state.lang': {
+    'speciesField': {
       handler: function(newVal,oldVal) {
-
+          // console.log(newVal)
       }
     }
   },
