@@ -100,9 +100,10 @@
     import uniqBy from 'lodash/uniqBy';
     import VueMultiselect from 'vue-multiselect'
 import {
-    fetchAdvancedSearchByLocality,
+    fetchOccurrenceCountInArea,
     fetchAdvancedTaxonSearch,
-    fetchTaxonSearchInSelectedArea
+    fetchTaxonSearchInSelectedArea,
+    fetchSpeciesCountInArea
 } from '../api'
     import Spinner from "../components/Spinner.vue";
 export default {
@@ -135,19 +136,15 @@ export default {
     },
     methods: {
 
-        getSpeciesCountInArea: function (params, speciesID) {
-            $.getJSON(BC_CONF.biocacheServiceUrl + '/occurrence/facets.json' + params + '&facets=taxon_name&callback=?',
-                function(data) {
-                    document.getElementById(speciesID).innerHTML = data.length ? data[0].count : 0;
-                });
+        getSpeciesCountInArea: function (query,speciesID) {
+            fetchSpeciesCountInArea(query).then((response) => {
+                document.getElementById(speciesID).innerHTML = response.count ? response.count : 0;
+            });
         },
-        getOccurrenceCountInArea: function (params, occurrenceID) {
-            $.getJSON(BC_CONF.biocacheServiceUrl + '/occurrences/search.json' + params + '&pageSize=0&facet=off&callback=?',
-                function(data) {
-                    var occurrenceCount = data.totalRecords;
-
-                    document.getElementById(occurrenceID).innerHTML = occurrenceCount;
-                });
+        getOccurrenceCountInArea: function (query, occurrenceID) {
+            fetchOccurrenceCountInArea(query).then((response) => {
+                document.getElementById(occurrenceID).innerHTML = response.count ? response.count : 0;
+            });
         },
         generatePopup: function(layer, latlng, query, map) {
             var geomParams = '';
@@ -176,7 +173,9 @@ export default {
             var coordsStr = latlng.lat + '-' + latlng.lng;
             var speciesID = 'speciesCount-' + coordsStr;
             var occurrenceID = 'occurrenceCount-' + coordsStr;
-
+            var this_ = this
+            this_.getSpeciesCountInArea(geomParams, speciesID);
+            this_.getOccurrenceCountInArea(geomParams, occurrenceID);
             L.popup()
                 .setLatLng(latlng)
                 .setContent(
@@ -192,12 +191,12 @@ export default {
                     '</a>'
                 )
                 .openOn(map);
-            var this_ = this
+
             $('#showOnlyTheseRecords').on("click", function(event){
                 this_.map.closePopup();
                 this_.applyMapSearch(geomParams)
-                // this.getSpeciesCountInArea(countParams, speciesID);
-                // getOccurrenceCountInArea(countParams, occurrenceID);
+
+
             })
         },
         getParamsForWKT: function(wkt) {
