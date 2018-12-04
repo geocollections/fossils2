@@ -67,7 +67,7 @@
                     </b-col>
                 </b-row>
                 <b-row class="pt-3">
-                    <b-col md="12" v-if="initialMessege">
+                    <b-col md="12" v-if="initialMessege && !isLoadingResults">
                         <b-alert show variant="info" v-if="!!initialMessege">Some initial instructions</b-alert>
                     </b-col>
 
@@ -102,8 +102,7 @@
 import {
     fetchAdvancedSearchByLocality,
     fetchAdvancedTaxonSearch,
-    fetchTaxonSearchInSelectedArea,
-    fetchHigherTaxonSearch
+    fetchTaxonSearchInSelectedArea
 } from '../api'
     import Spinner from "../components/Spinner.vue";
 export default {
@@ -165,7 +164,7 @@ export default {
 
                 geomParams = this.getParamsForWKT(wkt.write(), query);
             }
-
+            console.log(geomParams)
             if(!latlng) {
                 if($.isFunction(layer.getBounds)) {
                     latlng = layer.getBounds().getCenter();
@@ -201,36 +200,24 @@ export default {
                 // getOccurrenceCountInArea(countParams, occurrenceID);
             })
         },
-        getParamsForWKT: function(wkt, query) {
-            return '&wkt=' + encodeURI(wkt.replace(' ', '+'));
+        getParamsForWKT: function(wkt) {
+            let coordsPairs = wkt.split(',')
+            // second and fourth pairs' places changed
+            if (coordsPairs.length === 5) {
+                let secondPair = coordsPairs[1]
+                coordsPairs[1] = coordsPairs[3]
+                coordsPairs[3] = secondPair
+            }
+            let changedWkt = coordsPairs.join(',')
+            return `fq=%7B%21field%20f--latlong%7DisWithin(${changedWkt})`
         },
 
-        getParamsForCircle: function (circle, query) {
+        getParamsForCircle: function (circle) {
             var latlng = circle.getLatLng();
             var radius = Math.round((circle.getRadius() / 1000) * 10) / 10; // convert to km (from m) and round to 1 decmial place
-            return 'd=' + radius +'&pt=' + latlng.lat + ',' + latlng.lng
-            // return '&radius=' + radius + '&lat=' + latlng.lat + '&lon=' + latlng.lng;
+            return `fq=%7B%21geofilt%7D&d=${radius}&pt=${latlng.lat},${latlng.lng}&sfield=latlong`
         },
-        getParamsForObject:function(paramsObj, joinValues) {
-            // var params = Object.keys(paramsObj).map(function(key) {
-            //     var value = paramsObj[key]; // TODO Encode.
-            //
-            //     if(joinValues && Array.isArray(value)) {
-            //         // Join values of a param.
-            //         value = '(' + value.map(encodeURI).join('+AND+') + ')';
-            //     } else if(Array.isArray(value)) {
-            //         // HACK XXX Extend param value to include instances of itself, with different values.
-            //         value = value.map(encodeURI).join('&' + key + '=');
-            //     } else {
-            //         value = encodeURI(value);
-            //     }
-            //
-            //     return key + '=' + value;
-            // });
-            //
-            // return params.join('&');
-            return
-        },
+
 
         // drawWktObj:function (wktString) {
         //     var wkt = new Wkt.Wkt();

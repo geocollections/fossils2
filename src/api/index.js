@@ -160,11 +160,7 @@ export function fetchSimpleTaxonSearch (value) {
 }
 
 export function fetchTaxonSearchInSelectedArea (geoparams) {
-    return fetch(`solr/taxon_search/?fq=%7B%21geofilt%7D&${geoparams}&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&sfield=latlong&format=json`)
-}
-export function fetchHigherTaxonSearch (query) {
-    return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&format=json`)
-    // return fetch(`solr/taxon_search/?q=taxon:/.*${value}.*/&fq=rank:[1%20TO%2013]&fq=%7B%21collapse%20field--taxon%7D&fl=taxon,taxon_hierarchy&format=json`)
+    return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en&format=json`)
 }
 
 export function fetchSpeciesCountInArea (value) {
@@ -177,5 +173,5 @@ export function fetchAdvancedSearchByLocality (value) {
 }
 
 export function fetchAdvancedTaxonSearch (query) {
-    return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&format=json`)
+    return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en&format=json`)
 }
