@@ -471,10 +471,11 @@ export default {
         },
         applySearch() {
             let query;
+            console.log(this.higherTaxa)
             if (this.isDefinedAndNotNull(this.speciesField))
-                query = this.getQueryParameters(this.speciesField)
-            else if (this.isDefinedAndNotNull(this.higherTaxa.taxon))
-                query = this.getQueryParameters(this.higherTaxa.taxon, true)
+                query = this.getQueryParameters(this.speciesField);
+            else if (this.isDefinedAndNotNull(this.higherTaxa.taxon_hierarchy))
+                query = `taxon_hierarchy:${this.higherTaxa.taxon_hierarchy}*&fq=rank:[1%20TO%2013]`;
 
             if(query.length === 0) return
             this.isLoadingResults = true
