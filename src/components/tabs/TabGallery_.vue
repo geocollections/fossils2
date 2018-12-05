@@ -65,8 +65,7 @@
 
                 query.then((response) => {
                     // Todo: if selected images more than the number of pagenatedBy
-                    console.log(response)
-                    if(response && response.results && response.results.length > 0) {
+                    if(this.$parent.isDefinedAndNotEmpty(response)) {
                         this.$parent.images = this.$parent.images.concat(this.$parent.composeImageRequest(response.results));
                     } else {
                         this.noMoreResults = true;
