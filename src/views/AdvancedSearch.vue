@@ -616,6 +616,7 @@ export default {
         isDefinedAndNotNull(value) { return !!value && value !== null },
     },
     mounted (){
+      this.$refs.localitySearch.style =
       // this.resultsHandling()
       this.initialiseMap()
 

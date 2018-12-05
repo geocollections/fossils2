@@ -27,7 +27,7 @@
                                    :show-labels="false"
                                    @select="onSelect" @search-change="simpleTaxonSearchApiCall">
                     <template slot="noResult"><b>NoRes</b></template>
-                  </vue-multiselect>
+                  </vue-multiselect> &ensp;
                 <a href="/search" class="nav-link"><i class="fas fa-search-plus"></i></a>
                   <!--or <i class="fas fa-search"></i><span class="badge badge-primary badge-pill badge-info ml-1" style="font-size: 0.7rem "><i class="fas fa-cog"></i></span></a>-->
               </form>
