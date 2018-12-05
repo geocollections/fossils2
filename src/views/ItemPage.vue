@@ -563,8 +563,6 @@
             },
             getImages() {
                 this.imagesLoading = true;
-
-
                     fetchSelectedImages(this.taxon.id,this.$store.state.searchParameters).then((response) => {
                         if(response.results.length === 0) {
                             if(this.isHigherTaxon(this.taxon.rank__rank_en)) {

@@ -11,38 +11,19 @@
                     <b-col md="6" class="ml-auto"  style="padding-right:0.1rem !important;">
                         <div class="card rounded-0" style="width: 100%;height: 100%">
                             <div class="card-body">
-                                <div>
-                                    <label class="typo__label">Single select / dropdown</label>
-                                    <vue-multiselect v-model="value" deselect-label="Can't remove this value" track-by="name" label="name" placeholder="Select one" :options="options" :searchable="true">
-                                        <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.name }}</strong> is written in<strong>  {{ option.language }}</strong></template>
-                                    </vue-multiselect>
-                                    <pre class="language-json"><code>{{ value  }}</code></pre>
-                                </div>
                                 <b-row class="my-1">
                                     <b-col sm="4"><label for="input-small">{{$t('advancedsearch.hightaxon')}}:</label></b-col>
                                     <b-col sm="8">
-                                        <vue-multiselect v-model="higherTaxa" deselect-label="Can't remove this value" track-by="taxan_id" label="taxon"
+                                        <vue-multiselect class="align-middle" v-model="higherTaxa" deselect-label="Can't remove this value"
+                                                         select-label="" track-by="taxan_id" label="taxon"
                                                          :options="searchResults" :searchable="true" @search-change="autocompliteHigherTaxaSearch"
-                                                         :allow-empty="true"  :show-no-results="false">
+                                                         :allow-empty="true"  :show-no-results="false" :loading="isHigherTaxaLoading" :max-height="600"
+                                                         :open-direction="'bottom'">
                                             <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.taxon }}</strong> </template>
                                             <template slot="noResult"><b>NoRes</b></template>
                                             <template slot="clear" slot-scope="props">
                                                 <div class="multiselect__clear" v-if="true" @mousedown.prevent.stop="clearAll(props.search)"></div></template>
                                         </vue-multiselect>
-                                        <vue-multiselect class="align-middle"
-                                                         id="search"
-                                                         v-model="higherTaxa"
-                                                         :custom-label="displayResults" track-by="code"
-                                                         :options="searchResults"
-                                                         :searchable="true"
-                                                         :loading="isHigherTaxaLoading"
-                                                         :max-height="600"
-                                                         :show-no-results="false"
-                                                         :show-labels="false"
-                                                         @select="onHigherTaxaSelect" @search-change="autocompliteHigherTaxaSearch">
-                                            <template slot="noResult"><b>NoRes</b></template>
-                                        </vue-multiselect>
-                                        <!--<b-form-input id="input-small" size="sm" type="text" placeholder=""></b-form-input>-->
                                     </b-col>
                                 </b-row>
                                 <b-row class="my-1">
