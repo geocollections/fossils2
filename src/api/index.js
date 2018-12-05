@@ -20,10 +20,10 @@ function fetch (child) {
         });
     });
 }
-function applyMode(mode) {
+function applyMode(mode, separator = '=', queryJoiner = '&') {
     let returnVal = "";
-    if(mode === 'in_baltoscandia') returnVal = "&in_baltoscandia=1";
-    else if (mode === 'in_estonia') returnVal = "&in_estonia=1";
+    if(mode === 'in_baltoscandia') returnVal = `${queryJoiner}in_baltoscandia${separator}1`;
+    else if (mode === 'in_estonia') returnVal = `${queryJoiner}in_estonia${separator}1`;
     return returnVal
 }
 
@@ -110,7 +110,8 @@ export function fetchDistributionConop (name) {
 }
 
 export function fetchSpeciesMap (taxon_hierarchy,mode) {
-    return fetch(`solr/taxon_search/?fl=src,locality_en,locality,locality_id,latlong&fq=%7B%21collapse%20field--locality%7D&q=taxon_hierarchy:${taxon_hierarchy}* AND ${mode}:1&format=json`)
+    let mode_ =  mode === 'in_global' ? `` : `${applyMode(mode,':', ' AND ')}`
+    return fetch(`solr/taxon_search/?fl=src,locality_en,locality,locality_id,latlong&fq=%7B%21collapse%20field--locality%7D&q=taxon_hierarchy:${taxon_hierarchy}*${mode_}&format=json`)
     // return fetch(`taxon/?sql=get_species_map&keyword=${name}&format=json`)
 }
 

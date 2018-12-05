@@ -470,7 +470,7 @@
                     store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
                     store.dispatch('FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION', { id }),
                     //map and images
-                    // store.dispatch('FETCH_SPECIES_MAP', { id }),
+                    store.dispatch('FETCH_SPECIES_MAP', { id }),
                 ],queries)
             }
             return Promise.all(queries)
@@ -556,7 +556,7 @@
                 // if(!this.isHigherTaxon(this.taxon.rank__rank_en)){
                 //
                 // }
-                this.$store.dispatch('FETCH_SPECIES_MAP');
+                // this.$store.dispatch('FETCH_SPECIES_MAP');
                 cntSpecimenCollection(this.taxon.hierarchy_string).then((response) => {
                     this.specimenCollectionCnt = response.count;
 
