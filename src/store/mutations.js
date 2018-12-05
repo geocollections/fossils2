@@ -81,6 +81,7 @@ export default {
   },
     SET_SPECIES_MAP: (state, { map }) => {
         Vue.set(state.activeItem, 'map', map.results || false)
+        Vue.set(state.activeItem, 'cntLocalities', map.count || false)
     },
   SET_DESCRIPTION: (state, { description }) => {
     Vue.set(state.activeItem, 'description', description.results || false)

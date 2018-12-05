@@ -258,13 +258,14 @@
                    <!-- <b-row class="m-1">
                        <lingallery  style="width: 100%" v-if="images && images.length > 0" ref="lingallery" :width="400" :height="350" :items="images"/>
                    </b-row> -->
-                   <b-row class="m-1" v-if="isMapLoaded && $store.state.process === 'client' && $store.state.activeItem['map'].length > 0">
+                   <b-row class="m-1" v-if="$store.state.process === 'client' && $store.state.activeItem['map'] !== undefined && $store.state.activeItem['map'].length > 0">
                        <div class="card  rounded-0"  style="width: 100%">
                            <div class="card-header">{{$t('header.f_distribution_map')}}</div>
                            <div class="card-body no-padding">
                                <map-component></map-component>
                            </div>
                        </div>
+                       <b-alert style="width: 100%; font-size: 0.8rem" class="mb-0" show variant="info" v-if="isNumberOfLocalitiesOnMapOver1000">Map shows only the first <strong style="font-size: 0.9rem">1000</strong> localities</b-alert>
                    </b-row>
                    <b-row class="m-1" v-if="isTaxonomicTreeIsLoaded">
                        <div class="card rounded-0" style="width: 100%">
@@ -440,6 +441,9 @@
             mode () {
                 return this.$store.state.mode
             },
+            isNumberOfLocalitiesOnMapOver1000() {
+                return this.$store.state.activeItem['cntLocalities'] !== undefined && this.$store.state.activeItem['cntLocalities'] > 1000
+            }
         },
 
          asyncData ({ store, route : {params: { id }}}) {
@@ -549,10 +553,10 @@
 
                 this.getImages();
 
-                if(!this.isHigherTaxon(this.taxon.rank__rank_en)){
-                    this.$store.dispatch('FETCH_SPECIES_MAP')
-                }
-
+                // if(!this.isHigherTaxon(this.taxon.rank__rank_en)){
+                //
+                // }
+                this.$store.dispatch('FETCH_SPECIES_MAP');
                 cntSpecimenCollection(this.taxon.hierarchy_string).then((response) => {
                     this.specimenCollectionCnt = response.count;
 
@@ -681,7 +685,6 @@
                     let this_ = this
                     taxonImages.forEach(function(el) {
                         function setImageType(el) {
-                            console.log(el.specimen_image_id)
                             if(el.specimen_image_id || el.specimen_image_id === null) {
                                 return 'non_higher_taxon'
                             } else if (el.link_id || el.link_id === null){
