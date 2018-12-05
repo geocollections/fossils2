@@ -20,11 +20,11 @@
                                                          :custom-label="displayResults" track-by="code"
                                                          :options="searchResults"
                                                          :searchable="true"
-                                                         :loading="isLoading"
+                                                         :loading="isHigherTaxaLoading"
                                                          :max-height="600"
                                                          :show-no-results="false"
                                                          :show-labels="false"
-                                                         @select="onSelect" @search-change="autocompliteSearch">
+                                                         @select="onHigherTaxaSelect" @search-change="autocompliteHigherTaxaSearch">
                                             <template slot="noResult"><b>NoRes</b></template>
                                         </vue-multiselect>
                                         <!--<b-form-input id="input-small" size="sm" type="text" placeholder=""></b-form-input>-->
@@ -39,19 +39,53 @@
                                 <b-row class="my-1">
                                     <b-col sm="4"><label for="input-small">{{$t('advancedsearch.locality')}}:</label></b-col>
                                     <b-col sm="8">
-                                        <b-form-input id="input-small" size="sm" type="text" placeholder=""disabled></b-form-input>
+                                        <vue-multiselect class="align-middle"
+                                                         ref="localitySearch"
+                                                         id="localitySearch"
+                                                         v-model="localityField"
+                                                         :custom-label="displayLocalityResults"
+                                                         :options="searchResults"
+                                                         :searchable="true"
+                                                         :loading="isLocLoading"
+                                                         :max-height="600"
+                                                         :show-no-results="false"
+                                                         :show-labels="false"
+                                                         :open-direction="'bottom'"
+                                                         @close="onTouch"
+                                                         :block-keys="['Tab', 'Enter']"
+                                                         @select="onLocSelect" @search-change="autocompliteLocalitySearch">
+                                            <template slot="noResult"><b>NoRes</b></template>
+                                            <template slot="clear" slot-scope="props">
+                                                <div class="multiselect__clear" @mousedown.prevent.stop="clearAll(props.search)"></div></template>
+                                        </vue-multiselect>
+                                        <!--<b-form-input id="input-small" size="sm" type="text" placeholder=""disabled v-model="localityField"></b-form-input>-->
                                     </b-col>
                                 </b-row>
                                 <b-row class="my-1">
                                     <b-col sm="4"><label for="input-small">{{$t('advancedsearch.stratigraphy')}}:</label></b-col>
                                     <b-col sm="8">
-                                        <b-form-input id="input-small" size="sm" type="text" placeholder="" disabled></b-form-input>
+                                        <vue-multiselect class="align-middle"
+                                                         id="stratigraphySearch"
+                                                         v-model="stratigraphyField"
+                                                         :custom-label="displayStratigraphyResults" track-by="code"
+                                                         :options="searchResults"
+                                                         :searchable="true"
+                                                         :loading="isStratLoading"
+                                                         :max-height="600"
+                                                         :show-no-results="false"
+                                                         :show-labels="false"
+                                                         :open-direction="'bottom'"
+                                                         @select="onStratSelect" @search-change="autocompliteStratigraphySearch">
+                                            <template slot="noResult"><b>NoRes</b></template>
+                                        </vue-multiselect>
+                                        <!--<b-form-input id="input-small" size="sm" type="text" placeholder="" disabled v-model="stratigraphyField"></b-form-input>-->
                                     </b-col>
                                 </b-row>
                                 <b-row class="my-1">
                                     <b-col sm="4"></b-col>
                                     <b-col sm="8">
                                         <b-button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary" :disabled="isSearchDisabled">Search</b-button>
+                                        <b-button  @click="clearSearch()" type="button" class="btn btn-outline-info p-2 mr-2" style="float: right;font-size: 0.8rem" variant="info" :disabled="isSearchDisabled">Clear</b-button>
                                         <!--<button  @click="searchNearMe()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary" >{{$t('advancedsearch.btn_show_fossils_near_me')}}</button>-->
                                     </b-col>
                                 </b-row>
@@ -82,7 +116,7 @@
                                 <span v-for="group in output">
                                     <span><img :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 80px;" />
                                         <h1 style="display: inline;"><a :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a></h1></span>
-                                    <b-row v-for="species in group.node" style="padding-left: 7rem">
+                                    <b-row v-for="species in group.node" style="padding-left: 7rem" v-bind:key="species.taxon_id">
                                         <b-col sm="4"><em><a :href="'/'+species.id">{{species.taxon}}</a></em> {{species.author_year}}</b-col>
                                         <b-col sm="8"><span v-translate="{ et: species.strat, en: species.strat_en}"></span></b-col>
                                     </b-row>
@@ -100,6 +134,7 @@
     import uniqBy from 'lodash/uniqBy';
     import VueMultiselect from 'vue-multiselect'
 import {
+    fetchAutocompleteSearch,
     fetchOccurrenceCountInArea,
     fetchAdvancedTaxonSearch,
     fetchTaxonSearchInSelectedArea,
@@ -116,6 +151,9 @@ export default {
         return {
             initialMessege: true,
             speciesField:null,
+            localityField:null,
+            freeTextLocality: null,
+            stratigraphyField:null,
             higherTaxa:null,
             output: {},
             map: null,
@@ -123,14 +161,20 @@ export default {
             layer: null,
             searchResults: [],
             isLoadingResults:false,
-            isLoading: false,
+            isHigherTaxaLoading: false,
+            isLocLoading: false,
+            isStratLoading: false,
             results:[],
 
         }
     },
     computed: {
         isSearchDisabled() {
-            if((this.higherTaxa !== null && this.higherTaxa !== '') || (this.speciesField !== null && this.speciesField !== '')) return false
+            if((this.higherTaxa !== null && this.higherTaxa !== '') ||
+                (this.speciesField !== null && this.speciesField !== '') ||
+                (this.localityField !== null && this.localityField !== '') ||
+                (this.stratigraphyField !== null && this.stratigraphyField !== ''))
+                return false
             return true;
         }
     },
@@ -434,29 +478,68 @@ export default {
         displayResults: function (item) {
             return `${item.taxon}`
         },
-        onSelect: function(item){
-           this.higherTaxa = item
+        // Locality search
+        displayLocalityResults: function (item) {
+            return this.$store.lang === 'et' ?  `${item.locality}` : `${item.locality_en}`
         },
-        autocompliteSearch(value) {
+        // Stratigraphy search
+        displayStratigraphyResults: function (item) {
+            return this.$store.lang === 'et' ?  `${item.stratigraphy}` : `${item.stratigraphy_en}`
+        },
+        onHigherTaxaSelect: function(item){this.higherTaxa = item},
+
+        onLocSelect: function(item){
+            this.localityField = this.$store.lang === 'et' ? item.locality : item.locality_en
+        },
+
+        onTouch: function(){},
+        clearAll: function(){this.localityField = null},
+        onStratSelect: function(item){this.stratigraphyField = item},
+        autocompliteLocalitySearch(value) {
+            this.freeTextLocality = value;
+            this.autocompliteSearch(value, false,true, false, this.isLocLoading)
+        },
+        autocompliteStratigraphySearch(value) {
+            this.autocompliteSearch(value, false, false,true,this.isStratLoading)
+        },
+        autocompliteHigherTaxaSearch(value) {
+            this.autocompliteSearch(value, true, false,false, this.isHigherTaxaLoading)
+        },
+        autocompliteSearch(value,isHigher, isLoc, isStrat,isLoading) {
+
             if(value.length < 3)  this.searchResults = [];
             if(value.length > 2) {
-                let query = this.getQueryParameters(value,true)
+                let query = this.getQueryParameters(value,isHigher, isLoc, isStrat, true)
                 if(query.length === 0) return
-                this.isLoading = true;
-                fetchAdvancedTaxonSearch(query).then((response) => {
-                    this.isLoading = false;
+                isLoading = true;
+                fetchAutocompleteSearch(query).then((response) => {
+                    isLoading = false;
                     this.searchResults = response.results
                 });
             }
         },
-        getQueryParameters(speciesField,isHigher = false) {
+        getQueryParameters(fieldValue,isHigher = false, isLoc = false, isStrat = false, isAutocompleteSearch = false) {
             let q = ''
-            if(this.isDefinedAndNotNull(speciesField)) {
-                let lowerFirstCh = speciesField.charAt(0).toLowerCase()
-                let upperFirstCh = speciesField.charAt(0).toUpperCase()
-                let str = speciesField.substring(1)
-                q += isHigher ? `taxon:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/&fq=rank:[1%20TO%2013]` :
-                    `taxon:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/%20OR%20author_year:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/&fq=rank:[14%20TO%2017]`
+            if(this.isDefinedAndNotNull(fieldValue)) {
+                let lowerFirstCh = fieldValue.charAt(0).toLowerCase()
+                let upperFirstCh = fieldValue.charAt(0).toUpperCase()
+                let str = fieldValue.substring(1).toLowerCase()
+                if(isHigher === true)  {
+                    q += `taxon:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/&fq=rank:[1%20TO%2013]`;
+                    if(isAutocompleteSearch === true) q += `&fq=%7B%21collapse%20field--taxon%7D`;
+                }
+                if(isLoc === true) {
+                    q += `locality:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/OR locality_en:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/`
+                    if(isAutocompleteSearch === true) q += `&fq=%7B%21collapse%20field--locality%7D`;
+                } // OR locality_free:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/`;
+                if(isStrat === true) {
+                    q += `stratigraphy:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/OR stratigraphy_en:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/`;
+                    if(isAutocompleteSearch === true) q += `&fq=%7B%21collapse%20field--stratigraphy%7D`;
+                }
+                if(isHigher=== false && isLoc=== false && isStrat=== false) {
+                    q += `taxon:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/%20OR%20author_year:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/&fq=rank:[14%20TO%2017]`
+                    if(isAutocompleteSearch === true) q += `&fq=%7B%21collapse%20field--taxon%7D`;
+                }
 
             }
 
@@ -469,13 +552,28 @@ export default {
                 this.resultsHandling_()
             });
         },
+        clearSearch() {
+            this.speciesField = null;
+            this.higherTaxa = null;
+            this.localityField = null;
+            this.stratigraphyField = null;
+        },
         applySearch() {
-            let query;
-            console.log(this.higherTaxa)
+            let query='';
             if (this.isDefinedAndNotNull(this.speciesField))
                 query = this.getQueryParameters(this.speciesField);
-            else if (this.isDefinedAndNotNull(this.higherTaxa.taxon_hierarchy))
+            else if (this.higherTaxa && this.isDefinedAndNotNull(this.higherTaxa.taxon_hierarchy))
                 query = `taxon_hierarchy:${this.higherTaxa.taxon_hierarchy}*&fq=rank:[1%20TO%2013]`;
+            if (this.isDefinedAndNotNull(this.localityField)) {
+                let localityField = this.$store.lang === 'et' ? this.localityField.locality : this.localityField.locality_en
+                if(query.length !== 0) query += ` AND `
+                query += this.getQueryParameters(localityField, false, true, false);
+            }
+
+            if (this.stratigraphyField && this.isDefinedAndNotNull(this.stratigraphyField.taxon_hierarchy)) {
+                if(query.length !== 0) query += ` AND `
+                query += `taxon_hierarchy:${this.stratigraphyField.taxon_hierarchy}*`;
+            }
 
             if(query.length === 0) return
             this.isLoadingResults = true
@@ -523,10 +621,11 @@ export default {
 
     },
     watch: {
-    'speciesField': {
+    '$refs.localitySearch.value': {
       handler: function(newVal,oldVal) {
-          // console.log(newVal)
-      }
+          console.log(newVal)
+      },
+        deep: true
     }
   },
 }

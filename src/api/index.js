@@ -175,10 +175,14 @@ export function fetchOccurrenceCountInArea (geoparams) {
 
 }
 
-export function fetchAdvancedSearchByLocality (value) {
-    return fetch(`solr/taxon_search/?fq=locality:*${value}* OR locality_en:*${value}* OR locality_free:*${value}*&rows=10&sfield=locality,locality_en&format=json`)
-}
+// export function fetchAdvancedSearchByLocality (value) {
+//     return fetch(`solr/taxon_search/?fq=locality:*${value}* OR locality_en:*${value}* OR locality_free:*${value}*&rows=10&sfield=locality,locality_en&format=json`)
+// }
 
 export function fetchAdvancedTaxonSearch (query) {
-    return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy&format=json`)
+    return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
+}
+
+export function fetchAutocompleteSearch (query) {
+    return fetch(`solr/taxon_search/?q=${query}&sort=fossil_group asc&rows=30&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
 }
