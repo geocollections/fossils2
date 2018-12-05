@@ -456,6 +456,7 @@
                 store.dispatch('FETCH_CHILDREN', { id }),
                 // store.dispatch('FETCH_TAXON_LIST', { id }),
                 store.dispatch('FETCH_DESCRIPTION', { id }),
+                store.dispatch('FETCH_SPECIES_MAP', { id }),
             ];
             if (['Species','Subspecies'].includes(store.state.activeItem.taxon.rank__rank_en)) {
                 queries = Array.prototype.concat.apply([
@@ -469,8 +470,6 @@
                 queries = Array.prototype.concat.apply([
                     store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
                     store.dispatch('FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION', { id }),
-                    //map and images
-                    store.dispatch('FETCH_SPECIES_MAP', { id }),
                 ],queries)
             }
             return Promise.all(queries)
