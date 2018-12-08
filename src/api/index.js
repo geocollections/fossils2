@@ -167,21 +167,18 @@ export function fetchTaxonSearchInSelectedArea (geoparams) {
 export function fetchSpeciesCountInArea (geoparams) {
     // return fetch(`solr/taxon_search/?q=rank:[14%20TO%2016]&fq={!geofilt}&fq={!collapse%20field\=taxon}&sfield=latlong&pt=58.998153,23.235662&d=50&sort=geodist()%5asc&fl=locality,taxon,author_year,fossil_group,src,rank&format=json`)
     // return fetch(`solr/taxon_search/?q=rank:[14%20TO%2017]&fq=%7B%21collapse%20field--taxon%7D&${geoparams}&sort=geodist()%5asc&fl=locality,taxon,author_year,fossil_group,src,rank&format=json`)
-    return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--taxon%7D&q=rank:[14%20TO%2017]&fl=taxon&format=json`)
+    return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&fl=taxon&rows=1&format=json`)
 
 }
 
 export function fetchOccurrenceCountInArea (geoparams) {
-    return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&fl=taxon&format=json`)
-
+    return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--taxon%7D&q=rank:[14%20TO%2017]&fl=taxon&rows=1&format=json`)
 }
 
-// export function fetchAdvancedSearchByLocality (value) {
-//     return fetch(`solr/taxon_search/?fq=locality:*${value}* OR locality_en:*${value}* OR locality_free:*${value}*&rows=10&sfield=locality,locality_en&format=json`)
-// }
-
 export function fetchAdvancedTaxonSearch (query) {
-    return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
+    // return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
+    return fetch(`solr/taxon_search/?${query}fq=%7B%21collapse%20field--taxon%7D&q=rank:[14%20TO%2017]&sort=fossil_group asc&rows=1000&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
+
 }
 
 export function fetchAutocompleteSearch (query) {

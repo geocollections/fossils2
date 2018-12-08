@@ -228,6 +228,7 @@
 
     "hightaxon":"Kõrgtakson",
     "species":"Liik",
+    "author":"Autor",
     "locality":"Leiukoht",
     "country":"Riik, maakond, vald",
     "stratigraphy":"Stratigraafia",

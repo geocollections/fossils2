@@ -14,7 +14,7 @@
                                 <b-row class="my-1">
                                     <b-col sm="4"><label for="input-small">{{$t('advancedsearch.hightaxon')}}:</label></b-col>
                                     <b-col sm="8">
-                                        <vue-multiselect class="align-middle" v-model="higherTaxa" deselect-label="Can't remove this value"
+                                        <vue-multiselect class="align-middle" v-model="searchParams.higherTaxa" deselect-label="Can't remove this value"
                                                          select-label="" track-by="taxan_id" label="taxon"
                                                          :options="searchResults" :searchable="true" @search-change="autocompliteHigherTaxaSearch"
                                                          :allow-empty="true"  :show-no-results="false" :loading="isHigherTaxaLoading" :max-height="600"
@@ -29,53 +29,36 @@
                                 <b-row class="my-1">
                                     <b-col sm="4"><label for="input-small">{{$t('advancedsearch.species')}}:</label></b-col>
                                     <b-col sm="8">
-                                        <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="speciesField"></b-form-input>
+                                        <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.speciesField"></b-form-input>
+                                    </b-col>
+                                </b-row>
+                                <b-row class="my-1">
+                                    <b-col sm="4"><label for="input-small">{{$t('advancedsearch.author')}}:</label></b-col>
+                                    <b-col sm="8">
+                                        <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.authorField"></b-form-input>
                                     </b-col>
                                 </b-row>
                                 <b-row class="my-1">
                                     <b-col sm="4"><label for="input-small">{{$t('advancedsearch.locality')}}:</label></b-col>
                                     <b-col sm="8">
-                                        <vue-multiselect class="align-middle"
-                                                         ref="localitySearch"
-                                                         id="localitySearch"
-                                                         v-model="localityField"
-                                                         :custom-label="displayLocalityResults"
-                                                         :options="searchResults"
-                                                         :searchable="true"
-                                                         :loading="isLocLoading"
-                                                         :max-height="600"
-                                                         :show-no-results="false"
-                                                         :show-labels="false"
-                                                         :open-direction="'bottom'"
-                                                         @close="onTouch"
-                                                         :block-keys="['Tab', 'Enter']"
-                                                         @select="onLocSelect" @search-change="autocompliteLocalitySearch">
-                                            <template slot="noResult"><b>NoRes</b></template>
-                                            <template slot="clear" slot-scope="props">
-                                                <div class="multiselect__clear" @mousedown.prevent.stop="clearAll(props.search)"></div></template>
-                                        </vue-multiselect>
-                                        <!--<b-form-input id="input-small" size="sm" type="text" placeholder=""disabled v-model="localityField"></b-form-input>-->
+                                        <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.localityField"></b-form-input>
                                     </b-col>
                                 </b-row>
                                 <b-row class="my-1">
                                     <b-col sm="4"><label for="input-small">{{$t('advancedsearch.stratigraphy')}}:</label></b-col>
                                     <b-col sm="8">
-                                        <vue-multiselect class="align-middle"
-                                                         id="stratigraphySearch"
-                                                         v-model="stratigraphyField"
-                                                         :custom-label="displayStratigraphyResults" track-by="code"
-                                                         :options="searchResults"
-                                                         :searchable="true"
-                                                         :loading="isStratLoading"
-                                                         :max-height="600"
-                                                         :show-no-results="false"
-                                                         :show-labels="false"
-                                                         :open-direction="'bottom'"
-                                                         @select="onStratSelect" @search-change="autocompliteStratigraphySearch">
+                                        <vue-multiselect class="align-middle" v-model="searchParams.stratigraphyField" deselect-label="Can't remove this value"
+                                                         select-label=""
+                                                         :custom-label="displayStratigraphyResults" track-by="taxan_id"
+                                                         :options="searchResults" :searchable="true" @search-change="autocompliteStratigraphySearch"
+                                                         :allow-empty="true"  :show-no-results="false" :loading="isStratLoading" :max-height="600"
+                                                         :open-direction="'bottom'">
+                                            <template slot="singleLabel" slot-scope="{ option }"><strong>{{ $store.lang=== 'et' ? option.stratigraphy :option.stratigraphy_en }}</strong> </template>
                                             <template slot="noResult"><b>NoRes</b></template>
+                                            <template slot="clear" slot-scope="props">
+                                                <div class="multiselect__clear" v-if="true" @mousedown.prevent.stop="clearAll(props.search)"></div></template>
                                         </vue-multiselect>
-                                        <!--<b-form-input id="input-small" size="sm" type="text" placeholder="" disabled v-model="stratigraphyField"></b-form-input>-->
-                                    </b-col>
+                                        </b-col>
                                 </b-row>
                                 <b-row class="my-1">
                                     <b-col sm="4"></b-col>
@@ -113,7 +96,7 @@
                                     <span><img :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 80px;" />
                                         <h1 style="display: inline;"><a :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a></h1></span>
                                     <b-row v-for="species in group.node" style="padding-left: 7rem" v-bind:key="species.taxon_id">
-                                        <b-col sm="4"><em><a :href="'/'+species.id">{{species.taxon}}</a></em> {{species.author_year}}</b-col>
+                                        <b-col sm="4"><em><a :href="'/'+species.taxon_id">{{species.taxon}}</a></em> {{species.author_year}}</b-col>
                                         <b-col sm="8"><span v-translate="{ et: species.strat, en: species.strat_en}"></span></b-col>
                                     </b-row>
                                 </span>
@@ -145,12 +128,9 @@ export default {
     },
     data() {
         return {
+            query:'',
+            searchParams : this.setSearchParams(),
             initialMessege: true,
-            speciesField:null,
-            localityField:null,
-            freeTextLocality: null,
-            stratigraphyField:null,
-            higherTaxa:null,
             output: {},
             map: null,
             drawnItems: null,
@@ -195,8 +175,9 @@ export default {
                 document.getElementById(occurrenceID).innerHTML = response.count ? response.count : 0;
             });
         },
+
         generatePopup: function(layer, latlng, query, map) {
-            var geomParams = '';
+            var geomParams = '', this_ = this
 
             if($.isFunction(layer.getRadius)) {
                 // circle
@@ -210,7 +191,7 @@ export default {
 
                 geomParams = this.getParamsForWKT(wkt.write(), query);
             }
-            console.log(geomParams)
+
             if(!latlng) {
                 if($.isFunction(layer.getBounds)) {
                     latlng = layer.getBounds().getCenter();
@@ -222,9 +203,10 @@ export default {
             var coordsStr = latlng.lat + '-' + latlng.lng;
             var speciesID = 'speciesCount-' + coordsStr;
             var occurrenceID = 'occurrenceCount-' + coordsStr;
-            var this_ = this
+
             this_.getSpeciesCountInArea(geomParams, speciesID);
             this_.getOccurrenceCountInArea(geomParams, occurrenceID);
+
             L.popup()
                 .setLatLng(latlng)
                 .setContent(
@@ -243,10 +225,18 @@ export default {
 
             $('#showOnlyTheseRecords').on("click", function(event){
                 this_.map.closePopup();
-                this_.applyMapSearch(geomParams)
-
-
+                this_.resetDrawnItemsColor()
+                layer.setStyle({color: '#ff2a12'});
+                this_.searchParams.geoparams = geomParams
+                this_.applySearch(geomParams)
             })
+        },
+        resetDrawnItemsColor: function(){
+            this.map.eachLayer(function (layer) {
+                if(layer.options.hasOwnProperty('color')) {
+                    layer.setStyle({color: '#bada55' });
+                }
+            });
         },
         getParamsForWKT: function(wkt) {
             let coordsPairs = wkt.split(',')
@@ -479,44 +469,20 @@ export default {
             L.drawLocal.edit.handlers.remove.tooltip.text = this.$t('advancedsearch.draw_edit_handlers_remove_tooltip_text');
         },
 
-        // Higher Taxon search
-        displayResults: function (item) {
-            return `${item.taxon}`
-        },
-        // Locality search
-        displayLocalityResults: function (item) {
-            return this.$store.lang === 'et' ?  `${item.locality}` : `${item.locality_en}`
-        },
         // Stratigraphy search
         displayStratigraphyResults: function (item) {
             return this.$store.lang === 'et' ?  `${item.stratigraphy}` : `${item.stratigraphy_en}`
         },
-        onHigherTaxaSelect: function(item){this.higherTaxa = item},
-
-        onLocSelect: function(item){
-            this.localityField = this.$store.lang === 'et' ? item.locality : item.locality_en
-        },
-        clearAll:function () {
-
-        },
-        onTouch: function(){},
-        // clearAll: function(){this.localityField = null},
-        onStratSelect: function(item){this.stratigraphyField = item},
-        autocompliteLocalitySearch(value) {
-            this.freeTextLocality = value;
-            this.autocompliteSearch(value, false,true, false, this.isLocLoading)
-        },
         autocompliteStratigraphySearch(value) {
-            this.autocompliteSearch(value, false, false,true,this.isStratLoading)
+            this.autocompliteSearch(value, false, true,this.isStratLoading)
         },
         autocompliteHigherTaxaSearch(value) {
-            this.autocompliteSearch(value, true, false,false, this.isHigherTaxaLoading)
+            this.autocompliteSearch(value, true, false, this.isHigherTaxaLoading)
         },
-        autocompliteSearch(value,isHigher, isLoc, isStrat,isLoading) {
-
+        autocompliteSearch(value,isHigher, isStrat,isLoading) {
             if(value.length < 3)  this.searchResults = [];
             if(value.length > 2) {
-                let query = this.getQueryParameters(value,isHigher, isLoc, isStrat, true)
+                let query = this.getAutocompleteQueryParameters(value,isHigher, isStrat)
                 if(query.length === 0) return
                 isLoading = true;
                 fetchAutocompleteSearch(query).then((response) => {
@@ -525,32 +491,16 @@ export default {
                 });
             }
         },
-        getQueryParameters(fieldValue,isHigher = false, isLoc = false, isStrat = false, isAutocompleteSearch = false) {
-            let q = ''
-            if(this.isDefinedAndNotNull(fieldValue)) {
-                let lowerFirstCh = fieldValue.charAt(0).toLowerCase()
-                let upperFirstCh = fieldValue.charAt(0).toUpperCase()
-                let str = fieldValue.substring(1).toLowerCase()
-                if(isHigher === true)  {
-                    q += `taxon:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/&fq=rank:[1%20TO%2013]`;
-                    if(isAutocompleteSearch === true) q += `&fq=%7B%21collapse%20field--taxon%7D`;
-                }
-                if(isLoc === true) {
-                    q += `locality:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/OR locality_en:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/`
-                    if(isAutocompleteSearch === true) q += `&fq=%7B%21collapse%20field--locality%7D`;
-                } // OR locality_free:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/`;
-                if(isStrat === true) {
-                    q += `stratigraphy:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/OR stratigraphy_en:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/`;
-                    if(isAutocompleteSearch === true) q += `&fq=%7B%21collapse%20field--stratigraphy%7D`;
-                }
-                if(isHigher=== false && isLoc=== false && isStrat=== false) {
-                    q += `taxon:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/%20OR%20author_year:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/&fq=rank:[14%20TO%2017]`
-                    if(isAutocompleteSearch === true) q += `&fq=%7B%21collapse%20field--taxon%7D`;
-                }
-
+        getAutocompleteQueryParameters(fieldValue,isHigher = false, isStrat = false) {
+            let lowerFirstCh = fieldValue.charAt(0).toLowerCase()
+            let upperFirstCh = fieldValue.charAt(0).toUpperCase()
+            let str = fieldValue.substring(1).toLowerCase()
+            if(isHigher === true)  {
+                return `taxon:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/&fq=%7B%21collapse%20field--taxon%7D&fq=rank:[1%20TO%2013]`;
             }
-
-            return q
+            if(isStrat === true) {
+                return `stratigraphy:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/OR stratigraphy_en:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/&fq=%7B%21collapse%20field--stratigraphy%7D`;
+            }
         },
         applyMapSearch(geoParams) {
             this.isLoadingResults = true
@@ -559,31 +509,49 @@ export default {
                 this.resultsHandling_()
             });
         },
+        setSearchParams() {
+            return {
+                higherTaxa:null,
+                speciesField:null,
+                authorField:null,
+                localityField:null,
+                freeTextLocality: null,
+                stratigraphyField:null,
+                geoparams:null
+            }
+        },
         clearSearch() {
-            this.speciesField = null;
-            this.higherTaxa = null;
-            this.localityField = null;
-            this.stratigraphyField = null;
+            this.searchParams = this.setSearchParams();
+            this.resetDrawnItemsColor();
+        },
+        getQueryParameters_() {
+            function addFreeTextQueryParam(value, field){
+                let lowerFirstCh = value.charAt(0).toLowerCase();
+                let upperFirstCh = value.charAt(0).toUpperCase();
+                let str = value.substring(1).toLowerCase();
+                if(field === 'speciesField') return `taxon:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/`;
+                if(field === 'authorField') return `author_year:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/`;
+                if(field === 'localityField') return `(locality:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/OR locality_en:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/)`;
+                return ''
+            }
+
+            let params = this.searchParams
+            let query = ''
+            Object.getOwnPropertyNames(params).slice(0,7).forEach(function (el) {
+                if (params[el] !== null && params[el] !== '') {
+                    if(['stratigraphyField', 'higherTaxa'].includes(el)) query += `taxon_hierarchy:${params[el].taxon_hierarchy}* AND `;
+                    else if(el !== 'geoparams') query += `${addFreeTextQueryParam(params[el],el)} AND `;
+                }
+            });
+            //remove last AND
+            if(query.length > 0) query = `q=${query.substring(0,query.length - 5)}&`;
+            if(params['geoparams'] !== null) query += `${params['geoparams']}&`;
+            return query
         },
         applySearch() {
-            let query='';
-            if (this.isDefinedAndNotNull(this.speciesField))
-                query = this.getQueryParameters(this.speciesField);
-            else if (this.higherTaxa && this.isDefinedAndNotNull(this.higherTaxa.taxon_hierarchy))
-                query = `taxon_hierarchy:${this.higherTaxa.taxon_hierarchy}*&fq=rank:[1%20TO%2013]`;
-            if (this.isDefinedAndNotNull(this.localityField)) {
-                let localityField = this.$store.lang === 'et' ? this.localityField.locality : this.localityField.locality_en
-                if(query.length !== 0) query += ` AND `
-                query += this.getQueryParameters(localityField, false, true, false);
-            }
-
-            if (this.stratigraphyField && this.isDefinedAndNotNull(this.stratigraphyField.taxon_hierarchy)) {
-                if(query.length !== 0) query += ` AND `
-                query += `taxon_hierarchy:${this.stratigraphyField.taxon_hierarchy}*`;
-            }
-
-            if(query.length === 0) return
-            this.isLoadingResults = true
+            let query=this.getQueryParameters_();
+            if(query.length === 0) return;
+            this.isLoadingResults = true;
             fetchAdvancedTaxonSearch(query).then((response) => {
                 this.results = response.results
                 this.resultsHandling_()
@@ -623,13 +591,12 @@ export default {
         isDefinedAndNotNull(value) { return !!value && value !== null },
     },
     mounted (){
-      this.$refs.localitySearch.style =
       // this.resultsHandling()
       this.initialiseMap()
 
     },
     watch: {
-    '$refs.localitySearch.value': {
+    'searchParams.geoparams': {
       handler: function(newVal,oldVal) {
           console.log(newVal)
       },

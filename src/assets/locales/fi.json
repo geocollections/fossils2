@@ -208,6 +208,7 @@
 
     "hightaxon":"Ylempi taksoni",
     "species":"Laji",
+    "author":"Author",
     "locality":"Paikka",
     "country":"Maa, maakunta",
     "stratigraphy":"Stratigrafia",
