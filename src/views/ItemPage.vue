@@ -332,7 +332,6 @@
         fetchSpecies,
         fetchHierarchy,
         fetchImages,
-        fetchAttachment,
         fetchSelectedImages,
         fetchSpecimenCollection, cntSpecimenCollection
     } from '../api'
@@ -574,7 +573,7 @@
                                     this.imagesLoading = false;
                                 });
                             } else {
-                                fetchAttachment(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
+                                fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
                                     this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
                                         this.$store.state.searchParameters.images.page,response,
                                         this.$store.state.searchParameters.images.paginateBy)
