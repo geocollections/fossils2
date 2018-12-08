@@ -523,6 +523,9 @@ export default {
         clearSearch() {
             this.searchParams = this.setSearchParams();
             this.resetDrawnItemsColor();
+            this.initialMessege = true;
+            this.output = {};
+            this.results = null;
         },
         getQueryParameters_() {
             function addFreeTextQueryParam(value, field){
