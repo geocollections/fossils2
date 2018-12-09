@@ -53,7 +53,7 @@
                                                          :options="searchResults" :searchable="true" @search-change="autocompliteStratigraphySearch"
                                                          :allow-empty="true"  :show-no-results="false" :loading="isStratLoading" :max-height="600"
                                                          :open-direction="'bottom'">
-                                            <template slot="singleLabel" slot-scope="{ option }"><strong>{{ $store.lang=== 'et' ? option.stratigraphy :option.stratigraphy_en }}</strong> </template>
+                                            <template slot="singleLabel" slot-scope="{ option }"><strong>{{ $store.state.lang=== 'et' ? option.stratigraphy :option.stratigraphy_en }}</strong> </template>
                                             <template slot="noResult"><b>NoRes</b></template>
                                             <template slot="clear" slot-scope="props">
                                                 <div class="multiselect__clear" v-if="true" @mousedown.prevent.stop="clearAll(props.search)"></div></template>
@@ -90,8 +90,12 @@
                         </b-row>
                         <div class="card rounded-0" v-if="!isLoadingResults">
                             <div class="card-body">
-                                <h1 id="results" class="pb-4" v-if="results">{{results.length}} Species found:</h1>
-
+                                <h1 id="results" class="pb-4" v-if="results">{{numberOfResutls}} Species found:</h1>
+                                <div class="col-xs-12 pagination-center">
+                                    <b-pagination
+                                            size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="numberOfResutls" v-model="$store.state.searchParameters.advancedSearch.page" :per-page="$store.state.searchParameters.advancedSearch.paginateBy">
+                                    </b-pagination>
+                                </div>
                                 <span v-for="group in output">
                                     <span><img :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 80px;" />
                                         <h1 style="display: inline;"><a :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a></h1></span>
@@ -100,6 +104,11 @@
                                         <b-col sm="8"><span v-translate="{ et: species.strat, en: species.strat_en}"></span></b-col>
                                     </b-row>
                                 </span>
+                                <div class="col-xs-12 pagination-center">
+                                    <b-pagination
+                                            size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="numberOfResutls" v-model="$store.state.searchParameters.advancedSearch.page" :per-page="$store.state.searchParameters.advancedSearch.paginateBy">
+                                    </b-pagination>
+                                </div>
                             </div>
                         </div>
                     </b-col>
@@ -141,7 +150,7 @@ export default {
             isLocLoading: false,
             isStratLoading: false,
             results:[],
-
+            numberOfResutls: 0,
             value: null,
             options: [
                 { name: 'Vue.js', language: 'JavaScript' },
@@ -475,7 +484,7 @@ export default {
 
         // Stratigraphy search
         displayStratigraphyResults: function (item) {
-            return this.$store.lang === 'et' ?  `${item.stratigraphy}` : `${item.stratigraphy_en}`
+            return this.$store.state.lang === 'et' ?  `${item.stratigraphy}` : `${item.stratigraphy_en}`
         },
         autocompliteStratigraphySearch(value) {
             this.autocompliteSearch(value, false, true,this.isStratLoading)
@@ -559,8 +568,9 @@ export default {
             let query=this.getQueryParameters_();
             if(query.length === 0) return;
             this.isLoadingResults = true;
-            fetchAdvancedTaxonSearch(query).then((response) => {
+            fetchAdvancedTaxonSearch(query, this.$store.state.searchParameters).then((response) => {
                 this.results = response.results
+                this.numberOfResutls = response.count
                 this.resultsHandling_()
             });
         },
@@ -603,9 +613,9 @@ export default {
 
     },
     watch: {
-    'searchParams.geoparams': {
+    '$store.state.searchParameters.advancedSearch': {
       handler: function(newVal,oldVal) {
-          console.log(newVal)
+          this.applySearch()
       },
         deep: true
     }

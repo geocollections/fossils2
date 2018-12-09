@@ -28,7 +28,7 @@
         data() {return {bottom: false, imagesLoading: false, noMoreResults: false}},
         created() {
             window.addEventListener('scroll', () => {
-                this.bottom = false
+                this.bottom = false;
                 this.bottom = this.bottomVisible()
             });
             this.loadMoreImages()
