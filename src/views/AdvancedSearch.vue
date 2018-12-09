@@ -1,10 +1,10 @@
 <template>
     <section>
-        <section class="container-fluid mt-0">
-            <div class="page-container">
+        <section class="container-fluid mt-0" style="margin-top: 0; padding-top: 0;">
+            <div class="page-container" style="max-width: 1280px; margin-left: auto; margin-right: auto;">
                 <b-row class="text-center">
                     <b-col>
-                        <h1 class="text-center">{{ $t('menu.detail_search')}}</h1>
+                        <h1 style="padding: 5px 0 20px 0;">{{ $t('menu.detail_search')}}</h1>
                     </b-col>
                 </b-row>
                 <b-row>
@@ -81,7 +81,7 @@
                 </b-row>
                 <b-row class="pt-3">
                     <b-col md="12" v-if="initialMessege && !isLoadingResults">
-                        <b-alert show variant="info" v-if="!!initialMessege">Some initial instructions</b-alert>
+                        <b-alert show variant="info" v-if="!!initialMessege">Please specify some search criteria to show list of species and genera.</b-alert>
                     </b-col>
 
                     <b-col md="12" v-if="!initialMessege">
@@ -97,14 +97,14 @@
                                     </b-pagination>
                                 </div>
                                 <div v-for="group in output" style="padding: 5px 0 20px 0; border-top: dotted 2px #ccc;">
-                                    <span><img onerror="this.style.display='none'" :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 80px;" />
+                                    <span><img onerror="this.style.display='none'" :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 70px;" />
                                         <h2 style="display: inline;"><a v-if="group.fossil_group_id" :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a>
                                             <span v-else>{{group.fossil_group}}</span></h2></span>
-                                    <b-row v-for="species in group.node" style="padding-left: 7rem" v-bind:key="species.taxon_id">
-                                        <b-col sm="4"><a :href="'/'+species.taxon_id"><em>{{species.taxon}}</em> {{species.author_year}}</a></b-col>
-                                        <b-col v-if="species.fad && species.lad && species.fad!=species.lad" sm="8"><span v-translate="{ et: species.fad, en: species.fad_en}"></span> &rarr; <span v-translate="{ et: species.lad, en: species.lad_en}"></span></b-col>
-                                        <b-col v-else-if="species.fad===species.lad" sm="8"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
-                                        <b-col v-else-if="species.fad" sm="8"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
+                                    <b-row v-for="species in group.node" style="padding-left: 1rem" v-bind:key="species.taxon_id">
+                                        <b-col sm="6"><a :href="'/'+species.taxon_id"><em>{{species.taxon}}</em> {{species.author_year}}</a></b-col>
+                                        <b-col v-if="species.fad && species.lad && species.fad!=species.lad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span> &rarr; <span v-translate="{ et: species.lad, en: species.lad_en}"></span></b-col>
+                                        <b-col v-else-if="species.fad===species.lad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
+                                        <b-col v-else-if="species.fad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
                                     </b-row>
                                 </div>
                                 <div class="col-xs-12 pagination-center">
