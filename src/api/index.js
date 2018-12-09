@@ -179,10 +179,16 @@ export function fetchOccurrenceCountInArea (geoparams) {
 export function fetchAdvancedTaxonSearch (query,searchParameters) {
     let start = searchParameters.advancedSearch.paginateBy*(searchParameters.advancedSearch.page-1);
     // return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
-    return fetch(`solr/taxon_search/?${query}fq=%7B%21collapse%20field--taxon%7D&q=rank:[14%20TO%2017]&sort=fossil_group asc&rows=${searchParameters.advancedSearch.paginateBy}&start=${start}&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
+    return fetch(`solr/taxon_search/?${query}fq=%7B%21collapse%20field--taxon%7D&fq=rank:[14%20TO%2017]&sort=fossil_group asc,taxon asc&rows=${searchParameters.advancedSearch.paginateBy}&start=${start}&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,fad,fad_en,fad_id,lad,lad_en,lad_id&format=json`)
 
 }
 
 export function fetchAutocompleteSearch (query) {
-    return fetch(`solr/taxon_search/?q=${query}&sort=fossil_group asc&rows=30&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
+    //return fetch(`solr/taxon_search/?fq=${query}&sort=fossil_group asc&rows=30&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
+    return fetch(`solr/taxon/?fq=${query}&sort=taxon asc&rows=30&fl=taxon,taxon_id,hierarchy_string&format=json`)
+}
+export function fetchAutocompleteSearchStratigraphy (query) {
+    //return fetch(`solr/taxon_search/?q=${query}&sort=fossil_group asc&rows=30&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
+    return fetch(`solr/stratigraphy/?fq=${query}&sort=stratigraphy asc&rows=30&fl=stratigraphy,stratigraphy_en,id,hierarchy_string&fq=type:1&format=json`)
+
 }

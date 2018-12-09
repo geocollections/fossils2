@@ -219,6 +219,7 @@
     "js_map_layers_BlackWhite":"Black & white",
     "js_map_popup_linkText":"Search for records in this area",
     "js_map_popup_speciescount":"Species count",
+    "js_map_popup_localitycount":"Locality count",
     "js_map_popup_occurrencecount":"Occurrence count",
     "calculating":"calculating...",
 
@@ -231,7 +232,7 @@
     "stratigraphy":"Stratigraphy",
     "button":"Submit query",
     "results":"Search results",
-    "results_species":"species",
+    "results_species":"species / genera",
     "btn_show_fossils_near_me":"Show fossils near me"
   }
 

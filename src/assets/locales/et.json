@@ -223,6 +223,7 @@
     "js_map_layers_Occurrences":"Esinemised",
     "js_map_popup_linkText":"Otsi kirjeid sellelt alalt",
     "js_map_popup_speciescount":"Liikide arv",
+    "js_map_popup_localitycount":"Leiukohtade arv",
     "js_map_popup_occurrencecount":"Esinemiste arv",
     "calculating":"arvutan...",
 
@@ -234,7 +235,7 @@
     "stratigraphy":"Stratigraafia",
     "button":"Otsi liike",
     "results":"Otsingu tulemused",
-    "results_species":"liiki",
-    "btn_show_fossils_near_me":"Näita fossiilid minu ümbruses"
+    "results_species":"liiki / perekonda",
+    "btn_show_fossils_near_me":"Näita fossiilieminu ümbruses"
   }
 }

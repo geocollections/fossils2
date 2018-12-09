@@ -90,23 +90,25 @@
                         </b-row>
                         <div class="card rounded-0">
                             <div class="card-body">
-                                <h1 id="results" class="pb-4" v-if="results">{{numberOfResutls}} Species found:</h1>
+                                <h1 id="results" class="pb-4" v-if="results">{{$t('advancedsearch.results')}}: {{numberOfResutls}} {{$t('advancedsearch.results_species')}}</h1>
                                 <div class="col-xs-12 pagination-center">
-                                    <b-pagination
+                                    <b-pagination v-if="numberOfResutls>$store.state.searchParameters.advancedSearch.paginateBy" 
                                             size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="numberOfResutls" v-model="$store.state.searchParameters.advancedSearch.page" :per-page="$store.state.searchParameters.advancedSearch.paginateBy">
                                     </b-pagination>
                                 </div>
-                                <span v-for="group in output">
+                                <div v-for="group in output" style="padding: 5px 0 20px 0; border-top: dotted 2px #ccc;">
                                     <span><img onerror="this.style.display='none'" :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 80px;" />
-                                        <h1 style="display: inline;"><a v-if="group.fossil_group_id" :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a>
-                                            <span v-else>{{group.fossil_group}}</span></h1></span>
+                                        <h2 style="display: inline;"><a v-if="group.fossil_group_id" :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a>
+                                            <span v-else>{{group.fossil_group}}</span></h2></span>
                                     <b-row v-for="species in group.node" style="padding-left: 7rem" v-bind:key="species.taxon_id">
-                                        <b-col sm="4"><em><a :href="'/'+species.taxon_id">{{species.taxon}}</a></em> {{species.author_year}}</b-col>
-                                        <b-col sm="8"><span v-translate="{ et: species.strat, en: species.strat_en}"></span></b-col>
+                                        <b-col sm="4"><a :href="'/'+species.taxon_id"><em>{{species.taxon}}</em> {{species.author_year}}</a></b-col>
+                                        <b-col v-if="species.fad && species.lad && species.fad!=species.lad" sm="8"><span v-translate="{ et: species.fad, en: species.fad_en}"></span> &rarr; <span v-translate="{ et: species.lad, en: species.lad_en}"></span></b-col>
+                                        <b-col v-else-if="species.fad===species.lad" sm="8"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
+                                        <b-col v-else-if="species.fad" sm="8"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
                                     </b-row>
-                                </span>
+                                </div>
                                 <div class="col-xs-12 pagination-center">
-                                    <b-pagination
+                                    <b-pagination  v-if="numberOfResutls>$store.state.searchParameters.advancedSearch.paginateBy" 
                                             size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="numberOfResutls" v-model="$store.state.searchParameters.advancedSearch.page" :per-page="$store.state.searchParameters.advancedSearch.paginateBy">
                                     </b-pagination>
                                 </div>
@@ -124,6 +126,7 @@
     import VueMultiselect from 'vue-multiselect'
 import {
     fetchAutocompleteSearch,
+    fetchAutocompleteSearchStratigraphy,
     fetchOccurrenceCountInArea,
     fetchAdvancedTaxonSearch,
     fetchTaxonSearchInSelectedArea,
@@ -214,10 +217,10 @@ export default {
             L.popup()
                 .setLatLng(latlng)
                 .setContent(
-                    this.$t('advancedsearch.js_map_popup_speciescount') + ': ' +
+                    this.$t('advancedsearch.js_map_popup_localitycount') + ': ' +
                     '<b id="' + speciesID + '">' + this.$t('advancedsearch.calculating') + '</b>' +
                     '<br />' +
-                    this.$t('advancedsearch.js_map_popup_occurrencecount') + ': ' +
+                    this.$t('advancedsearch.js_map_popup_speciescount') + ': ' +
                     '<b id="' + occurrenceID + '">' + this.$t('advancedsearch.calculating') + '</b>' +
                     '<br />' +
                     '<a id="showOnlyTheseRecords" href="#" onclick="return;">' +
@@ -340,11 +343,11 @@ export default {
                 // fullscreenControlOptions: {
                 //     position: 'topleft'
                 // },
-                center: [58.5,20.5],
+                center: [58.3,25],
                 zoomControl: false,
-                zoom: 4,
+                zoom: 6,
                 minZoom: 1,
-                scrollWheelZoom: false
+                scrollWheelZoom: true
             });
             this.drawI18N();
             L.control.zoom({
@@ -493,10 +496,17 @@ export default {
                 let query = this.getAutocompleteQueryParameters(value,isHigher, isStrat)
                 if(query.length === 0) return
                 isLoading = true;
-                fetchAutocompleteSearch(query).then((response) => {
-                    isLoading = false;
-                    this.searchResults = response.results
-                });
+                if(isHigher === true){
+                    fetchAutocompleteSearch(query).then((response) => {
+                        isLoading = false;
+                        this.searchResults = response.results
+                    });
+                } else {
+                    fetchAutocompleteSearchStratigraphy(query).then((response) => {
+                        isLoading = false;
+                        this.searchResults = response.results
+                    });
+                }
             }
         },
         getAutocompleteQueryParameters(fieldValue,isHigher = false, isStrat = false) {
@@ -545,17 +555,17 @@ export default {
                 if(field === 'localityField') return `(locality:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/OR locality_en:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/)`;
                 return ''
             }
-
             let params = this.searchParams
             let query = ''
             Object.getOwnPropertyNames(params).slice(0,7).forEach(function (el) {
                 if (params[el] !== null && params[el] !== '') {
-                    if(['stratigraphyField', 'higherTaxa'].includes(el)) query += `taxon_hierarchy:${params[el].taxon_hierarchy}* AND `;
+                    if(['higherTaxa'].includes(el)) query += `taxon_hierarchy:${params[el].hierarchy_string}* AND `;
+                    else if(['stratigraphyField'].includes(el)) query += `(stratigraphy_hierarchy:${params[el].hierarchy_string}* OR global_stratigraphy_hierarchy:${params[el].hierarchy_string}) AND `;
                     else if(el !== 'geoparams') query += `${addFreeTextQueryParam(params[el],el)} AND `;
                 }
             });
             //remove last AND
-            if(query.length > 0) query = `q=${query.substring(0,query.length - 5)}&`;
+            if(query.length > 0) query = `fq=${query.substring(0,query.length - 5)}&`;
             if(params['geoparams'] !== null) query += `${params['geoparams']}&`;
             return query
         },
@@ -588,7 +598,7 @@ export default {
                     oorder.push(i['fossil_group_id'])
                 }
                 output[i['fossil_group_id']]['node'].push({
-                    taxon: i['taxon'], taxon_id: i['taxon_id'], strat : i['stratigraphy'],strat_en : i['stratigraphy_en']
+                    taxon: i['taxon'], taxon_id: i['taxon_id'], author_year: i['author_year'], fad : i['fad'], fad_en : i['fad_en'], lad : i['lad'], lad_en : i['lad_en']
                 });
 
 
