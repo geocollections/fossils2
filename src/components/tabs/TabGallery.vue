@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import {fetchAttachment, fetchImages} from '../../api'
+    import {fetchImages} from '../../api'
     import Spinner from "../Spinner.vue";
 
     export default {
@@ -61,7 +61,7 @@
                 this.imagesLoading = true;
                 let query = this.$parent.isHigherTaxon(this.$parent.taxon.rank__rank_en) ?
                     fetchImages(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters) :
-                    fetchAttachment(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters);
+                    fetchImages(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters);
 
                 query.then((response) => {
                     // Todo: if selected images more than the number of pagenatedBy
