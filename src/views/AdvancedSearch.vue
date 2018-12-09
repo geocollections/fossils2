@@ -560,7 +560,7 @@ export default {
             Object.getOwnPropertyNames(params).slice(0,7).forEach(function (el) {
                 if (params[el] !== null && params[el] !== '') {
                     if(['higherTaxa'].includes(el)) query += `taxon_hierarchy:${params[el].hierarchy_string}* AND `;
-                    else if(['stratigraphyField'].includes(el)) query += `(stratigraphy_hierarchy:${params[el].hierarchy_string}* OR global_stratigraphy_hierarchy:${params[el].hierarchy_string}) AND `;
+                    else if(['stratigraphyField'].includes(el)) query += `(stratigraphy_hierarchy:${params[el].hierarchy_string}* OR global_stratigraphy_hierarchy:${params[el].hierarchy_string}*) AND `;
                     else if(el !== 'geoparams') query += `${addFreeTextQueryParam(params[el],el)} AND `;
                 }
             });
