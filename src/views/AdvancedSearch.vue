@@ -228,7 +228,6 @@ export default {
                 this_.resetDrawnItemsColor()
                 layer.setStyle({color: '#ff2a12'});
                 this_.searchParams.geoparams = geomParams
-                this_.applySearch(geomParams)
             })
         },
         resetDrawnItemsColor: function(){
@@ -239,14 +238,19 @@ export default {
             });
         },
         getParamsForWKT: function(wkt) {
-            let coordsPairs = wkt.split(',')
-            // second and fourth pairs' places changed
-            if (coordsPairs.length === 5) {
-                let secondPair = coordsPairs[1]
-                coordsPairs[1] = coordsPairs[3]
-                coordsPairs[3] = secondPair
+            let coordsPairs = wkt.split(','),reversedPairs = [];
+            // second and fourth pairs' places are changed because solr getting error
+            let firstLatCoord = coordsPairs[0].replace('POLYGON((',''). split(' ')[0];
+            let secondLatCoord = coordsPairs[1].split(' ')[0];
+
+            if(parseFloat(firstLatCoord) <= parseFloat(secondLatCoord)) {
+                let coordsPairs_ = coordsPairs.slice(1,coordsPairs.length - 1);
+                reversedPairs.push(coordsPairs[0]);
+                reversedPairs = reversedPairs.concat(coordsPairs_.reverse());
+                reversedPairs.push(coordsPairs[coordsPairs.length - 1]);
             }
-            let changedWkt = coordsPairs.join(',')
+
+            let changedWkt = reversedPairs.length > 0 ? reversedPairs.join(',') : coordsPairs.join(',');
             return `fq=%7B%21field%20f--latlong%7DisWithin(${changedWkt})`
         },
 
