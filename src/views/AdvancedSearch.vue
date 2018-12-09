@@ -63,8 +63,8 @@
                                 <b-row class="my-1">
                                     <b-col sm="4"></b-col>
                                     <b-col sm="8">
-                                        <b-button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary" :disabled="isSearchDisabled">Search</b-button>
-                                        <b-button  @click="clearSearch()" type="button" class="btn btn-outline-info p-2 mr-2" style="float: right;font-size: 0.8rem" variant="info" :disabled="isSearchDisabled">Clear</b-button>
+                                        <b-button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary">Search</b-button>
+                                        <b-button  @click="clearSearch()" type="button" class="btn btn-outline-info p-2 mr-2" style="float: right;font-size: 0.8rem" variant="info">Clear</b-button>
                                         <!--<button  @click="searchNearMe()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary" >{{$t('advancedsearch.btn_show_fossils_near_me')}}</button>-->
                                     </b-col>
                                 </b-row>
@@ -88,7 +88,7 @@
                         <b-row v-if="isLoadingResults">
                             <spinner  :show="isLoadingResults"></spinner><span class="p-2">{{$t('messages.pageLoading')}}</span>
                         </b-row>
-                        <div class="card rounded-0" v-if="!isLoadingResults">
+                        <div class="card rounded-0">
                             <div class="card-body">
                                 <h1 id="results" class="pb-4" v-if="results">{{numberOfResutls}} Species found:</h1>
                                 <div class="col-xs-12 pagination-center">
@@ -97,8 +97,9 @@
                                     </b-pagination>
                                 </div>
                                 <span v-for="group in output">
-                                    <span><img :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 80px;" />
-                                        <h1 style="display: inline;"><a :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a></h1></span>
+                                    <span><img onerror="this.style.display='none'" :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 80px;" />
+                                        <h1 style="display: inline;"><a v-if="group.fossil_group_id" :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a>
+                                            <span v-else>{{group.fossil_group}}</span></h1></span>
                                     <b-row v-for="species in group.node" style="padding-left: 7rem" v-bind:key="species.taxon_id">
                                         <b-col sm="4"><em><a :href="'/'+species.taxon_id">{{species.taxon}}</a></em> {{species.author_year}}</b-col>
                                         <b-col sm="8"><span v-translate="{ et: species.strat, en: species.strat_en}"></span></b-col>
@@ -150,37 +151,31 @@ export default {
             isLocLoading: false,
             isStratLoading: false,
             results:[],
-            numberOfResutls: 0,
-            value: null,
-            options: [
-                { name: 'Vue.js', language: 'JavaScript' },
-                { name: 'Rails', language: 'Ruby' },
-                { name: 'Sinatra', language: 'Ruby' },
-                { name: 'Laravel', language: 'PHP', $isDisabled: true },
-                { name: 'Phoenix', language: 'Elixir' }
-            ]
+            numberOfResutls: 0
 
         }
     },
-    computed: {
-        isSearchDisabled() {
-            if((this.higherTaxa !== null && this.higherTaxa !== '') ||
-                (this.speciesField !== null && this.speciesField !== '') ||
-                (this.localityField !== null && this.localityField !== '') ||
-                (this.stratigraphyField !== null && this.stratigraphyField !== ''))
-                return false
-            return true;
-        }
-    },
+    // computed: {
+    //     isSearchDisabled() {
+    //         if((this.higherTaxa !== null && this.higherTaxa !== '') ||
+    //             (this.speciesField !== null && this.speciesField !== '') ||
+    //             (this.localityField !== null && this.localityField !== '') ||
+    //             (this.stratigraphyField !== null && this.stratigraphyField !== ''))
+    //             return false
+    //         return true;
+    //     }
+    // },
     methods: {
 
-        getSpeciesCountInArea: function (query,speciesID) {
-            fetchSpeciesCountInArea(query).then((response) => {
+        getSpeciesCountInArea: function (geomParams,speciesID) {
+            this.searchParams.geoparams = geomParams;
+            fetchSpeciesCountInArea(this.getQueryParameters_()+'fq=%7B%21collapse%20field--locality%7D&').then((response) => {
                 document.getElementById(speciesID).innerHTML = response.count ? response.count : 0;
             });
         },
-        getOccurrenceCountInArea: function (query, occurrenceID) {
-            fetchOccurrenceCountInArea(query).then((response) => {
+        getOccurrenceCountInArea: function (geomParams, occurrenceID) {
+            this.searchParams.geoparams = geomParams;
+            fetchSpeciesCountInArea(this.getQueryParameters_()+'fq=%7B%21collapse%20field--taxon%7D&').then((response) => {
                 document.getElementById(occurrenceID).innerHTML = response.count ? response.count : 0;
             });
         },
@@ -225,7 +220,7 @@ export default {
                     this.$t('advancedsearch.js_map_popup_occurrencecount') + ': ' +
                     '<b id="' + occurrenceID + '">' + this.$t('advancedsearch.calculating') + '</b>' +
                     '<br />' +
-                    '<a id="showOnlyTheseRecords" href="#results" onclick="return;">' +
+                    '<a id="showOnlyTheseRecords" href="#" onclick="return;">' +
                     '<span class="fa fa-search"></span> ' +
                     this.$t('advancedsearch.js_map_popup_linkText') +
                     '</a>'
@@ -585,6 +580,7 @@ export default {
             let j = 0,output={},oorder=[],forder={}
             for(j in filteredByUniqueID) {
                 let i = filteredByUniqueID[j]
+                if(i['fossil_group_id'] === undefined) i['fossil_group'] = this.$store.state.lang='et'?'Määramata':'None';
                 if (output[i['fossil_group_id']] === undefined) {
                     output[i['fossil_group_id']] = {
                         fossil_group_id: i['fossil_group_id'], fossil_group: i['fossil_group'], node: []

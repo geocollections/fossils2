@@ -159,7 +159,7 @@ export function fetchSimpleTaxonSearch (value) {
     // return 'https://api.geocollections.info/taxon/?paginate_by=10&fields=id,taxon,common_name__name,rank__rank_short&multi_search=value:' + value + ';fields:taxon,common_name__name;lookuptype:icontains'
     //   // return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=id,taxon,rank__rank_en&multi_search=value:' + value + ';fields:taxon;lookuptype:icontains'
 }
-
+//not used
 export function fetchTaxonSearchInSelectedArea (geoparams) {
     return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en&format=json`)
 }
@@ -167,13 +167,14 @@ export function fetchTaxonSearchInSelectedArea (geoparams) {
 export function fetchSpeciesCountInArea (geoparams) {
     // return fetch(`solr/taxon_search/?q=rank:[14%20TO%2016]&fq={!geofilt}&fq={!collapse%20field\=taxon}&sfield=latlong&pt=58.998153,23.235662&d=50&sort=geodist()%5asc&fl=locality,taxon,author_year,fossil_group,src,rank&format=json`)
     // return fetch(`solr/taxon_search/?q=rank:[14%20TO%2017]&fq=%7B%21collapse%20field--taxon%7D&${geoparams}&sort=geodist()%5asc&fl=locality,taxon,author_year,fossil_group,src,rank&format=json`)
-    return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&fl=taxon&rows=1&format=json`)
-
+    // return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&fl=taxon&rows=1&format=json`)
+    return fetch(`solr/taxon_search/?${geoparams}q=rank:[14%20TO%2017]&fl=taxon&rows=1&format=json`)
 }
-
+//not used
 export function fetchOccurrenceCountInArea (geoparams) {
     return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--taxon%7D&q=rank:[14%20TO%2017]&fl=taxon&rows=1&format=json`)
 }
+
 
 export function fetchAdvancedTaxonSearch (query,searchParameters) {
     let start = searchParameters.advancedSearch.paginateBy*(searchParameters.advancedSearch.page-1);
