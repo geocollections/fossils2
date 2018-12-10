@@ -149,7 +149,7 @@ import {
     fetchSpeciesCountInArea
 } from '../api'
     import Spinner from "../components/Spinner.vue";
-    import vueSlider from '../../node_modules/vue-slider-component/src/vue2-slider.vue';
+    import vueSlider from '../components/vue2-slider.vue';
 export default {
   name: 'advanced-search-page',
     components:  {
