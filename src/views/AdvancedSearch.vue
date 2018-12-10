@@ -63,6 +63,12 @@
                                 <b-row class="my-1">
                                     <b-col sm="4"></b-col>
                                     <b-col sm="8">
+                                        <b-form-checkbox id="subsurfaceCheckbox" v-model="searchParams.isSubsurface" value="true">{{$t('advancedsearch.subsurfaceField')}}</b-form-checkbox>
+                                    </b-col>
+                                </b-row>
+                                <b-row class="my-1">
+                                    <b-col sm="4"></b-col>
+                                    <b-col sm="8">
                                         <b-button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary">Search</b-button>
                                         <b-button  @click="clearSearch()" type="button" class="btn btn-outline-info p-2 mr-2" style="float: right;font-size: 0.8rem" variant="info">Clear</b-button>
                                         <!--<button  @click="searchNearMe()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary" >{{$t('advancedsearch.btn_show_fossils_near_me')}}</button>-->
@@ -102,7 +108,7 @@
                                             <span v-else>{{group.fossil_group}}</span></h2></span>
                                     <b-row v-for="species in group.node" style="padding-left: 1rem" v-bind:key="species.taxon_id">
                                         <b-col sm="6"><a :href="'/'+species.taxon_id"><em>{{species.taxon}}</em> {{species.author_year}}</a></b-col>
-                                        <b-col v-if="species.fad && species.lad && species.fad!=species.lad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span> &rarr; <span v-translate="{ et: species.lad, en: species.lad_en}"></span></b-col>
+                                        <b-col v-if="species.fad && species.lad && species.fad!==species.lad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span> &rarr; <span v-translate="{ et: species.lad, en: species.lad_en}"></span></b-col>
                                         <b-col v-else-if="species.fad===species.lad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
                                         <b-col v-else-if="species.fad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
                                     </b-row>
@@ -171,14 +177,12 @@ export default {
     methods: {
 
         getSpeciesCountInArea: function (geomParams,speciesID) {
-            this.searchParams.geoparams = geomParams;
-            fetchSpeciesCountInArea(this.getQueryParameters_()+'fq=%7B%21collapse%20field--locality%7D&').then((response) => {
+            fetchSpeciesCountInArea(this.getQueryParameters(geomParams)+'fq=%7B%21collapse%20field--locality%7D&').then((response) => {
                 document.getElementById(speciesID).innerHTML = response.count ? response.count : 0;
             });
         },
         getOccurrenceCountInArea: function (geomParams, occurrenceID) {
-            this.searchParams.geoparams = geomParams;
-            fetchSpeciesCountInArea(this.getQueryParameters_()+'fq=%7B%21collapse%20field--taxon%7D&').then((response) => {
+            fetchSpeciesCountInArea(this.getQueryParameters(geomParams)+'fq=%7B%21collapse%20field--taxon%7D&').then((response) => {
                 document.getElementById(occurrenceID).innerHTML = response.count ? response.count : 0;
             });
         },
@@ -267,24 +271,6 @@ export default {
             return `fq=%7B%21geofilt%7D&d=${radius}&pt=${latlng.lat},${latlng.lng}&sfield=latlong`
         },
 
-
-        // drawWktObj:function (wktString) {
-        //     var wkt = new Wkt.Wkt();
-        //     wkt.read(wktString);
-        //     var wktObject = wkt.toObject({ color: '#bada55' });
-        //     this.generatePopup(wktObject, null, MAP_VAR.query, MAP_VAR.map );
-        //     addClickEventForVector(wktObject, MAP_VAR.query, MAP_VAR.map);
-        //     MAP_VAR.drawnItems.addLayer(wktObject);
-        //
-        //     if(wktObject.getBounds !== undefined && typeof wktObject.getBounds === 'function') {
-        //         // For objects that have defined bounds or a way to get them
-        //         MAP_VAR.map.fitBounds(wktObject.getBounds());
-        //     } else {
-        //         if(focus && wktObject.getLatLng !== undefined && typeof wktObject.getLatLng === 'function') {
-        //             MAP_VAR.map.panTo(wktObject.getLatLng());
-        //         }
-        //     }
-        // },
         getBaseLayers: function () {
             // Google map layers
             var minimalBaseLayer =
@@ -520,13 +506,6 @@ export default {
                 return `stratigraphy:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/OR stratigraphy_en:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/&fq=%7B%21collapse%20field--stratigraphy%7D`;
             }
         },
-        applyMapSearch(geoParams) {
-            this.isLoadingResults = true
-            fetchTaxonSearchInSelectedArea(geoParams).then((response) => {
-                this.results = response.results
-                this.resultsHandling_()
-            });
-        },
         setSearchParams() {
             return {
                 higherTaxa:null,
@@ -535,6 +514,7 @@ export default {
                 localityField:null,
                 freeTextLocality: null,
                 stratigraphyField:null,
+                isSubsurface: false,
                 geoparams:null
             }
         },
@@ -545,7 +525,7 @@ export default {
             this.output = {};
             this.results = null;
         },
-        getQueryParameters_() {
+        getQueryParameters(geoparams = null) {
             function addFreeTextQueryParam(value, field){
                 let lowerFirstCh = value.charAt(0).toLowerCase();
                 let upperFirstCh = value.charAt(0).toUpperCase();
@@ -557,8 +537,10 @@ export default {
             }
             let params = this.searchParams
             let query = ''
-            Object.getOwnPropertyNames(params).slice(0,7).forEach(function (el) {
-                if (params[el] !== null && params[el] !== '') {
+            Object.getOwnPropertyNames(params).slice(0,8).forEach(function (el) {
+                if(['isSubsurface'].includes(el) && params[el] === 'true') {
+                    query += `-locality:*puurauk AND `;
+                } else if (!['isSubsurface'].includes(el) && params[el] !== null && params[el] !== '') {
                     if(['higherTaxa'].includes(el)) query += `taxon_hierarchy:${params[el].hierarchy_string}* AND `;
                     else if(['stratigraphyField'].includes(el)) query += `(stratigraphy_hierarchy:${params[el].hierarchy_string}* OR global_stratigraphy_hierarchy:${params[el].hierarchy_string}*) AND `;
                     else if(el !== 'geoparams') query += `${addFreeTextQueryParam(params[el],el)} AND `;
@@ -566,23 +548,28 @@ export default {
             });
             //remove last AND
             if(query.length > 0) query = `fq=${query.substring(0,query.length - 5)}&`;
-            if(params['geoparams'] !== null) query += `${params['geoparams']}&`;
+            if(geoparams !== null) query += `${geoparams}&`;
+            else if(params['geoparams'] !== null) query += `${params['geoparams']}&`;
+
             return query
         },
         applySearch() {
-            let query=this.getQueryParameters_();
-            if(query.length === 0) return;
+            let query=this.getQueryParameters();
+            if(query.length === 0) {
+                this.clearSearch();
+                return;
+            }
             this.isLoadingResults = true;
             fetchAdvancedTaxonSearch(query, this.$store.state.searchParameters).then((response) => {
                 this.results = response.results
                 this.numberOfResutls = response.count
-                this.resultsHandling_()
+                this.resultsHandling()
             });
         },
         searchNearMe() {
 
         },
-        resultsHandling_() {
+        resultsHandling() {
             this.initialMessege = false;
             this.isLoadingResults = false;
             let filteredByUniqueID = this.results
@@ -600,8 +587,6 @@ export default {
                 output[i['fossil_group_id']]['node'].push({
                     taxon: i['taxon'], taxon_id: i['taxon_id'], author_year: i['author_year'], fad : i['fad'], fad_en : i['fad_en'], lad : i['lad'], lad_en : i['lad_en']
                 });
-
-
             }
 
             let output_=[], i = 0;
@@ -614,7 +599,6 @@ export default {
         isDefinedAndNotNull(value) { return !!value && value !== null },
     },
     mounted (){
-      // this.resultsHandling()
       this.initialiseMap()
 
     },

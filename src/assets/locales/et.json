@@ -233,6 +233,7 @@
     "locality":"Leiukoht",
     "country":"Riik, maakond, vald",
     "stratigraphy":"Stratigraafia",
+    "subsurfaceField":"Näita ainult paljandite andmeid",
     "button":"Otsi liike",
     "results":"Otsingu tulemused",
     "results_species":"liiki / perekonda",

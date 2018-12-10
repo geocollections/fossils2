@@ -212,6 +212,7 @@
     "locality":"Paikka",
     "country":"Maa, maakunta",
     "stratigraphy":"Stratigrafia",
+    "subsurfaceField":"Show only outcrop data",
     "button":"Hae",
     "results":"Haun tulokset",
     "results_species":"laji",

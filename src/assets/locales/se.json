@@ -216,6 +216,7 @@
     "locality":"Locality",
     "country":"Country, county",
     "stratigraphy":"Stratigraphy",
+    "subsurfaceField":"Show only outcrop data",
     "button":"Submit query",
     "results":"Search results",
     "results_species":"species",
