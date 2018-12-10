@@ -176,7 +176,7 @@ export default {
             isStratLoading: false,
             results:[],
             numberOfResutls: 0,
-            isPopQueryTriggered:false
+            isPopupQueryTriggered:false
         }
     },
     // computed: {
@@ -192,11 +192,13 @@ export default {
     methods: {
 
         getSpeciesCountInArea: function (geomParams,speciesID) {
-            let this_=this
             fetchSpeciesCountInArea(this.getQueryParameters(geomParams)+'fq=%7B%21collapse%20field--locality%7D&').then((response) => {
-                if(document.getElementById(speciesID) !== null)
+                if(document.getElementById(speciesID) !== null) {
                     document.getElementById(speciesID).innerHTML = response.count ? response.count : 0;
-                this_.isPopQueryTriggered = false;
+                }
+
+
+
             });
         },
         getOccurrenceCountInArea: function (geomParams, occurrenceID) {
@@ -221,15 +223,16 @@ export default {
 
                 geomParams = this.getParamsForWKT(wkt.write(), query);
             }
-            console.log(latlng)
-            if(!latlng) {
-                if($.isFunction(layer.getBounds)) {
-                    latlng = layer.getBounds().getCenter();
-                } else {
-                    latlng = layer.getLatLng();
-                }
-            }
 
+            // if(!latlng) {
+            //     if($.isFunction(layer.getBounds)) {
+            //         latlng = layer.getBounds().getCenter();
+            //     } else {
+            //         latlng = layer.getLatLng();
+            //     }
+            // }
+
+            latlng = layer.getBounds().getCenter();
             var coordsStr = latlng.lat + '-' + latlng.lng;
             var speciesID = 'speciesCount-' + coordsStr;
             var occurrenceID = 'occurrenceCount-' + coordsStr;
@@ -408,20 +411,21 @@ export default {
             }
 
             MAP_VAR.map.on('draw:created', function(e) {
-                console.log(e)
                 var layer = e.layer;
                 var center = typeof layer.getLatLng === 'function' ? layer.getLatLng() : layer.getBounds().getCenter();
-                console.log(MAP_VAR.query)
                 addClickEventForVector(layer, MAP_VAR.query, MAP_VAR.map);
                 MAP_VAR.drawnItems.addLayer(layer);
 
                 // "run next" - trigger the popup a bit later for maxiumum browser compatibility
-                setTimeout(function() {
-                    layer.fireEvent('click');
-                }, 100);
+                if(MAP_VAR.isPopupQueryTriggered === false) {
+                    setTimeout(function() {
+                        layer.fireEvent('click');
+                    }, 200);
+                }
             });
 
             MAP_VAR.map.on('draw:edited', function(e) {
+                console.log('edited')
                 var layers = e.layers;
 
                 layers.eachLayer(function(layer) {
@@ -590,9 +594,7 @@ export default {
                 this.resultsHandling()
             });
         },
-        searchNearMe() {
 
-        },
         resultsHandling() {
             this.initialMessege = false;
             this.isLoadingResults = false;
@@ -636,17 +638,22 @@ export default {
             }
         },
         drawAreaNearMe() {
-            this.circle = this.circle === null ?
-                new L.Circle(this.searchParams.latlng, this.searchParams.radius*1000, this.drawControls.options.draw.circle.shapeOptions):
-                this.circle.setRadius(this.searchParams.radius*1000);
             this._map=this.map;
-            this.isPopQueryTriggered = true;
-            let this_=this;
-            setTimeout(function() {
-                this_._map=this_.map
-                L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this_, this_.circle);
-            }, 200);
+            this.type='circle'
 
+            if(this.circle !== null) {
+                this.map.closePopup();
+                this.circle.remove();
+
+            }
+
+            this.circle =new L.Circle(this.searchParams.latlng, this.searchParams.radius*1000, this.drawControls.options.draw.circle.shapeOptions)
+            L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this, this.circle);
+            this.isPopupQueryTriggered = false
+
+        },
+        nearMe() {
+            this.drawAreaNearMe();
         }
     },
     mounted (){
@@ -661,13 +668,21 @@ export default {
         },
         'searchParams.isNearMeSearch': {
             handler: function (newVal, oldVal) {
+                if(this.searchParams.isNearMeSearch === false) return;
                 this.getLocation()
             }
         },
         'searchParams.radius': {
             handler: function (newVal, oldVal) {
-                if(this.isPopQueryTriggered === true) return;
-                this.drawAreaNearMe();
+                if(this.searchParams.isNearMeSearch === false) return;
+                let this_=this
+                //
+                this.isPopupQueryTriggered = true;
+                this_.drawAreaNearMe();
+                setTimeout(function() {
+
+                }, 700);
+
             },
             deep: true
         }
