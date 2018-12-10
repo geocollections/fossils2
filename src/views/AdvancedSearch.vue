@@ -61,9 +61,16 @@
                                         </b-col>
                                 </b-row>
                                 <b-row class="my-1">
-                                    <b-col sm="4"></b-col>
-                                    <b-col sm="8">
-                                        <b-form-checkbox id="subsurfaceCheckbox" v-model="searchParams.isSubsurface" value="true">{{$t('advancedsearch.subsurfaceField')}}</b-form-checkbox>
+                                    <b-col sm="12">
+                                        <b-form-checkbox id="subsurfaceCheckbox" v-model="searchParams.isSubsurface">{{$t('advancedsearch.subsurfaceField')}}</b-form-checkbox>
+                                    </b-col>
+                                </b-row>
+                                <b-row class="my-1">
+                                    <b-col sm="4">
+                                        <b-form-checkbox id="nearMeSearchCheckbox" v-model="searchParams.isNearMeSearch">{{$t('advancedsearch.showNearMeField')}}</b-form-checkbox>
+                                        </b-col>
+                                    <b-col sm="8" class="pt-2">
+                                        <vue-slider ref="slider" :min="0" :max="20" v-model="searchParams.radius" v-if="searchParams.isNearMeSearch === true"></vue-slider>
                                     </b-col>
                                 </b-row>
                                 <b-row class="my-1">
@@ -71,7 +78,6 @@
                                     <b-col sm="8">
                                         <b-button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary">Search</b-button>
                                         <b-button  @click="clearSearch()" type="button" class="btn btn-outline-info p-2 mr-2" style="float: right;font-size: 0.8rem" variant="info">Clear</b-button>
-                                        <!--<button  @click="searchNearMe()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary" >{{$t('advancedsearch.btn_show_fossils_near_me')}}</button>-->
                                     </b-col>
                                 </b-row>
                             </div>
@@ -86,6 +92,10 @@
                     </b-col>
                 </b-row>
                 <b-row class="pt-3">
+                    <b-col md="12" v-if="errorMessege !== null">
+                        <b-alert show variant="warning">{{errorMessege}}</b-alert>
+                    </b-col>
+
                     <b-col md="12" v-if="initialMessege && !isLoadingResults">
                         <b-alert show variant="info" v-if="!!initialMessege">Please specify some search criteria to show list of species and genera.</b-alert>
                     </b-col>
@@ -128,8 +138,8 @@
 </template>
 
 <script>
-    import uniqBy from 'lodash/uniqBy';
     import VueMultiselect from 'vue-multiselect'
+
 import {
     fetchAutocompleteSearch,
     fetchAutocompleteSearchStratigraphy,
@@ -139,19 +149,24 @@ import {
     fetchSpeciesCountInArea
 } from '../api'
     import Spinner from "../components/Spinner.vue";
+    import vueSlider from '../../node_modules/vue-slider-component/src/vue2-slider.vue';
 export default {
   name: 'advanced-search-page',
     components:  {
         Spinner,
-        VueMultiselect
+        VueMultiselect,
+        vueSlider
     },
     data() {
         return {
             query:'',
             searchParams : this.setSearchParams(),
             initialMessege: true,
+            errorMessege: null,
             output: {},
             map: null,
+            circle:null,
+            drawControls: null,
             drawnItems: null,
             layer: null,
             searchResults: [],
@@ -160,8 +175,8 @@ export default {
             isLocLoading: false,
             isStratLoading: false,
             results:[],
-            numberOfResutls: 0
-
+            numberOfResutls: 0,
+            isPopQueryTriggered:false
         }
     },
     // computed: {
@@ -177,13 +192,17 @@ export default {
     methods: {
 
         getSpeciesCountInArea: function (geomParams,speciesID) {
+            let this_=this
             fetchSpeciesCountInArea(this.getQueryParameters(geomParams)+'fq=%7B%21collapse%20field--locality%7D&').then((response) => {
-                document.getElementById(speciesID).innerHTML = response.count ? response.count : 0;
+                if(document.getElementById(speciesID) !== null)
+                    document.getElementById(speciesID).innerHTML = response.count ? response.count : 0;
+                this_.isPopQueryTriggered = false;
             });
         },
         getOccurrenceCountInArea: function (geomParams, occurrenceID) {
             fetchSpeciesCountInArea(this.getQueryParameters(geomParams)+'fq=%7B%21collapse%20field--taxon%7D&').then((response) => {
-                document.getElementById(occurrenceID).innerHTML = response.count ? response.count : 0;
+                if(document.getElementById(occurrenceID) !== null)
+                    document.getElementById(occurrenceID).innerHTML = response.count ? response.count : 0;
             });
         },
 
@@ -202,7 +221,7 @@ export default {
 
                 geomParams = this.getParamsForWKT(wkt.write(), query);
             }
-
+            console.log(latlng)
             if(!latlng) {
                 if($.isFunction(layer.getBounds)) {
                     latlng = layer.getBounds().getCenter();
@@ -348,7 +367,7 @@ export default {
             MAP_VAR.map.addLayer(MAP_VAR.drawnItems);
 
             // Initialise the draw control and pass it the FeatureGroup of editable layers
-            var drawControls = new L.Control.Draw({
+            this.drawControls = new L.Control.Draw({
                 edit: {
                     featureGroup: MAP_VAR.drawnItems
                 },
@@ -379,7 +398,7 @@ export default {
                 }
             });
 
-            MAP_VAR.map.addControl(drawControls);
+            MAP_VAR.map.addControl(this.drawControls);
 
             /*  Common map (Leaflet) functions */
             function addClickEventForVector(layer, query, map) {
@@ -389,9 +408,10 @@ export default {
             }
 
             MAP_VAR.map.on('draw:created', function(e) {
+                console.log(e)
                 var layer = e.layer;
                 var center = typeof layer.getLatLng === 'function' ? layer.getLatLng() : layer.getBounds().getCenter();
-
+                console.log(MAP_VAR.query)
                 addClickEventForVector(layer, MAP_VAR.query, MAP_VAR.map);
                 MAP_VAR.drawnItems.addLayer(layer);
 
@@ -515,7 +535,11 @@ export default {
                 freeTextLocality: null,
                 stratigraphyField:null,
                 isSubsurface: false,
-                geoparams:null
+                isNearMeSearch: false,
+                geoparams:null,
+                nearMeArea: null,
+                radius:20,
+                latlng:null
             }
         },
         clearSearch() {
@@ -538,9 +562,9 @@ export default {
             let params = this.searchParams
             let query = ''
             Object.getOwnPropertyNames(params).slice(0,8).forEach(function (el) {
-                if(['isSubsurface'].includes(el) && params[el] === 'true') {
-                    query += `-locality:*puurauk AND `;
-                } else if (!['isSubsurface'].includes(el) && params[el] !== null && params[el] !== '') {
+                if(params[el] === true) {
+                    if(['isSubsurface'].includes(el)) query += `-locality:*puurauk AND `;
+                } else if (!['isSubsurface','isNearMeSearch'].includes(el) && params[el] !== null && params[el] !== '') {
                     if(['higherTaxa'].includes(el)) query += `taxon_hierarchy:${params[el].hierarchy_string}* AND `;
                     else if(['stratigraphyField'].includes(el)) query += `(stratigraphy_hierarchy:${params[el].hierarchy_string}* OR global_stratigraphy_hierarchy:${params[el].hierarchy_string}*) AND `;
                     else if(el !== 'geoparams') query += `${addFreeTextQueryParam(params[el],el)} AND `;
@@ -550,7 +574,7 @@ export default {
             if(query.length > 0) query = `fq=${query.substring(0,query.length - 5)}&`;
             if(geoparams !== null) query += `${geoparams}&`;
             else if(params['geoparams'] !== null) query += `${params['geoparams']}&`;
-
+            else if(params['isNearMeSearch'] === true && params['nearMeArea'] !== null) query += `${params['nearMeArea']}&`;
             return query
         },
         applySearch() {
@@ -597,18 +621,56 @@ export default {
             this.output = output_
         },
         isDefinedAndNotNull(value) { return !!value && value !== null },
+        getLocation() {
+            let this_ = this;
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    let geoparams = {getRadius() {return this_.searchParams.radius*1000}, getLatLng() { return {lat : position.coords.latitude, lng: position.coords.longitude}}}
+                    this_.searchParams.latlng = {lat:position.coords.latitude,lng:position.coords.longitude}
+                    this_.searchParams.nearMeArea = this_.getParamsForCircle(geoparams)
+                    this_.drawAreaNearMe()
+                },function (error) {
+                    if (error.code == error.PERMISSION_DENIED)
+                        this_.errorMessege = "Geolocation is not supported by this browser.";
+                });
+            }
+        },
+        drawAreaNearMe() {
+            this.circle = this.circle === null ?
+                new L.Circle(this.searchParams.latlng, this.searchParams.radius*1000, this.drawControls.options.draw.circle.shapeOptions):
+                this.circle.setRadius(this.searchParams.radius*1000);
+            this._map=this.map;
+            this.isPopQueryTriggered = true;
+            let this_=this;
+            setTimeout(function() {
+                this_._map=this_.map
+                L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this_, this_.circle);
+            }, 200);
+
+        }
     },
     mounted (){
       this.initialiseMap()
 
     },
     watch: {
-    '$store.state.searchParameters.advancedSearch': {
-      handler: function(newVal,oldVal) {
-          this.applySearch()
-      },
-        deep: true
+        '$store.state.searchParameters.advancedSearch': {
+            handler: function (newVal, oldVal) {
+                this.applySearch()
+            }
+        },
+        'searchParams.isNearMeSearch': {
+            handler: function (newVal, oldVal) {
+                this.getLocation()
+            }
+        },
+        'searchParams.radius': {
+            handler: function (newVal, oldVal) {
+                if(this.isPopQueryTriggered === true) return;
+                this.drawAreaNearMe();
+            },
+            deep: true
+        }
     }
-  },
 }
 </script>

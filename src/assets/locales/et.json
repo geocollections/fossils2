@@ -234,6 +234,7 @@
     "country":"Riik, maakond, vald",
     "stratigraphy":"Stratigraafia",
     "subsurfaceField":"Näita ainult paljandite andmeid",
+    "showNearMeField":"Show near me",
     "button":"Otsi liike",
     "results":"Otsingu tulemused",
     "results_species":"liiki / perekonda",

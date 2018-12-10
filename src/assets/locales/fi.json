@@ -213,6 +213,7 @@
     "country":"Maa, maakunta",
     "stratigraphy":"Stratigrafia",
     "subsurfaceField":"Show only outcrop data",
+    "showNearMeField":"Show near me",
     "button":"Hae",
     "results":"Haun tulokset",
     "results_species":"laji",

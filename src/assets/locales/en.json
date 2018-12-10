@@ -231,6 +231,7 @@
     "country":"Country, county",
     "stratigraphy":"Stratigraphy",
     "subsurfaceField":"Show only outcrop data",
+    "showNearMeField":"Show near me",
     "button":"Submit query",
     "results":"Search results",
     "results_species":"species / genera",
