@@ -111,7 +111,9 @@ export function fetchDistributionConop (name) {
 
 export function fetchSpeciesMap (taxon_hierarchy,mode) {
     let mode_ =  mode === 'in_global' ? `` : `${applyMode(mode,':', ' AND ')}`
-    return fetch(`solr/taxon_search/?fl=src,locality_en,locality,locality_id,latlong&fq=%7B%21collapse%20field--locality%7D&q=taxon_hierarchy:${taxon_hierarchy}*${mode_}&format=json`)
+    // return fetch(`solr/taxon_search/?fl=src,locality_en,locality,locality_id,latlong&fq=%7B%21collapse%20field--locality%7D&q=taxon_hierarchy:${taxon_hierarchy}*${mode_}&format=json`)
+    return fetch(`solr/taxon_search/?q=taxon_hierarchy:${taxon_hierarchy}*${mode_}&fq=%7B%21collapse%20field--locality%7D&fq=rank:[14%20TO%2017]&sort=fossil_group asc,taxon asc&rows=1000&start=0&fl=src,locality,locality_en,locality_id,latlong&format=json`)
+
     // return fetch(`taxon/?sql=get_species_map&keyword=${name}&format=json`)
 }
 

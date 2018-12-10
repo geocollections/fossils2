@@ -86,7 +86,7 @@
                     <b-col md="6" class="mr-auto" style="padding-left:0.1rem !important;">
                         <div class="card rounded-0" style="width: 100%;height: 100%">
                             <div class="card-body  no-padding">
-                                <div id="map" style="height: 300px"></div>
+                                <div id="map" style="height: 380px"></div>
                             </div>
                         </div>
                     </b-col>
