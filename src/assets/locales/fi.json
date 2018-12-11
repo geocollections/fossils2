@@ -150,6 +150,12 @@
     "langChange": "Changed language!",
     "pageLoading": "Please wait. The page is loading."
   },
+  "map":{
+    "overlay_title": "Taxon occurrences:",
+    "overlay_specimens": "Specimens",
+    "overlay_literature_based": "Literature-based",
+    "overlay_in_samples": "In samples"
+  },
   "tabs": {
     "overview" : "Overview",
     "gallery" : "Gallery",

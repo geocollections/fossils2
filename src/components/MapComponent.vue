@@ -24,6 +24,36 @@
                     this.initLayers();
                 }
             },
+            '$store.state.mode'(mode) {
+                if (mode) {
+                    this.setView()
+                    this.map.removeLayer(this.tileLayer)
+                    this.tileLayer.addTo(this.map);
+                }
+
+            },
+            'mapData': {
+                handler: function (newVal, oldVal) {
+
+                    for(let i = 0; i < this.layers.length; i++){
+                        this.map.removeLayer(this.layers[i].leaflatObjects)
+                    }
+                    this.map.removeControl(this.groupedLayers);
+
+                    this.layers = [
+                        {id: 0, name: 'Specimen', active: true, features: []},
+                        {id: 1, name: 'Taxon_occurrence', active: true, features: []},
+                        {id: 2, name: 'sample + conop_distribution', active: true, features: []},
+                    ];
+                    if(this.getLocationsObject(this.mapData)) {
+                        this.initLayers();
+                        this.checkAllLayers()
+                    }
+
+                }
+            },
+            deep: true
+
         },
         computed : {
             mapData() {return this.$store.state.activeItem['map']}
@@ -37,7 +67,14 @@
 
         },
         methods: {
-
+            setView()  {
+                let mode = this.$store.state.mode;
+                if (mode) {
+                    if(mode === 'in_global') this.map.setView([58.5,20.5], 1);
+                    else if(mode === 'in_estonia') this.map.setView([58.5,25.5], 6);
+                    else this.map.setView([58.5,25.5], 4);
+                }
+            },
             checkAllLayers() {
                 this.layers.sort((a, b) => a.id - b.id);
                 for(let i = 0; i < this.layers.length; i++){
@@ -84,10 +121,11 @@
                 document.getElementById('map').style.cursor = 'default';
                 this.map = L.map('map',{
                     fullscreenControl: true,
-                }).setView([58.5,20.5], 4);
+                })
+                this.setView();
                 this.tileLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoia3V1dG9iaW5lIiwiYSI6ImNpZWlxdXAzcjAwM2Nzd204enJvN2NieXYifQ.tp6-mmPsr95hfIWu3ASz2w',
                     {
-                        minZoom: 4,
+                        minZoom: 1,
                         maxZoom: 18,
                         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                     }

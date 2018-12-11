@@ -165,6 +165,7 @@ export default {
             errorMessege: null,
             output: {},
             map: null,
+            minimalBaseLayer:null,
             circle:null,
             drawControls: null,
             drawnItems: null,
@@ -295,7 +296,7 @@ export default {
 
         getBaseLayers: function () {
             // Google map layers
-            var minimalBaseLayer =
+            this.minimalBaseLayer =
                 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, imagery &copy; <a href="https://carto.com/attribution">CartoDB</a>',
                 subdomains: 'abcd',
@@ -321,7 +322,7 @@ export default {
             // var blackWhiteLayer = new L.StamenTileLayer('toner');
 
             var baseLayers = {};
-            baseLayers[this.$t('advancedsearch.js_map_layers_Minimal')] = minimalBaseLayer;
+            baseLayers[this.$t('advancedsearch.js_map_layers_Minimal')] = this.minimalBaseLayer;
             // baseLayers[this.$t('advancedsearch.js.map.layers.Road')] = roadLayer;
             // baseLayers[this.$t('advancedsearch.js.map.layers.Terrain')] = terrainLayer;
             // baseLayers[this.$t('advancedsearch.js.map.layers.Satellite')] = hybridLayer;
@@ -351,12 +352,11 @@ export default {
                 // fullscreenControlOptions: {
                 //     position: 'topleft'
                 // },
-                center: [58.3,25],
                 zoomControl: false,
-                zoom: 6,
                 minZoom: 1,
                 scrollWheelZoom: true
             });
+            this.setView()
             this.drawI18N();
             L.control.zoom({
                 position: 'topleft',
@@ -652,9 +652,15 @@ export default {
             this.isPopupQueryTriggered = false
 
         },
-        nearMe() {
-            this.drawAreaNearMe();
-        }
+
+        setView()  {
+            let mode = this.$store.state.mode;
+            if (mode) {
+                if(mode === 'in_global') this.map.setView([58.5,20.5], 1);
+                else if(mode === 'in_estonia') this.map.setView([58.5,25], 6);
+                else this.map.setView([58.5,25], 5);
+            }
+        },
     },
     mounted (){
       this.initialiseMap()
@@ -685,7 +691,15 @@ export default {
 
             },
             deep: true
-        }
+        },
+        '$store.state.mode'(mode) {
+            if (mode) {
+                this.setView()
+                this.map.removeLayer(this.minimalBaseLayer)
+                this.minimalBaseLayer.addTo(this.map);
+            }
+
+        },
     }
 }
 </script>
