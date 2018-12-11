@@ -24,7 +24,6 @@ export default context => {
     if (fullPath !== url) {
       return reject({ url: fullPath })
     }
-
     // set router's location
     router.push(url)
 
@@ -43,7 +42,7 @@ export default context => {
       let id = router.currentRoute.params.id;
       if (router.currentRoute.name === 'ItemPage') {
           Promise.all([
-              store.dispatch('FETCH_TAXON', { id })
+              isNaN(id) ? store.dispatch('FETCH_TAXON_BY_NAME', { id }) : store.dispatch('FETCH_TAXON', { id })
           ]).then(() => {
               if(!store.state.activeItem.taxon) {
                   //IF taxon do not exist show error page

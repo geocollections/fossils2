@@ -16,12 +16,13 @@ import {
     fetchDistributionConop,
     fetchSpecies,
     fetchDistributionSamples,
-    fetchReferences, fetchReferences2, fetchSpeciesMap, fetchNumberOfSpecimenIdentifications
+    fetchReferences, fetchReferences2, fetchSpeciesMap, fetchNumberOfSpecimenIdentifications, fetchTaxonByName
 } from '../api'
 
 export default {
 
     FETCH_PAGE: ({ commit, state }, { id }) => {
+        console.log('fetching page')
         return state.page[id]
           ? Promise.resolve(state.page[id])
           : fetchStaticPage(id).then(page => commit('SET_PAGE', { id, page }))
@@ -41,6 +42,10 @@ export default {
 
     FETCH_TAXON: ({ commit, state }, { id }) => {
         return fetchTaxon(id).then(taxon => commit('SET_TAXON', { taxon }))
+    },
+
+    FETCH_TAXON_BY_NAME: ({ commit, state }, { id }) => {
+        return fetchTaxonByName(id).then(taxon => commit('SET_TAXON', { taxon }))
     },
 
     FETCH_COMMON_NAMES: ({ commit, state }, { id }) => {

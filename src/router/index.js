@@ -16,9 +16,10 @@ export function createRouter () {
     fallback: false,
     scrollBehavior: () => ({ y: 0 }),
     routes: [
-      { path: '/:id(\\d+)',name: 'ItemPage', component: ItemPage , meta: { isSpecies: false} },
-      { path: '/page/:id', component: StaticPage },
+        { path: '/page/:id', component: StaticPage },
         { path: '/search', component: AdvancesSearch },
+      { path: '/:id',name: 'ItemPage', component: ItemPage , meta: { isSpecies: false} },
+
       { path: '/', component: FrontPage },
       { path: '*', redirect: '/' },
     ]

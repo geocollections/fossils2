@@ -60,7 +60,8 @@
                                 this.$cookies.set('fossils_lang', this.$store.state.lang)
                             }
                         }
-                        this.$router.push({ path: this.$router.currentRoute.path, query:  {mode:mode, lang: lang}});
+                        // this.$router.currentRoute.path
+                        this.$router.push({ path: '/'+this.$store.state.activeItem.taxon.id , query:  {mode:mode, lang: lang}});
                     }
                 })
             },

@@ -28,7 +28,7 @@ function applyMode(mode, separator = '=', queryJoiner = '&') {
 }
 
 export function fetchStaticPage (id) {
-  return fetch(`webpages/${id}&format=json`)
+  return fetch(`webpages/?id=${id}&format=json`)
 }
 
 export function fetchFrontPage (lang) {
@@ -38,6 +38,9 @@ export function fetchFrontPage (lang) {
 /* Item page request */
 export function fetchTaxon (id) {
     return fetch(`taxon/?id=${id}&fields=id,taxon,parent,parent__taxon,rank__rank,rank__rank_en,fossil_group__id,is_fossil_group,fossil_group__taxon,hierarchy_string,author_year,date_added,date_changed,stratigraphy_base__stratigraphy,stratigraphy_base_id,stratigraphy_top_id,stratigraphy_base__age_base,stratigraphy_top__age_top,stratigraphy_top__stratigraphy,taxon_id_tol,taxon_id_eol,taxon_id_nrm,taxon_id_plutof,taxon_id_pbdb&format=json`)
+}
+export function fetchTaxonByName (id) {
+    return fetch(`taxon/?taxon=${id}&fields=id,taxon,parent,parent__taxon,rank__rank,rank__rank_en,fossil_group__id,is_fossil_group,fossil_group__taxon,hierarchy_string,author_year,date_added,date_changed,stratigraphy_base__stratigraphy,stratigraphy_base_id,stratigraphy_top_id,stratigraphy_base__age_base,stratigraphy_top__age_top,stratigraphy_top__stratigraphy,taxon_id_tol,taxon_id_eol,taxon_id_nrm,taxon_id_plutof,taxon_id_pbdb&format=json`)
 }
 
 export function fetchSisterTaxa (id, mode) {
