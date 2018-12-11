@@ -551,41 +551,27 @@
 
                 this.getImages();
 
-                // if(!this.isHigherTaxon(this.taxon.rank__rank_en)){
-                //
-                // }
-                // this.$store.dispatch('FETCH_SPECIES_MAP');
                 cntSpecimenCollection(this.taxon.hierarchy_string).then((response) => {
                     this.specimenCollectionCnt = response.count;
-
                 });
+            },
+            handleImageResponse(searchParameters,response){
+                searchParameters.allowPaging = this.isAllowedMorePaging(searchParameters.page,response,searchParameters.paginateBy)
+                if(searchParameters.allowPaging) searchParameters.page += 1;
+                this.images = this.composeImageRequest(response.results)
+                this.imagesLoading = false;
             },
             getImages() {
                 this.imagesLoading = true;
-                    fetchSelectedImages(this.taxon.id,this.$store.state.searchParameters).then((response) => {
-                        if(response.results.length === 0) {
-                            if(this.isHigherTaxon(this.taxon.rank__rank_en)) {
-                                fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
-                                    this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
-                                        this.$store.state.searchParameters.images.page,response,
-                                        this.$store.state.searchParameters.images.paginateBy)
-                                    this.images = this.composeImageRequest(response.results)
-                                    this.imagesLoading = false;
-                                });
-                            } else {
-                                fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
-                                    this.$store.state.searchParameters.images.allowPaging = this.isAllowedMorePaging(
-                                        this.$store.state.searchParameters.images.page,response,
-                                        this.$store.state.searchParameters.images.paginateBy)
-                                    this.images = this.composeImageRequest(response.results);
-                                    this.imagesLoading = false;
-                                });
-                            }
-                        } else {
-                            this.images = this.composeImageRequest(response.results)
-                            this.imagesLoading = false;
-                        }
-                    });
+                fetchSelectedImages(this.taxon.id,this.$store.state.searchParameters).then((response) => {
+                    if(response.results.length === 0) {
+                        fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
+                            this.handleImageResponse(this.$store.state.searchParameters.images,response)
+                        });
+                    } else {
+                        this.handleImageResponse(this.$store.state.searchParameters.selectedImages,response)
+                    }
+                });
             },
 
             isDifferentName(obj) {
@@ -593,9 +579,7 @@
                 return localizedName[0] !== localizedName[1] && localizedName[1] !== ""
             },
             isAllowedMorePaging(page, response, paginateBy) {
-                let isAllowed = !(response.page === undefined || (parseInt(response.count) / page < paginateBy))
-                if(isAllowed) page += 1;
-                return isAllowed
+                return !(response.results === undefined || response.results.length === 0 || (parseInt(response.results.length) / page < paginateBy))
             },
             //todo: utils
             composeImgUrl(uuid_filename,isFull) {

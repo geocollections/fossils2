@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import {fetchImages} from '../../api'
+    import {fetchImages,fetchSelectedImages} from '../../api'
     import Spinner from "../Spinner.vue";
 
     export default {
@@ -38,7 +38,6 @@
             'bottom': {
                 handler: function (bottom) {
                     if (bottom) {
-                        console.log('bottom handler '+bottom)
                        this.loadMoreImages();
                     }
                 },
@@ -53,31 +52,33 @@
             },
             loadMoreImages() {
                 if(this.imagesLoading) return;
+                this.imagesLoading = true;
+                let query;
+                if(this.$store.state.searchParameters.selectedImages.allowPaging) {
+                    query = fetchSelectedImages(this.$parent.taxon.id,this.$store.state.searchParameters)
+                } else if (this.$store.state.searchParameters.images.allowPaging) {
+                    query = fetchImages(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters)
+                }
 
                 if(!this.$store.state.searchParameters.images.allowPaging || this.noMoreResults) {
                     this.imagesLoading = false;
                     return;
                 }
-                this.imagesLoading = true;
-                let query = this.$parent.isHigherTaxon(this.$parent.taxon.rank__rank_en) ?
-                    fetchImages(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters) :
-                    fetchImages(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters);
-
+                //67033
                 query.then((response) => {
-                    // Todo: if selected images more than the number of pagenatedBy
-                    console.log(response)
                     if(response && response.results && response.results.length > 0) {
                         this.$parent.images = this.$parent.images.concat(this.$parent.composeImageRequest(response.results));
                     } else {
-                        this.noMoreResults = true;
+                        if(this.$store.state.searchParameters.selectedImages.allowPaging){
+                            this.$store.state.searchParameters.selectedImages.allowPaging = false
+                        } else {
+                            this.noMoreResults = true;
+                        }
                     }
-                    //solr do not return count
-                    if (response.count) {
-                        this.$store.state.searchParameters.images.allowPaging = this.$parent.isAllowedMorePaging(
-                            this.$store.state.searchParameters.images.page,response,
-                            this.$store.state.searchParameters.images.paginateBy)
+                    if(this.$store.state.searchParameters.selectedImages.allowPaging) {
+                        this.$store.state.searchParameters.selectedImages.page = this.$store.state.searchParameters.selectedImages.page + 1;
                     } else {
-                        this.$store.state.searchParameters.images.page =this.$store.state.searchParameters.images.page + 1
+                        this.$store.state.searchParameters.images.page = this.$store.state.searchParameters.images.page + 1;
                     }
 
                     this.imagesLoading = false;

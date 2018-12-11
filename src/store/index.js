@@ -26,7 +26,7 @@ export function createStore () {
         ranks: []
       },
       searchParameters: {
-          selectedImages: { page: 1, paginateBy: 100 },
+          selectedImages: { page: 1, paginateBy: 20,allowPaging: true },
           images: { page: 1, paginateBy: 20, allowPaging: true },
           species: { page: 1, paginateBy: 20 },
           advancedSearch: { page: 1, paginateBy: 100 },
