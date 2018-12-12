@@ -2,6 +2,7 @@ import { createApp } from './app'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
+
 // This exported function will be called by `bundleRenderer`.
 // This is where we perform data-prefetching to determine the
 // state of our application before actually rendering it.
@@ -38,36 +39,52 @@ export default context => {
 
       let process = 'server';
       store.commit('SET_PROCESS', {process})
-
+        function fetchTaxon(app,store,router,context,id,matchedComponents,reject){
+            Promise.all([
+                store.dispatch('FETCH_TAXON', { id })
+            ]).then(() => {
+                if(!store.state.activeItem.taxon) {
+                    //IF taxon do not exist show error page
+                    resolve(app)
+                } else {
+                    // Call fetchData hooks on components matched by the route.
+                    // A preFetch hook dispatches a store action and returns a Promise,
+                    // which is resolved when the action is complete and store state has been
+                    // updated.
+                    Promise.all(matchedComponents.map(({ asyncData }) => asyncData && asyncData({
+                        store,
+                        route: router.currentRoute
+                    }))).then(() => {
+                        isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)
+                        // After all preFetch hooks are resolved, our store is now
+                        // filled with the state needed to render the app.
+                        // Expose the state on the render context, and let the request handler
+                        // inline the state in the HTML response. This allows the client-side
+                        // store to pick-up the server-side state without having to duplicate
+                        // the initial data fetching on the client.
+                        context.state = store.state
+                        resolve(app)
+                    }).catch(reject)
+                }
+            }).catch(reject)
+        }
       let id = router.currentRoute.params.id;
       if (router.currentRoute.name === 'ItemPage') {
-          Promise.all([
-              isNaN(id) ? store.dispatch('FETCH_TAXON_BY_NAME', { id }) : store.dispatch('FETCH_TAXON', { id })
-          ]).then(() => {
-              if(!store.state.activeItem.taxon) {
-                  //IF taxon do not exist show error page
-                  resolve(app)
-              } else {
-                  // Call fetchData hooks on components matched by the route.
-                  // A preFetch hook dispatches a store action and returns a Promise,
-                  // which is resolved when the action is complete and store state has been
-                  // updated.
-                  Promise.all(matchedComponents.map(({ asyncData }) => asyncData && asyncData({
-                      store,
-                      route: router.currentRoute
-                  }))).then(() => {
-                      isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)
-                      // After all preFetch hooks are resolved, our store is now
-                      // filled with the state needed to render the app.
-                      // Expose the state on the render context, and let the request handler
-                      // inline the state in the HTML response. This allows the client-side
-                      // store to pick-up the server-side state without having to duplicate
-                      // the initial data fetching on the client.
-                      context.state = store.state
+          if(isNaN(id)) {
+              Promise.all([store.dispatch('FETCH_TAXON_BY_NAME', { id }) ]).then(() => {
+                  if(!store.state.activeItem.taxon) {
+                      //IF taxon do not exist show error page
                       resolve(app)
-                  }).catch(reject)
-              }
-          }).catch(reject)
+                  } else {
+                      id = store.state.activeItem.taxon.id
+                      fetchTaxon(app,store,router,context,id,matchedComponents,reject)
+                  }
+              }).catch(reject)
+          } else {
+              fetchTaxon(app,store,router,context,id,matchedComponents,reject)
+          }
+
+
       } else {
           Promise.all(matchedComponents.map(({ asyncData }) => asyncData && asyncData({
               store,

@@ -14,7 +14,7 @@ import {
     fetchTaxonList,
     fetchTaxonDescription,
     fetchDistributionConop,
-    fetchSpecies,
+    fetchSimpleTaxonSearch,
     fetchDistributionSamples,
     fetchReferences, fetchReferences2, fetchSpeciesMap, fetchNumberOfSpecimenIdentifications, fetchTaxonByName
 } from '../api'
@@ -45,7 +45,7 @@ export default {
     },
 
     FETCH_TAXON_BY_NAME: ({ commit, state }, { id }) => {
-        return fetchTaxonByName(id).then(taxon => commit('SET_TAXON', { taxon }))
+        return fetchSimpleTaxonSearch(id).then(taxon => commit('SET_TAXON', { taxon }))
     },
 
     FETCH_COMMON_NAMES: ({ commit, state }, { id }) => {
