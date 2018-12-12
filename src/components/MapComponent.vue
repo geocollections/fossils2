@@ -143,7 +143,7 @@
                         let tokenizedCoords = string.split(',')
                         return [tokenizedCoords[0],tokenizedCoords[1]]
                     }
-                    console.log(element.latlong)
+
                     if (element.locality !== null && element.locality_id !== null
                         && element.latlong && element.latlong !== null) {
                         this_.layers[element.src-1].features.push({

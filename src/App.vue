@@ -21,6 +21,7 @@
                 isFixed: false
             }
         },
+
         name: 'App',
         created() {
             this.setLangAndMode();

@@ -457,20 +457,20 @@
                 store.dispatch('FETCH_DESCRIPTION', { id }),
                 store.dispatch('FETCH_SPECIES_MAP', { id }),
             ];
-            if (['Species','Subspecies'].includes(store.state.activeItem.taxon.rank__rank_en)) {
-                queries = Array.prototype.concat.apply([
-                    store.dispatch('FETCH_SYNONIMS', { id }),
-                    store.dispatch('FETCH_TYPE_SPECIMEN', { id }),
-                    store.dispatch('FETCH_DISTRIBUTION_SAMPLES', { id }),
-                    store.dispatch('FETCH_DISTRIBUTION_CONOP', { id }),
-                ], queries)
-            }
-            if (['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(store.state.activeItem.taxon.rank__rank_en)){
-                queries = Array.prototype.concat.apply([
-                    store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
-                    store.dispatch('FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION', { id }),
-                ],queries)
-            }
+            // if (['Species','Subspecies'].includes(store.state.activeItem.taxon.rank__rank_en)) {
+            //     queries = Array.prototype.concat.apply([
+            //         store.dispatch('FETCH_SYNONIMS', { id }),
+            //         store.dispatch('FETCH_TYPE_SPECIMEN', { id }),
+            //         store.dispatch('FETCH_DISTRIBUTION_SAMPLES', { id }),
+            //         store.dispatch('FETCH_DISTRIBUTION_CONOP', { id }),
+            //     ], queries)
+            // }
+            // if (['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(store.state.activeItem.taxon.rank__rank_en)){
+            //     queries = Array.prototype.concat.apply([
+            //         store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
+            //         store.dispatch('FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION', { id }),
+            //     ],queries)
+            // }
             return Promise.all(queries)
 
         },
@@ -554,6 +554,19 @@
                 cntSpecimenCollection(this.taxon.hierarchy_string).then((response) => {
                     this.specimenCollectionCnt = response.count;
                 });
+
+                if (['Species','Subspecies'].includes(this.$store.state.activeItem.taxon.rank__rank_en)) {
+                    this.$store.dispatch('FETCH_SYNONIMS', { id })
+                    this.$store.dispatch('FETCH_TYPE_SPECIMEN', { id })
+                    this.$store.dispatch('FETCH_DISTRIBUTION_SAMPLES', { id })
+                    this.$store.dispatch('FETCH_DISTRIBUTION_CONOP', { id })
+
+                }
+                if (['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(this.$store.state.activeItem.taxon.rank__rank_en)){
+                    this.$store.dispatch('FETCH_TYPE_IDENTIFICATION', { id })
+                    this.$store.dispatch('FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION', { id })
+
+                }
             },
             handleImageResponse(searchParameters,response){
                 searchParameters.allowPaging = this.isAllowedMorePaging(searchParameters.page,response,searchParameters.paginateBy)

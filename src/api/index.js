@@ -52,7 +52,7 @@ export function fetchSpecies (hierarchy_string,mode,searchParameters) {
 }
 
 export function fetchHierarchy (hierarchy_string) {
-    return fetch(`taxon?id__in=${hierarchy_string}&fields=id,taxon,rank__rank,rank__rank_en&format=json`)
+    return fetch(`taxon/?id__in=${hierarchy_string}&fields=id,taxon,rank__rank,rank__rank_en&format=json`)
 }
 
 export function fetchChildren (id, mode) {
