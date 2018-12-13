@@ -167,7 +167,7 @@ function render (req, res) {
     <!--<script type="text/javascript" src="/static/js/fossils.js"></script>-->
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>
- 
+    <script src="https://jsconsole.com/js/remote.js?07e23f73-dcd3-4bd6-a2ef-10ae8c970650"></script>
     ${script.text(bodyOpt)}
   </body>
 </html>

@@ -408,6 +408,8 @@ export default {
                 if(MAP_VAR.isPopupQueryTriggered === false) {
                     setTimeout(function() {
                         layer.fireEvent('click');
+                        layer.fireEvent('touchstart');
+                        layer.fireEvent('mousedown');
                     }, 200);
                 }
             });
