@@ -393,10 +393,7 @@ export default {
 
             /*  Common map (Leaflet) functions */
             function addClickEventForVector(layer, query, map) {
-                layer.on('touchcancel', function(e) {
-                    this_.generatePopup(layer, e.latlng, query, map,this_);
-                });
-                layer.on('click', function(e) {
+                layer.on('mousedown touchstart click', function(e) {
                     this_.generatePopup(layer, e.latlng, query, map,this_);
                 });
             }
