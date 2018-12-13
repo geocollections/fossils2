@@ -101,7 +101,7 @@
                                        <span v-if="$store.state.mode === 'in_baltoscandia'">{{$t('header.f_baltic_species')}}</span>
                                        <span v-else-if="$store.state.mode === 'in_estonia'">{{$t('header.f_estonian_species')}}</span>
                                        <span v-else>{{$t('header.f_global_species')}}</span>
-                                       <strong><a href="#species">{{numberOfSpecimen}}</a></strong>
+                                       <strong><a href="#species" v-if="numberOfSpecimen !== null">{{numberOfSpecimen}}</a></strong>
                                 </div>
                                 <see-also v-if="((taxonPage && taxonPage.link_wikipedia != null) || taxon.taxon_id_tol != null|| taxon.taxon_id_eol != null|| taxon.taxon_id_nrm!= null || taxon.taxon_id_plutof!= null || taxon.taxon_id_pbdb != null)"></see-also>
                            </div>
@@ -328,6 +328,7 @@
     import map from 'lodash/map';
     import {
         fetchTaxon,
+        fetchParentTaxon,
         fetchSisterTaxa,
         fetchSpecies,
         fetchHierarchy,
@@ -380,7 +381,6 @@
             distributionSamples () { return this.$store.state.activeItem['distributionSamples'] },
             distributionConop () { return this.$store.state.activeItem['distributionConop'] },
             specimenIdentification () { return this.$store.state.activeItem['specimenIdentification'] },
-            cntSpecimenIdentification () { return this.$store.state.activeItem['cntSpecimenIdentification'] },
             taxonOccurrence () { return this.$store.state.activeItem['taxonOccurrence'] },
             references () {
                 if((this.$store.state.activeItem['references'] === [] && this.$store.state.activeItem['references2'] === []) ||
@@ -455,22 +455,16 @@
                 store.dispatch('FETCH_CHILDREN', { id }),
                 // store.dispatch('FETCH_TAXON_LIST', { id }),
                 store.dispatch('FETCH_DESCRIPTION', { id }),
-                store.dispatch('FETCH_SPECIES_MAP', { id }),
+                store.dispatch('FETCH_SPECIES_MAP', { id })
             ];
-            // if (['Species','Subspecies'].includes(store.state.activeItem.taxon.rank__rank_en)) {
-            //     queries = Array.prototype.concat.apply([
-            //         store.dispatch('FETCH_SYNONIMS', { id }),
-            //         store.dispatch('FETCH_TYPE_SPECIMEN', { id }),
-            //         store.dispatch('FETCH_DISTRIBUTION_SAMPLES', { id }),
-            //         store.dispatch('FETCH_DISTRIBUTION_CONOP', { id }),
-            //     ], queries)
-            // }
-            // if (['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(store.state.activeItem.taxon.rank__rank_en)){
-            //     queries = Array.prototype.concat.apply([
-            //         store.dispatch('FETCH_TYPE_IDENTIFICATION', { id }),
-            //         store.dispatch('FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION', { id }),
-            //     ],queries)
-            // }
+            if (['Species','Subspecies'].includes(store.state.activeItem.taxon.rank__rank_en)) {
+                queries = Array.prototype.concat.apply([
+                    store.dispatch('FETCH_SYNONIMS', { id }),
+                    store.dispatch('FETCH_TYPE_SPECIMEN', { id }),
+                    store.dispatch('FETCH_DISTRIBUTION_SAMPLES', { id }),
+                    store.dispatch('FETCH_DISTRIBUTION_CONOP', { id }),
+                ], queries)
+            }
             return Promise.all(queries)
 
         },
@@ -517,7 +511,7 @@
                     mapDataLoaded: false,
                     sister_taxa: {},
                     hierarchy: {},
-                    numberOfSpecimen: {},
+                    numberOfSpecimen: null,
                     requestingData: false,
                     isSisterTaxaLoaded: false,
                     isHierarchyLoaded: false,
@@ -530,7 +524,7 @@
             },
             loadFullTaxonInfo: function(){
                 if (this.isDefinedAndNotNull(this.taxon.parent)) {
-                    fetchTaxon(this.taxon.parent).then((response) => {
+                    fetchParentTaxon(this.taxon.parent).then((response) => {
                         this.parent = response.results ? response.results[0] : {};
                     });
 
@@ -554,19 +548,6 @@
                 cntSpecimenCollection(this.taxon.hierarchy_string).then((response) => {
                     this.specimenCollectionCnt = response.count;
                 });
-
-                if (['Species','Subspecies'].includes(this.$store.state.activeItem.taxon.rank__rank_en)) {
-                    this.$store.dispatch('FETCH_SYNONIMS', { id })
-                    this.$store.dispatch('FETCH_TYPE_SPECIMEN', { id })
-                    this.$store.dispatch('FETCH_DISTRIBUTION_SAMPLES', { id })
-                    this.$store.dispatch('FETCH_DISTRIBUTION_CONOP', { id })
-
-                }
-                if (['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(this.$store.state.activeItem.taxon.rank__rank_en)){
-                    this.$store.dispatch('FETCH_TYPE_IDENTIFICATION', { id })
-                    this.$store.dispatch('FETCH_NUMBER_OF_SPECIMEN_IDENTIFICATION', { id })
-
-                }
             },
             handleImageResponse(searchParameters,response){
                 searchParameters.allowPaging = this.isAllowedMorePaging(searchParameters.page,response,searchParameters.paginateBy)
@@ -584,7 +565,8 @@
                     } else {
                         this.handleImageResponse(this.$store.state.searchParameters.selectedImages,response)
                     }
-                });
+                })
+
             },
 
             isDifferentName(obj) {

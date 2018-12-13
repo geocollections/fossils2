@@ -40,7 +40,7 @@ export default {
   },
 
   SET_SPECIMEN_ATTACHMENT: (state, { images }) => {
-      Vue.set(state.activeItem, 'attachment', images.results || false)
+      Vue.set(state.activeItem, 'selectedImages', images.results || false)
   },
 
   SET_TAXON_TYPE_SPECIMEN: (state, { typeSpecimen }) => {

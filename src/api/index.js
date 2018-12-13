@@ -39,6 +39,9 @@ export function fetchFrontPage (lang) {
 export function fetchTaxon (id) {
     return fetch(`taxon/?id=${id}&fields=id,taxon,parent,parent__taxon,rank__rank,rank__rank_en,fossil_group__id,is_fossil_group,fossil_group__taxon,hierarchy_string,author_year,date_added,date_changed,stratigraphy_base__stratigraphy,stratigraphy_base_id,stratigraphy_top_id,stratigraphy_base__age_base,stratigraphy_top__age_top,stratigraphy_top__stratigraphy,taxon_id_tol,taxon_id_eol,taxon_id_nrm,taxon_id_plutof,taxon_id_pbdb&format=json`)
 }
+export function fetchParentTaxon (id) {
+    return fetch(`taxon/?id=${id}&fields=id,taxon,rank__rank_en&format=json`)
+}
 
 export function fetchSisterTaxa (id, mode) {
     let returningFields = "id,taxon,parent__taxon,parent_id,rank__rank_en,rank__rank";
@@ -123,7 +126,7 @@ export function fetchSpecimenIdentification (taxon) {
 }
 
 export function fetchNumberOfSpecimenIdentifications (id) {
-    return fetch(`specimen_identification/?taxon_id=${id}&fields=id&format=json`)
+    return fetch(`specimen_identification/?taxon_id=${id}&fields=id&page=1&paginate_by=1&format=json`)
 }
 
 export function fetchAttachment (hierarchy_string,searchParameters) {

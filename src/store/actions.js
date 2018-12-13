@@ -6,7 +6,7 @@ import {
     fetchTaxonCommonName,
     fetchTaxonPages,
     fetchTypeSpecimen,
-    fetchAttachment,
+    fetchSelectedImages,
     fetchSpecimenIdentification,
     fetchTaxonOccurrence,
     fetchChildren,
@@ -52,8 +52,8 @@ export default {
         return fetchTaxonCommonName(id).then(names => commit('SET_COMMON_NAMES', { names }))
     },
 
-    FETCH_SPECIMEN_ATTACHMENT: ({ commit, state }, { id }) => {
-        return fetchAttachment(state.activeItem.taxon.hierarchy_string).then(images => commit('SET_SPECIMEN_ATTACHMENT', { images }))
+    FETCH_SELECTED_IMAGES: ({ commit, state }, { id }) => {
+        return fetchSelectedImages(id,state.searchParameters).then(images => commit('SET_SPECIMEN_ATTACHMENT', { images }))
     },
 
     FETCH_TYPE_SPECIMEN: ({ commit, state }, { id }) => {
