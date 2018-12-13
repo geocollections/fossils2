@@ -18,9 +18,9 @@ export function createRouter () {
     routes: [
         { path: '/page/:id', component: StaticPage },
         { path: '/search', component: AdvancesSearch },
-      { path: '/:id',name: 'ItemPage', component: ItemPage , meta: { isSpecies: false} },
+      { path: '/:id',name: 'ItemPage', component: ItemPage , meta: { isSpecies: false}},
 
-      { path: '/', component: FrontPage },
+      { path: '/', name:'FrontPage',component: FrontPage , meta: {error: false }},
       { path: '*', redirect: '/' },
     ]
   })

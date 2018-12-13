@@ -1,6 +1,7 @@
 <template>
     <section>
-        <div id="fossilgroups_box" style="max-width: 1280px !important;text-align: center">
+        <div class="col-lg-12" v-if="errorMessege"><b-alert show variant="warning"><span v-html="errorMessege"></span></b-alert></div>
+        <div id="fossilgroups_box" style="max-width: 1280px !important;text-align: center" v-if="content">
             <div class='fossilgroup_box'  v-for = "item in content">
                 <a :href="'/'+item.taxon" :title="item.taxon__taxon" >
                         <img :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'">
@@ -18,35 +19,16 @@ export default {
     content : function() {
         return this.$store.state.lang === 'et' ? this.$store.state.frontPage.et : this.$store.state.frontPage.en
     },
-    groupedImgs : function () {
-        if (this.content.length === 0) return
-        let arr = this.content
-        let imgs = [];
-        let numberOfImgsInRow = 6
-        let row = []
-        for (let i = 0; i < arr.length; i++) {
-            let item = arr[i]
-            row.push(item)
-            if (i !== 0  && i % (numberOfImgsInRow) === 5 || i === arr.length-1) {
-                imgs.push(row);
-                row = [];
-            }
-        }
-
-        return imgs
+    errorMessege : function () {
+        return this.$store.state['errorMessage']
     }
   },
-  methods: {
-      isRowCreated: function (index) {
-          return [3,7, 11, 15].includes(parseInt(index))
-      }
-  },
+
   watch: {
     '$store.state.lang': {
       handler: function(newVal,oldVal) {
         let lang = this.$store.state.lang;
         this.$store.dispatch('FETCH_FRONT_PAGE', { lang })
-          console.log(this.$store.state)
       }
     }
   },
@@ -56,3 +38,18 @@ export default {
   }
 }
 </script>
+<style>
+    .css-loader {
+        border: 10px solid #f3f3f3;
+        border-top: 10px solid rgb(240, 95, 64);
+        border-radius: 50%;
+        width: 180px;
+        height: 180px;
+        animation: spin 2s linear infinite;
+    }
+    @keyframes spin {
+        0% {transform: rotate(0deg)}
+        100% {transform: rotate(360deg)}
+
+    }
+</style>

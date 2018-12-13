@@ -11,6 +11,7 @@ export function createStore () {
   return new Vuex.Store({
     state: {
       process: 'server',
+      errorMessage: null,
       activeTab: 'overview',
       itemsPerPage: 20,
       items: {/* [id: number]: Item */},

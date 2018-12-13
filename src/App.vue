@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-header></app-header>
-    <app-content  class="mt-5 mb-5"/>
+    <app-content class="mt-5 mb-5" />
     <app-footer/>
   </div>
 </template>
@@ -120,5 +120,3 @@
 <link rel="stylesheet" href="/static/leaflet-fullscreen/leaflet.fullscreen.css" />
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous"/>
-<!--<style src="../static/css/sarv.css"></style>-->
-<!--<style src="../static/css/sarv-fonts.css"></style>-->

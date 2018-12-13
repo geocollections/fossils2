@@ -1,8 +1,10 @@
 <template>
    <section class="container-fluid">
-       <div style="letter-spacing: 3px;" class="m-md-3 text-center"  v-if="!isTaxonExisted">
-           <img class="rounded-circle border" style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/><br/>
-           <p>{{$t('main.taxon_do_not_exist')}}</p>
+       <div class="m-md-3 text-center" v-if="!isTaxonExisted">
+            <div class="css-loader" style="margin:auto"></div>
+            <h5 class="mt-3">{{$t('messages.pageLoading')}}</h5>
+           <!--<img class="rounded-circle border" style="height: 180px;width: 180px" src="/static/imgs/trilobite_logo_by_ewhauber-d4v4xyh.jpg"/><br/>-->
+           <!--<p>{{$t('main.taxon_do_not_exist')}}</p>-->
        </div>
        <div class="page-container" v-if="isTaxonExisted">
            <b-row class="mt-3" v-show="scroll">
@@ -364,7 +366,17 @@
         },
         computed: {
             taxon () { return this.$store.state.activeItem['taxon'] },
-            isTaxonExisted () {return this.taxon && this.taxon.hasOwnProperty('id')},
+            isTaxonExisted () {
+                if(this.taxon && this.taxon.hasOwnProperty('id')){
+                    return true
+                } else {
+                    let id = this.$router.currentRoute.params.id
+                    this.$store.state.errorMessage = `This taxon with id <strong>${ id }</strong> is not existing or not available `;
+                    this.$router.push({name:'FrontPage'})
+                    return false;
+                }
+
+            },
             taxonTitle: function() {
                 let lang = this.$store.state.lang;
                 if (this.taxonPage && this.taxonPage.title)
@@ -477,8 +489,7 @@
         },
 
         mounted () {
-
-                window.addEventListener('scroll', this.handleScroll);
+            window.addEventListener('scroll', this.handleScroll);
             if (this.taxon && this.taxon.hasOwnProperty('id')) {
                 let process = 'client'
                 this.$store.commit('SET_PROCESS', {process})
@@ -753,5 +764,19 @@
     }
     .col-lg-4 {
         padding-left:0.1rem !important;
+    }
+
+    .css-loader {
+        border: 12px solid #f3f3f3;
+        border-top: 12px solid rgb(255, 164, 78);
+        border-radius: 50%;
+        width: 180px;
+        height: 180px;
+        animation: spin 2s linear infinite;
+    }
+    @keyframes spin {
+        0% {transform: rotate(0deg)}
+        100% {transform: rotate(360deg)}
+
     }
 </style>
