@@ -76,8 +76,8 @@
                                 <b-row class="my-1">
                                     <b-col sm="4"></b-col>
                                     <b-col sm="8">
-                                        <b-button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem" variant="primary">Search</b-button>
-                                        <b-button  @click="clearSearch()" type="button" class="btn btn-outline-info p-2 mr-2" style="float: right;font-size: 0.8rem" variant="info">Clear</b-button>
+                                        <button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem">Search</button>
+                                        <button  @click="clearSearch()" type="button" class="btn btn-outline-info p-2 mr-2" style="float: right;font-size: 0.8rem">Clear</button>
                                     </b-col>
                                 </b-row>
                             </div>
@@ -180,16 +180,7 @@ export default {
             isPopupQueryTriggered:false
         }
     },
-    // computed: {
-    //     isSearchDisabled() {
-    //         if((this.higherTaxa !== null && this.higherTaxa !== '') ||
-    //             (this.speciesField !== null && this.speciesField !== '') ||
-    //             (this.localityField !== null && this.localityField !== '') ||
-    //             (this.stratigraphyField !== null && this.stratigraphyField !== ''))
-    //             return false
-    //         return true;
-    //     }
-    // },
+
     methods: {
 
         getSpeciesCountInArea: function (geomParams,speciesID) {
@@ -197,9 +188,6 @@ export default {
                 if(document.getElementById(speciesID) !== null) {
                     document.getElementById(speciesID).innerHTML = response.count ? response.count : 0;
                 }
-
-
-
             });
         },
         getOccurrenceCountInArea: function (geomParams, occurrenceID) {
@@ -405,6 +393,9 @@ export default {
 
             /*  Common map (Leaflet) functions */
             function addClickEventForVector(layer, query, map) {
+                layer.on('touch', function(e) {
+                    this_.generatePopup(layer, e.latlng, query, map,this_);
+                });
                 layer.on('click', function(e) {
                     this_.generatePopup(layer, e.latlng, query, map,this_);
                 });
