@@ -401,12 +401,12 @@ export default {
                 });
             }
 
-            function yourCustomLog(msg) {
-                document.getElementById('debug').innerHTML = document.getElementById('debug').innerHTML+"</br>"+msg;
-            }
-
-            window.console.log = yourCustomLog;
-            window.console.error = yourCustomLog;
+            // function yourCustomLog(msg) {
+            //     document.getElementById('debug').innerHTML = document.getElementById('debug').innerHTML+"</br>"+msg;
+            // }
+            //
+            // window.console.log = yourCustomLog;
+            // window.console.error = yourCustomLog;
 
             MAP_VAR.map.on('draw:created', function(e) {
                 var layer = e.layer;
