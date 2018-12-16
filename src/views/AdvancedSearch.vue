@@ -107,8 +107,8 @@
                     <div class="card rounded-0">
                         <div class="card-body">
                             <h1 id="results" class="pb-4" v-if="results">{{$t('advancedsearch.results')}}: {{numberOfResutls}} {{$t('advancedsearch.results_species')}}</h1>
-                            <div class="col-xs-12 pagination-center">
-                                <b-pagination v-if="numberOfResutls>$store.state.searchParameters.advancedSearch.paginateBy"
+                            <div class="col-xs-12 pagination-center">{{$store.state.searchParameters}}
+                                <b-pagination v-if="numberOfResutls > $store.state.searchParameters.advancedSearch.paginateBy"
                                         size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="numberOfResutls" v-model="$store.state.searchParameters.advancedSearch.page" :per-page="$store.state.searchParameters.advancedSearch.paginateBy">
                                 </b-pagination>
                             </div>
@@ -667,9 +667,9 @@ export default {
 
     },
     watch: {
-        '$store.state.searchParameters.advancedSearch': {
+        '$store.state.searchParameters.advancedSearch.page': {
             handler: function (newVal, oldVal) {
-                console.log(newval)
+                console.log(newVal)
                 this.applySearch()
             }
         },
