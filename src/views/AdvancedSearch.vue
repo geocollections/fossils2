@@ -1,139 +1,138 @@
 <template>
-    <section>
-        <section class="container-fluid mt-0" style="margin-top: 0; padding-top: 0;">
-            <div class="page-container" style="max-width: 1280px; margin-left: auto; margin-right: auto;">
-                <b-row class="text-center">
-                    <b-col>
-                        <h1 style="padding: 5px 0 20px 0;">{{ $t('menu.detail_search')}}</h1>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col md="6" class="ml-auto"  style="padding-right:0.1rem !important;">
-                        <div class="card rounded-0" style="width: 100%;height: 100%">
-                            <div class="card-body">
-                                <b-row class="my-1">
-                                    <b-col sm="4"><label for="input-small">{{$t('advancedsearch.hightaxon')}}:</label></b-col>
-                                    <b-col sm="8">
-                                        <vue-multiselect class="align-middle" v-model="searchParams.higherTaxa" deselect-label="Can't remove this value"
-                                                         select-label="" track-by="taxan_id" label="taxon"
-                                                         :options="searchResults" :searchable="true" @search-change="autocompliteHigherTaxaSearch"
-                                                         :allow-empty="true"  :show-no-results="false" :loading="isHigherTaxaLoading" :max-height="600"
-                                                         :open-direction="'bottom'">
-                                            <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.taxon }}</strong> </template>
-                                            <template slot="noResult"><b>NoRes</b></template>
-                                            <template slot="clear" slot-scope="props">
-                                                <div class="multiselect__clear" v-if="true" @mousedown.prevent.stop="clearAll(props.search)"></div></template>
-                                        </vue-multiselect>
+    <section class="container-fluid mt-0" style="margin-top: 0; padding-top: 0;">
+        <div class="page-container" style="max-width: 1280px; margin-left: auto; margin-right: auto;">
+            <b-row class="text-center">
+                <b-col>
+                    <h1 style="padding: 5px 0 20px 0;">{{ $t('menu.detail_search')}}</h1>
+                </b-col>
+            </b-row>
+            <div id="debug"></div>
+            <b-row>
+                <b-col md="6" class="ml-auto"  style="padding-right:0.1rem !important;">
+                    <div class="card rounded-0" style="width: 100%;height: 100%">
+                        <div class="card-body">
+                            <b-row class="my-1">
+                                <b-col sm="4"><label for="input-small">{{$t('advancedsearch.hightaxon')}}:</label></b-col>
+                                <b-col sm="8">
+                                    <vue-multiselect class="align-middle" v-model="searchParams.higherTaxa" deselect-label="Can't remove this value"
+                                                     select-label="" track-by="taxan_id" label="taxon"
+                                                     :options="searchResults" :searchable="true" @search-change="autocompliteHigherTaxaSearch"
+                                                     :allow-empty="true"  :show-no-results="false" :loading="isHigherTaxaLoading" :max-height="600"
+                                                     :open-direction="'bottom'">
+                                        <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.taxon }}</strong> </template>
+                                        <template slot="noResult"><b>NoRes</b></template>
+                                        <template slot="clear" slot-scope="props">
+                                            <div class="multiselect__clear" v-if="true" @mousedown.prevent.stop="clearAll(props.search)"></div></template>
+                                    </vue-multiselect>
+                                </b-col>
+                            </b-row>
+                            <b-row class="my-1">
+                                <b-col sm="4"><label for="input-small">{{$t('advancedsearch.species')}}:</label></b-col>
+                                <b-col sm="8">
+                                    <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.speciesField"></b-form-input>
+                                </b-col>
+                            </b-row>
+                            <b-row class="my-1">
+                                <b-col sm="4"><label for="input-small">{{$t('advancedsearch.author')}}:</label></b-col>
+                                <b-col sm="8">
+                                    <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.authorField"></b-form-input>
+                                </b-col>
+                            </b-row>
+                            <b-row class="my-1">
+                                <b-col sm="4"><label for="input-small">{{$t('advancedsearch.locality')}}:</label></b-col>
+                                <b-col sm="8">
+                                    <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.localityField"></b-form-input>
+                                </b-col>
+                            </b-row>
+                            <b-row class="my-1">
+                                <b-col sm="4"><label for="input-small">{{$t('advancedsearch.stratigraphy')}}:</label></b-col>
+                                <b-col sm="8">
+                                    <vue-multiselect class="align-middle" v-model="searchParams.stratigraphyField" deselect-label="Can't remove this value"
+                                                     select-label=""
+                                                     :custom-label="displayStratigraphyResults" track-by="taxan_id"
+                                                     :options="searchResults" :searchable="true" @search-change="autocompliteStratigraphySearch"
+                                                     :allow-empty="true"  :show-no-results="false" :loading="isStratLoading" :max-height="600"
+                                                     :open-direction="'bottom'">
+                                        <template slot="singleLabel" slot-scope="{ option }"><strong>{{ $store.state.lang=== 'et' ? option.stratigraphy :option.stratigraphy_en }}</strong> </template>
+                                        <template slot="noResult"><b>NoRes</b></template>
+                                        <template slot="clear" slot-scope="props">
+                                            <div class="multiselect__clear" v-if="true" @mousedown.prevent.stop="clearAll(props.search)"></div></template>
+                                    </vue-multiselect>
                                     </b-col>
-                                </b-row>
-                                <b-row class="my-1">
-                                    <b-col sm="4"><label for="input-small">{{$t('advancedsearch.species')}}:</label></b-col>
-                                    <b-col sm="8">
-                                        <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.speciesField"></b-form-input>
+                            </b-row>
+                            <b-row class="my-1">
+                                <b-col sm="12">
+                                    <b-form-checkbox id="subsurfaceCheckbox" v-model="searchParams.isSubsurface">{{$t('advancedsearch.subsurfaceField')}}</b-form-checkbox>
+                                </b-col>
+                            </b-row>
+                            <b-row class="my-1">
+                                <b-col sm="4">
+                                    <b-form-checkbox id="nearMeSearchCheckbox" v-model="searchParams.isNearMeSearch">{{$t('advancedsearch.showNearMeField')}}</b-form-checkbox>
                                     </b-col>
-                                </b-row>
-                                <b-row class="my-1">
-                                    <b-col sm="4"><label for="input-small">{{$t('advancedsearch.author')}}:</label></b-col>
-                                    <b-col sm="8">
-                                        <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.authorField"></b-form-input>
-                                    </b-col>
-                                </b-row>
-                                <b-row class="my-1">
-                                    <b-col sm="4"><label for="input-small">{{$t('advancedsearch.locality')}}:</label></b-col>
-                                    <b-col sm="8">
-                                        <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.localityField"></b-form-input>
-                                    </b-col>
-                                </b-row>
-                                <b-row class="my-1">
-                                    <b-col sm="4"><label for="input-small">{{$t('advancedsearch.stratigraphy')}}:</label></b-col>
-                                    <b-col sm="8">
-                                        <vue-multiselect class="align-middle" v-model="searchParams.stratigraphyField" deselect-label="Can't remove this value"
-                                                         select-label=""
-                                                         :custom-label="displayStratigraphyResults" track-by="taxan_id"
-                                                         :options="searchResults" :searchable="true" @search-change="autocompliteStratigraphySearch"
-                                                         :allow-empty="true"  :show-no-results="false" :loading="isStratLoading" :max-height="600"
-                                                         :open-direction="'bottom'">
-                                            <template slot="singleLabel" slot-scope="{ option }"><strong>{{ $store.state.lang=== 'et' ? option.stratigraphy :option.stratigraphy_en }}</strong> </template>
-                                            <template slot="noResult"><b>NoRes</b></template>
-                                            <template slot="clear" slot-scope="props">
-                                                <div class="multiselect__clear" v-if="true" @mousedown.prevent.stop="clearAll(props.search)"></div></template>
-                                        </vue-multiselect>
-                                        </b-col>
-                                </b-row>
-                                <b-row class="my-1">
-                                    <b-col sm="12">
-                                        <b-form-checkbox id="subsurfaceCheckbox" v-model="searchParams.isSubsurface">{{$t('advancedsearch.subsurfaceField')}}</b-form-checkbox>
-                                    </b-col>
-                                </b-row>
-                                <b-row class="my-1">
-                                    <b-col sm="4">
-                                        <b-form-checkbox id="nearMeSearchCheckbox" v-model="searchParams.isNearMeSearch">{{$t('advancedsearch.showNearMeField')}}</b-form-checkbox>
-                                        </b-col>
-                                    <b-col sm="8" class="pt-2">
-                                        <vue-slider ref="slider" :min="0" :max="20" v-model="searchParams.radius" v-if="searchParams.isNearMeSearch === true"></vue-slider>
-                                    </b-col>
-                                </b-row>
-                                <b-row class="my-1">
-                                    <b-col sm="4"></b-col>
-                                    <b-col sm="8">
-                                        <button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem">Search</button>
-                                        <button  @click="clearSearch()" type="button" class="btn btn-outline-info p-2 mr-2" style="float: right;font-size: 0.8rem">Clear</button>
-                                    </b-col>
-                                </b-row>
-                            </div>
+                                <b-col sm="8" class="pt-2">
+                                    <vue-slider ref="slider" :min="0" :max="20" v-model="searchParams.radius" v-if="searchParams.isNearMeSearch === true"></vue-slider>
+                                </b-col>
+                            </b-row>
+                            <b-row class="my-1">
+                                <b-col sm="4"></b-col>
+                                <b-col sm="8">
+                                    <button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem">Search</button>
+                                    <button  @click="clearSearch()" type="button" class="btn btn-outline-info p-2 mr-2" style="float: right;font-size: 0.8rem">Clear</button>
+                                </b-col>
+                            </b-row>
                         </div>
-                    </b-col>
-                    <b-col md="6" class="mr-auto" style="padding-left:0.1rem !important;">
-                        <div class="card rounded-0" style="width: 100%;height: 100%">
-                            <div class="card-body  no-padding">
-                                <div id="map" style="height: 380px"></div>
-                            </div>
+                    </div>
+                </b-col>
+                <b-col md="6" class="mr-auto" style="padding-left:0.1rem !important;">
+                    <div class="card rounded-0" style="width: 100%;height: 100%">
+                        <div class="card-body  no-padding">
+                            <div id="map" style="height: 380px"></div>
                         </div>
-                    </b-col>
-                </b-row>
-                <b-row class="pt-3">
-                    <b-col md="12" v-if="errorMessege !== null">
-                        <b-alert show variant="warning">{{errorMessege}}</b-alert>
-                    </b-col>
+                    </div>
+                </b-col>
+            </b-row>
+            <b-row class="pt-3">
+                <b-col md="12" v-if="errorMessege !== null">
+                    <b-alert show variant="warning">{{errorMessege}}</b-alert>
+                </b-col>
 
-                    <b-col md="12" v-if="initialMessege && !isLoadingResults">
-                        <b-alert show variant="info" v-if="!!initialMessege">Please specify some search criteria to show list of species and genera.</b-alert>
-                    </b-col>
+                <b-col md="12" v-if="initialMessege && !isLoadingResults">
+                    <b-alert show variant="info" v-if="!!initialMessege">Please specify some search criteria to show list of species and genera.</b-alert>
+                </b-col>
 
-                    <b-col md="12" v-if="!initialMessege">
-                        <b-row v-if="isLoadingResults">
-                            <spinner  :show="isLoadingResults"></spinner><span class="p-2">{{$t('messages.pageLoading')}}</span>
-                        </b-row>
-                        <div class="card rounded-0">
-                            <div class="card-body">
-                                <h1 id="results" class="pb-4" v-if="results">{{$t('advancedsearch.results')}}: {{numberOfResutls}} {{$t('advancedsearch.results_species')}}</h1>
-                                <div class="col-xs-12 pagination-center">
-                                    <b-pagination v-if="numberOfResutls>$store.state.searchParameters.advancedSearch.paginateBy" 
-                                            size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="numberOfResutls" v-model="$store.state.searchParameters.advancedSearch.page" :per-page="$store.state.searchParameters.advancedSearch.paginateBy">
-                                    </b-pagination>
-                                </div>
-                                <div v-for="group in output" style="padding: 5px 0 20px 0; border-top: dotted 2px #ccc;">
-                                    <span><img onerror="this.style.display='none'" :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 70px;" />
-                                        <h2 style="display: inline;"><a v-if="group.fossil_group_id" :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a>
-                                            <span v-else>{{group.fossil_group}}</span></h2></span>
-                                    <b-row v-for="species in group.node" style="padding-left: 1rem" v-bind:key="species.taxon_id">
-                                        <b-col sm="6"><a :href="'/'+species.taxon_id"><em>{{species.taxon}}</em> {{species.author_year}}</a></b-col>
-                                        <b-col v-if="species.fad && species.lad && species.fad!==species.lad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span> &rarr; <span v-translate="{ et: species.lad, en: species.lad_en}"></span></b-col>
-                                        <b-col v-else-if="species.fad===species.lad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
-                                        <b-col v-else-if="species.fad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
-                                    </b-row>
-                                </div>
-                                <div class="col-xs-12 pagination-center">
-                                    <b-pagination  v-if="numberOfResutls>$store.state.searchParameters.advancedSearch.paginateBy" 
-                                            size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="numberOfResutls" v-model="$store.state.searchParameters.advancedSearch.page" :per-page="$store.state.searchParameters.advancedSearch.paginateBy">
-                                    </b-pagination>
-                                </div>
+                <b-col md="12" v-if="!initialMessege">
+                    <b-row v-if="isLoadingResults">
+                        <spinner  :show="isLoadingResults"></spinner><span class="p-2">{{$t('messages.pageLoading')}}</span>
+                    </b-row>
+                    <div class="card rounded-0">
+                        <div class="card-body">
+                            <h1 id="results" class="pb-4" v-if="results">{{$t('advancedsearch.results')}}: {{numberOfResutls}} {{$t('advancedsearch.results_species')}}</h1>
+                            <div class="col-xs-12 pagination-center">
+                                <b-pagination v-if="numberOfResutls>$store.state.searchParameters.advancedSearch.paginateBy"
+                                        size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="numberOfResutls" v-model="$store.state.searchParameters.advancedSearch.page" :per-page="$store.state.searchParameters.advancedSearch.paginateBy">
+                                </b-pagination>
+                            </div>
+                            <div v-for="group in output" style="padding: 5px 0 20px 0; border-top: dotted 2px #ccc;">
+                                <span><img onerror="this.style.display='none'" :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 70px;" />
+                                    <h2 style="display: inline;"><a v-if="group.fossil_group_id" :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a>
+                                        <span v-else>{{group.fossil_group}}</span></h2></span>
+                                <b-row v-for="species in group.node" style="padding-left: 1rem" v-bind:key="species.taxon_id">
+                                    <b-col sm="6"><a :href="'/'+species.taxon_id"><em>{{species.taxon}}</em> {{species.author_year}}</a></b-col>
+                                    <b-col v-if="species.fad && species.lad && species.fad!==species.lad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span> &rarr; <span v-translate="{ et: species.lad, en: species.lad_en}"></span></b-col>
+                                    <b-col v-else-if="species.fad===species.lad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
+                                    <b-col v-else-if="species.fad" sm="6"><span v-translate="{ et: species.fad, en: species.fad_en}"></span></b-col>
+                                </b-row>
+                            </div>
+                            <div class="col-xs-12 pagination-center">
+                                <b-pagination  v-if="numberOfResutls>$store.state.searchParameters.advancedSearch.paginateBy"
+                                        size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="numberOfResutls" v-model="$store.state.searchParameters.advancedSearch.page" :per-page="$store.state.searchParameters.advancedSearch.paginateBy">
+                                </b-pagination>
                             </div>
                         </div>
-                    </b-col>
-                </b-row>
-            </div>
-        </section>
+                    </div>
+                </b-col>
+            </b-row>
+        </div>
     </section>
 </template>
 
@@ -188,12 +187,16 @@ export default {
                 if(document.getElementById(speciesID) !== null) {
                     document.getElementById(speciesID).innerHTML = response.count ? response.count : 0;
                 }
+            }).catch(function (error) {
+                console.error(error)
             });
         },
         getOccurrenceCountInArea: function (geomParams, occurrenceID) {
             fetchSpeciesCountInArea(this.getQueryParameters(geomParams)+'fq=%7B%21collapse%20field--taxon%7D&').then((response) => {
                 if(document.getElementById(occurrenceID) !== null)
                     document.getElementById(occurrenceID).innerHTML = response.count ? response.count : 0;
+            }).catch(function (error) {
+                console.error(error)
             });
         },
 
@@ -225,10 +228,10 @@ export default {
             var coordsStr = latlng.lat + '-' + latlng.lng;
             var speciesID = 'speciesCount-' + coordsStr;
             var occurrenceID = 'occurrenceCount-' + coordsStr;
-
+            console.log('query...')
             this_.getSpeciesCountInArea(geomParams, speciesID);
             this_.getOccurrenceCountInArea(geomParams, occurrenceID);
-
+            console.log('query succesful...')
             L.popup()
                 .setLatLng(latlng)
                 .setContent(
@@ -393,10 +396,17 @@ export default {
 
             /*  Common map (Leaflet) functions */
             function addClickEventForVector(layer, query, map) {
-                layer.on('mousedown touchstart click', function(e) {
+                layer.on('click', function(e) {
                     this_.generatePopup(layer, e.latlng, query, map,this_);
                 });
             }
+
+            function yourCustomLog(msg) {
+                document.getElementById('debug').innerHTML = document.getElementById('debug').innerHTML+"</br>"+msg;
+            }
+
+            window.console.log = yourCustomLog;
+            window.console.error = yourCustomLog;
 
             MAP_VAR.map.on('draw:created', function(e) {
                 var layer = e.layer;
@@ -408,8 +418,6 @@ export default {
                 if(MAP_VAR.isPopupQueryTriggered === false) {
                     setTimeout(function() {
                         layer.fireEvent('click');
-                        layer.fireEvent('touchstart');
-                        layer.fireEvent('mousedown');
                     }, 200);
                 }
             });
@@ -441,7 +449,6 @@ export default {
             L.control.coordinates({ position: 'bottomright', useLatLngOrder: true }).addTo(MAP_VAR.map); // coordinate plugin
             //Layers menu
             // L.control.layers(baseLayers, {}, { collapsed: true, position: 'bottomleft' }).addTo(MAP_VAR.map);
-
             L.Util.requestAnimFrame(MAP_VAR.map.invalidateSize, MAP_VAR.map, !1, MAP_VAR.map._container);
 
             // MAP_VAR.map.on('baselayerchange', onBaseLayerChange);
@@ -553,17 +560,19 @@ export default {
                 if(field === 'localityField') return `(locality:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/OR locality_en:/.*[${upperFirstCh},${lowerFirstCh}]${str}.*/)`;
                 return ''
             }
+
             let params = this.searchParams
             let query = ''
             Object.getOwnPropertyNames(params).slice(0,8).forEach(function (el) {
                 if(params[el] === true) {
                     if(['isSubsurface'].includes(el)) query += `-locality:*puurauk AND `;
-                } else if (!['isSubsurface','isNearMeSearch'].includes(el) && params[el] !== null && params[el] !== '') {
+                } else if (!['isSubsurface','isNearMeSearch'].includes(el) && params[el] !== null && params[el] !== '' && el !== '__ob__') {
                     if(['higherTaxa'].includes(el)) query += `taxon_hierarchy:${params[el].hierarchy_string}* AND `;
                     else if(['stratigraphyField'].includes(el)) query += `(stratigraphy_hierarchy:${params[el].hierarchy_string}* OR global_stratigraphy_hierarchy:${params[el].hierarchy_string}*) AND `;
                     else if(el !== 'geoparams') query += `${addFreeTextQueryParam(params[el],el)} AND `;
                 }
             });
+
             //remove last AND
             if(query.length > 0) query = `fq=${query.substring(0,query.length - 5)}&`;
             if(geoparams !== null) query += `${geoparams}&`;
@@ -573,6 +582,7 @@ export default {
         },
         applySearch() {
             let query=this.getQueryParameters();
+            console.log(query)
             if(query.length === 0) {
                 this.clearSearch();
                 return;
@@ -659,6 +669,7 @@ export default {
     watch: {
         '$store.state.searchParameters.advancedSearch': {
             handler: function (newVal, oldVal) {
+                console.log(newval)
                 this.applySearch()
             }
         },
