@@ -75,7 +75,7 @@
                                 <b-col sm="8" class="pt-2">
                                     <vue-slider ref="slider" :min="0" :max="20" :piecewiseLabel="true" width="100%" :show="searchParams.isNearMeSearch === true"
                                                 v-model="searchParams.radius" :disabled="errorMessege !== null">
-                                        <template slot="label" scope="{ label, active }">
+                                        <template slot="label" slot-scope="{ label, active }">
                                           <span style="margin-left: -5px;font-size:0.7rem; width: 40px !important; display: inline-block;" :class="['custom-label', { active }]" v-if="label % 20 === 0">
                                             {{ label }} km
                                           </span>
@@ -248,7 +248,7 @@ export default {
                 '<br />' +
                 this.$t('advancedsearch.js_map_popup_speciescount') + ': ' +
                 '<b id="' + occurrenceID + '">' + this.$t('advancedsearch.calculating') + '</b>';
-            console.log(numberOfDrawnLayers)
+
             if(numberOfDrawnLayers > 1) {
                 content +=  '<br />' +
                     '<a id="showOnlyTheseRecords" href="#map" onclick="return;">' +

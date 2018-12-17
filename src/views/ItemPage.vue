@@ -563,15 +563,17 @@
             handleImageResponse(searchParameters,response){
                 searchParameters.allowPaging = this.isAllowedMorePaging(searchParameters.page,response,searchParameters.paginateBy)
                 if(searchParameters.allowPaging) searchParameters.page += 1;
-                this.images = this.composeImageRequest(response.results)
+                this.images = this.composeImageRequest(response.results);
                 this.imagesLoading = false;
+                return searchParameters
             },
             getImages() {
                 this.imagesLoading = true;
                 fetchSelectedImages(this.taxon.id,this.$store.state.searchParameters).then((response) => {
                     if(response.results.length === 0) {
                         fetchImages(this.taxon.hierarchy_string,this.$store.state.searchParameters).then((response) => {
-                            this.handleImageResponse(this.$store.state.searchParameters.images,response)
+                            this.handleImageResponse(this.$store.state.searchParameters.images,response);
+                            this.$store.state.searchParameters.selectedImages.allowPaging = false;
                         });
                     } else {
                         this.handleImageResponse(this.$store.state.searchParameters.selectedImages,response)

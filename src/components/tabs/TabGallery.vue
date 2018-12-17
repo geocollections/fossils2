@@ -33,7 +33,6 @@
             });
             this.loadMoreImages()
         },
-
         watch: {
             'bottom': {
                 handler: function (bottom) {
@@ -42,7 +41,7 @@
                     }
                 },
                 deep: true
-            },
+            }
         },
         methods: {
             bottomVisible() {
@@ -53,17 +52,18 @@
             loadMoreImages() {
                 if(this.imagesLoading) return;
                 this.imagesLoading = true;
+                if(this.$store.state.searchParameters.images.allowPaging === false || this.noMoreResults) {
+                    this.imagesLoading = false;
+                    return;
+                }
                 let query;
-                if(this.$store.state.searchParameters.selectedImages.allowPaging) {
+                if(this.$store.state.searchParameters.selectedImages.allowPaging === true) {
+                    console.log(this.$store.state.searchParameters.selectedImages.allowPaging);
                     query = fetchSelectedImages(this.$parent.taxon.id,this.$store.state.searchParameters)
                 } else if (this.$store.state.searchParameters.images.allowPaging) {
                     query = fetchImages(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters)
                 }
 
-                if(!this.$store.state.searchParameters.images.allowPaging || this.noMoreResults) {
-                    this.imagesLoading = false;
-                    return;
-                }
                 //67033
                 query.then((response) => {
                     if(response && response.results && response.results.length > 0) {
