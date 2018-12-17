@@ -1,18 +1,18 @@
 <template>
-    <section class="container-fluid mt-0" style="margin-top: 0; padding-top: 0;">
-        <div class="page-container" style="max-width: 1280px; margin-left: auto; margin-right: auto;">
+    <section class="container-fluid">
+        <div class="page-container" style="max-width: 1280px; margin-left: auto; margin-right: auto; ">
             <b-row class="text-center">
                 <b-col>
                     <h1 style="padding: 5px 0 20px 0;">{{ $t('menu.detail_search')}}</h1>
                 </b-col>
             </b-row>
-            <div id="debug"></div>
+            <!--<div id="debug"></div>-->
             <b-row>
                 <b-col md="6" class="ml-auto"  style="padding-right:0.1rem !important;">
                     <div class="card rounded-0" style="width: 100%;height: 100%">
                         <div class="card-body">
                             <b-row class="my-1">
-                                <b-col sm="4"><label for="input-small">{{$t('advancedsearch.hightaxon')}}:</label></b-col>
+                                <b-col sm="4"><label>{{$t('advancedsearch.hightaxon')}}:</label></b-col>
                                 <b-col sm="8">
                                     <vue-multiselect class="align-middle" v-model="searchParams.higherTaxa" deselect-label="Can't remove this value"
                                                      select-label="" track-by="taxan_id" label="taxon"
@@ -27,25 +27,25 @@
                                 </b-col>
                             </b-row>
                             <b-row class="my-1">
-                                <b-col sm="4"><label for="input-small">{{$t('advancedsearch.species')}}:</label></b-col>
+                                <b-col sm="4"><label>{{$t('advancedsearch.species')}}:</label></b-col>
                                 <b-col sm="8">
                                     <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.speciesField"></b-form-input>
                                 </b-col>
                             </b-row>
                             <b-row class="my-1">
-                                <b-col sm="4"><label for="input-small">{{$t('advancedsearch.author')}}:</label></b-col>
+                                <b-col sm="4"><label>{{$t('advancedsearch.author')}}:</label></b-col>
                                 <b-col sm="8">
                                     <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.authorField"></b-form-input>
                                 </b-col>
                             </b-row>
                             <b-row class="my-1">
-                                <b-col sm="4"><label for="input-small">{{$t('advancedsearch.locality')}}:</label></b-col>
+                                <b-col sm="4"><label>{{$t('advancedsearch.locality')}}:</label></b-col>
                                 <b-col sm="8">
                                     <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.localityField"></b-form-input>
                                 </b-col>
                             </b-row>
                             <b-row class="my-1">
-                                <b-col sm="4"><label for="input-small">{{$t('advancedsearch.stratigraphy')}}:</label></b-col>
+                                <b-col sm="4"><label>{{$t('advancedsearch.stratigraphy')}}:</label></b-col>
                                 <b-col sm="8">
                                     <vue-multiselect class="align-middle" v-model="searchParams.stratigraphyField" deselect-label="Can't remove this value"
                                                      select-label=""
