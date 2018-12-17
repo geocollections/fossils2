@@ -149,9 +149,7 @@
 import {
     fetchAutocompleteSearch,
     fetchAutocompleteSearchStratigraphy,
-    fetchOccurrenceCountInArea,
     fetchAdvancedTaxonSearch,
-    fetchTaxonSearchInSelectedArea,
     fetchSpeciesCountInArea
 } from '../api'
     import Spinner from "../components/Spinner.vue";

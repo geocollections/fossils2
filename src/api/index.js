@@ -87,7 +87,6 @@ export function fetchTaxonList (id) {
 }
 
 export function fetchTaxonOccurrence (name) {
-    // return fetch(`taxon_occurrence/?taxon=${id}`)
     return fetch(`taxon_occurrence/?taxon__taxon__icontains=${name}&fields=reference,reference__reference,locality__locality,locality__locality_en,depth_interval,depth,stratigraphy_base__stratigraphy,stratigraphy_base__stratigraphy_en&format=json`)
 }
 export function fetchReferences (hierarchy_string) {
@@ -101,7 +100,6 @@ export function fetchSynonims (id) {
 }
 
 export function fetchTypeSpecimen (id) {
-    // return fetch(`taxon_type_specimen/?taxon__taxon__icontains=${name}`)
     return fetch(`taxon_type_specimen/?taxon=${id}&format=json`)
 }
 
@@ -114,12 +112,8 @@ export function fetchDistributionConop (name) {
 
 export function fetchSpeciesMap (taxon_hierarchy,mode) {
     let mode_ =  mode === 'in_global' ? `` : `${applyMode(mode,':', ' AND ')}`
-    // return fetch(`solr/taxon_search/?fl=src,locality_en,locality,locality_id,latlong&fq=%7B%21collapse%20field--locality%7D&q=taxon_hierarchy:${taxon_hierarchy}*${mode_}&format=json`)
     return fetch(`solr/taxon_search/?q=taxon_hierarchy:${taxon_hierarchy}*${mode_}&fq=%7B%21collapse%20field--locality%7D&fq=rank:[14%20TO%2017]&sort=fossil_group asc,taxon asc&rows=1000&start=0&fl=src,locality,locality_en,locality_id,latlong&format=json`)
-
-    // return fetch(`taxon/?sql=get_species_map&keyword=${name}&format=json`)
 }
-
 
 export function fetchSpecimenIdentification (taxon) {
     return fetch(`specimen/?specimenidentification__name__icontains=${taxon}&fields=id,locality_id,locality__locality,locality__locality_en,locality__longitude,locality__latitude&format=json`)
@@ -139,61 +133,31 @@ export function fetchRanks () {
 }
 
 export function cntSpecimenCollection(hierarchy_string) {
-    let returningFields='&fields=id'
-    let paginateBy='1'
-    // return fetch(`specimen/?specimenidentification__taxon__taxon__hierarchy=${taxon}${returningFields}&paginate_by=${paginateBy}`)
-    return fetch(`solr/specimen/?q=hierarchy_string:(${hierarchy_string}*)&rows=1&format=json`)
+     return fetch(`solr/specimen/?q=hierarchy_string:(${hierarchy_string}*)&rows=1&format=json`)
 }
 
 export function fetchSpecimenCollection(hierarchy_string,searchParameters) {
-    // let orderBy = searchParameters.specimens.order === 'ASCENDING' ? '&order_by='+searchParameters.specimens.sortBy : '&order_by=-' +searchParameters.specimens.sortBy;
-    // let returningFields='&fields=id,specimenidentification__name,coll__number,specimen_id,specimen_nr,locality__id,locality__locality,' +
-    //     'locality__locality_en,locality_free,depth_interval,depth,stratigraphy_id,stratigraphy__stratigraphy,stratigraphy__stratigraphy_en,' +
-    //     'lithostratigraphy__stratigraphy_en,lithostratigraphy_id,lithostratigraphy__stratigraphy,specimenidentification__taxon_id,specimenidentification__taxon__taxon,specimenidentificationgeologies__rock__id,' +
-    //     'specimenidentificationgeologies__name,specimenidentificationgeologies__name_en,specimenidentificationgeologies__rock__name,specimenidentificationgeologies__rock__name_en,' +
-    //     'agent_collected__agent,agent_collected__forename,agent_collected__surename,original_status__value,original_status__value_en,attachment__filename&distinct=true'
-    // return fetch(`specimen/?specimenidentification__taxon__taxon__hierarchy=${taxon}&order_by=-id${returningFields}&page=${searchParameters.specimens.page}&paginate_by=${searchParameters.specimens.paginateBy}${orderBy}`)
     let start = searchParameters.specimens.paginateBy*(searchParameters.specimens.page-1);
     let orderBy = searchParameters.specimens.order === 'ASCENDING' ? searchParameters.specimens.sortBy + ' asc': searchParameters.specimens.sortBy + ' desc';
     return fetch(`solr/specimen/?q=hierarchy_string:(${hierarchy_string}*)&rows=${searchParameters.specimens.paginateBy}&start=${start}&sort=${orderBy}&format=json`)
 }
 
 export function fetchSimpleTaxonSearch (value) {
-    // return fetch(`solr/fossils_search/?q=name:*${value}*`)
     return fetch(`taxon/?sql=simple_taxon_search&keyword=${value}&format=json`)
-    // return 'https://api.geocollections.info/taxon/?paginate_by=10&fields=id,taxon,common_name__name,rank__rank_short&multi_search=value:' + value + ';fields:taxon,common_name__name;lookuptype:icontains'
-    //   // return 'https://api.geocollections.info/taxon/?paginate_by=30&format=json&fields=id,taxon,rank__rank_en&multi_search=value:' + value + ';fields:taxon;lookuptype:icontains'
-}
-//not used
-export function fetchTaxonSearchInSelectedArea (geoparams) {
-    return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en&format=json`)
 }
 
 export function fetchSpeciesCountInArea (geoparams) {
-    // return fetch(`solr/taxon_search/?q=rank:[14%20TO%2016]&fq={!geofilt}&fq={!collapse%20field\=taxon}&sfield=latlong&pt=58.998153,23.235662&d=50&sort=geodist()%5asc&fl=locality,taxon,author_year,fossil_group,src,rank&format=json`)
-    // return fetch(`solr/taxon_search/?q=rank:[14%20TO%2017]&fq=%7B%21collapse%20field--taxon%7D&${geoparams}&sort=geodist()%5asc&fl=locality,taxon,author_year,fossil_group,src,rank&format=json`)
-    // return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--locality%7D&q=rank:[14%20TO%2017]&fl=taxon&rows=1&format=json`)
     return fetch(`solr/taxon_search/?${geoparams}q=rank:[14%20TO%2017]&fl=taxon&rows=1&format=json`)
 }
-//not used
-export function fetchOccurrenceCountInArea (geoparams) {
-    return fetch(`solr/taxon_search/?${geoparams}&fq=%7B%21collapse%20field--taxon%7D&q=rank:[14%20TO%2017]&fl=taxon&rows=1&format=json`)
-}
-
 
 export function fetchAdvancedTaxonSearch (query,searchParameters) {
     let start = searchParameters.advancedSearch.paginateBy*(searchParameters.advancedSearch.page-1);
-    // return fetch(`solr/taxon_search/?fq=%7B%21collapse%20field--taxon%7D&q=${query}&sort=fossil_group asc&rows=1000&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
     return fetch(`solr/taxon_search/?${query}fq=%7B%21collapse%20field--taxon%7D&fq=rank:[14%20TO%2017]&sort=fossil_group asc,taxon asc&rows=${searchParameters.advancedSearch.paginateBy}&start=${start}&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,fad,fad_en,fad_id,lad,lad_en,lad_id&format=json`)
-
 }
 
 export function fetchAutocompleteSearch (query) {
-    //return fetch(`solr/taxon_search/?fq=${query}&sort=fossil_group asc&rows=30&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
     return fetch(`solr/taxon/?fq=${query}&sort=taxon asc&rows=30&fl=taxon,taxon_id,hierarchy_string&format=json`)
 }
 export function fetchAutocompleteSearchStratigraphy (query) {
-    //return fetch(`solr/taxon_search/?q=${query}&sort=fossil_group asc&rows=30&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,stratigraphy,stratigraphy_en,taxon_hierarchy,locality,locality_en&format=json`)
     return fetch(`solr/stratigraphy/?fq=${query}&sort=stratigraphy asc&rows=30&fl=stratigraphy,stratigraphy_en,id,hierarchy_string&fq=type:1&format=json`)
-
 }
