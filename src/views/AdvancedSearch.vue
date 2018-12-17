@@ -206,7 +206,12 @@ export default {
                 console.error(error)
             });
         },
-
+        showRecordsInSelectedArea: function(this_,layer,geomParams) {
+            // this_.map.closePopup();
+            this_.resetDrawnItemsColor()
+            layer.setStyle({color: '#ff2a12'});
+            this_.searchParams.geoparams = geomParams
+        },
         generatePopup: function(layer, latlng, query, map) {
             var geomParams = '', this_ = this
 
@@ -237,28 +242,32 @@ export default {
             var occurrenceID = 'occurrenceCount-' + coordsStr;
             this_.getSpeciesCountInArea(geomParams, speciesID);
             this_.getOccurrenceCountInArea(geomParams, occurrenceID);
-            L.popup()
-                .setLatLng(latlng)
-                .setContent(
-                    this.$t('advancedsearch.js_map_popup_localitycount') + ': ' +
-                    '<b id="' + speciesID + '">' + this.$t('advancedsearch.calculating') + '</b>' +
-                    '<br />' +
-                    this.$t('advancedsearch.js_map_popup_speciescount') + ': ' +
-                    '<b id="' + occurrenceID + '">' + this.$t('advancedsearch.calculating') + '</b>' +
-                    '<br />' +
-                    '<a id="showOnlyTheseRecords" href="#" onclick="return;">' +
+            let numberOfDrawnLayers = Object.keys(this_.drawnItems._layers).length
+            let content =  this.$t('advancedsearch.js_map_popup_localitycount') + ': ' +
+                '<b id="' + speciesID + '">' + this.$t('advancedsearch.calculating') + '</b>' +
+                '<br />' +
+                this.$t('advancedsearch.js_map_popup_speciescount') + ': ' +
+                '<b id="' + occurrenceID + '">' + this.$t('advancedsearch.calculating') + '</b>';
+            console.log(numberOfDrawnLayers)
+            if(numberOfDrawnLayers > 1) {
+                content +=  '<br />' +
+                    '<a id="showOnlyTheseRecords" href="#map" onclick="return;">' +
                     '<span class="fa fa-search"></span> ' +
                     this.$t('advancedsearch.js_map_popup_linkText') +
-                    '</a>'
-                )
+                    '</a>';
+            }
+
+            L.popup()
+                .setLatLng(latlng)
+                .setContent(content)
                 .openOn(map);
 
             $('#showOnlyTheseRecords').on("click", function(event){
-                this_.map.closePopup();
-                this_.resetDrawnItemsColor()
-                layer.setStyle({color: '#ff2a12'});
-                this_.searchParams.geoparams = geomParams
+                this_.showRecordsInSelectedArea(this_,layer,geomParams);
             })
+
+            if(numberOfDrawnLayers === 1) this_.showRecordsInSelectedArea(this_,layer,geomParams);
+
         },
         resetDrawnItemsColor: function(){
             this.map.eachLayer(function (layer) {
@@ -418,7 +427,6 @@ export default {
                 var center = typeof layer.getLatLng === 'function' ? layer.getLatLng() : layer.getBounds().getCenter();
                 addClickEventForVector(layer, MAP_VAR.query, MAP_VAR.map);
                 MAP_VAR.drawnItems.addLayer(layer);
-
                 // "run next" - trigger the popup a bit later for maxiumum browser compatibility
                 if(MAP_VAR.isPopupQueryTriggered === false) {
                     setTimeout(function() {
@@ -645,9 +653,9 @@ export default {
             this.type='circle'
 
             if(this.circle !== null) {
-                this.map.closePopup();
                 this.circle.remove();
-
+                this.map.closePopup();
+                delete this.drawnItems._layers[this.circle._leaflet_id];
             }
 
             this.circle =new L.Circle(this.searchParams.latlng, this.searchParams.radius*1000, this.drawControls.options.draw.circle.shapeOptions)
