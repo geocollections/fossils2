@@ -68,9 +68,20 @@
                             <b-row class="my-1">
                                 <b-col sm="4">
                                     <b-form-checkbox id="nearMeSearchCheckbox" v-model="searchParams.isNearMeSearch">{{$t('advancedsearch.showNearMeField')}}</b-form-checkbox>
-                                    </b-col>
+                                </b-col>
+                                <b-col md="12" v-if="errorMessege !== null">
+                                    <b-alert show variant="warning">{{errorMessege}}</b-alert>
+                                </b-col>
                                 <b-col sm="8" class="pt-2">
-                                    <vue-slider ref="slider" :min="0" :max="20" v-model="searchParams.radius" v-if="searchParams.isNearMeSearch === true"></vue-slider>
+                                    <vue-slider ref="slider" :min="0" :max="20" :piecewiseLabel="true" width="100%" :show="searchParams.isNearMeSearch === true"
+                                                v-model="searchParams.radius" :disabled="errorMessege !== null">
+                                        <template slot="label" scope="{ label, active }">
+                                          <span style="margin-left: -5px;font-size:0.7rem; width: 40px !important; display: inline-block;" :class="['custom-label', { active }]" v-if="label % 20 === 0">
+                                            {{ label }} km
+                                          </span>
+                                        </template>
+                                    </vue-slider>
+
                                 </b-col>
                             </b-row>
                             <b-row class="my-1">
@@ -92,10 +103,6 @@
                 </b-col>
             </b-row>
             <b-row class="pt-3">
-                <b-col md="12" v-if="errorMessege !== null">
-                    <b-alert show variant="warning">{{errorMessege}}</b-alert>
-                </b-col>
-
                 <b-col md="12" v-if="initialMessege && !isLoadingResults">
                     <b-alert show variant="info" v-if="!!initialMessege">Please specify some search criteria to show list of species and genera.</b-alert>
                 </b-col>
@@ -539,7 +546,7 @@ export default {
                 isNearMeSearch: false,
                 geoparams:null,
                 nearMeArea: null,
-                radius:20,
+                radius:5,
                 latlng:null
             }
         },
