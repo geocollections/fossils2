@@ -235,10 +235,8 @@ export default {
             var coordsStr = latlng.lat + '-' + latlng.lng;
             var speciesID = 'speciesCount-' + coordsStr;
             var occurrenceID = 'occurrenceCount-' + coordsStr;
-            console.log('query...')
             this_.getSpeciesCountInArea(geomParams, speciesID);
             this_.getOccurrenceCountInArea(geomParams, occurrenceID);
-            console.log('query succesful...')
             L.popup()
                 .setLatLng(latlng)
                 .setContent(
@@ -430,7 +428,6 @@ export default {
             });
 
             MAP_VAR.map.on('draw:edited', function(e) {
-                console.log('edited')
                 var layers = e.layers;
 
                 layers.eachLayer(function(layer) {
@@ -589,7 +586,6 @@ export default {
         },
         applySearch() {
             let query=this.getQueryParameters();
-            console.log(query)
             if(query.length === 0) {
                 this.clearSearch();
                 return;
@@ -656,7 +652,7 @@ export default {
 
             this.circle =new L.Circle(this.searchParams.latlng, this.searchParams.radius*1000, this.drawControls.options.draw.circle.shapeOptions)
             L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this, this.circle);
-            this.isPopupQueryTriggered = false
+            // this.isPopupQueryTriggered = false
 
         },
 
@@ -676,7 +672,6 @@ export default {
     watch: {
         '$store.state.searchParameters.advancedSearch.page': {
             handler: function (newVal, oldVal) {
-                console.log(newVal)
                 this.applySearch()
             }
         },
@@ -689,13 +684,7 @@ export default {
         'searchParams.radius': {
             handler: function (newVal, oldVal) {
                 if(this.searchParams.isNearMeSearch === false) return;
-                let this_=this
-                //
-                this.isPopupQueryTriggered = true;
-                this_.drawAreaNearMe();
-                setTimeout(function() {
-
-                }, 700);
+                this.drawAreaNearMe();
 
             },
             deep: true
