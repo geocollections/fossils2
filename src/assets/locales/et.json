@@ -234,10 +234,12 @@
     "country":"Riik, maakond, vald",
     "stratigraphy":"Stratigraafia",
     "subsurfaceField":"Näita ainult paljandite andmeid",
-    "showNearMeField":"Show near me",
+    "showNearMeField":"Näita minu ümbruses",
     "button":"Otsi liike",
     "results":"Otsingu tulemused",
     "results_species":"liiki / perekonda",
-    "btn_show_fossils_near_me":"Näita fossiilieminu ümbruses"
+    "btn_search":"Otsi fossiile",
+    "btn_clear":"Tühjenda väljad",
+    "msg_add_criteria":"Perekondade/liikide nimekirja kuvamiseks täida vähemalt üks otsinguparameeter."
   }
 }

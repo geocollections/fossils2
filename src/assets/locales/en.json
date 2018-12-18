@@ -235,7 +235,9 @@
     "button":"Submit query",
     "results":"Search results",
     "results_species":"species / genera",
-    "btn_show_fossils_near_me":"Show fossils near me"
+    "btn_search":"Search",
+    "btn_clear":"Clear",
+    "msg_add_criteria":"Please specify some search criteria to show list of species and genera."
   }
 
 }
