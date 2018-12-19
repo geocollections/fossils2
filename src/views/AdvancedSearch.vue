@@ -561,7 +561,6 @@ export default {
             this.searchParams = this.setSearchParams();
             this.resetLayers();
             this.removeDrawnItems();
-            // this.resetDrawnItemsColor();
             this.initialMessege = true;
             this.output = {};
             this.results = null;
