@@ -87,8 +87,8 @@
                             <b-row class="my-1">
                                 <b-col sm="4"></b-col>
                                 <b-col sm="8">
-                                    <button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem">Search</button>
-                                    <button  @click="clearSearch()" type="button" class="btn btn-outline-info p-2 mr-2" style="float: right;font-size: 0.8rem">Clear</button>
+                                    <button  @click="applySearch()" type="button" class="btn btn-primary p-2" style="float: right;font-size: 0.8rem">{{$t('advancedsearch.btn_search')}}</button>
+                                    <button  @click="clearSearch()" type="button" class="btn btn-outline-info p-2 mr-2" style="float: right;font-size: 0.8rem">{{$t('advancedsearch.btn_clear')}}</button>
                                 </b-col>
                             </b-row>
                         </div>
@@ -104,7 +104,7 @@
             </b-row>
             <b-row class="pt-3">
                 <b-col md="12" v-if="initialMessege && !isLoadingResults">
-                    <b-alert show variant="info" v-if="!!initialMessege">Please specify some search criteria to show list of species and genera.</b-alert>
+                    <b-alert show variant="info" v-if="!!initialMessege">{{$t('advancedsearch.msg_add_criteria')}}</b-alert>
                 </b-col>
 
                 <b-col md="12" v-if="!initialMessege">
