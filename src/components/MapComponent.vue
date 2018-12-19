@@ -35,16 +35,8 @@
             'mapData': {
                 handler: function (newVal, oldVal) {
 
-                    for(let i = 0; i < this.layers.length; i++){
-                        this.map.removeLayer(this.layers[i].leaflatObjects)
-                    }
-                    this.map.removeControl(this.groupedLayers);
 
-                    this.layers = [
-                        {id: 0, name: 'Specimen', active: true, features: []},
-                        {id: 1, name: 'Taxon_occurrence', active: true, features: []},
-                        {id: 2, name: 'sample + conop_distribution', active: true, features: []},
-                    ];
+                    this.resetLayers()
                     if(this.getLocationsObject(this.mapData)) {
                         this.initLayers();
                         this.checkAllLayers()
@@ -67,6 +59,24 @@
 
         },
         methods: {
+            resetLayers() {
+                return new Promise((resolve) => {
+                    if(this.groupedLayers) {
+                        for (let i = 0; i < this.layers.length; i++) {
+                            this.map.removeLayer(this.layers[i].leaflatObjects)
+                        }
+                        this.map.removeControl(this.groupedLayers);
+
+                        this.layers = [
+                            {id: 0, name: 'Specimen', active: true, features: []},
+                            {id: 1, name: 'Taxon_occurrence', active: true, features: []},
+                            {id: 2, name: 'sample + conop_distribution', active: true, features: []},
+                        ];
+                        this.groupedLayers = null;
+                    }
+                    resolve()
+                });
+            },
             setView()  {
                 let mode = this.$store.state.mode;
                 if (mode) {
@@ -161,7 +171,7 @@
                         });
                     }
                 });
-                return true;
+                return true
             },
         }
     }

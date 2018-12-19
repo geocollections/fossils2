@@ -152,7 +152,7 @@ export function fetchSpeciesCountInArea (geoparams) {
 
 export function fetchAdvancedTaxonSearch (query,searchParameters) {
     let start = searchParameters.advancedSearch.paginateBy*(searchParameters.advancedSearch.page-1);
-    return fetch(`solr/taxon_search/?${query}fq=%7B%21collapse%20field--taxon%7D&fq=rank:[14%20TO%2017]&sort=fossil_group asc,taxon asc&rows=${searchParameters.advancedSearch.paginateBy}&start=${start}&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,fad,fad_en,fad_id,lad,lad_en,lad_id&format=json`)
+    return fetch(`solr/taxon_search/?${query}fq=%7B%21collapse%20field--taxon%7D&fq=rank:[14%20TO%2017]&sort=fossil_group asc,taxon asc&rows=${searchParameters.advancedSearch.paginateBy}&start=${start}&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,fad,fad_en,fad_id,lad,lad_en,lad_id,locality_en,locality_id,locality,latlong,src&format=json`)
 }
 
 export function fetchAutocompleteSearch (query) {

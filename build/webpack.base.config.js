@@ -1,4 +1,5 @@
 const path = require('path')
+const glob = require('glob');
 const utils = require('./utils')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -6,7 +7,8 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 const vueLoaderConfig = require('./vue-loader.conf')
 const isProd = process.env.NODE_ENV === 'production'
-
+// const PurifyCSSPlugin = require('purifycss-webpack');
+// const PurifyCss = require('purify-css');
 
 exports.resolve = function(dir) {
     return path.join(__dirname, '..', dir)
@@ -79,7 +81,15 @@ module.exports = {
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ExtractTextPlugin({
           filename: 'common.[chunkhash].css'
-        })
+        }),
+          // new PurifyCss({
+          //     paths: glob.sync(path.join(__dirname, 'src/components/**/*.vue')),
+          //     minimize: true
+          // }),
+      // new PurifyCSSPlugin({
+      //     // Give paths to parse for rules. These should be absolute!
+      //     paths: glob.sync(path.join(__dirname, '../dist/vue-ssr-server-bundle.json')),
+      // })
       ]
     : [
         new VueLoaderPlugin(),

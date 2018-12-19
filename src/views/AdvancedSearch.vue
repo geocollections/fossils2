@@ -114,7 +114,7 @@
                     <div class="card rounded-0">
                         <div class="card-body">
                             <h1 id="results" class="pb-4" v-if="results">{{$t('advancedsearch.results')}}: {{numberOfResutls}} {{$t('advancedsearch.results_species')}}</h1>
-                            <div class="col-xs-12 pagination-center">{{$store.state.searchParameters}}
+                            <div class="col-xs-12 pagination-center">
                                 <b-pagination v-if="numberOfResutls > $store.state.searchParameters.advancedSearch.paginateBy"
                                         size="sm" align="right" :limit="5" :hide-ellipsis="true" :total-rows="numberOfResutls" v-model="$store.state.searchParameters.advancedSearch.page" :per-page="$store.state.searchParameters.advancedSearch.paginateBy">
                                 </b-pagination>
@@ -142,7 +142,6 @@
         </div>
     </section>
 </template>
-
 <script>
     import VueMultiselect from 'vue-multiselect'
 
@@ -154,13 +153,15 @@ import {
 } from '../api'
     import Spinner from "../components/Spinner.vue";
     import vueSlider from '../components/vue2-slider.vue';
+    import MapComponent from "../components/MapComponent.vue";
 export default {
   name: 'advanced-search-page',
     components:  {
         Spinner,
         VueMultiselect,
-        vueSlider
+        vueSlider,
     },
+    mixins:[MapComponent],
     data() {
         return {
             query:'',
@@ -267,9 +268,12 @@ export default {
             if(numberOfDrawnLayers === 1) this_.showRecordsInSelectedArea(this_,layer,geomParams);
 
         },
+        removeDrawnItems: function() {
+            this.drawnItems = new L.FeatureGroup();
+        },
         resetDrawnItemsColor: function(){
             this.map.eachLayer(function (layer) {
-                if(layer.options.hasOwnProperty('color')) {
+                if(layer.options.hasOwnProperty('radius')) {
                     layer.setStyle({color: '#bada55' });
                 }
             });
@@ -555,7 +559,9 @@ export default {
         },
         clearSearch() {
             this.searchParams = this.setSearchParams();
-            this.resetDrawnItemsColor();
+            this.resetLayers();
+            this.removeDrawnItems();
+            // this.resetDrawnItemsColor();
             this.initialMessege = true;
             this.output = {};
             this.results = null;
@@ -601,9 +607,22 @@ export default {
                 this.results = response.results
                 this.numberOfResutls = response.count
                 this.resultsHandling()
+                this.showLocalitiesOnMap()
             });
         },
-
+        showLocalities() {
+            if(this.getLocationsObject(this.results)) {
+                this.initLayers();
+                this.checkAllLayers()
+            }
+        },
+        showLocalitiesOnMap(){
+            // Promise should be returned. Otherwise, navigation to last page triggers showLocalities function before
+            // layers has been reset
+            this.resetLayers().then(() => {
+                this.showLocalities()
+            })
+        },
         resultsHandling() {
             this.initialMessege = false;
             this.isLoadingResults = false;
@@ -658,7 +677,6 @@ export default {
 
             this.circle =new L.Circle(this.searchParams.latlng, this.searchParams.radius*1000, this.drawControls.options.draw.circle.shapeOptions)
             L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this, this.circle);
-            // this.isPopupQueryTriggered = false
 
         },
 
@@ -678,7 +696,7 @@ export default {
     watch: {
         '$store.state.searchParameters.advancedSearch.page': {
             handler: function (newVal, oldVal) {
-                this.applySearch()
+                this.applySearch();
             }
         },
         'searchParams.isNearMeSearch': {
