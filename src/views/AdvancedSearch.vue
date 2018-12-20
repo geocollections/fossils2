@@ -206,14 +206,12 @@ export default {
             });
         },
         showRecordsInSelectedArea: function(this_,layer,geomParams) {
-            // this_.map.closePopup();
             this_.resetDrawnItemsColor()
             layer.setStyle({color: '#ff2a12'});
             this_.searchParams.geoparams = geomParams
         },
         generatePopup: function(layer, latlng, query, map) {
             var geomParams = '', this_ = this
-
             if($.isFunction(layer.getRadius)) {
                 // circle
                 geomParams = this.getParamsForCircle(layer, query);
@@ -236,12 +234,19 @@ export default {
             // }
 
             latlng = layer.getBounds().getCenter();
+            if(map._popup) {
+                // console.log(map._popup.getLatLng().lat)
+                if(map._popup.getLatLng().lat === latlng.lat && map._popup.getLatLng().lng === latlng.lng)
+
+                    return;
+            }
+            // latlng = layer.getLatLng();
             var coordsStr = latlng.lat + '-' + latlng.lng;
             var speciesID = 'speciesCount-' + coordsStr;
             var occurrenceID = 'occurrenceCount-' + coordsStr;
             this_.getSpeciesCountInArea(geomParams, speciesID);
             this_.getOccurrenceCountInArea(geomParams, occurrenceID);
-            let numberOfDrawnLayers = Object.keys(this_.drawnItems._layers).length
+            let numberOfDrawnLayers = Object.keys(this_.drawnItems._layers).length;
             let content =  this.$t('advancedsearch.js_map_popup_localitycount') + ': ' +
                 '<b id="' + speciesID + '">' + this.$t('advancedsearch.calculating') + '</b>' +
                 '<br />' +
@@ -260,16 +265,25 @@ export default {
                 .setLatLng(latlng)
                 .setContent(content)
                 .openOn(map);
-
             $('#showOnlyTheseRecords').on("click", function(event){
+                $('.leaflet-popup-close-button')[0].click()
                 this_.showRecordsInSelectedArea(this_,layer,geomParams);
+
             })
 
-            if(numberOfDrawnLayers === 1) this_.showRecordsInSelectedArea(this_,layer,geomParams);
+            if(numberOfDrawnLayers === 1) {
+                this_.showRecordsInSelectedArea(this_,layer,geomParams);
+            }
 
         },
         removeDrawnItems: function() {
-            this.drawnItems = new L.FeatureGroup();
+            let this_ = this
+            this.map.closePopup()
+            this.map.eachLayer(function (layer) {
+                if(layer.options.hasOwnProperty('radius')) {
+                    this_.map.removeLayer(layer)
+                }
+            });
         },
         resetDrawnItemsColor: function(){
             this.map.eachLayer(function (layer) {
@@ -378,9 +392,9 @@ export default {
 
             // Initialise the draw control and pass it the FeatureGroup of editable layers
             this.drawControls = new L.Control.Draw({
-                edit: {
-                    featureGroup: MAP_VAR.drawnItems
-                },
+                // edit: {
+                //     featureGroup: MAP_VAR.drawnItems
+                // },
                 draw: {
                     circlemarker: false,
                     marker: false,
@@ -413,6 +427,7 @@ export default {
             /*  Common map (Leaflet) functions */
             function addClickEventForVector(layer, query, map) {
                 layer.on('click', function(e) {
+                    map.closePopup()
                     this_.generatePopup(layer, e.latlng, query, map,this_);
                 });
             }
@@ -426,6 +441,7 @@ export default {
 
             MAP_VAR.map.on('draw:created', function(e) {
                 var layer = e.layer;
+
                 var center = typeof layer.getLatLng === 'function' ? layer.getLatLng() : layer.getBounds().getCenter();
                 addClickEventForVector(layer, MAP_VAR.query, MAP_VAR.map);
                 MAP_VAR.drawnItems.addLayer(layer);
