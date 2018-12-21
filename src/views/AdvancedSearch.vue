@@ -29,19 +29,19 @@
                             <b-row class="my-1">
                                 <b-col sm="4"><label>{{$t('advancedsearch.species')}}:</label></b-col>
                                 <b-col sm="8">
-                                    <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.speciesField"></b-form-input>
+                                    <input class="form-control form-control-sm" type="text" v-model="searchParams.speciesField" v-on:keydown.enter="applySearch"/>
                                 </b-col>
                             </b-row>
                             <b-row class="my-1">
                                 <b-col sm="4"><label>{{$t('advancedsearch.author')}}:</label></b-col>
                                 <b-col sm="8">
-                                    <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.authorField"></b-form-input>
+                                    <input class="form-control form-control-sm" type="text" v-model="searchParams.authorField" v-on:keydown.enter="applySearch"/>
                                 </b-col>
                             </b-row>
                             <b-row class="my-1">
                                 <b-col sm="4"><label>{{$t('advancedsearch.locality')}}:</label></b-col>
                                 <b-col sm="8">
-                                    <b-form-input id="input-small" size="sm" type="text" placeholder="" v-model="searchParams.localityField"></b-form-input>
+                                    <input class="form-control form-control-sm" type="text" v-model="searchParams.localityField" v-on:keydown.enter="applySearch"></b-form-input>
                                 </b-col>
                             </b-row>
                             <b-row class="my-1">
@@ -170,7 +170,7 @@ export default {
             errorMessege: null,
             output: {},
             map: null,
-            minimalBaseLayer:null,
+            tileLayer:null,
             circle:null,
             drawControls: null,
             drawnItems: null,
@@ -224,29 +224,21 @@ export default {
 
                 geomParams = this.getParamsForWKT(wkt.write(), query);
             }
-
-            // if(!latlng) {
-            //     if($.isFunction(layer.getBounds)) {
-            //         latlng = layer.getBounds().getCenter();
-            //     } else {
-            //         latlng = layer.getLatLng();
-            //     }
-            // }
-
-            latlng = layer.getBounds().getCenter();
             if(map._popup) {
-                // console.log(map._popup.getLatLng().lat)
+                console.log(map._popup)
                 if(map._popup.getLatLng().lat === latlng.lat && map._popup.getLatLng().lng === latlng.lng)
-
-                    return;
+                    return
+            } else {
+                latlng = layer.getBounds().getCenter();
             }
-            // latlng = layer.getLatLng();
+
             var coordsStr = latlng.lat + '-' + latlng.lng;
             var speciesID = 'speciesCount-' + coordsStr;
             var occurrenceID = 'occurrenceCount-' + coordsStr;
             this_.getSpeciesCountInArea(geomParams, speciesID);
             this_.getOccurrenceCountInArea(geomParams, occurrenceID);
             let numberOfDrawnLayers = Object.keys(this_.drawnItems._layers).length;
+            console.log(Object.keys(this_.drawnItems._layers))
             let content =  this.$t('advancedsearch.js_map_popup_localitycount') + ': ' +
                 '<b id="' + speciesID + '">' + this.$t('advancedsearch.calculating') + '</b>' +
                 '<br />' +
@@ -284,6 +276,10 @@ export default {
                     this_.map.removeLayer(layer)
                 }
             });
+
+            Object.keys(this.drawnItems._layers).forEach(function (el) {
+                delete this_.drawnItems._layers[el];
+            })
         },
         resetDrawnItemsColor: function(){
             this.map.eachLayer(function (layer) {
@@ -317,7 +313,7 @@ export default {
 
         getBaseLayers: function () {
             // Google map layers
-            this.minimalBaseLayer =
+            this.tileLayer =
                 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, imagery &copy; <a href="https://carto.com/attribution">CartoDB</a>',
                 subdomains: 'abcd',
@@ -343,7 +339,7 @@ export default {
             // var blackWhiteLayer = new L.StamenTileLayer('toner');
 
             var baseLayers = {};
-            baseLayers[this.$t('advancedsearch.js_map_layers_Minimal')] = this.minimalBaseLayer;
+            baseLayers[this.$t('advancedsearch.js_map_layers_Minimal')] = this.tileLayer;
             // baseLayers[this.$t('advancedsearch.js.map.layers.Road')] = roadLayer;
             // baseLayers[this.$t('advancedsearch.js.map.layers.Terrain')] = terrainLayer;
             // baseLayers[this.$t('advancedsearch.js.map.layers.Satellite')] = hybridLayer;
@@ -427,7 +423,7 @@ export default {
             /*  Common map (Leaflet) functions */
             function addClickEventForVector(layer, query, map) {
                 layer.on('click', function(e) {
-                    map.closePopup()
+                    map.closePopup();
                     this_.generatePopup(layer, e.latlng, query, map,this_);
                 });
             }
@@ -674,6 +670,7 @@ export default {
                     this_.searchParams.latlng = {lat:position.coords.latitude,lng:position.coords.longitude}
                     this_.searchParams.nearMeArea = this_.getParamsForCircle(geoparams)
                     this_.drawAreaNearMe()
+                    // this_.applySearch();
                 },function (error) {
                     if (error.code == error.PERMISSION_DENIED)
                         this_.errorMessege = "Geolocation is not supported by this browser.";
@@ -693,16 +690,7 @@ export default {
             this.circle =new L.Circle(this.searchParams.latlng, this.searchParams.radius*1000, this.drawControls.options.draw.circle.shapeOptions)
             L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this, this.circle);
 
-        },
-
-        setView()  {
-            let mode = this.$store.state.mode;
-            if (mode) {
-                if(mode === 'in_global') this.map.setView([58.5,20.5], 1);
-                else if(mode === 'in_estonia') this.map.setView([58.5,25], 6);
-                else this.map.setView([58.5,25], 5);
-            }
-        },
+        }
     },
     mounted (){
       this.initialiseMap()
@@ -714,28 +702,31 @@ export default {
                 this.applySearch();
             }
         },
+        'searchParams.isSubsurface': {
+            handler: function (newVal, oldVal) {
+                // this.applySearch();
+            }
+        },
         'searchParams.isNearMeSearch': {
             handler: function (newVal, oldVal) {
-                if(this.searchParams.isNearMeSearch === false) return;
-                this.getLocation()
+                if(this.searchParams.isNearMeSearch === true) {
+                    this.searchParams.isSubsurface = true;
+                    this.getLocation()
+                } else {
+                    this.searchParams.nearMeArea = null;
+                    return
+                }
+
             }
         },
         'searchParams.radius': {
             handler: function (newVal, oldVal) {
                 if(this.searchParams.isNearMeSearch === false) return;
                 this.drawAreaNearMe();
-
+                this.map.setView([this.searchParams.latlng.lat, this.searchParams.latlng.lng], 12-this.searchParams.radius*0.15);
             },
             deep: true
-        },
-        '$store.state.mode'(mode) {
-            if (mode) {
-                this.setView()
-                this.map.removeLayer(this.minimalBaseLayer)
-                this.minimalBaseLayer.addTo(this.map);
-            }
-
-        },
+        }
     }
 }
 </script>

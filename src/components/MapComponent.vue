@@ -34,8 +34,6 @@
             },
             'mapData': {
                 handler: function (newVal, oldVal) {
-
-
                     this.resetLayers()
                     if(this.getLocationsObject(this.mapData)) {
                         this.initLayers();
@@ -82,7 +80,7 @@
                 if (mode) {
                     if(mode === 'in_global') this.map.setView([58.5,20.5], 1);
                     else if(mode === 'in_estonia') this.map.setView([58.5,25.5], 6);
-                    else this.map.setView([58.5,25.5], 4);
+                    else this.map.setView([58.5,25.5], 5);
                 }
             },
             checkAllLayers() {
