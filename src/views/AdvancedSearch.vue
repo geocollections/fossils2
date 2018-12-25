@@ -181,8 +181,10 @@ export default {
             isLocLoading: false,
             isStratLoading: false,
             results:[],
+            mapDataResult: [],
             numberOfResutls: 0,
-            isPopupQueryTriggered:false
+            isPopupQueryTriggered:false,
+            openPopup: null
         }
     },
 
@@ -199,8 +201,10 @@ export default {
         },
         getOccurrenceCountInArea: function (geomParams, occurrenceID) {
             fetchSpeciesCountInArea(this.getQueryParameters(geomParams)+'fq=%7B%21collapse%20field--taxon%7D&').then((response) => {
-                if(document.getElementById(occurrenceID) !== null)
+                if(document.getElementById(occurrenceID) !== null) {
                     document.getElementById(occurrenceID).innerHTML = response.count ? response.count : 0;
+                }
+
             }).catch(function (error) {
                 console.error(error)
             });
@@ -224,10 +228,22 @@ export default {
 
                 geomParams = this.getParamsForWKT(wkt.write(), query);
             }
+            console.log(map._popup)
+            if(map._popup !== null && this.openPopup !== null && layer &&
+                this.openPopup.getLatLng().lat.toFixed(2) === layer.getLatLng().lat.toFixed(2) &&
+                this.openPopup.getLatLng().lng.toFixed(2) === layer.getLatLng().lng.toFixed(2)) {
+                console.log('layer off')
+                layer.off('click', this.openPopup);
+                return;
+            }
+            // map.closePopup();
+            latlng = layer.getLatLng()
             if(map._popup) {
-                console.log(map._popup)
-                if(map._popup.getLatLng().lat === latlng.lat && map._popup.getLatLng().lng === latlng.lng)
-                    return
+                $('.leaflet-popup-close-button')[0].click()
+                if(map._popup !== null) latlng = layer.getBounds().getCenter();
+                return
+                // if(map._popup.getLatLng()  &&  map._popup.getLatLng().lat === latlng.lat && map._popup.getLatLng().lng === latlng.lng)
+
             } else {
                 latlng = layer.getBounds().getCenter();
             }
@@ -238,25 +254,29 @@ export default {
             this_.getSpeciesCountInArea(geomParams, speciesID);
             this_.getOccurrenceCountInArea(geomParams, occurrenceID);
             let numberOfDrawnLayers = Object.keys(this_.drawnItems._layers).length;
-            console.log(Object.keys(this_.drawnItems._layers))
-            let content =  this.$t('advancedsearch.js_map_popup_localitycount') + ': ' +
+
+            let content =   this.$t('advancedsearch.js_map_popup_localitycount') + ': ' +
                 '<b id="' + speciesID + '">' + this.$t('advancedsearch.calculating') + '</b>' +
                 '<br />' +
                 this.$t('advancedsearch.js_map_popup_speciescount') + ': ' +
                 '<b id="' + occurrenceID + '">' + this.$t('advancedsearch.calculating') + '</b>';
 
             if(numberOfDrawnLayers > 1) {
-                content +=  '<br />' +
+                content += '<br />' +
                     '<a id="showOnlyTheseRecords" href="#map" onclick="return;">' +
                     '<span class="fa fa-search"></span> ' +
-                    this.$t('advancedsearch.js_map_popup_linkText') +
-                    '</a>';
+                    this.$t('advancedsearch.js_map_popup_linkText') + '</a>';
             }
 
-            L.popup()
+            this.openPopup = L.popup({
+                closeOnClick: false,
+                autoClose: false
+            })
                 .setLatLng(latlng)
                 .setContent(content)
-                .openOn(map);
+                .openOn(map)
+
+
             $('#showOnlyTheseRecords').on("click", function(event){
                 $('.leaflet-popup-close-button')[0].click()
                 this_.showRecordsInSelectedArea(this_,layer,geomParams);
@@ -423,8 +443,10 @@ export default {
             /*  Common map (Leaflet) functions */
             function addClickEventForVector(layer, query, map) {
                 layer.on('click', function(e) {
-                    map.closePopup();
+                    //prevent new search if selected area popup already triggered
                     this_.generatePopup(layer, e.latlng, query, map,this_);
+
+
                 });
             }
 
@@ -614,7 +636,11 @@ export default {
                 return;
             }
             this.isLoadingResults = true;
-            fetchAdvancedTaxonSearch(query, this.$store.state.searchParameters).then((response) => {
+            fetchAdvancedTaxonSearch(query, this.$store.state.searchParameters, true).then((response) => {
+                this.mapDataResult = response.results
+                this.showLocalitiesOnMap()
+            });
+            fetchAdvancedTaxonSearch(query, this.$store.state.searchParameters, false).then((response) => {
                 this.results = response.results
                 this.numberOfResutls = response.count
                 this.resultsHandling()
@@ -622,7 +648,7 @@ export default {
             });
         },
         showLocalities() {
-            if(this.getLocationsObject(this.results)) {
+            if(this.getLocationsObject(this.mapDataResult)) {
                 this.initLayers();
                 this.checkAllLayers()
             }
@@ -693,8 +719,7 @@ export default {
         }
     },
     mounted (){
-      this.initialiseMap()
-
+      this.initialiseMap();
     },
     watch: {
         '$store.state.searchParameters.advancedSearch.page': {
@@ -714,7 +739,6 @@ export default {
                     this.getLocation()
                 } else {
                     this.searchParams.nearMeArea = null;
-                    return
                 }
 
             }

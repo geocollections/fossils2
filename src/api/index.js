@@ -150,9 +150,11 @@ export function fetchSpeciesCountInArea (geoparams) {
     return fetch(`solr/taxon_search/?${geoparams}q=rank:[14%20TO%2017]&fl=taxon&rows=1&format=json`)
 }
 
-export function fetchAdvancedTaxonSearch (query,searchParameters) {
+export function fetchAdvancedTaxonSearch (query,searchParameters, isMapData = false) {
     let start = searchParameters.advancedSearch.paginateBy*(searchParameters.advancedSearch.page-1);
-    return fetch(`solr/taxon_search/?${query}fq=%7B%21collapse%20field--taxon%7D&fq=rank:[14%20TO%2017]&sort=fossil_group asc,taxon asc&rows=${searchParameters.advancedSearch.paginateBy}&start=${start}&fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,fad,fad_en,fad_id,lad,lad_en,lad_id,locality_en,locality_id,locality,latlong,src&format=json`)
+    let fq = isMapData ? `fq=%7B%21collapse%20field--locality%7D` : `fq=%7B%21collapse%20field--taxon%7D`;
+    let fl = isMapData ? `fl=locality_en,locality_id,locality,latlong,src` : `fl=taxon,taxon_id,author_year,fossil_group,fossil_group_id,fad,fad_en,fad_id,lad,lad_en,lad_id,locality_en,locality_id,locality,latlong,src`
+    return fetch(`solr/taxon_search/?${query}${fq}&fq=rank:[14%20TO%2017]&sort=fossil_group asc,taxon asc&rows=${isMapData ? searchParameters.advancedSearch.madDataPaginateBy : searchParameters.advancedSearch.paginateBy}&start=${start}&${fl}&format=json`)
 }
 
 export function fetchAutocompleteSearch (query) {
