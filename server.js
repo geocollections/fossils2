@@ -120,13 +120,13 @@ function render (req, res) {
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <meta name="google-site-verification" content="pIdr5rJIyc8ecTojliRBlGtJAQ9j9MFB6iFrJEbu3Tw" />
     ${meta.text()}
     ${title.text()}
     <link rel="preconnect" href="https://api.geocollections.info">
     <link rel="preconnect" href="https://geocollections.info">
     <link rel="preconnect" href="https://files.geocollections.info">
     <link rel="preconnect" href="https://fossiilid.info">
-    <link rel="preconnect" href="https://localhost">
     <link rel="preconnect" href="https://api.tiles.mapbox.com">
     ${link.text()}
     ${style.text()}    
