@@ -139,7 +139,7 @@ function render (req, res) {
     ${html}
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="/static/css/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="http://minime.stephan-brumme.com/files/lodash/lodash-4.13.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
     <script src="/static/leaflet-1.3.4/leaflet.js"></script>
     <script src="/static/leaflet-fullscreen/Leaflet.fullscreen.js"></script>
     <script src="/static/leaflet-draw-1.0.4/leaflet.draw.js"></script>
