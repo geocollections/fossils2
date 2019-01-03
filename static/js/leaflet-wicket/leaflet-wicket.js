@@ -30,7 +30,7 @@
         module.exports = factory( require('./wicket') );
     } else if ( typeof define === 'function' && define.amd ) {
         // AMD. Register as an anonymous module.
-        define( ['wicket'], factory);
+        define( ['static/js/leaflet-wicket/wicket'], factory);
     } else {
         // Browser globals
         factory(root.Wkt );

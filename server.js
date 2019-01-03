@@ -140,14 +140,14 @@ function render (req, res) {
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="/static/css/bootstrap/dist/js/bootstrap.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
-    <script src="/static/leaflet-1.3.4/leaflet.js"></script>
-    <script src="/static/leaflet-fullscreen/Leaflet.fullscreen.js"></script>
-    <script src="/static/leaflet-draw-1.0.4/leaflet.draw.js"></script>
-    <script src="/static/leaflet-coordinates-0.1.5/leaflet.coordinates.min.js"></script>
+    <script src="/static/js/leaflet-1.3.4/leaflet.js"></script>
+    <script src="/static/js/leaflet-fullscreen/Leaflet.fullscreen.js"></script>
+    <script src="/static/js/leaflet-draw-1.0.4/leaflet.draw.js"></script>
+    <script src="/static/js/leaflet-coordinates-0.1.5/leaflet.coordinates.min.js"></script>
     <!--<script src="/static/leaflet-wicket/wicket.js"></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wicket/1.3.3/wicket.js"></script>
     
-    <script src="/static/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.js"></script>
+    <script src="/static/js/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>
     ${script.text(bodyOpt)}
   </body>
