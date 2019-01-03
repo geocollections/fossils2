@@ -214,7 +214,7 @@
                                        <em>{{reference.reference__book}}</em>, pp. {{reference.reference__pages}}.
                                        </span>
 
-                                       <span v-if="reference.reference__doi !== null" ><a :href="'https://doi.org/'+reference.reference__doi" target="_blank">DOI:{{reference.reference__doi}}</a></span>
+                                       <span v-if="reference.reference__doi !== null" ><a :href="'https://doi.org/'+reference.reference__doi" rel="noopener" target="_blank">DOI:{{reference.reference__doi}}</a></span>
                                    </div>
                                </foldable>
                            </div>

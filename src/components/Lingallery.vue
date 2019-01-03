@@ -5,7 +5,7 @@
                 <div v-if="isLoading">Loading</div>
                 <!--<half-circle-spinner :animation-duration="1000" :size="60" :color="accentColor" v-if="isLoading"/>-->
             </div>
-            <a data-fancybox="gallery" :href="currentImage.image_url" :data-caption="currentImage.caption">
+            <a aria-label="image" data-fancybox="gallery" :href="currentImage.image_url" :data-caption="currentImage.caption">
                 <img :src="currentImage">
             </a>
             <a class="control left" @click="showPreviousImage">&#9664;</a>
@@ -14,8 +14,8 @@
         <div class="lingallery_thumbnails" v-if="showThumbnails">
             <div class="lingallery_thumbnails_content">
                 <div v-for="(item, index) in items" class="lingallery_thumbnails_content_elem" :key="index">
-                   <a data-fancybox="gallery" :href="item.src" :data-caption="item.caption">
-                        <img v-if="index < 10" :alt="item.src" style="height: 200px;" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" :data-src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="100" :style="thumbnailStyle(index)">
+                   <a :aria-label="'image'+index" data-fancybox="gallery" :href="item.src" :data-caption="item.caption">
+                        <img v-show="index < 10" :alt="item.src" style="height: 200px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="100" :style="thumbnailStyle(index)">
                     </a>
                 </div>
             </div>
