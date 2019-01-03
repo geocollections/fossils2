@@ -121,6 +121,8 @@ function render (req, res) {
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
     <meta name="google-site-verification" content="pIdr5rJIyc8ecTojliRBlGtJAQ9j9MFB6iFrJEbu3Tw" />
+       <!-- Chrome, Firefox OS and Opera address bar color -->
+    <meta name="theme-color" content="#004393">
     ${meta.text()}
     ${title.text()}
     <link rel="preconnect" href="https://api.geocollections.info">
@@ -130,6 +132,7 @@ function render (req, res) {
     <link rel="preconnect" href="https://api.tiles.mapbox.com">
     <!--<link rel="preconnect" href="https://cdnjs.cloudflare.com">-->
 
+    <link rel="manifest" href="static/manifest.json"/>
     <link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
     ${link.text()}
     <style src="../static/js/use.fontawesome.com-5.4.2/all.css"></style>
