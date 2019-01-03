@@ -120,7 +120,7 @@
                                 </b-pagination>
                             </div>
                             <div v-for="group in output" style="padding: 5px 0 20px 0; border-top: dotted 2px #ccc;">
-                                <span><img onerror="this.style.display='none'" :src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 70px;" />
+                                <span><img onerror="this.style.display='none'" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"  :data-src="'/static/fossilgroups/'+group.fossil_group_id+'.png'" style="width: 70px;" />
                                     <h2 style="display: inline;"><a v-if="group.fossil_group_id" :href="'/'+group.fossil_group_id">{{group.fossil_group}}</a>
                                         <span v-else>{{group.fossil_group}}</span></h2></span>
                                 <b-row v-for="species in group.node" style="padding-left: 1rem" v-bind:key="species.taxon_id">

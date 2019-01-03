@@ -164,7 +164,7 @@
                                    <span v-if="isDefinedAndNotNull(item.remarks)">{{item.remarks}}</span>
                                    <span class="pl-3" v-if="isDefinedAndNotNull(item.attachment__filename)">
                                <a @click="openUrl({parent_url:geocollectionUrl + '/file',object:item.attachment, width:500,height:500})" href="#">
-                                   <img class="img-thumbnail previewImage" style="max-height: 80px;" :src="composeImgUrl(item.attachment__filename,false)"/>
+                                   <img class="img-thumbnail previewImage" style="max-height: 80px;" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"  :data-src="composeImgUrl(item.attachment__filename,false)"/>
                                </a>
                            </span>
                                </div>
@@ -447,7 +447,9 @@
             map_ () { return this.$store.state.activeItem['map'] },
             isMapLoaded() {
                 return !!( this.map_
-                    && ['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(this.taxon.rank__rank_en) && this.isDefinedAndNotNull(this.taxon.taxon))
+                    && ['Species','Subspecies','Genus','Supergenus','Subgenus'].indexOf(this.taxon.rank__rank_en) >= 0
+                    // && ['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(this.taxon.rank__rank_en)
+                    && this.isDefinedAndNotNull(this.taxon.taxon))
             },
             mode () {
                 return this.$store.state.mode
@@ -469,7 +471,8 @@
                 store.dispatch('FETCH_DESCRIPTION', { id }),
                 store.dispatch('FETCH_SPECIES_MAP', { id })
             ];
-            if (['Species','Subspecies'].includes(store.state.activeItem.taxon.rank__rank_en)) {
+             if (['Species','Subspecies'].indexOf(store.state.activeItem.taxon.rank__rank_en) >= 0) {
+                 // if (['Species','Subspecies'].includes(store.state.activeItem.taxon.rank__rank_en)) {
                 queries = Array.prototype.concat.apply([
                     store.dispatch('FETCH_SYNONIMS', { id }),
                     store.dispatch('FETCH_TYPE_SPECIMEN', { id }),
@@ -616,7 +619,10 @@
                 found = this.arrayHasNonNullElement(localizedArr);
                 return found;
             },
-            isHigherTaxon(rank) { return !['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(rank) },
+            isHigherTaxon(rank) {
+                // return !['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(rank)
+                return !['Species','Subspecies','Genus','Supergenus','Subgenus'].indexOf(rank) >= 0
+            },
             calculateSpeciesIdx: function (idx) {
                 return (idx + 1) + this.$store.state.searchParameters.species.paginateBy * this.$store.state.searchParameters.species.page - this.$store.state.searchParameters.species.paginateBy
             },
@@ -636,7 +642,7 @@
             },
             //todo: utils
             formatHierarchyString: function(value) {
-                return value.replace(/-/g, ',');
+                return value ? value.replace(/-/g, ',') : value;
             },
 
             topNavigation: function() {

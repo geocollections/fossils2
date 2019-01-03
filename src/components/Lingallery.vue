@@ -15,7 +15,7 @@
             <div class="lingallery_thumbnails_content">
                 <div v-for="(item, index) in items" class="lingallery_thumbnails_content_elem" :key="index">
                    <a data-fancybox="gallery" :href="item.src" :data-caption="item.caption">
-                        <img v-if="index < 10" :alt="item.src" style="height: 200px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="100" :style="thumbnailStyle(index)">
+                        <img v-if="index < 10" :alt="item.src" style="height: 200px;" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" :data-src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="100" :style="thumbnailStyle(index)">
                     </a>
                 </div>
             </div>

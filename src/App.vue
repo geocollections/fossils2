@@ -92,6 +92,16 @@
                 return isCorrect;
             }
         },
+        beforeMount(){
+            window.addEventListener('load', function(){
+                var allimages= document.getElementsByTagName('img');
+                for (var i=0; i<allimages.length; i++) {
+                    if (allimages[i].getAttribute('data-src')) {
+                        allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
+                    }
+                }
+            }, false)
+        },
         mounted() {
             //set locale after route refresh
             if(this.$store.state.lang === 'et') this.$i18n.locale = 'ee'
@@ -109,7 +119,7 @@
         },
     }
 </script>
-<style src="../static/css/bootstrap/dist/css/bootstrap.css"></style>
+<style src="../static/css/bootstrap/css/bootstrap.css"></style>
 <!--<style src="../node_modules/bootstrap/dist/css/bootstrap.css"></style>-->
 <style src="../static/css/vue-multiselect.min.css"></style>
 <!--<style src="../node_modules/bootstrap-vue/dist/bootstrap-vue.css"></style>-->
@@ -117,10 +127,8 @@
 <style src="../static/css/creative.css"></style>
 <style src="../static/css/mainpage.css"></style>
 <style src="../static/js/leaflet-1.3.4/leaflet.css"></style>
-<link rel="stylesheet" href="/static/js/leaflet-fullscreen/leaflet.fullscreen.css" />
-<link rel="stylesheet" href="/static/js/leaflet-draw-1.0.4/leaflet.draw.css" />
-<link rel="stylesheet" href="/static/js/leaflet-coordinates-0.1.5/leaflet.coordinates.css" />
-<link rel="stylesheet" href="/static/js/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.css" />
-<link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.css" />
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous"/>
+<style src="../static/js/leaflet-fullscreen/leaflet.fullscreen.css"></style>
+<style src="../static/js/leaflet-draw-1.0.4/leaflet.draw.css"></style>
+<style src="../static/js/leaflet-coordinates-0.1.5/leaflet.coordinates.css"></style>
+<style src="../static/js/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.css"></style>
+<style src="../static/js/fancybox-3.4.2/jquery.fancybox.min.css"></style>

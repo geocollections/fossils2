@@ -58,7 +58,8 @@
             <a class="cc-large" href="http://creativecommons.org/licences/by-nc/3.0/">
               <img width="88px" height="31px"
                    alt="Creative Commons Licence"
-                   src="/static/imgs/ccbync.png"
+                   src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                   data-src="/static/imgs/ccbync.png"
                    typeof="foaf:Image"></a>
             <br/>
 
@@ -76,16 +77,16 @@
     </table>
     <div style="margin: 10px 0 10px 0;">
       <a href="http://geokogud.info">
-        <img border="0" style="height: 50px;" src="https://files.geocollections.info/img/sarv_logo.svg" alt="SARV"
+        <img border="0" style="height: 50px;"  src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://files.geocollections.info/img/sarv_logo.svg" alt="SARV"
              title="SARV: geokogude infosüsteem">
       </a>
       <a href="http://natarc.ut.ee">
-        <img border="0" style="height: 50px; margin-left: 25px;" src="https://elurikkus.ee/assets/images/natarc_logo_black.svg"
+        <img border="0" style="height: 50px; margin-left: 25px;"  src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://elurikkus.ee/assets/images/natarc_logo_black.svg"
              alt="Natural History Archives and Information Network (NATARC)"
              title="SARV is part of national infrastructure Natural History Archives and Information Network (NATARC)">
       </a>
       <a href="http://struktuurifondid.ee">
-        <img border="0" style="height: 50px; margin-left: 25px;" src="//geokogud.info/images/EL_mv.png" alt="EU" title="Euroopa Liit">
+        <img border="0" style="height: 50px; margin-left: 25px;" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"  data-src="https://geokogud.info/images/EL_mv.png" alt="EU" title="Euroopa Liit">
       </a>
 
     </div>

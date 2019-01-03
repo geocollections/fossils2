@@ -128,27 +128,34 @@ function render (req, res) {
     <link rel="preconnect" href="https://files.geocollections.info">
     <link rel="preconnect" href="https://fossiilid.info">
     <link rel="preconnect" href="https://api.tiles.mapbox.com">
+    <!--<link rel="preconnect" href="https://cdnjs.cloudflare.com">-->
+
+    <link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
     ${link.text()}
+    <style src="../static/js/use.fontawesome.com-5.4.2/all.css"></style>
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.css" />-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous"/>
+
     ${style.text()}    
     ${script.text()}
     ${noscript.text()}
   </head>
   <body ${bodyAttrs.text()} id="page-top">
     <noscript>This web page needs Javascript to work properly!</noscript>
-    <script type="text/javascript"> var _paq = _paq || []; /* tracker methods like "setCustomDimension" should be called before "trackPageView" */ _paq.push(['trackPageView']); _paq.push(['enableLinkTracking']); (function() { var u="//geocollections.info/statistikat/"; _paq.push(['setTrackerUrl', u+'piwik.php']); _paq.push(['setSiteId', '13']); var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s); })(); </script>
+    <script type="text/javascript"> var _paq = _paq || []; /* tracker methods like "setCustomDimension" should be called before "trackPageView" */ _paq.push(['trackPageView']); _paq.push(['enableLinkTracking']); (function() { var u="https://geocollections.info/statistikat/"; _paq.push(['setTrackerUrl', u+'piwik.php']); _paq.push(['setSiteId', '13']); var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s); })(); </script>
     ${html}
-    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="/static/css/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/static/css/bootstrap/js/bootstrap.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
     <script src="/static/js/leaflet-1.3.4/leaflet.js"></script>
     <script src="/static/js/leaflet-fullscreen/Leaflet.fullscreen.js"></script>
     <script src="/static/js/leaflet-draw-1.0.4/leaflet.draw.js"></script>
     <script src="/static/js/leaflet-coordinates-0.1.5/leaflet.coordinates.min.js"></script>
-    <!--<script src="/static/leaflet-wicket/wicket.js"></script>-->
+    <!--<script src="/static/js/leaflet-wicket/wicket.js"></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wicket/1.3.3/wicket.js"></script>
     
     <script src="/static/js/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>
+    <script src="/static/js/fancybox-3.4.2/jquery.fancybox.min.js"></script>
     ${script.text(bodyOpt)}
   </body>
 </html>

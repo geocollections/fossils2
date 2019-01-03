@@ -74,7 +74,8 @@
           for(let idx in filteredList) {
             let node = {i: idx, rank: filteredList[idx].rank__rank, rank_en: filteredList[idx].rank__rank_en,
                 label: filteredList[idx].taxon, id: filteredList[idx].id, siblings: []};
-            if(!sisterIds.includes(filteredList[idx].id))
+            if(!sisterIds.indexOf(filteredList[idx].id)>=0)
+            // if(!sisterIds.includes(filteredList[idx].id))
               this.taxonomicTree.nodes.push(node)
           }
         },
@@ -116,8 +117,6 @@
           if(parent.label)
             return _.includes(taxon.taxon, taxon.parent__taxon) && taxon.taxon.split(' ').length > 1 ? taxon.taxon.replace(taxon.parent__taxon, "") : taxon.taxon;
           return _.includes(taxon.taxon, parent.taxon) && taxon.taxon.split(' ').length > 1 ? taxon.taxon.replace(parent.taxon, "") : taxon.taxon;
-
-
         },
         addSiblingsIfExists: function(parent_node) {
           if (this.isDefinedAndNotEmpty(this.sortedSiblings)) {
@@ -136,7 +135,9 @@
             let rank_ = _.find(this.$store.state.lists.ranks, function(o) { return currentTaxonRank === o.rank_en; });
             return _.map(_.filter(this.$store.state.lists.ranks, function(o) { return rank_.sort > o.sort; }),"rank_en");
         },
-        isHigherRank(rank) {return this.ranks.includes(rank)}
+        isHigherRank(rank) {return this.ranks.indexOf(rank)>=0
+              // return this.ranks.includes(rank)
+          }
       }
     }
 </script>
