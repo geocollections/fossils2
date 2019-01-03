@@ -1,5 +1,6 @@
 <template>
   <ul style="padding-left: 0 !important;">
+    <li style="list-style-type: none">
     <table v-if="ranks.length > 0 ">
       <tbody class="hierarchy_tree">
       <tr  v-for="item in taxonomicTree.nodes">
@@ -10,13 +11,16 @@
           <a :href="'/'+item.id" v-if="item.id !== taxon.id">{{item.label}}</a>
           <span class="node_in_tree_selected" v-if="item.id === taxon.id">{{item.label}}</span>
           <ul v-for="sibling in item.siblings">
+            <li style="list-style-type: none">
             <span v-for="j in convertToNumber(item.i)-2">&ensp;</span>
             <a :href="'/'+sibling.id">{{sibling.label}}</a>
+            </li>
           </ul>
         </td>
       </tr>
       </tbody>
     </table>
+    </li>
   </ul>
 </template>
 

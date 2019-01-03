@@ -1,6 +1,6 @@
 <template>
     <div class="m-1 mt-3">
-        <ul class="nav nav-tabs tab-links" role="tablist"  style="flex-wrap: nowrap !important;">
+        <ul class="nav nav-tabs tab-links" style="flex-wrap: nowrap !important;">
             <li class="nav-item">
                 <a href="#" v-on:click="setActiveTab('overview')" class="nav-link"  :class="{ active: activeTab === 'overview' }">{{ $t('tabs.overview') }}</a>
             </li>
