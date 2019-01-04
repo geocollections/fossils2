@@ -98,9 +98,6 @@ const webpackConfig = {
                 // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
                 allChunks: true,
             }),
-            // new ExtractTextPlugin({
-            //   filename: 'common.[chunkhash].css'
-            // }),
             new OptimizeCSSPlugin({
                 cssProcessorOptions: config.build.productionSourceMap
                     ? { safe: true, map: { inline: false } }
@@ -110,6 +107,10 @@ const webpackConfig = {
 
             // keep module.id stable when vendor modules does not change
             new webpack.HashedModuleIdsPlugin(),
+            // new PurifyCSSPlugin({
+            //     // Give paths to parse for rules. These should be absolute!
+            //     paths: glob.sync(path.join(__dirname, '**/*.vue')),
+            // }),
         ]
         : [
             new VueLoaderPlugin(),

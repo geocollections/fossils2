@@ -129,15 +129,18 @@ function render (req, res) {
     <link rel="preconnect" href="https://geocollections.info">
     <link rel="preconnect" href="https://files.geocollections.info">
     <link rel="preconnect" href="https://fossiilid.info">
-    <link rel="preconnect" href="https://api.tiles.mapbox.com">
+ 
     <!--<link rel="preconnect" href="https://cdnjs.cloudflare.com">-->
-
+    <link rel="preconnect" href="https://api.tiles.mapbox.com">
     <link rel="manifest" href="static/manifest.json"/>
     <link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
     ${link.text()}
-    <style src="../static/js/use.fontawesome.com-5.4.2/all.css"></style>
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+    <!--<style src="../static/js/use.fontawesome.com-5.4.2/all.css"></style>-->
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.css" />-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous"/>
+    <!--<link rel="stylesheet" href="../static/css/bootstrap/css/bootstrap.css"/>-->
+    <!--<link rel="stylesheet" href="../static/js/fancybox-3.4.2/jquery.fancybox.min.css"/> -->
 
     ${style.text()}    
     ${script.text()}
@@ -147,18 +150,20 @@ function render (req, res) {
     <noscript>This web page needs Javascript to work properly!</noscript>
     <script type="text/javascript"> var _paq = _paq || []; /* tracker methods like "setCustomDimension" should be called before "trackPageView" */ _paq.push(['trackPageView']); _paq.push(['enableLinkTracking']); (function() { var u="https://geocollections.info/statistikat/"; _paq.push(['setTrackerUrl', u+'piwik.php']); _paq.push(['setSiteId', '13']); var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s); })(); </script>
     ${html}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.js"></script>-->
     <script src="/static/css/bootstrap/js/bootstrap.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>-->
     <script src="/static/js/leaflet-1.3.4/leaflet.js"></script>
     <script src="/static/js/leaflet-fullscreen/Leaflet.fullscreen.js"></script>
     <script src="/static/js/leaflet-draw-1.0.4/leaflet.draw.js"></script>
     <script src="/static/js/leaflet-coordinates-0.1.5/leaflet.coordinates.min.js"></script>
     <!--<script src="/static/js/leaflet-wicket/wicket.js"></script>-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/wicket/1.3.3/wicket.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wicket/1.3.3/wicket.min.js"></script>
     <script src="/static/js/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.js"></script>
-    <script src="/static/js/fancybox-3.4.2/jquery.fancybox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>
     ${script.text(bodyOpt)}
   </body>
 </html>

@@ -4,7 +4,7 @@
         <div id="fossilgroups_box" style="max-width: 1280px !important;text-align: center" v-if="content">
             <div class='fossilgroup_box'  v-for = "item in content">
                 <a :href="'/'+item.taxon" :title="item.taxon__taxon" >
-                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"  :data-src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'">
+                        <img :src="'/static/fossilgroups/'+item.taxon+'.png'" :alt="item.frontpage+' ('+item.taxon__taxon+')'">
                     {{item.frontpage}}
                 </a>
             </div>

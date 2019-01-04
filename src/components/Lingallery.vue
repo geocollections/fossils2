@@ -13,9 +13,9 @@
         </figure>
         <div class="lingallery_thumbnails" v-if="showThumbnails">
             <div class="lingallery_thumbnails_content">
-                <div v-for="(item, index) in items" class="lingallery_thumbnails_content_elem" :key="index">
+                <div v-for="(item, index) in items" class="lingallery_thumbnails_content_elem" :key="index" v-if="index < 10" >
                    <a :aria-label="'image'+index" data-fancybox="gallery" :href="item.src" :data-caption="item.caption">
-                        <img v-show="index < 10" :alt="item.src" style="height: 200px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="100" :style="thumbnailStyle(index)">
+                        <img :alt="item.src"  style="height: 200px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="100" :style="thumbnailStyle(index)">
                     </a>
                 </div>
             </div>

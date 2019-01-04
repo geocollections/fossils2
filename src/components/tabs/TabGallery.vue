@@ -47,7 +47,7 @@
             bottomVisible() {
                 const visible = document.documentElement.clientHeight
                 return document.getElementById('bottomOfGallery') === null ?
-                    false : ((document.getElementById('bottomOfGallery').getBoundingClientRect().y - 100) <= visible)
+                    false : ((document.getElementById('bottomOfGallery').getBoundingClientRect().bottom - 100) <= visible)
             },
             loadMoreImages() {
                 if(this.imagesLoading) return;

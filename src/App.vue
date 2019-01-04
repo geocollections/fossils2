@@ -92,16 +92,6 @@
                 return isCorrect;
             }
         },
-        beforeMount(){
-            window.addEventListener('load', function(){
-                var allimages= document.getElementsByTagName('img');
-                for (var i=0; i<allimages.length; i++) {
-                    if (allimages[i].getAttribute('data-src')) {
-                        allimages[i].setAttribute('src', allimages[i].getAttribute('data-src'));
-                    }
-                }
-            }, false)
-        },
         mounted() {
             //set locale after route refresh
             if(this.$store.state.lang === 'et') this.$i18n.locale = 'ee'
@@ -120,6 +110,7 @@
     }
 </script>
 <style src="../static/css/bootstrap/css/bootstrap.css"></style>
+<!--<style src="../static/js/use.fontawesome.com-5.4.2/all.css"></style>-->
 <!--<style src="../node_modules/bootstrap/dist/css/bootstrap.css"></style>-->
 <style src="../static/css/vue-multiselect.min.css"></style>
 <!--<style src="../node_modules/bootstrap-vue/dist/bootstrap-vue.css"></style>-->

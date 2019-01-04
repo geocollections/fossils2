@@ -1,9 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-// import VueIziToast from 'vue-izitoast'
 import AsyncComputed from 'vue-async-computed'
 import VueMoment from 'vue-moment'
-// import VueLocalStorage from 'vue-localstorage' // VueLocalStorage for using local storage
 import BootstrapVue from 'bootstrap-vue' // Bootstrap
 import VueI18n from 'vue-i18n'
 import { createStore } from './store'
@@ -23,7 +21,6 @@ Vue.mixin(metaMixin)
 // Vue.use(VueIziToast)
 Vue.use(AsyncComputed)
 Vue.use(VueMoment)
-// Vue.use(VueLocalStorage)
 Vue.use(BootstrapVue)
 // Translations
 Vue.use(VueI18n)
