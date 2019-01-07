@@ -40,6 +40,7 @@
     "save": "^2.3.2",
     "scrollreveal": "^4.0.4",
     "serve-favicon": "^2.4.5",
+    "vanilla-lazyload": "^10.19.0",
     "vue": "^2.5.16",
     "vue-async-computed": "^3.4.1",
     "vue-cookies": "^1.5.7",

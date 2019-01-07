@@ -15,7 +15,7 @@
             <div class="lingallery_thumbnails_content">
                 <div v-for="(item, index) in items" class="lingallery_thumbnails_content_elem" :key="index" v-if="index < 10" >
                    <a :aria-label="'image'+index" data-fancybox="gallery" :href="item.src" :data-caption="item.caption">
-                        <img :alt="item.src"  style="height: 200px;" :src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" height="100" :style="thumbnailStyle(index)">
+                        <img :alt="item.src" class="lazy"  data-sizes="(min-width: 20em) 35vw, 100vw" style="height: 200px;" :data-src="item.thumbnail" v-on="currentIndex !== index ? { click: () => handleImageClick(index) } : {}" :style="thumbnailStyle(index)">
                     </a>
                 </div>
             </div>
@@ -165,6 +165,10 @@ export default {
     this.currentCaption = this.items[this.startImage].caption
     this.currentIndex = this.startImage
     this.windowWidth = window.innerWidth
+      var myLazyLoad = new LazyLoad({
+          elements_selector: ".lazy"
+      });
+
   }
 }
 </script>

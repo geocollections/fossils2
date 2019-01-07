@@ -3,6 +3,7 @@ import App from './App.vue'
 import AsyncComputed from 'vue-async-computed'
 import VueMoment from 'vue-moment'
 import BootstrapVue from 'bootstrap-vue' // Bootstrap
+
 import VueI18n from 'vue-i18n'
 import { createStore } from './store'
 import { createRouter } from './router'

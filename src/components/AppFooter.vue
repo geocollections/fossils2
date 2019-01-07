@@ -17,9 +17,9 @@
           {{ $t(' footer.licence ') }}
           <div><br/>
             <a class="cc-large" href="http://creativecommons.org/licences/by-nc/3.0/">
-              <img width="88px" height="31px"
+              <img width="88px" height="31px" class="lazy"
                    alt="Creative Commons Licence"
-                   src="/static/imgs/ccbync.png"
+                   data-src="/static/imgs/ccbync.png"
                    typeof="foaf:Image"></a>
             <br/>
 
@@ -37,16 +37,16 @@
     </table>
     <div style="margin: 10px 0 10px 0;">
       <a href="http://geokogud.info">
-        <img border="0" style="height: 50px;"  src="https://files.geocollections.info/img/sarv_logo.svg" alt="SARV"
+        <img border="0" style="height: 50px;" class="lazy" data-src="https://files.geocollections.info/img/sarv_logo.svg" alt="SARV"
              title="SARV: geokogude infosüsteem">
       </a>
       <a href="http://natarc.ut.ee">
-        <img border="0" style="height: 50px; margin-left: 25px;"  src="https://elurikkus.ee/assets/images/natarc_logo_black.svg"
+        <img border="0" style="height: 50px; margin-left: 25px;" class="lazy" data-src="https://elurikkus.ee/assets/images/natarc_logo_black.svg"
              alt="Natural History Archives and Information Network (NATARC)"
              title="SARV is part of national infrastructure Natural History Archives and Information Network (NATARC)">
       </a>
       <a href="http://struktuurifondid.ee">
-        <img border="0" style="height: 50px; margin-left: 25px;" src="https://geokogud.info/images/EL_mv.png" alt="EU" title="Euroopa Liit">
+        <img border="0" style="height: 50px; margin-left: 25px;" class="lazy" data-src="https://geokogud.info/images/EL_mv.png" alt="EU" title="Euroopa Liit">
       </a>
 
     </div>
@@ -55,14 +55,13 @@
 </template>
 
 <script>
-  // import LangButtons from '../components/LangButtons.vue'
   export default {
     name: "app-footer",
-    components:  {
-      // LangButtons
+    mounted(){
+        var myLazyLoad = new LazyLoad({
+            elements_selector: ".lazy"
+        });
+
     }
   }
 </script>
-<style lang="stylus" scoped>
-
-</style>

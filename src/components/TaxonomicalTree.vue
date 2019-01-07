@@ -140,8 +140,8 @@
             return _.map(_.filter(this.$store.state.lists.ranks, function(o) { return rank_.sort > o.sort; }),"rank_en");
         },
         isHigherRank(rank) {
-              // return this.ranks.indexOf(rank)>=0
-              return this.ranks.includes(rank)
+              return this.ranks.indexOf(rank)>=0
+              // return this.ranks.includes(rank)
           }
       }
     }

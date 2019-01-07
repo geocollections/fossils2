@@ -109,8 +109,9 @@
                            </div>
                        </div>
                    </b-row>
-                   <b-row class="m-1">
-                       <lingallery  style="width: 100%; height: 200px;" v-if="images && images.length > 0" ref="lingallery" :width="400" :height="350" :items="images"/>
+                   <b-row class="m-1" style="height: 200px;" >
+                       <!--<div style="height: 200px"></div>-->
+                       <lingallery  style="width: 100%;" v-if="images && images.length > 0" ref="lingallery" :height="200" :items="images"/>
                    </b-row>
                    <b-row class="m-1" v-if="taxonPage && taxonPage.content" >
                        <div class="card rounded-0" style="width: 100%">

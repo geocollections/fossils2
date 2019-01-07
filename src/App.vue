@@ -24,7 +24,13 @@
 
         name: 'App',
         created() {
-            this.setLangAndMode();
+            try {
+                this.setLangAndMode();
+            } catch(e){
+                console.log('IE do not work properly with vue-cookies')
+                this.$router.push({ path: '/'+this.$store.state.activeItem.taxon.id , query:  {mode:'in_baltoscandia', lang: 'en'}});
+            }
+
         },
         methods: {
             setLangAndMode: function() {
@@ -99,6 +105,7 @@
             // let jquery = document.createElement('script');
             // jquery.setAttribute('src',"/static/js/jquery.js");
             // document.head.appendChild(jquery);
+
         },
         metaInfo () {
             return {
@@ -114,7 +121,7 @@
 <!--<style src="../node_modules/bootstrap/dist/css/bootstrap.css"></style>-->
 <style src="../static/css/vue-multiselect.min.css"></style>
 <!--<style src="../node_modules/bootstrap-vue/dist/bootstrap-vue.css"></style>-->
-<style src="../static/css/fonts.css"></style>
+<!--<style src="../static/css/fonts.css"></style>-->
 <style src="../static/css/creative.css"></style>
 <style src="../static/css/mainpage.css"></style>
 <style src="../static/js/leaflet-1.3.4/leaflet.css"></style>
