@@ -60,6 +60,7 @@
                 let query;
                 if(this.$store.state.searchParameters.selectedImages.allowPaging === true) {
                     this.$store.state.searchParameters.selectedImages.paginateBy = 30;
+  
                     query = fetchSelectedImages(this.$parent.taxon.id,this.$store.state.searchParameters)
                 } else if (this.$store.state.searchParameters.images.allowPaging) {
                     query = fetchImages(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters)
