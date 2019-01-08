@@ -696,6 +696,8 @@ export default {
                     this_.searchParams.latlng = {lat:position.coords.latitude,lng:position.coords.longitude}
                     this_.searchParams.nearMeArea = this_.getParamsForCircle(geoparams)
                     this_.drawAreaNearMe()
+                    this_.map.setView([this_.searchParams.latlng.lat, this_.searchParams.latlng.lng], 12-this_.searchParams.radius*0.15);
+
                     // this_.applySearch();
                 },function (error) {
                     if (error.code == error.PERMISSION_DENIED)
@@ -738,7 +740,13 @@ export default {
                     this.searchParams.isSubsurface = true;
                     this.getLocation()
                 } else {
+                    this.circle.remove();
+                    this.map.closePopup();
+                    this.searchParams.nearMeArea = false;
+                    this.searchParams.geoparams = null;
                     this.searchParams.nearMeArea = null;
+                    this.searchParams.radius = 5;
+                    this.searchParams.latlng = null;
                 }
 
             }
