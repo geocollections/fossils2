@@ -129,7 +129,6 @@ function render (req, res) {
     <link rel="preconnect" href="https://geocollections.info">
     <link rel="preconnect" href="https://files.geocollections.info">
     <link rel="preconnect" href="https://fossiilid.info">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://api.tiles.mapbox.com">
     <link rel="manifest" href="static/manifest.json"/>
     <link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
@@ -137,10 +136,12 @@ function render (req, res) {
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
     <!--<style src="../static/js/use.fontawesome.com-5.4.2/all.css"></style>-->
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.css" />-->
+    <link rel="stylesheet" href="../static/css/bootstrap/css/bootstrap.css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous"/>
-    <!--<link rel="stylesheet" href="../static/css/bootstrap/css/bootstrap.css"/>-->
-    <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"/>-->
-    <!--<link rel="stylesheet" href="../static/css/fonts.css"/>-->
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic"/>  
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"/>
+    <link rel="stylesheet" href="/static/css/mainpage.css"/>
     <!--<link rel="stylesheet" href="../static/js/fancybox-3.4.2/jquery.fancybox.min.css"/> -->
 
     ${style.text()}    
@@ -165,7 +166,7 @@ function render (req, res) {
     <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@10.19.0/dist/lazyload.min.js"></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/wicket/1.3.3/wicket.min.js"></script>-->
     <script src="/static/js/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>-->
     ${script.text(bodyOpt)}
   </body>
 </html>

@@ -5,6 +5,7 @@
     <app-footer/>
   </div>
 </template>
+
 <script>
     import AppFooter from './components/AppFooter.vue'
     import AppHeader from './components/AppHeader.vue'
@@ -96,16 +97,22 @@
                     default: break;
                 }
                 return isCorrect;
+            },
+            appendScript: function (src) {
+                var js = document.createElement('script'); js.async = true; js.defer = true;
+                js.src = src;
+                document.getElementsByTagName('head')[0].appendChild(js);
             }
+        },
+        beforeCreate(){
+
         },
         mounted() {
             //set locale after route refresh
             if(this.$store.state.lang === 'et') this.$i18n.locale = 'ee'
             else this.$i18n.locale = this.$store.state.lang
-            // let jquery = document.createElement('script');
-            // jquery.setAttribute('src',"/static/js/jquery.js");
-            // document.head.appendChild(jquery);
-
+            // this.appendScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js");
+            // this.appendScript("https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js")
         },
         metaInfo () {
             return {
@@ -116,14 +123,14 @@
         },
     }
 </script>
-<style src="../static/css/bootstrap/css/bootstrap.css"></style>
+<!--<style src="../static/css/bootstrap/css/bootstrap.css"></style>-->
 <!--<style src="../static/js/use.fontawesome.com-5.4.2/all.css"></style>-->
 <!--<style src="../node_modules/bootstrap/dist/css/bootstrap.css"></style>-->
-<style src="../static/css/vue-multiselect.min.css"></style>
 <!--<style src="../node_modules/bootstrap-vue/dist/bootstrap-vue.css"></style>-->
 <!--<style src="../static/css/fonts.css"></style>-->
+<style src="../static/css/vue-multiselect.min.css"></style>
 <style src="../static/css/creative.css"></style>
-<style src="../static/css/mainpage.css"></style>
+<!--<style src="../static/css/mainpage.css"></style>-->
 <style src="../static/js/leaflet-1.3.4/leaflet.css"></style>
 <style src="../static/js/leaflet-fullscreen/leaflet.fullscreen.css"></style>
 <style src="../static/js/leaflet-draw-1.0.4/leaflet.draw.css"></style>

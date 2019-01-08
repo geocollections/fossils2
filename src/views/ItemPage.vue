@@ -109,7 +109,7 @@
                            </div>
                        </div>
                    </b-row>
-                   <b-row class="m-1" style="height: 200px;" >
+                   <b-row class="m-1" :style="images && images.length > 0 ? 'height: 200px;':''" >
                        <!--<div style="height: 200px"></div>-->
                        <lingallery  style="width: 100%;" v-if="images && images.length > 0" ref="lingallery" :height="200" :items="images"/>
                    </b-row>
@@ -622,7 +622,7 @@
             },
             isHigherTaxon(rank) {
                 // return !['Species','Subspecies','Genus','Supergenus','Subgenus'].includes(rank)
-                return !['Species','Subspecies','Genus','Supergenus','Subgenus'].indexOf(rank) >= 0
+                return !(['Species','Subspecies','Genus','Supergenus','Subgenus'].indexOf(rank) >= 0)
             },
             calculateSpeciesIdx: function (idx) {
                 return (idx + 1) + this.$store.state.searchParameters.species.paginateBy * this.$store.state.searchParameters.species.page - this.$store.state.searchParameters.species.paginateBy
