@@ -32,6 +32,7 @@
                 this.bottom = this.bottomVisible()
             });
             this.loadMoreImages()
+            // this.triggerFirstScroll()
         },
         watch: {
             'bottom': {
@@ -58,7 +59,6 @@
                 }
                 let query;
                 if(this.$store.state.searchParameters.selectedImages.allowPaging === true) {
-                    console.log(this.$store.state.searchParameters.selectedImages.allowPaging);
                     query = fetchSelectedImages(this.$parent.taxon.id,this.$store.state.searchParameters)
                 } else if (this.$store.state.searchParameters.images.allowPaging) {
                     query = fetchImages(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters)
@@ -85,7 +85,7 @@
                 });
             },
             triggerFirstScroll() {
-                window.scrollTo(0, 1);
+                window.scrollTo(0, 250);
             }
 
         }

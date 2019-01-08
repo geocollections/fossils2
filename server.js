@@ -163,10 +163,10 @@ function render (req, res) {
     <script src="/static/js/leaflet-draw-1.0.4/leaflet.draw.js"></script>
     <script src="/static/js/leaflet-coordinates-0.1.5/leaflet.coordinates.min.js"></script>
     <script src="/static/js/leaflet-wicket/wicket.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@10.19.0/dist/lazyload.min.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@10.19.0/dist/lazyload.min.js"></script>-->
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/wicket/1.3.3/wicket.min.js"></script>-->
     <script src="/static/js/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.min.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js"></script>
     ${script.text(bodyOpt)}
   </body>
 </html>
