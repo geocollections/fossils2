@@ -1,7 +1,7 @@
 <template>
     <div id="#tab-gallery" class="tab-pane" :class="{active: $store.state.activeTab === 'gallery'}" role="tabpanel">
         <transition name="fade">
-            <b-row class="m-1" style="max-width: 1280px;" v-if="!$parent.imagesLoading">
+            <b-row class="m-1" v-if="!$parent.imagesLoading">
                 <div class="col-lg-12 photogallery" style="width: 100%;">
                     <div v-for="image in $parent.images" style="float: left; position: relative;" class="image_highlight" v-if="image.src" >
                         <a data-fancybox="gallery2" :href="image.src" :data-caption="image.caption">
