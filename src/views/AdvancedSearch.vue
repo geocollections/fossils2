@@ -228,16 +228,18 @@ export default {
 
                 geomParams = this.getParamsForWKT(wkt.write(), query);
             }
-            console.log(map._popup)
-            if(map._popup !== null && this.openPopup !== null && layer &&
-                this.openPopup.getLatLng().lat.toFixed(2) === layer.getLatLng().lat.toFixed(2) &&
-                this.openPopup.getLatLng().lng.toFixed(2) === layer.getLatLng().lng.toFixed(2)) {
-                console.log('layer off')
-                layer.off('click', this.openPopup);
-                return;
-            }
+
             // map.closePopup();
-            latlng = layer.getLatLng()
+            if( typeof layer.getLatLng === 'function') {
+                latlng = layer.getLatLng()
+                if(map._popup !== null && this.openPopup !== null && layer &&
+                    this.openPopup.getLatLng().lat.toFixed(2) === layer.getLatLng().lat.toFixed(2) &&
+                    this.openPopup.getLatLng().lng.toFixed(2) === layer.getLatLng().lng.toFixed(2)) {
+                    layer.off('click', this.openPopup);
+                    return;
+                }
+            }
+
             if(map._popup) {
                 $('.leaflet-popup-close-button')[0].click()
                 if(map._popup !== null) latlng = layer.getBounds().getCenter();
@@ -292,7 +294,7 @@ export default {
             let this_ = this
             this.map.closePopup()
             this.map.eachLayer(function (layer) {
-                if(layer.options.hasOwnProperty('radius')) {
+                if(layer.options.hasOwnProperty('stroke')) {
                     this_.map.removeLayer(layer)
                 }
             });
@@ -303,7 +305,7 @@ export default {
         },
         resetDrawnItemsColor: function(){
             this.map.eachLayer(function (layer) {
-                if(layer.options.hasOwnProperty('radius')) {
+                if(layer.options.hasOwnProperty('stroke')) {
                     layer.setStyle({color: '#bada55' });
                 }
             });
