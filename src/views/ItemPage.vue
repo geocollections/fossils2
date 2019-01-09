@@ -565,7 +565,7 @@
             },
             handleImageResponse(searchParameters,response){
                 searchParameters.allowPaging = this.isAllowedMorePaging(searchParameters.page,response,searchParameters.paginateBy)
-                // if(searchParameters.allowPaging) searchParameters.page += 1;
+                if(searchParameters.allowPaging) searchParameters.page += 1;
                 this.images = this.composeImageRequest(response.results);
                 this.imagesLoading = false;
                 return searchParameters

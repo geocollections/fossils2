@@ -58,19 +58,15 @@
                 }
                 let query;
                 if(this.$store.state.searchParameters.selectedImages.allowPaging === true) {
-                    this.$store.state.searchParameters.selectedImages.paginateBy = 30;
                     query = fetchSelectedImages(this.$parent.taxon.id,this.$store.state.searchParameters)
                 } else if (this.$store.state.searchParameters.images.allowPaging) {
-                    this.$store.state.searchParameters.images.paginateBy = 20;
                     query = fetchImages(this.$parent.taxon.hierarchy_string,this.$store.state.searchParameters)
                 }
 
                 //67033
                 query.then((response) => {
                     if(response && response.results && response.results.length > 0) {
-                        if(this.$store.state.searchParameters.selectedImages.page === 1)
-                            this.$parent.images = this.$parent.composeImageRequest(response.results);
-                        else this.$parent.images = this.$parent.images.concat(this.$parent.composeImageRequest(response.results));
+                        this.$parent.images = this.$parent.images.concat(this.$parent.composeImageRequest(response.results));
                     } else {
                         if(this.$store.state.searchParameters.selectedImages.allowPaging){
                             this.$store.state.searchParameters.selectedImages.allowPaging = false
@@ -105,7 +101,6 @@
         border-radius: 6px;
         padding: 5px;
         margin: 0;
-        max-width: 1280px !important;text-align: center;
     }
 
     .photogallery h3 {
