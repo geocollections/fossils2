@@ -110,7 +110,6 @@
                        </div>
                    </b-row>
                    <b-row class="m-1" :style="images && images.length > 0 ? 'height: 200px;':''" >
-                       <!--<div style="height: 200px"></div>-->
                        <lingallery  style="width: 100%;" v-if="images && images.length > 0" ref="lingallery" :height="200" :items="images"/>
                    </b-row>
                    <b-row class="m-1" v-if="taxonPage && taxonPage.content" >
@@ -566,7 +565,7 @@
             },
             handleImageResponse(searchParameters,response){
                 searchParameters.allowPaging = this.isAllowedMorePaging(searchParameters.page,response,searchParameters.paginateBy)
-                if(searchParameters.allowPaging) searchParameters.page += 1;
+                // if(searchParameters.allowPaging) searchParameters.page += 1;
                 this.images = this.composeImageRequest(response.results);
                 this.imagesLoading = false;
                 return searchParameters
