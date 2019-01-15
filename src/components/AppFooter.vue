@@ -43,7 +43,7 @@
              title="SARV is part of national infrastructure Natural History Archives and Information Network (NATARC)">
       </a>
       <a href="http://struktuurifondid.ee">
-        <img border="0" style="height: 50px; margin-left: 25px;" src="https://geokogud.info/images/EL_mv.png" alt="EU" title="Euroopa Liit">
+        <img border="0" style="height: 50px; margin-left: 25px;" src="https://files.geocollections.info/img/EL_mv.png" alt="EU" title="Euroopa Liit">
       </a>
 
     </div>
