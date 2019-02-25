@@ -51,7 +51,13 @@
 
            <b-row v-if="$store.state.activeTab === 'overview'">
                <div class="col-lg-8">
-                   <b-row class="m-1">
+                   <b-row class="m-1" v-if="isDefinedAndNotEmpty(opinions) &&  isDefinedAndNotEmpty(invalidTaxonName)">
+                       <div class="alert alert-danger" style="width: 100%">
+                           <div v-if="isDefinedAndNotNull(item.other_taxon)
+                               && item.is_preferred=== true && item.opinion_type__invalid === true" v-for="item in opinions">
+                               {{$t('header.f_name_is_invalid')}} <a :href="item.other_taxon">{{item.other_taxon__taxon}}</a>
+                           </div>
+                       </div>
                        <div class="card rounded-0" style="width: 100%">
                            <div class="card-body">
                                <div style="font-size: small; color: #666; padding:0 0 6px 0;">
@@ -68,6 +74,15 @@
                                    {{$t('header.f_belongs_to')}}:
                                    <a :class="isHigherTaxon(parent.rank__rank_en) ? '' : 'font-italic'" :href="'/'+parent.id">{{parent.taxon}}</a>
                                </div>
+                               <div v-if="isDefinedAndNotEmpty(opinions)">
+                                   {{$t('header.f_other_names')}}:
+                                   <span v-if="isDefinedAndNotNull(item.other_taxon)" v-for="(item,idx) in opinions">
+                                       <a :href="item.other_taxon">{{item.other_taxon__taxon}}</a>
+                                       <span v-if = 'idx != opinions.length -1'>,</span>
+                                   </span>
+                               </div>
+
+
                                <div v-if="filteredCommonNames && filteredCommonNames.length > 0">
                                    <!-- {{$t('to be translated')}} -->
                                    <span  v-for="item in filteredCommonNames">{{item.language}}: <strong>{{item.name}}</strong>;&ensp;</span>
@@ -336,7 +351,7 @@
         fetchHierarchy,
         fetchImages,
         fetchSelectedImages,
-        fetchSpecimenCollection, cntSpecimenCollection
+        cntSpecimenCollection
     } from '../api'
     import MapComponent from "../components/MapComponent.vue";
     import ProtoHeader from "../components/AppHeader.vue";
@@ -387,6 +402,10 @@
                 if (activeCommonName.length > 0)
                     return activeCommonName[0].name
             },
+            invalidTaxonName() {
+                return filter(this.opinions, function(o) {
+                return o.opinion_type__invalid === true && o.is_preferred === true});},
+            opinions () { return this.$store.state.activeItem['opinions'] },
             description () { return this.$store.state.activeItem['description'] },
             commonNames () { return this.$store.state.activeItem['commonNames'] },
             taxonTypeSpecimen () { return this.$store.state.activeItem['typeSpecimen'] },
@@ -469,7 +488,8 @@
                 store.dispatch('FETCH_CHILDREN', { id }),
                 // store.dispatch('FETCH_TAXON_LIST', { id }),
                 store.dispatch('FETCH_DESCRIPTION', { id }),
-                store.dispatch('FETCH_SPECIES_MAP', { id })
+                store.dispatch('FETCH_SPECIES_MAP', { id }),
+                store.dispatch('FETCH_OPINIONS', { id })
             ];
              if (['Species','Subspecies'].indexOf(store.state.activeItem.taxon.rank__rank_en) >= 0) {
                  // if (['Species','Subspecies'].includes(store.state.activeItem.taxon.rank__rank_en)) {

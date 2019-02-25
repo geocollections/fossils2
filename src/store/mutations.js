@@ -89,4 +89,7 @@ export default {
   SET_TAXON_PAGE: (state, { page }) => {
       Vue.set(state.activeItem, 'taxonPage', page.results || false)
   },
+    SET_OPINIONS: (state, { list }) => {
+        Vue.set(state.activeItem, 'opinions', list.results || false)
+    },
 }

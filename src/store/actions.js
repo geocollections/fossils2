@@ -16,7 +16,12 @@ import {
     fetchDistributionConop,
     fetchSimpleTaxonSearch,
     fetchDistributionSamples,
-    fetchReferences, fetchReferences2, fetchSpeciesMap, fetchNumberOfSpecimenIdentifications, fetchTaxonByName
+    fetchReferences,
+    fetchReferences2,
+    fetchSpeciesMap,
+    fetchNumberOfSpecimenIdentifications,
+    fetchTaxonByName,
+    fetchOpinion
 } from '../api'
 
 export default {
@@ -110,4 +115,9 @@ export default {
     FETCH_DESCRIPTION: ({ commit, state }, { id}) => {
         return fetchTaxonDescription(id).then(description => commit('SET_DESCRIPTION', { description }))
     },
+
+    FETCH_OPINIONS: ({ commit, state }, { id}) => {
+        return fetchOpinion(id).then(list => commit('SET_OPINIONS', { list }))
+    },
+
 }

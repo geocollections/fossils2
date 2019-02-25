@@ -163,3 +163,6 @@ export function fetchAutocompleteSearch (query) {
 export function fetchAutocompleteSearchStratigraphy (query) {
     return fetch(`solr/stratigraphy/?fq=${query}&sort=stratigraphy asc&rows=30&fl=stratigraphy,stratigraphy_en,id,hierarchy_string&fq=type:1&format=json`)
 }
+export function fetchOpinion (id) {
+    return fetch(`taxon_opinion/?taxon=${id}&order_by=-reference__year&format=json`)
+}
