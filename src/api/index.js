@@ -75,7 +75,7 @@ export function fetchTaxonPages (id,lang) {
 }
 
 export function fetchTaxonDescription (id) {
-    return fetch(`taxon_description/?taxon=${id}&fields=reference,reference__reference,description&format=json`)
+    return fetch(`taxon_description/?taxon=${id}&fields=reference,reference__reference,description&order_by=-reference__year&format=json`)
 }
 
 export function fetchTaxonCommonName (id) {

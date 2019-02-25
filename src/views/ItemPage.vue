@@ -141,14 +141,16 @@
                        </div>
                    </b-row>
                    <!-- Row contains description-->
-                   <b-row class="m-1" v-if = "description && description.description">
-                       <div class="col-lg-12">
-                           <foldable>
-                               <h3>{{$t('header.f_taxon_description_diagnosis')}}
-                                   (<a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:description.reference, width:500,height:500})">
-                                       <strong>{{description.reference__reference}}</strong>)</a></h3>
-                               <div v-html="description.description"></div>
-                           </foldable>
+                   <b-row class="m-1" v-if = "description">
+                       <div class="card rounded-0" style="width: 100%" >
+                           <div class="card-header">{{$t('header.f_taxon_description_diagnosis')}}</div>
+                           <div class="card-body">
+                               <div v-for="item in description" v-if="item.description">
+                                   <h3 class="mb-3"><a href="#" @click="openUrl({parent_url:'http://geocollections.info/reference',object:item.reference, width:500,height:500})">
+                                       <strong>{{item.reference__reference}}</strong></a></h3>
+                                   <div v-html="item.description"></div>
+                               </div>
+                           </div>
                        </div>
                    </b-row>
                    <!-- TYPE SPECIMEN DATA begins-->
