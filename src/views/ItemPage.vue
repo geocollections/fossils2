@@ -528,7 +528,7 @@
             initialData: function () {
                 return {
                     geocollectionUrl: "http://geocollections.info",
-                    fossilsUrl: "https://fossiilid.geokogud.info",
+                    fossilsUrl: "https://fossiilid.info",
                     kividUrl: "http://www.kivid.info",
                     fileUrl:'https://files.geocollections.info',
                     isReferencesCollapsed: true,
