@@ -2,4 +2,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://fossils.info/sitemap.xml
+Sitemap: https://fossiilid.info/sitemap.xml
