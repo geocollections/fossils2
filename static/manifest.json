@@ -5,17 +5,5 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "scope": "/",
-  "theme_color": "#004393",
-  "icons": [
-    {
-      "src": "static/web_hi_res_512.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "static/web_hi_res_512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ]
+  "theme_color": "#004393"
 }
