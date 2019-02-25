@@ -83,10 +83,12 @@ function render (req, res) {
     const s = Date.now()
 
     if ('/robots.txt' == req.url) {
+        res.setHeader("Content-Type", "text/plain")
         return res.sendFile(path.join(__dirname, './dist/static/robots.txt'));
     }
 
     if ('/sitemap.xml' == req.url) {
+        res.setHeader("Content-Type", "application/xml")
         return res.sendFile(path.join(__dirname, './dist/static/sitemap.xml'));
     }
 
