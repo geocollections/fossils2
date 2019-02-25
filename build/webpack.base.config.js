@@ -3,6 +3,7 @@ const glob = require('glob');
 const utils = require('./utils')
 const webpack = require('webpack')
 const config = require('../config')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -104,7 +105,14 @@ const webpackConfig = {
                     : { safe: true }
             }),
             new webpack.optimize.ModuleConcatenationPlugin(),
-
+            // copy custom static assets
+            new CopyWebpackPlugin([
+                {
+                    from: path.resolve(__dirname, '../static/seo'),
+                    to: config.build.assetsSubDirectory,
+                    ignore: ['.*']
+                }
+            ]),
             // keep module.id stable when vendor modules does not change
             new webpack.HashedModuleIdsPlugin(),
             // new PurifyCSSPlugin({

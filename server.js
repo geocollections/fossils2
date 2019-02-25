@@ -83,8 +83,11 @@ function render (req, res) {
     const s = Date.now()
 
     if ('/robots.txt' == req.url) {
-        res.type('text/plain')
-        return res.send("User-agent: *\nDisallow: /");
+        return res.sendFile(path.join(__dirname, './dist/static/robots.txt'));
+    }
+
+    if ('/sitemap.xml' == req.url) {
+        return res.sendFile(path.join(__dirname, './dist/static/sitemap.xml'));
     }
 
     res.setHeader("Content-Type", "text/html")
