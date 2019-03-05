@@ -62,12 +62,12 @@
                             </b-row>
                             <b-row class="my-1">
                                 <b-col sm="12">
-                                    <!--<b-form-checkbox id="subsurfaceCheckbox" v-model="searchParams.isSubsurface">{{$t('advancedsearch.subsurfaceField')}}</b-form-checkbox>-->
+                                    <b-form-checkbox id="subsurfaceCheckbox" v-model="searchParams.isSubsurface">{{$t('advancedsearch.subsurfaceField')}}</b-form-checkbox>
                                 </b-col>
                             </b-row>
                             <b-row class="my-1">
                                 <b-col sm="4">
-                                    <!--<b-form-checkbox id="nearMeSearchCheckbox" v-model="searchParams.isNearMeSearch">{{$t('advancedsearch.showNearMeField')}}</b-form-checkbox>-->
+                                    <b-form-checkbox id="nearMeSearchCheckbox" v-model="searchParams.isNearMeSearch">{{$t('advancedsearch.showNearMeField')}}</b-form-checkbox>
                                 </b-col>
                                 <b-col md="12" v-if="errorMessege !== null">
                                     <b-alert show variant="warning">{{errorMessege}}</b-alert>
