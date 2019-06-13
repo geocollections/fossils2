@@ -36,7 +36,7 @@
         methods: {
             setLangAndMode: function() {
                 this.$nextTick(() => {
-                    if(this.$store.state.process === 'client') {
+                  if(this.$store.state.process === 'client') {
                         let lang = this.$store.state.lang, mode = this.$store.state.mode;
                         //check if manually set lang or mode value is correct otherwise set default
 
@@ -47,7 +47,7 @@
 
                         if(this.$router.currentRoute.query.hasOwnProperty('lang')
                             && this.checkIfLangIsCorrect(this.$router.currentRoute.query.lang)){
-                            this.$cookies.set('fossils_lang', this.$router.currentRoute.query.lang)
+                          this.$cookies.set('fossils_lang', this.$router.currentRoute.query.lang)
                         }
 
                         if(!this.$router.currentRoute.query.hasOwnProperty('mode') || !this.$router.currentRoute.query.hasOwnProperty('lang')) {
@@ -109,8 +109,23 @@
         },
         mounted() {
             //set locale after route refresh
-            if(this.$store.state.lang === 'et') this.$i18n.locale = 'ee'
-            else this.$i18n.locale = this.$store.state.lang
+            // if(this.$store.state.lang === 'et') this.$i18n.locale = 'ee'
+            // else this.$i18n.locale = this.$store.state.lang
+
+            if (typeof this.$router.currentRoute.query.lang !== 'undefined') {
+              let lang = this.$router.currentRoute.query.lang
+              if (lang === 'et' || lang === 'en' || lang === 'fi' || lang === 'se') {
+                if (lang === 'et') this.$i18n.locale = 'ee'
+                else this.$i18n.locale = lang
+
+                this.$store.commit('SET_LANG', {lang});
+                this.$cookies.set('fossils_lang', lang)
+              }
+            } else {
+              if(this.$store.state.lang === 'et') this.$i18n.locale = 'ee'
+              else this.$i18n.locale = this.$store.state.lang
+            }
+
             // this.appendScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js");
             // this.appendScript("https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.4.2/jquery.fancybox.min.js")
         },

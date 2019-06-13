@@ -32,7 +32,11 @@ export function fetchStaticPage (id) {
 }
 
 export function fetchFrontPage (lang) {
-    return fetch(`taxon_page/?language=${lang}&on_frontpage=1&order_by=frontpage_order&fields=frontpage,taxon,taxon__taxon&format=json`)
+    if (lang === 'se') {
+        return fetch(`taxon_page/?language=sv&on_frontpage=1&order_by=frontpage_order&fields=frontpage,taxon,taxon__taxon&format=json`)
+    } else {
+        return fetch(`taxon_page/?language=${lang}&on_frontpage=1&order_by=frontpage_order&fields=frontpage,taxon,taxon__taxon&format=json`)
+    }
 }
 
 /* Item page request */

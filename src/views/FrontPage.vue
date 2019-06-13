@@ -17,7 +17,11 @@ export default {
   name: 'front-page',
   computed: {
     content : function() {
-        return this.$store.state.lang === 'et' ? this.$store.state.frontPage.et : this.$store.state.frontPage.en
+        if (this.$store.state.lang === 'et') return this.$store.state.frontPage.et
+        else if (this.$store.state.lang === 'en') return this.$store.state.frontPage.en
+        else if (this.$store.state.lang === 'fi') return this.$store.state.frontPage.fi
+        else if (this.$store.state.lang === 'se') return this.$store.state.frontPage.se
+        // return this.$store.state.lang === 'et' ? this.$store.state.frontPage.et : this.$store.state.frontPage.en
     },
     errorMessege : function () {
         return this.$store.state['errorMessage']
