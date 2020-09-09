@@ -52,9 +52,8 @@
            <b-row v-if="$store.state.activeTab === 'overview'">
                <div class="col-lg-8">
                    <b-row class="m-1" v-if="isDefinedAndNotEmpty(opinions) &&  isDefinedAndNotEmpty(invalidTaxonName)">
-                       <div class="alert alert-danger" style="width: 100%">
-                           <div v-if="isDefinedAndNotNull(item.other_taxon)
-                               && item.is_preferred=== true && item.opinion_type__invalid === true" v-for="item in opinions">
+                       <div class="alert alert-danger" style="width: 100%" v-if="computedOpinions.length > 0">
+                           <div  v-for="(item, index) in computedOpinions" :key="index">
                                {{$t('header.f_name_is_invalid')}} <a :href="item.other_taxon">{{item.other_taxon__taxon}}</a>
                            </div>
                        </div>
@@ -74,8 +73,8 @@
                                    {{$t('header.f_belongs_to')}}:
                                    <a :class="isHigherTaxon(parent.rank__rank_en) ? '' : 'font-italic'" :href="'/'+parent.id">{{parent.taxon}}</a>
                                </div>
-                               <div v-if="isDefinedAndNotEmpty(opinions)">
-                                   {{$t('header.f_other_names')}}:
+                               <div v-if="isDefinedAndNotEmpty(opinions)" style="font-size: 0.9rem !important">
+1                                   {{$t('header.f_other_names')}}:
                                    <span v-if="isDefinedAndNotNull(item.other_taxon)" v-for="(item,idx) in opinions">
                                        <a :href="item.other_taxon">{{item.other_taxon__taxon}}</a>
                                        <span v-if = 'idx != opinions.length -1'>,</span>
@@ -477,6 +476,12 @@
             },
             isNumberOfLocalitiesOnMapOver1000() {
                 return this.$store.state.activeItem['cntLocalities'] !== undefined && this.$store.state.activeItem['cntLocalities'] > 1000
+            },
+            computedOpinions() {
+                return this.opinions.filter(item => {
+                  return this.isDefinedAndNotNull(item.other_taxon)
+                      && item.is_preferred=== true && item.opinion_type__invalid === true
+                })
             }
         },
 
