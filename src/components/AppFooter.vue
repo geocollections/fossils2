@@ -4,14 +4,14 @@
       <tbody>
       <tr>
         <td valign="top" style="width: 33%;">
-          <strong>{{ $t(' footer.related ') }}:</strong><br/>
+          <strong>{{ $t('footer.related') }}:</strong><br/>
           <a href='http://elurikkus.ee'>eElurikkus</a><br/>
           <a href='http://naturforskaren.se'>Naturforskaren</a><br/>
           <a href='http://www.geocase.eu'>GeoCASe</a><br/>
           <a href='http://www.open-up.eu'>OpenUp!</a><br/>
         </td>
         <td valign="top" style="border-left: solid 0px #ccc; border-right: dotted 0px #ccc;">
-          {{ $t(' footer.licence ') }}
+          {{ $t('footer.licence') }}
           <div><br/>
             <a class="cc-large" href="http://creativecommons.org/licences/by-nc/3.0/">
               <img width="88px" height="31px"
@@ -23,10 +23,10 @@
           </div>
         </td>
         <td valign="top" style="width: 33%;">
-          <strong>{{ $t(' footer.founders ') }}:</strong><br/>
-          <a href="https://taltech.ee/geoloogia-instituut">{{ $t(' footer.gi ') }}</a><br/>
-          <a href="http://natmuseum.ut.ee">{{ $t(' footer.ut ') }}</a><br/>
-          <a href="http://loodusmuuseum.ee">{{ $t(' footer.elm ') }}</a><br/>
+          <strong>{{ $t('footer.founders') }}:</strong><br/>
+          <a href="https://taltech.ee/geoloogia-instituut">{{ $t('footer.gi') }}</a><br/>
+          <a href="http://natmuseum.ut.ee">{{ $t('footer.ut') }}</a><br/>
+          <a href="http://loodusmuuseum.ee">{{ $t('footer.elm') }}</a><br/>
           <br/>
         </td>
       </tr>

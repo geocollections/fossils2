@@ -140,7 +140,7 @@ function render (req, res) {
     <link rel="preconnect" href="https://geocollections.info">
     <link rel="preconnect" href="https://files.geocollections.info">
     <link rel="preconnect" href="https://fossiilid.info">
-    <link rel="preconnect" href="https://api.tiles.mapbox.com">
+    <link rel="preconnect" href="https://basemaps.cartocdn.com/">
     <link rel="manifest" href="static/manifest.json"/>
     <link rel="shortcut icon"  sizes="48x48" href="/static/favicon.ico"/>
     ${link.text()}
