@@ -50,7 +50,7 @@
     "vue-izitoast": "^1.1.2",
     "vue-localstorage": "^0.6.2",
     "vue-meta": "^1.5.8",
-    "vue-moment": "^4.0.0",
+    "vue-moment": "^4.1.0",
     "vue-multiselect": "^2.1.4",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.2",
