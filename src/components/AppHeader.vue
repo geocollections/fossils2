@@ -127,7 +127,7 @@
             if (lang === 'ee') lang = 'et';
             this.$store.commit('SET_LANG', {lang});
             this.$cookies.set('fossils_lang',lang)
-            this.$router.push({ path: this.$router.currentRoute.path, query:  {mode:this.$store.state.mode, lang: lang}  });
+            this.$router.replace({ path: this.$router.currentRoute.path, query:  {mode:this.$store.state.mode, lang: lang}  });
         },
         changeMode: function(mode) {
             this.$store.commit('SET_MODE', {mode})

@@ -69,7 +69,7 @@
                             }
                         }
                         // this.$router.currentRoute.path
-                        this.$router.push({ path: '/'+this.$store.state.activeItem.taxon.id , query:  {mode:mode, lang: lang}});
+                        this.$router.replace({ path: '/'+this.$store.state.activeItem.taxon.id , query:  {mode:mode, lang: lang}});
                     }
                 })
             },
